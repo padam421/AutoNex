@@ -1,0 +1,38 @@
+{
+  "name": "railway-dashboard",
+  "version": "1.0.0",
+  "description": "AI Powered Railway Dynamic Scheduling & Delay Management System - Indian Railway Network Real Time Control Dashboard",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "dev:backend": "npm run dev --workspace=backend",
+    "build": "npm run build --workspace=frontend",
+    "build:css": "npm run build:css --workspace=frontend",
+    "install:all": "npm install && npm install --workspace=frontend && npm install --workspace=backend",
+    "generate:data": "node data/seed/generateData.js",
+    "lint": "echo 'Linting...'",
+    "test": "npm run test --workspace=backend",
+    "clean": "rimraf frontend/src/css/output.css backend/node_modules frontend/node_modules node_modules"
+  },
+  "keywords": [
+    "indian-railway",
+    "ai-powered",
+    "delay-management",
+    "dynamic-scheduling",
+    "smart-india-hackathon",
+    "sih",
+    "train-tracking",
+    "kavach",
+    "conflict-resolution"
+  ],
+  "author": "SIH Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

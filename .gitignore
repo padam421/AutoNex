@@ -1,0 +1,41 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Build output
+frontend/src/css/output.css
+dist/
+build/
+
+# Environment files
+.env
+.env.local
+.env.production
+backend/.env
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE files
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+
+# Temporary files
+tmp/
+temp/
+.cache/
+
+# Coverage
+coverage/
+
+# Generated data backups
+data/backups/

@@ -1,0 +1,16 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "username": "admin",
+      "password": "password123",
+      "name": "John Doe",
+      "role": "Controller",
+      "zone": "NCR",
+      "preferences": {
+        "language": "English",
+        "theme": "Dark"
+      }
+    }
+  ]
+}
