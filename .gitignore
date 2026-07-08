@@ -12,6 +12,8 @@ build/
 .env.local
 .env.production
 backend/.env
+backend/.env.cloud
+backend/certs/*.pem
 
 # OS files
 .DS_Store
