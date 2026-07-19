@@ -11,9 +11,7 @@
     "html": "html",
     "javascript": "javascript"
   },
-  "tailwindCSS.experimental.classRegex": [
-    "class=\"([^\"]*)\""
-  ],
+  "tailwindCSS.experimental.classRegex": ["class=\"([^\"]*)\""],
   "emmet.includeLanguages": {
     "javascript": "javascriptreact"
   },
@@ -30,5 +28,6 @@
   },
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "liveServer.settings.port": 5501
 }

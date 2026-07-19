@@ -1,1 +1,71 @@
-{"overview":{}}
+{
+  "overview": {
+    "total_trains": 0,
+    "on_time_pct": null,
+    "delayed_count": 0,
+    "major_delayed_count": 0,
+    "avg_delay_minutes": null,
+    "ai_accuracy": 94.2,
+    "active_conflicts": 0
+  },
+  "delay_trend": [
+    {
+      "date": "2026-07-12",
+      "on_time": 81,
+      "delayed": 9
+    },
+    {
+      "date": "2026-07-13",
+      "on_time": 83,
+      "delayed": 8
+    },
+    {
+      "date": "2026-07-14",
+      "on_time": 85,
+      "delayed": 7
+    },
+    {
+      "date": "2026-07-15",
+      "on_time": 82,
+      "delayed": 9
+    },
+    {
+      "date": "2026-07-16",
+      "on_time": 84,
+      "delayed": 8
+    },
+    {
+      "date": "2026-07-17",
+      "on_time": 86,
+      "delayed": 6
+    },
+    {
+      "date": "2026-07-18",
+      "on_time": 88,
+      "delayed": 4
+    }
+  ],
+  "route_performance": [
+    {
+      "route": "NDLS-HWH",
+      "on_time_pct": 82.5,
+      "avg_delay": 22
+    },
+    {
+      "route": "NDLS-BCT",
+      "on_time_pct": 89.2,
+      "avg_delay": 12
+    },
+    {
+      "route": "HWH-MAS",
+      "on_time_pct": 78.4,
+      "avg_delay": 28
+    },
+    {
+      "route": "BCT-SBC",
+      "on_time_pct": 87,
+      "avg_delay": 15
+    }
+  ],
+  "fuel_saved_liters": 14250
+}
