@@ -1,0 +1,58 @@
+{
+  "stations": [
+    {
+      "code": "NDLS",
+      "name": "New Delhi",
+      "lat": 28.6431,
+      "lng": 77.2223
+    },
+    {
+      "code": "CNB",
+      "name": "Kanpur Central",
+      "lat": 26.4542,
+      "lng": 80.3507
+    },
+    {
+      "code": "ALD",
+      "name": "Prayagraj Junction",
+      "lat": 25.4497,
+      "lng": 81.829
+    },
+    {
+      "code": "MGS",
+      "name": "Pt. Deen Dayal Upadhyaya Junction",
+      "lat": 25.2801,
+      "lng": 83.0232
+    },
+    {
+      "code": "PNBE",
+      "name": "Patna Junction",
+      "lat": 25.6023,
+      "lng": 85.1376
+    },
+    {
+      "code": "HWH",
+      "name": "Howrah Junction",
+      "lat": 22.5835,
+      "lng": 88.3429
+    },
+    {
+      "code": "BCT",
+      "name": "Mumbai Central",
+      "lat": 18.9696,
+      "lng": 72.8193
+    },
+    {
+      "code": "MAS",
+      "name": "Chennai Central",
+      "lat": 13.0827,
+      "lng": 80.2707
+    },
+    {
+      "code": "SBC",
+      "name": "KSR Bengaluru City",
+      "lat": 12.9779,
+      "lng": 77.5707
+    }
+  ]
+}
