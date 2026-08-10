@@ -706,6 +706,16 @@ def setup_routes(app, get_producer_fn, get_data_dir_fn):
         load_api_registry(get_data_dir_fn())
         return JSONResponse(content={"total_apis": len(REGISTERED_APIS), "apis": list(REGISTERED_APIS.values())})
 
+    @app.get("/api/live-station-board/{station_code}", tags=["Live Station Board"])
+    def get_station_board(station_code: str):
+        try:
+            from ingestion.telemetry_engine import get_live_station_board
+        except ImportError:
+            from telemetry_engine import get_live_station_board
+        board_data = get_live_station_board(station_code)
+        return JSONResponse(content=board_data)
+
+
     @app.get("/api/reload-registry", tags=["API Key & Endpoint Manager"])
     @app.post("/api/reload-registry", tags=["API Key & Endpoint Manager"])
     def reload_registry_endpoint():
