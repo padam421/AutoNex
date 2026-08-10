@@ -287,34 +287,14 @@ def save_api_response_to_data_folder(data_dir: str, api_id: str, api_name: str, 
     Each API gets its own file: data/api_responses/{api_id}.json
     Data is overwritten each sync to avoid duplicates.
     """
-    try:
-        out_dir = os.path.join(data_dir, "api_responses")
-        os.makedirs(out_dir, exist_ok=True)
-        out_file = os.path.join(out_dir, f"{api_id}.json")
+    """
+    Local disk storage disabled by explicit user request.
+    Data is stored 100% directly in Apache Cassandra NoSQL database table kavach.api_responses_vault.
+    Existing entries for static/consistent APIs are safely overwritten/deduplicated to prevent duplicate data bloat.
+    """
+    logger.info(f"⚡ [Cassandra Routing] Routing response for '{api_name}' ({api_id}) directly to Cassandra NoSQL DB.")
+    return format_and_save_data_to_cassandra(api_id, api_name, endpoint, target_db, payload, data_dir)
 
-        resp_data = payload.get("response_data", payload)
-
-        save_obj = {
-            "api_id": api_id,
-            "api_name": api_name,
-            "endpoint": endpoint,
-            "target_db": target_db,
-            "sync_timestamp": payload.get("sync_timestamp", datetime.utcnow().isoformat()),
-            "status": payload.get("status", "SUCCESS"),
-            "response_data": resp_data
-        }
-
-        with open(out_file, "w", encoding="utf-8") as f:
-            json.dump(save_obj, f, indent=2, ensure_ascii=False, default=str)
-
-        file_size = os.path.getsize(out_file)
-        logger.info(f"[LOCAL DISK] Saved '{api_name}' -> {out_file} ({file_size:,} bytes)")
-        add_live_log("LOCAL_STORAGE", f"Saved '{api_name}' -> {out_file} ({file_size:,} bytes)", "SUCCESS")
-        return True
-    except Exception as e:
-        logger.error(f"Error saving to local disk for '{api_name}': {e}")
-        add_live_log("LOCAL_STORAGE", f"Error saving '{api_name}': {e}", "WARNING")
-        return False
 
 def format_and_save_data_to_cassandra(api_id: str, api_name: str, endpoint: str, target_db: str, payload: dict, data_dir: str = None):
     """
