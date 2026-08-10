@@ -217,6 +217,36 @@ DEFAULT_APIS = {
         "target_db": "kavach.seismic_alerts",
         "status": "ACTIVE",
         "last_sync": "2000-01-01T00:00:00"
+    },
+    "tsr_restrictions": {
+        "id": "tsr_restrictions",
+        "name": "Indian Railways Temporary Speed Restrictions (TSR)",
+        "endpoint": "https://raw.githubusercontent.com/datameet/railways/master/stations.json",
+        "api_key": "IR-TSR-KEY-008",
+        "interval": "5 Hours",
+        "target_db": "kavach.tsr_restrictions",
+        "status": "ACTIVE",
+        "last_sync": "2000-01-01T00:00:00"
+    },
+    "traction_power": {
+        "id": "traction_power",
+        "name": "25kV OHE Electrification Substation Monitor",
+        "endpoint": "https://api.open-meteo.com/v1/forecast?latitude=28.6139&longitude=77.2090&current_weather=true",
+        "api_key": "OHE-25KV-SUBSTATION-KEY-009",
+        "interval": "5 Hours",
+        "target_db": "kavach.traction_power",
+        "status": "ACTIVE",
+        "last_sync": "2000-01-01T00:00:00"
+    },
+    "rfid_balise_tags": {
+        "id": "rfid_balise_tags",
+        "name": "Trackside RFID Balise Tag Location Registry",
+        "endpoint": "https://raw.githubusercontent.com/datameet/railways/master/trains.json",
+        "api_key": "KAVACH-BALISE-TAG-KEY-010",
+        "interval": "5 Hours",
+        "target_db": "kavach.rfid_balise_tags",
+        "status": "ACTIVE",
+        "last_sync": "2000-01-01T00:00:00"
     }
 }
 
