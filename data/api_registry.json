@@ -1,0 +1,92 @@
+{
+  "open_meteo_weather": {
+    "id": "open_meteo_weather",
+    "name": "Open-Meteo Satellite Weather API",
+    "endpoint": "https://api.open-meteo.com/v1/forecast?latitude=28.6139&longitude=77.2090&current_weather=true",
+    "api_key": "IMD-SATELLITE-LIVE-KEY-001",
+    "interval": "5 Hours",
+    "target_db": "kavach.weather_history",
+    "status": "ACTIVE",
+    "last_sync": "2026-08-06T07:21:38.115751"
+  },
+  "subsecond_telemetry": {
+    "id": "subsecond_telemetry",
+    "name": "24/7 Sub-second Locomotive GPS Telemetry",
+    "endpoint": "Internal Telemetry Stream Engine",
+    "api_key": "KAVACH-ATP-INTERNAL-BUS",
+    "interval": "5 Hours",
+    "target_db": "kavach.train_telemetry",
+    "status": "ACTIVE",
+    "last_sync": "2026-08-06T07:21:38.118442"
+  },
+  "master_schedules": {
+    "id": "master_schedules",
+    "name": "Indian Railways Master Schedules DB",
+    "endpoint": "https://raw.githubusercontent.com/datameet/railways/master/schedules.json",
+    "api_key": "IR-SCHEDULES-KEY-001",
+    "interval": "5 Hours",
+    "target_db": "kavach.train_schedules",
+    "status": "ACTIVE",
+    "last_sync": "2026-08-06T07:21:39.237623"
+  },
+  "master_trains": {
+    "id": "master_trains",
+    "name": "Indian Railways Master Trains DB",
+    "endpoint": "https://raw.githubusercontent.com/datameet/railways/master/trains.json",
+    "api_key": "IR-TRAINS-KEY-002",
+    "interval": "5 Hours",
+    "target_db": "kavach.master_trains",
+    "status": "ACTIVE",
+    "last_sync": "2026-08-06T07:21:40.473756"
+  },
+  "master_stations": {
+    "id": "master_stations",
+    "name": "Indian Railways Station Network DB",
+    "endpoint": "https://raw.githubusercontent.com/datameet/railways/master/stations.json",
+    "api_key": "IR-STATIONS-KEY-003",
+    "interval": "5 Hours",
+    "target_db": "kavach.master_stations",
+    "status": "ACTIVE",
+    "last_sync": "2026-08-06T07:21:41.704106"
+  },
+  "osm_tracks": {
+    "id": "osm_tracks",
+    "name": "OpenStreetMap Broad Gauge Track GIS",
+    "endpoint": "https://overpass-api.de/api/interpreter?data=[out:json];way[\"railway\"=\"rail\"][\"gauge\"=\"1676\"](26,77,28,81);out geom;",
+    "api_key": "OSM-TRACKS-KEY-004",
+    "interval": "5 Hours",
+    "target_db": "kavach.tracks_history",
+    "status": "ACTIVE",
+    "last_sync": "2026-08-06T07:23:09.928537"
+  },
+  "osm_signals": {
+    "id": "osm_signals",
+    "name": "OpenStreetMap Railway Signal Nodes",
+    "endpoint": "https://overpass-api.de/api/interpreter?data=[out:json];node[\"railway\"=\"signal\"](26,77,28,81);out;",
+    "api_key": "OSM-SIGNALS-KEY-005",
+    "interval": "5 Hours",
+    "target_db": "kavach.signal_nodes",
+    "status": "ACTIVE",
+    "last_sync": "2026-08-06T07:24:23.596096"
+  },
+  "osm_crossings": {
+    "id": "osm_crossings",
+    "name": "OpenStreetMap Railway Level Crossings",
+    "endpoint": "https://overpass-api.de/api/interpreter?data=[out:json];node[\"railway\"=\"level_crossing\"](26,77,28,81);out;",
+    "api_key": "OSM-CROSSINGS-KEY-006",
+    "interval": "5 Hours",
+    "target_db": "kavach.level_crossings",
+    "status": "ACTIVE",
+    "last_sync": "2026-08-06T07:25:36.536234"
+  },
+  "earthquake_monitor": {
+    "id": "earthquake_monitor",
+    "name": "USGS Subcontinent Earthquake Monitor",
+    "endpoint": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2026-01-01&minmagnitude=3&minlatitude=8&maxlatitude=37&minlongitude=68&maxlongitude=97",
+    "api_key": "USGS-SEISMIC-KEY-007",
+    "interval": "5 Hours",
+    "target_db": "kavach.seismic_alerts",
+    "status": "ACTIVE",
+    "last_sync": "2026-08-06T07:25:48.293837"
+  }
+}

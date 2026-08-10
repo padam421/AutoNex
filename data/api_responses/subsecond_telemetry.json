@@ -1,0 +1,11 @@
+{
+  "api_id": "subsecond_telemetry",
+  "api_name": "24/7 Sub-second Locomotive GPS Telemetry",
+  "endpoint": "Internal Telemetry Stream Engine",
+  "target_db": "kavach.train_telemetry",
+  "sync_timestamp": "2026-08-06T07:21:38.117151",
+  "status": "SUCCESS",
+  "response_data": {
+    "stream": "Internal Real-Time Data Pipeline Stream Active"
+  }
+}

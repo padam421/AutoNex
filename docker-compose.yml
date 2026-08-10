@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
 
-  # ─── LINK 7: ZooKeeper (Manager) ───
+  # ─── LINK 7: ZooKeeper (Cluster Manager & Coordinator) ───
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
     container_name: zookeeper
@@ -11,7 +11,7 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
 
-  # ─── LINK 2: Kafka (Post Office) ───
+  # ─── LINK 2: Kafka (Message Broker & Central Bus) ───
   kafka:
     image: confluentinc/cp-kafka:7.5.0
     container_name: kafka
@@ -19,28 +19,60 @@ services:
       - zookeeper
     ports:
       - "9092:9092"
+      - "29092:29092"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
 
-  # ─── LINK 1: NiFi (Postman / Data Collector) ───
-  nifi:
-    image: apache/nifi:latest
-    container_name: nifi
+  # ─── LINK 1: High-Speed Ingestion Engine (API Extractor & Telemetry Producer) ───
+  ingestion-service:
+    build:
+      context: ./ingestion
+      dockerfile: Dockerfile
+    container_name: ingestion-service
+    restart: always
     ports:
-      - "8443:8443"
+      - "8000:8000"
     environment:
-      SINGLE_USER_CREDENTIALS_USERNAME: admin
-      SINGLE_USER_CREDENTIALS_PASSWORD: admin12345678
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - CASSANDRA_HOST=cassandra
+      - DATA_DIR=/app/data
+    volumes:
+      - ./data:/app/data
+      - ./ingestion:/app
+    depends_on:
+      - kafka
+      - cassandra
 
-  # ─── LINK 3b: Flink (Traffic Police) ───
+  # ─── LINK 3 & LINK 4 BRIDGE: Stream Processor (Kafka ➔ Real-time Analytics ➔ Cassandra) ───
+  stream-processor:
+    build:
+      context: ./processor
+      dockerfile: Dockerfile
+    container_name: stream-processor
+    restart: always
+    environment:
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - CASSANDRA_HOST=cassandra
+    volumes:
+      - ./data:/app/data
+      - ./processor:/app
+    depends_on:
+      - kafka
+      - cassandra
+
+  # ─── LINK 3b: Flink JobManager (Real-time Stream Engine) ───
   flink-jobmanager:
     image: flink:1.18-scala_2.12-java11
     container_name: flink-jobmanager
     ports:
-      - "8081:8081"
+      - "8001:8081"
     command: jobmanager
     environment:
       FLINK_PROPERTIES: "jobmanager.rpc.address: flink-jobmanager"
@@ -54,7 +86,7 @@ services:
     environment:
       FLINK_PROPERTIES: "jobmanager.rpc.address: flink-jobmanager"
 
-  # ─── LINK 3a: Spark (Big Calculator) ───
+  # ─── LINK 3a: Spark Master (Big Data Analytics) ───
   spark:
     image: apache/spark:latest
     container_name: spark-master
@@ -65,7 +97,7 @@ services:
     environment:
       SPARK_MODE: master
 
-  # ─── LINK 4: Cassandra (Filing Cabinet) ───
+  # ─── LINK 4: Cassandra (NoSQL Filing Cabinet Database) ───
   cassandra:
     image: cassandra:4.1
     container_name: cassandra
@@ -76,7 +108,7 @@ services:
     volumes:
       - cassandra-data:/var/lib/cassandra
 
-  # ─── LINK 5: Grafana (Control Room TV) ───
+  # ─── LINK 5: Grafana (Control Room TV Dashboard) ───
   grafana:
     image: grafana/grafana:latest
     container_name: grafana

@@ -1,0 +1,1008 @@
+{
+  "api_id": "master_stations",
+  "api_name": "Indian Railways Station Network DB",
+  "endpoint": "https://raw.githubusercontent.com/datameet/railways/master/stations.json",
+  "target_db": "kavach.master_stations",
+  "sync_timestamp": "2026-08-06T07:21:40.475635",
+  "status": "SUCCESS",
+  "response_data": {
+    "version": 0.6,
+    "generator": "Overpass API 0.7.62.11 87bfad18",
+    "osm3s": {
+      "timestamp_osm_base": "2026-08-06T07:07:03Z",
+      "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+    },
+    "elements": [
+      {
+        "type": "node",
+        "id": 528023082,
+        "lat": 18.974755,
+        "lon": 72.8201428,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 620384359,
+        "lat": 18.9704032,
+        "lon": 72.8332447,
+        "tags": {
+          "railway": "signal"
+        }
+      },
+      {
+        "type": "node",
+        "id": 1149274947,
+        "lat": 20.5295153,
+        "lon": 72.9259315,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 1234823932,
+        "lat": 18.9482203,
+        "lon": 72.8379299,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "backward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 1365560225,
+        "lat": 19.0396654,
+        "lon": 72.8473431,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 1365570259,
+        "lat": 19.0254944,
+        "lon": 72.8460682,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "backward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 1646750823,
+        "lat": 19.1185268,
+        "lon": 72.8467494,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "backward",
+          "ref": "S-49"
+        }
+      },
+      {
+        "type": "node",
+        "id": 2173882738,
+        "lat": 26.8782659,
+        "lon": 75.7976794,
+        "tags": {
+          "name": "Tonk phatak",
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 2520377919,
+        "lat": 19.6556963,
+        "lon": 73.4789638,
+        "tags": {
+          "railway": "signal"
+        }
+      },
+      {
+        "type": "node",
+        "id": 2520377923,
+        "lat": 19.6562029,
+        "lon": 73.4795666,
+        "tags": {
+          "railway": "signal"
+        }
+      },
+      {
+        "type": "node",
+        "id": 4005154942,
+        "lat": 19.3783059,
+        "lon": 72.8339402,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "backward",
+          "ref": "S-42"
+        }
+      },
+      {
+        "type": "node",
+        "id": 4005154943,
+        "lat": 19.3783318,
+        "lon": 72.8340057,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward",
+          "ref": "S-44"
+        }
+      },
+      {
+        "type": "node",
+        "id": 5568408497,
+        "lat": 20.7614383,
+        "lon": 72.9715694,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "backward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 5936229259,
+        "lat": 18.9928576,
+        "lon": 73.119543,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 6175035024,
+        "lat": 19.0114834,
+        "lon": 73.0246826,
+        "tags": {
+          "internet_access": "no",
+          "network": "IR",
+          "operator": "CR",
+          "railway": "signal"
+        }
+      },
+      {
+        "type": "node",
+        "id": 9133367154,
+        "lat": 18.9387526,
+        "lon": 72.8268919,
+        "tags": {
+          "note": "entry",
+          "operator": "IR",
+          "railway": "signal"
+        }
+      },
+      {
+        "type": "node",
+        "id": 9133367155,
+        "lat": 18.9387406,
+        "lon": 72.826841,
+        "tags": {
+          "operator": "IR",
+          "railway": "signal"
+        }
+      },
+      {
+        "type": "node",
+        "id": 9133367156,
+        "lat": 18.9387285,
+        "lon": 72.826786,
+        "tags": {
+          "operator": "IR",
+          "railway": "signal"
+        }
+      },
+      {
+        "type": "node",
+        "id": 9133556357,
+        "lat": 18.9373351,
+        "lon": 72.8271337,
+        "tags": {
+          "operator": "IR",
+          "railway": "signal",
+          "railway:signal:direction": "backward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 9133556358,
+        "lat": 18.9373009,
+        "lon": 72.8270895,
+        "tags": {
+          "operator": "IR",
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 9133556359,
+        "lat": 18.9366528,
+        "lon": 72.827025,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "backward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 9136041545,
+        "lat": 18.9942772,
+        "lon": 72.829603,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "backward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 9136305166,
+        "lat": 18.9366489,
+        "lon": 72.8269334,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "backward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 9138744317,
+        "lat": 19.0094967,
+        "lon": 72.8372224,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 9138744318,
+        "lat": 19.0062654,
+        "lon": 72.8352144,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 9153251679,
+        "lat": 19.043701,
+        "lon": 72.8453898,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 9153251680,
+        "lat": 19.043632,
+        "lon": 72.8455378,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 9153251709,
+        "lat": 19.0462524,
+        "lon": 72.8443004,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "backward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 9153251712,
+        "lat": 19.047379,
+        "lon": 72.8439109,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 9153251713,
+        "lat": 19.0481525,
+        "lon": 72.843625,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 9153251714,
+        "lat": 19.048051,
+        "lon": 72.8435505,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 9153251715,
+        "lat": 19.0504097,
+        "lon": 72.8423528,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 9153286217,
+        "lat": 19.0527051,
+        "lon": 72.8413827,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "backward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 9153286218,
+        "lat": 19.0527288,
+        "lon": 72.8414712,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 9153354207,
+        "lat": 19.0274535,
+        "lon": 72.846765,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 9153354208,
+        "lat": 19.0274212,
+        "lon": 72.8468103,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 9153374860,
+        "lat": 19.0284574,
+        "lon": 72.8471468,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "backward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 9153374886,
+        "lat": 19.0313828,
+        "lon": 72.8478837,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 9153374890,
+        "lat": 19.035454,
+        "lon": 72.8481038,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 9153389932,
+        "lat": 19.0393425,
+        "lon": 72.8472872,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 9156165151,
+        "lat": 19.0368171,
+        "lon": 72.8489015,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 9835810729,
+        "lat": 19.011483,
+        "lon": 73.0247673,
+        "tags": {
+          "internet_access": "no",
+          "network": "IR",
+          "operator": "CR",
+          "railway": "signal"
+        }
+      },
+      {
+        "type": "node",
+        "id": 11830860719,
+        "lat": 21.2083427,
+        "lon": 72.8402714,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward",
+          "railway:signal:main": "yes",
+          "ref": "S-35"
+        }
+      },
+      {
+        "type": "node",
+        "id": 12596383266,
+        "lat": 26.8153412,
+        "lon": 75.7731989,
+        "tags": {
+          "railway": "signal"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13469711993,
+        "lat": 18.9737803,
+        "lon": 72.832717,
+        "tags": {
+          "railway": "signal"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13469711996,
+        "lat": 18.9669956,
+        "lon": 72.8355586,
+        "tags": {
+          "railway": "signal"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13469728506,
+        "lat": 18.975097,
+        "lon": 72.832704,
+        "tags": {
+          "railway": "signal"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13482221687,
+        "lat": 19.1850108,
+        "lon": 72.9731171,
+        "tags": {
+          "railway": "signal"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13482221688,
+        "lat": 19.1853675,
+        "lon": 72.9744109,
+        "tags": {
+          "railway": "signal"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13482221689,
+        "lat": 19.1852757,
+        "lon": 72.974432,
+        "tags": {
+          "railway": "signal"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13482222634,
+        "lat": 19.9463695,
+        "lon": 73.8418765,
+        "tags": {
+          "railway": "signal"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13482227359,
+        "lat": 19.2344507,
+        "lon": 73.1285866,
+        "tags": {
+          "railway": "signal"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13482227360,
+        "lat": 19.2358969,
+        "lon": 73.1324527,
+        "tags": {
+          "railway": "signal"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13482227361,
+        "lat": 19.2344461,
+        "lon": 73.128564,
+        "tags": {
+          "railway": "signal"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13482227362,
+        "lat": 19.238138,
+        "lon": 73.1384652,
+        "tags": {
+          "railway": "signal"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13482227363,
+        "lat": 19.2343799,
+        "lon": 73.1283921,
+        "tags": {
+          "railway": "signal"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13483047579,
+        "lat": 19.6114619,
+        "lon": 73.4084843,
+        "tags": {
+          "railway": "signal"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13483737154,
+        "lat": 19.0168982,
+        "lon": 72.8429593,
+        "tags": {
+          "railway": "signal"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13516940270,
+        "lat": 19.1189871,
+        "lon": 72.8469992,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward",
+          "ref": "S-12"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13516940281,
+        "lat": 19.1183122,
+        "lon": 72.8466636,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward",
+          "ref": "S-48"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13760340658,
+        "lat": 19.0652096,
+        "lon": 72.8396287,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13760340659,
+        "lat": 19.0642149,
+        "lon": 72.8396303,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13760344106,
+        "lat": 19.0751309,
+        "lon": 72.840648,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward",
+          "ref": "A-920"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13798225981,
+        "lat": 19.3814922,
+        "lon": 72.8324206,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward",
+          "ref": "S-42"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13798295220,
+        "lat": 19.3783463,
+        "lon": 72.8340609,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "backward",
+          "ref": "S-46"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13800406793,
+        "lat": 23.3414296,
+        "lon": 75.0505892,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward",
+          "ref": "S-75"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13800406796,
+        "lat": 23.3405795,
+        "lon": 75.0500045,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13948463521,
+        "lat": 23.3309721,
+        "lon": 75.0276593,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13948463552,
+        "lat": 23.0892547,
+        "lon": 74.7551293,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13948463646,
+        "lat": 23.3246812,
+        "lon": 75.0213095,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13948463663,
+        "lat": 20.1776683,
+        "lon": 72.8097046,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13948463714,
+        "lat": 19.0643349,
+        "lon": 72.8413333,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "backward",
+          "ref": "BDTS S-63"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13948463832,
+        "lat": 20.5318299,
+        "lon": 72.9263862,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13948464182,
+        "lat": 23.3354268,
+        "lon": 75.0415777,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13948464199,
+        "lat": 20.5357099,
+        "lon": 72.9268097,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13948464216,
+        "lat": 20.1701853,
+        "lon": 72.8038214,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13948464270,
+        "lat": 23.3431371,
+        "lon": 75.051642,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "backward",
+          "ref": "S-85"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13948464288,
+        "lat": 20.185884,
+        "lon": 72.8162759,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13954126559,
+        "lat": 19.2468925,
+        "lon": 72.8593183,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13954126574,
+        "lat": 19.3497009,
+        "lon": 72.8474595,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13954150705,
+        "lat": 19.2483764,
+        "lon": 72.8595622,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13954150718,
+        "lat": 19.2207455,
+        "lon": 72.8554309,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13954150758,
+        "lat": 18.9990598,
+        "lon": 73.1157365,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13958235387,
+        "lat": 19.1670706,
+        "lon": 73.2375725,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward",
+          "railway:signal:position": "bridge",
+          "ref": "BUD S-19"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13958235388,
+        "lat": 19.1670193,
+        "lon": 73.2375617,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward",
+          "railway:signal:position": "right",
+          "ref": "BUD S-18"
+        }
+      },
+      {
+        "type": "node",
+        "id": 13958235389,
+        "lat": 19.1670878,
+        "lon": 73.2368748,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "backward",
+          "railway:signal:position": "left"
+        }
+      },
+      {
+        "type": "node",
+        "id": 14014723210,
+        "lat": 19.1876875,
+        "lon": 73.058003,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward",
+          "ref": "DCC S-3"
+        }
+      },
+      {
+        "type": "node",
+        "id": 14014723238,
+        "lat": 19.1845228,
+        "lon": 73.0631925,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward",
+          "ref": "LX1 S-2"
+        }
+      },
+      {
+        "type": "node",
+        "id": 14014723239,
+        "lat": 19.1855671,
+        "lon": 73.0620036,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "backward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 14014723297,
+        "lat": 19.3712972,
+        "lon": 72.8384658,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward",
+          "ref": "S-17"
+        }
+      },
+      {
+        "type": "node",
+        "id": 14045828751,
+        "lat": 18.9479407,
+        "lon": 72.8378596,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward",
+          "ref": "CSMT S-54"
+        }
+      },
+      {
+        "type": "node",
+        "id": 14058724061,
+        "lat": 22.7881962,
+        "lon": 73.6403939,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 14058729741,
+        "lat": 22.3088809,
+        "lon": 73.1806101,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "backward",
+          "railway:signal:main_repeated": "yes",
+          "railway:signal:position": "left",
+          "ref": "S-39"
+        }
+      },
+      {
+        "type": "node",
+        "id": 14058729742,
+        "lat": 22.3088746,
+        "lon": 73.1807427,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward",
+          "railway:signal:main_repeated": "yes",
+          "railway:signal:position": "left",
+          "ref": "S-45"
+        }
+      },
+      {
+        "type": "node",
+        "id": 14058729874,
+        "lat": 21.2051169,
+        "lon": 72.8408582,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward",
+          "railway:signal:main_repeated": "yes",
+          "ref": "R S-35"
+        }
+      },
+      {
+        "type": "node",
+        "id": 14059018399,
+        "lat": 26.4760506,
+        "lon": 76.7364916,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "forward"
+        }
+      },
+      {
+        "type": "node",
+        "id": 14059026501,
+        "lat": 26.4759545,
+        "lon": 76.7365417,
+        "tags": {
+          "railway": "signal",
+          "railway:signal:direction": "backward"
+        }
+      }
+    ]
+  }
+}
