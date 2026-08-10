@@ -1,43 +1,23 @@
-# Dependencies
-node_modules/
-package-lock.json
+# Byte-compiled / optimized files
+__pycache__/
+*.py[cod]
+*$py.class
 
-# Build output
-frontend/src/css/output.css
-dist/
-build/
+# Data & Database exports
+data/kavach_db_export.*
+data/api_responses/*.json
+data/raw/*.json
+data/geojson/*.geojson
+data/mock/*.json
+data/seed/*.json
+*.parquet
+*.csv
 
-# Environment files
+# Environment & IDE
 .env
 .env.local
-.env.production
-backend/.env
-backend/.env.cloud
-backend/certs/*.pem
-
-# OS files
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# IDE files
+.vscode/
 .idea/
-*.swp
-*.swo
-*~
 
-# Logs
+# Docker build logs
 *.log
-logs/
-npm-debug.log*
-
-# Temporary files
-tmp/
-temp/
-.cache/
-
-# Coverage
-coverage/
-
-# Generated data backups
-data/backups/

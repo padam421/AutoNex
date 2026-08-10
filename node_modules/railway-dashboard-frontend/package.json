@@ -1,0 +1,13 @@
+{
+  "name": "railway-dashboard-frontend",
+  "version": "1.0.0",
+  "description": "Frontend for AI Powered Railway Dashboard",
+  "scripts": {
+    "dev": "npx tailwindcss -i ./src/css/input.css -o ./src/css/output.css --watch",
+    "build:css": "npx tailwindcss -i ./src/css/input.css -o ./src/css/output.css --minify",
+    "serve": "npx live-server src/ --port=5500 --no-browser"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.1"
+  }
+}
