@@ -24,13 +24,15 @@ try:
     from ingestion.weather_service import fetch_all_india_weather_telemetry, continuous_5hr_all_india_weather_loop
     from ingestion.gis_extractor import extract_railway_infrastructure
     from ingestion.telemetry_engine import continuous_24x7_all_india_telemetry_loop
-    from ingestion.api_routes import setup_routes, add_live_log
+    from ingestion.railway_iot_sensors import continuous_railway_iot_sensors_loop
+    from ingestion.api_routes import setup_routes, add_live_log, save_api_response_to_cassandra
 except ImportError:
     from master_loader import load_real_indian_railways_master
     from weather_service import fetch_all_india_weather_telemetry, continuous_5hr_all_india_weather_loop
     from gis_extractor import extract_railway_infrastructure
     from telemetry_engine import continuous_24x7_all_india_telemetry_loop
-    from api_routes import setup_routes, add_live_log
+    from railway_iot_sensors import continuous_railway_iot_sensors_loop
+    from api_routes import setup_routes, add_live_log, save_api_response_to_cassandra
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("kavach-ingestion-main")
@@ -117,3 +119,7 @@ async def startup_event():
     
     # Background 24/7 Sub-second All-India Real Route Telemetry Stream Engine
     asyncio.create_task(continuous_24x7_all_india_telemetry_loop(get_kafka_producer, add_live_log))
+
+    # Background 24/7 Continuous RDSO Railway IoT Sensors Telemetry Stream Engine (MEMS, USFD, Strain Gauge, Pyrometer, DAS, Laser Profiler)
+    asyncio.create_task(continuous_railway_iot_sensors_loop(save_api_response_to_cassandra, add_live_log))
+
