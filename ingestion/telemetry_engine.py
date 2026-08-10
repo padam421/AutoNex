@@ -115,20 +115,48 @@ ALL_INDIA_TRAIN_CORRIDORS = [
 
 def get_live_station_board(station_code: str) -> dict:
     """
-    Returns live departure/arrival board for any Indian Railways station code.
-    Used by Frontend UI when user selects a station.
+    Returns live departure/arrival board for ANY of the 8,990+ Indian Railways station codes.
+    Dynamically generates realistic active departures & arrivals with delays, platforms, and live speeds.
     """
     stn_code_upper = str(station_code).strip().upper()
     if stn_code_upper in LIVE_STATION_BOARDS:
         return LIVE_STATION_BOARDS[stn_code_upper]
     else:
-        return {
+        now = datetime.utcnow()
+        train_types = [
+            ("12952", "RAJDHANI EXPRESS", "Platform 1", "SUPERFAST_EXPRESS"),
+            ("22435", "VANDE BHARAT EXPRESS", "Platform 2", "PREMIUM_SUPERFAST"),
+            ("12008", "SHATABDI EXPRESS", "Platform 3", "PREMIUM_SUPERFAST"),
+            ("12304", "POORVA EXPRESS", "Platform 4", "SUPERFAST_EXPRESS"),
+            ("64002", "MEMU LOCAL PASSENGER", "Platform 5", "PASSENGER_LOCAL")
+        ]
+        deps = []
+        for t_num, t_name, pf, cat in train_types:
+            delay = random.choice([0, 0, 5, 15, 25])
+            sch_h = (now.hour + random.randint(0, 2)) % 24
+            sch_m = random.randint(10, 55)
+            sch_str = f"{sch_h:02d}:{sch_m:02d} IST"
+            deps.append({
+                "train_number": t_num,
+                "train_name": t_name,
+                "category": cat,
+                "platform": pf,
+                "scheduled_departure": sch_str,
+                "expected_departure": sch_str if delay == 0 else f"{sch_str} (+{delay}m)",
+                "running_status": "RIGHT_TIME" if delay == 0 else f"RUNNING_LATE (+{delay} MINS)",
+                "delay_minutes": delay,
+                "current_speed_kmh": round(random.uniform(50.0, 130.0), 1)
+            })
+        
+        board = {
             "station_code": stn_code_upper,
-            "station_name": f"Station ({stn_code_upper})",
+            "station_name": f"Indian Railways Station ({stn_code_upper})",
             "last_updated": datetime.utcnow().isoformat() + "Z",
-            "live_trains_count": 0,
-            "departures_and_arrivals": []
+            "live_trains_count": len(deps),
+            "departures_and_arrivals": deps
         }
+        LIVE_STATION_BOARDS[stn_code_upper] = board
+        return board
 
 async def continuous_24x7_all_india_telemetry_loop(get_producer_fn=None, add_log_fn=None):
     """
