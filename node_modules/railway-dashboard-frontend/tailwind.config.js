@@ -7,36 +7,46 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Railway Dashboard Color Palette
+        // Railway Dashboard Color Palette (Updated from Govt Indian Railways Palette)
+        'navy': {
+          DEFAULT: '#12355B',       // Primary Navy Blue
+          'dark': '#0D2542',        // Deep Navy
+          'light': '#1D4877',       // Accent Navy
+        },
+        'lightblue': '#EAF3F8',     // Section Background
+        'saffron': '#FF9933',       // Highlights / Accent
+        'railgreen': '#138808',     // Success / Status
+        'railred': '#DC2626',       // Critical Delays / Alerts
         'railway': {
-          'dark': '#0a0e1a',         // Darkest background
-          'darker': '#0f1729',       // Sidebar background
-          'card': '#131b2e',         // Card background
-          'border': '#1e2a45',       // Border color
-          'hover': '#1a2540',        // Hover state
-          'text': '#94a3b8',         // Secondary text
-          'text-light': '#e2e8f0',   // Primary text
+          'dark': '#12355B',         // Primary Navy background
+          'darker': '#0D2542',       // Sidebar / Sub-header background
+          'card': '#FFFFFF',         // White card background
+          'border': '#D6E3EC',       // Light border color
+          'hover': '#EAF3F8',        // Light blue hover state
+          'text': '#475569',         // Secondary text
+          'text-light': '#0F172A',   // Primary text
         },
         'accent': {
-          'blue': '#3b82f6',         // Primary accent
-          'cyan': '#06b6d4',         // Secondary accent
-          'indigo': '#6366f1',       // Tertiary accent
-          'purple': '#8b5cf6',       // Highlight
+          'blue': '#12355B',         // Navy Primary
+          'cyan': '#0284C7',         // Light cyan accent
+          'indigo': '#1D4877',       // Navy light
+          'purple': '#FF9933',       // Saffron highlight
+          'saffron': '#FF9933',      // Saffron highlight
         },
         'status': {
-          'success': '#22c55e',      // On Time / OK
-          'warning': '#f59e0b',      // Minor Delay / Warning
-          'danger': '#ef4444',       // Major Delay / Critical
-          'info': '#3b82f6',         // Information
-          'muted': '#64748b',        // Inactive
+          'success': '#138808',      // On Time / OK Green
+          'warning': '#FF9933',      // Minor Delay / Warning Saffron
+          'danger': '#DC2626',       // Major Delay / Critical Red
+          'info': '#12355B',         // Information Navy
+          'muted': '#64748B',        // Inactive
         },
         'kpi': {
-          'total': '#6366f1',        // Total trains card
-          'ontime': '#22c55e',       // On-time card
-          'delayed': '#f59e0b',      // Delayed card
-          'major': '#ef4444',        // Major delay card
-          'avg': '#8b5cf6',          // Average delay card
-          'ai': '#06b6d4',           // AI accuracy card
+          'total': '#12355B',        // Navy Total trains
+          'ontime': '#138808',       // Green On-time
+          'delayed': '#FF9933',      // Saffron Delayed
+          'major': '#DC2626',        // Red Major delay
+          'avg': '#1D4877',          // Average delay
+          'ai': '#FF9933',           // Saffron AI indicator
         }
       },
       fontFamily: {

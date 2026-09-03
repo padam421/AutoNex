@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>window.location.replace('dashboard.html#notifications');</script>
+  <title>Indian Railways - Kavach Notifications & Dispatch Log Hub</title>
+  <meta name="description" content="Kavach Real-Time System Notifications, Alerts & Broadcast Logs" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../css/theme.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #EAF3F8;
+    }
+    .glass-card {
+      background: #FFFFFF !important;
+      border: 1px solid #D6E3EC !important;
+      box-shadow: 0 4px 20px -2px rgba(18, 53, 91, 0.08) !important;
+      border-radius: 20px;
+      color: #0F172A !important;
+    }
+    .glass-nav {
+      background: #12355B !important;
+      border-bottom: 3px solid #FF9933 !important;
+      color: #FFFFFF !important;
+    }
+    #toastContainer {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen font-['Plus_Jakarta_Sans',sans-serif] text-slate-100 antialiased flex flex-col justify-between">
+
+  <!-- Header Navigation -->
+  <header class="glass-nav sticky top-0 z-50 px-4 sm:px-6 py-3 flex flex-col gap-3">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <img src="../assets/images/indian_railways_emblem.png" alt="Indian Railways Crest" class="w-9 h-9 object-contain drop-shadow-md" />
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-sm font-black tracking-wider text-white uppercase font-['Outfit']">INDIAN RAILWAYS</h1>
+            <span class="text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40 font-mono">NOTIFICATIONS</span>
+          </div>
+          <p class="text-[11px] text-slate-300 font-medium tracking-wide">Kavach System Alerts & Radio Broadcast Dispatch Log</p>
+        </div>
+      </div>
+      
+      <div class="flex items-center gap-3 text-xs font-mono text-slate-300">
+        <a href="dashboard.html" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold border border-white/10 transition-all">
+          ← Back to Dashboard
+        </a>
+      </div>
+    </div>
+
+    <!-- Active Sub-Navigation Bar -->
+    <div class="flex items-center gap-1 overflow-x-auto pb-1 pt-1 border-t border-white/10 text-xs font-bold no-scrollbar">
+      <a href="dashboard.html" class="px-3 py-1.5 rounded-xl bg-slate-900/70 hover:bg-slate-800 border border-white/10 text-slate-300 hover:text-white shrink-0 flex items-center gap-1.5 transition-all">
+        <i class="fa-solid fa-gauge"></i> Executive Dashboard
+      </a>
+      <a href="track-sensor.html" class="px-3 py-1.5 rounded-xl bg-slate-900/70 hover:bg-slate-800 border border-white/10 text-slate-300 hover:text-white shrink-0 flex items-center gap-1.5 transition-all">
+        <i class="fa-solid fa-ruler-combined text-amber-400"></i> Track Integrity & Sensors
+      </a>
+      <a href="live-map.html" class="px-3 py-1.5 rounded-xl bg-slate-900/70 hover:bg-slate-800 border border-white/10 text-slate-300 hover:text-white shrink-0 flex items-center gap-1.5 transition-all">
+        <i class="fa-solid fa-map-location-dot text-emerald-400"></i> Live Kavach Radar Map
+      </a>
+      <a href="conflict-alerts.html" class="px-3 py-1.5 rounded-xl bg-slate-900/70 hover:bg-slate-800 border border-white/10 text-slate-300 hover:text-white shrink-0 flex items-center gap-1.5 transition-all">
+        <i class="fa-solid fa-triangle-exclamation text-red-400"></i> Anti-SPAD & Collision Alerts
+      </a>
+      <a href="analytics.html" class="px-3 py-1.5 rounded-xl bg-slate-900/70 hover:bg-slate-800 border border-white/10 text-slate-300 hover:text-white shrink-0 flex items-center gap-1.5 transition-all">
+        <i class="fa-solid fa-chart-line text-purple-400"></i> Safety Analytics
+      </a>
+      <a href="notifications.html" class="px-3 py-1.5 rounded-xl bg-sky-500/25 border border-sky-500/50 text-sky-200 shrink-0 flex items-center gap-1.5 transition-all">
+        <i class="fa-solid fa-bell text-sky-400"></i> Notifications & Dispatches
+      </a>
+      <a href="weather.html" class="px-3 py-1.5 rounded-xl bg-slate-900/70 hover:bg-slate-800 border border-white/10 text-slate-300 hover:text-white shrink-0 flex items-center gap-1.5 transition-all">
+        <i class="fa-solid fa-cloud-sun text-yellow-400"></i> Weather & Thermal Radar
+      </a>
+    </div>
+  </header>
+
+  <div id="toastContainer"></div>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
+
+    <div class="glass-card p-5 border-l-4 border-[#12355B] flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-white">
+      <div>
+        <span class="px-2.5 py-0.5 rounded-full bg-[#EAF3F8] text-[#12355B] text-xs font-extrabold border border-[#12355B]/30 uppercase">Broadcast Control Hub</span>
+        <h2 class="text-2xl font-black text-[#12355B] font-['Outfit'] mt-1">Live Notifications & Dispatch Stream</h2>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button onclick="showToast('📻 Connecting to Loco Pilot Radio Frequency (868.5 MHz)...', 'info')" class="px-4 py-2 rounded-xl bg-[#12355B] hover:bg-[#0D2542] text-white font-extrabold text-xs shadow-lg transition-all cursor-pointer">
+          <i class="fa-solid fa-radio"></i> Radio Broadcast Frequency
+        </button>
+      </div>
+    </div>
+
+    <div class="glass-card p-5 space-y-3 bg-white">
+      <h3 class="text-lg font-black text-[#12355B] font-['Outfit']">System Alert Logs</h3>
+
+      <div class="space-y-2.5">
+        <div class="p-3.5 rounded-xl bg-[#F0FDF4] border-2 border-[#138808] flex items-center justify-between shadow-sm">
+          <div class="flex items-center gap-3">
+            <i class="fa-solid fa-circle-check text-[#138808] text-xl"></i>
+            <div>
+              <p class="text-xs font-black text-[#0F172A]">TSR Caution Order Dispatched Successfully</p>
+              <p class="text-xs font-bold text-[#1E293B]">Speed restricted to 30 km/h on Block B2 • 10 mins ago</p>
+            </div>
+          </div>
+          <span class="text-xs text-[#12355B] font-mono font-bold">12:40 UTC</span>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-[#EAF3F8] border-2 border-[#12355B] flex items-center justify-between shadow-sm">
+          <div class="flex items-center gap-3">
+            <i class="fa-solid fa-tower-cell text-[#12355B] text-xl"></i>
+            <div>
+              <p class="text-xs font-black text-[#0F172A]">RF Mesh Tower Node #14 Self-Test Verified</p>
+              <p class="text-xs font-bold text-[#1E293B]">Signal strength 99.4% • 25 mins ago</p>
+            </div>
+          </div>
+          <span class="text-xs text-[#12355B] font-mono font-bold">12:25 UTC</span>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="../js/pages/notifications.js"></script>
+</body>
+</html>

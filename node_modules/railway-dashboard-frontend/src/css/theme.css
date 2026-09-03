@@ -1,0 +1,371 @@
+/* ==========================================================================
+   Official Indian Railways - Government Color Theme Stylesheet
+   Navy Blue (#12355B) | White (#FFFFFF) | Light Blue (#EAF3F8)
+   Saffron (#FF9933)   | Green (#138808) | Red (#DC2626)
+   ========================================================================== */
+
+:root {
+  --primary-navy: #12355B;
+  --primary-navy-dark: #0D2542;
+  --primary-navy-light: #1D4877;
+  --bg-light-blue: #EAF3F8;
+  --card-white: #FFFFFF;
+  --accent-saffron: #FF9933;
+  --status-green: #138808;
+  --status-red: #DC2626;
+  --text-dark: #0F172A;
+  --text-muted: #1E293B;
+  --border-light: #D6E3EC;
+}
+
+/* ==========================================================================
+   GLOBAL HIGH-VISIBILITY TYPOGRAPHY & BOLDING (100% VISIBLE TEXT)
+   ========================================================================== */
+
+body {
+  background-color: var(--bg-light-blue) !important;
+  color: var(--text-dark) !important;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 700 !important;
+  -webkit-font-smoothing: antialiased;
+}
+
+p, span, label, td, th, li, a, input, select, textarea, div {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+h1, h2, h3, h4, h5, h6, .font-bold, .font-extrabold, .font-black {
+  font-weight: 900 !important;
+  color: var(--primary-navy) !important;
+}
+
+/* Force All Slate Colors to High-Contrast Charcoal Slate */
+.text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-slate-800,
+.text-gray-400, .text-gray-500, .text-gray-600, .text-gray-700 {
+  color: #1E293B !important;
+  font-weight: 700 !important;
+}
+
+.text-slate-300, .text-slate-200, .text-slate-100, .text-gray-300, .text-gray-200 {
+  color: #0F172A !important;
+  font-weight: 700 !important;
+}
+
+.text-slate-900, .text-slate-950, .text-black {
+  color: #0F172A !important;
+  font-weight: 900 !important;
+}
+
+/* Highlight Colors for Text */
+.text-blue-400, .text-blue-500, .text-blue-600, .text-cyan-400, .text-indigo-400 {
+  color: #12355B !important;
+  font-weight: 800 !important;
+}
+
+.text-emerald-400, .text-emerald-500, .text-green-500, .text-green-600 {
+  color: #138808 !important;
+  font-weight: 800 !important;
+}
+
+.text-red-400, .text-red-500, .text-red-600 {
+  color: #DC2626 !important;
+  font-weight: 800 !important;
+}
+
+.text-amber-300, .text-amber-400, .text-amber-500, .text-yellow-400, .text-yellow-500 {
+  color: #B45309 !important;
+  font-weight: 800 !important;
+}
+
+/* ==========================================================================
+   HEADER BAR (NAVY BACKGROUND + BOLD WHITE TEXT)
+   ========================================================================== */
+
+header, .glass-nav, .bg-slate-950\/70, .glass-header-bar {
+  background-color: var(--primary-navy) !important;
+  background-image: linear-gradient(180deg, #12355B 0%, #0D2542 100%) !important;
+  border-bottom: 4px solid var(--accent-saffron) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 20px rgba(18, 53, 91, 0.3) !important;
+}
+
+header h1, header h2, header h3, header span, header p, header div, header a, header i,
+.glass-nav h1, .glass-nav h2, .glass-nav h3, .glass-nav span, .glass-nav p, .glass-nav div, .glass-nav a, .glass-nav i {
+  color: #FFFFFF !important;
+  font-weight: 800 !important;
+}
+
+/* Light Header Override for Login Page */
+header.header-light {
+  background-color: #FFFFFF !important;
+  background-image: none !important;
+  border-bottom: 4px solid var(--accent-saffron) !important;
+  color: #12355B !important;
+}
+
+header.header-light h1, header.header-light p, header.header-light span, header.header-light div {
+  color: #12355B !important;
+}
+
+/* ==========================================================================
+   GLOBAL SEARCH BAR & ICON VISIBILITY
+   ========================================================================== */
+
+#globalSearchInput {
+  background-color: #FFFFFF !important;
+  color: #0F172A !important;
+  font-weight: 800 !important;
+  border: 2px solid #12355B !important;
+  box-shadow: 0 2px 10px rgba(18, 53, 91, 0.1) !important;
+}
+
+#globalSearchInput::placeholder {
+  color: #475569 !important;
+  font-weight: 700 !important;
+}
+
+.search-icon-dark, .fa-magnifying-glass {
+  color: #12355B !important;
+  font-weight: 900 !important;
+}
+
+/* ==========================================================================
+   DEPARTMENT SELECT DROPDOWN (100% VISIBLE POPUP & SELECTION)
+   ========================================================================== */
+
+select, select#headerDepartmentSelect {
+  background-color: #FFFFFF !important;
+  color: #12355B !important;
+  font-weight: 800 !important;
+  border: 2px solid #12355B !important;
+  border-radius: 10px !important;
+  padding: 4px 8px !important;
+}
+
+select option, select#headerDepartmentSelect option {
+  background-color: #FFFFFF !important;
+  color: #12355B !important;
+  font-weight: 800 !important;
+  padding: 8px !important;
+}
+
+/* ==========================================================================
+   CARDS & CONTAINERS (LIGHT BLUE & WHITE BACKGROUNDS + DARK BOLD TEXT)
+   ========================================================================== */
+
+.glass-card, .card,
+.bg-slate-900, .bg-slate-950, .bg-slate-800,
+.bg-slate-900\/90, .bg-slate-900\/80, .bg-slate-900\/70, .bg-slate-900\/50, .bg-slate-800\/80,
+.bg-\[\#0b0f19\], .bg-\[\#030712\], .bg-\[\#0f1729\], .bg-\[\#131b2e\] {
+  background-color: #FFFFFF !important;
+  background: #FFFFFF !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: 1.5px solid var(--border-light) !important;
+  box-shadow: 0 4px 20px -2px rgba(18, 53, 91, 0.08) !important;
+  color: #0F172A !important;
+}
+
+/* Internal Sub-Containers Inside Cards */
+.glass-card div, .card div, .glass-card p, .card p, .glass-card span, .card span {
+  color: #0F172A;
+}
+
+/* Sub-sections & Inner Widget Panels */
+.bg-slate-950, .bg-slate-900\/40, .bg-slate-900\/60, .bg-slate-900\/30 {
+  background-color: var(--bg-light-blue) !important;
+  border: 1px solid var(--border-light) !important;
+}
+
+/* ==========================================================================
+   SIDEBAR NAVIGATION
+   ========================================================================== */
+
+aside, .glass-sidebar {
+  background-color: #FFFFFF !important;
+  border-right: 1.5px solid var(--border-light) !important;
+  box-shadow: 2px 0 15px rgba(18, 53, 91, 0.04) !important;
+}
+
+.sidebar-link {
+  color: #334155 !important;
+  font-weight: 800 !important;
+  transition: all 0.2s ease-in-out;
+}
+
+.sidebar-link:hover:not(.active) {
+  background-color: var(--bg-light-blue) !important;
+  color: var(--primary-navy) !important;
+}
+
+.sidebar-link.active {
+  background-color: var(--primary-navy) !important;
+  color: #FFFFFF !important;
+  border-left: 4px solid var(--accent-saffron) !important;
+  box-shadow: 0 4px 12px rgba(18, 53, 91, 0.25) !important;
+}
+
+.sidebar-link.active i, .sidebar-link.active span, .sidebar-link.active p {
+  color: #FFFFFF !important;
+}
+
+/* ==========================================================================
+   FORM INPUTS & DROPDOWNS
+   ========================================================================== */
+
+input, .glass-input {
+  background-color: #FFFFFF !important;
+  border: 1.5px solid var(--border-light) !important;
+  color: #0F172A !important;
+  font-weight: 700 !important;
+}
+
+input::placeholder, textarea::placeholder {
+  color: #64748B !important;
+  font-weight: 600 !important;
+}
+
+input:focus, select:focus, textarea:focus, .glass-input:focus {
+  border-color: var(--primary-navy) !important;
+  box-shadow: 0 0 0 3px rgba(18, 53, 91, 0.15) !important;
+  outline: none;
+}
+
+/* ==========================================================================
+   BUTTONS
+   ========================================================================== */
+
+.btn-primary, button.bg-blue-600, button.bg-blue-500, .bg-blue-600, .bg-blue-500 {
+  background-color: var(--primary-navy) !important;
+  color: #FFFFFF !important;
+  font-weight: 800 !important;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary *, button.bg-blue-600 *, button.bg-blue-500 * {
+  color: #FFFFFF !important;
+}
+
+.btn-primary:hover, button.bg-blue-600:hover, button.bg-blue-500:hover {
+  background-color: var(--primary-navy-dark) !important;
+}
+
+.btn-saffron, .bg-saffron, button.bg-amber-500 {
+  background-color: var(--accent-saffron) !important;
+  color: #FFFFFF !important;
+  font-weight: 800 !important;
+}
+
+.btn-success, .bg-emerald-500, .bg-green-600 {
+  background-color: var(--status-green) !important;
+  color: #FFFFFF !important;
+  font-weight: 800 !important;
+}
+
+.btn-danger, .bg-red-500, .bg-red-600 {
+  background-color: var(--status-red) !important;
+  color: #FFFFFF !important;
+  font-weight: 800 !important;
+}
+
+/* ==========================================================================
+   STATUS BADGES & PILLS
+   ========================================================================== */
+
+.badge-success, .badge-ontime, .bg-emerald-500\/15, .bg-emerald-500\/20,
+.bg-emerald-950, .bg-emerald-950\/90, .bg-emerald-950\/80, .bg-emerald-950\/50, .bg-emerald-950\/30 {
+  background-color: #F0FDF4 !important;
+  color: var(--status-green) !important;
+  border: 1.5px solid var(--status-green) !important;
+  font-weight: 800 !important;
+}
+
+.badge-warning, .badge-delayed, .badge-saffron, .bg-amber-500\/15, .bg-amber-500\/20,
+.bg-amber-950, .bg-amber-950\/90, .bg-amber-950\/80, .bg-amber-950\/50, .bg-amber-950\/30 {
+  background-color: #FFFBEB !important;
+  color: #B45309 !important;
+  border: 1.5px solid #FF9933 !important;
+  font-weight: 800 !important;
+}
+
+.badge-danger, .badge-alert, .badge-critical, .bg-red-500\/15, .bg-red-500\/20,
+.bg-red-950, .bg-red-950\/90, .bg-red-950\/80, .bg-red-950\/50, .bg-red-950\/30 {
+  background-color: #FEF2F2 !important;
+  color: var(--status-red) !important;
+  border: 1.5px solid var(--status-red) !important;
+  font-weight: 800 !important;
+}
+
+.badge-info, .badge-primary, .badge-navy, .bg-blue-500\/20, .bg-sky-500\/20,
+.bg-blue-950, .bg-blue-950\/90, .bg-blue-950\/80, .bg-blue-950\/50, .bg-blue-950\/30,
+.bg-purple-950, .bg-cyan-950 {
+  background-color: var(--bg-light-blue) !important;
+  color: var(--primary-navy) !important;
+  border: 1.5px solid var(--primary-navy) !important;
+  font-weight: 800 !important;
+}
+
+/* ==========================================================================
+   TOAST POPUPS & NOTIFICATIONS LOG STREAM
+   ========================================================================== */
+
+#toastContainer > div {
+  background-color: #FFFFFF !important;
+  color: #0F172A !important;
+  font-weight: 800 !important;
+  font-size: 0.875rem !important;
+  border-width: 2px !important;
+  box-shadow: 0 12px 35px rgba(18, 53, 91, 0.3) !important;
+  border-radius: 16px !important;
+  padding: 14px 18px !important;
+}
+
+.notification-item, .p-3.5.rounded-xl {
+  background-color: #FFFFFF !important;
+  border: 1.5px solid #D6E3EC !important;
+  color: #0F172A !important;
+  box-shadow: 0 2px 10px rgba(18, 53, 91, 0.06) !important;
+}
+
+.notification-item p, .p-3.5.rounded-xl p, .notification-item span, .p-3.5.rounded-xl span {
+  color: #0F172A !important;
+  font-weight: 800 !important;
+}
+
+/* ==========================================================================
+   TABLES
+   ========================================================================== */
+
+table {
+  background-color: #FFFFFF !important;
+}
+
+table th {
+  background-color: var(--bg-light-blue) !important;
+  color: var(--primary-navy) !important;
+  font-weight: 900 !important;
+  font-size: 0.8125rem !important;
+  border-bottom: 2px solid var(--border-light) !important;
+}
+
+table td {
+  border-bottom: 1.5px solid var(--border-light) !important;
+  color: #0F172A !important;
+  font-weight: 700 !important;
+}
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+
+footer {
+  background-color: var(--primary-navy) !important;
+  color: #FFFFFF !important;
+  border-top: 4px solid var(--accent-saffron) !important;
+}
+
+footer p, footer span, footer a {
+  color: #FFFFFF !important;
+  font-weight: 800 !important;
+}

@@ -1,0 +1,165 @@
+/* ==========================================================================
+   Executive Government Login Page Styles
+   Indian Railways - Kavach AI Safety Portal
+   Colors: Navy Blue (#12355B) | Light Blue (#EAF3F8) | Saffron (#FF9933)
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --primary-navy: #12355B;
+  --primary-navy-dark: #0D2542;
+  --bg-light-blue: #EAF3F8;
+  --accent-saffron: #FF9933;
+  --card-white: #FFFFFF;
+  --status-green: #138808;
+  --status-red: #DC2626;
+  --border-light: #D6E3EC;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--bg-light-blue);
+  color: #0F172A;
+}
+
+/* Background Train Backdrop */
+.login-bg-container {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.login-bg-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 35%;
+  transform: scale(1);
+  filter: brightness(0.9) contrast(1.1);
+  transition: transform 12s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.login-bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(18, 53, 91, 0.85) 0%, rgba(13, 37, 66, 0.75) 50%, rgba(234, 243, 248, 0.5) 100%);
+}
+
+/* Apple Glass Card Container - Navy & White Theme */
+.apple-glass-card {
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-light);
+  box-shadow: 0 25px 60px -10px rgba(18, 53, 91, 0.3);
+  border-radius: 24px;
+  position: relative;
+  overflow: hidden;
+  color: #0F172A;
+}
+
+/* Card Saffron Top Accent Line */
+.apple-glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #12355B 0%, #FF9933 50%, #12355B 100%);
+}
+
+/* Inputs Styling */
+.glass-input {
+  background: #FFFFFF;
+  border: 1.5px solid var(--border-light);
+  color: #0F172A;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 14px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.glass-input::placeholder {
+  color: #94A3B8;
+}
+
+.glass-input:focus {
+  background: #FFFFFF;
+  border-color: var(--primary-navy);
+  box-shadow: 0 0 0 4px rgba(18, 53, 91, 0.15);
+  outline: none;
+}
+
+/* Role Selector Cards */
+.role-card {
+  background: #FFFFFF;
+  border: 1.5px solid var(--border-light);
+  border-radius: 16px;
+  padding: 14px 10px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  color: #0F172A;
+}
+
+.role-card:hover {
+  background: var(--bg-light-blue);
+  border-color: var(--primary-navy);
+  transform: translateY(-2px);
+}
+
+.role-card.active-role {
+  background: var(--primary-navy);
+  border-color: var(--accent-saffron);
+  color: #FFFFFF !important;
+  box-shadow: 0 8px 20px rgba(18, 53, 91, 0.3);
+}
+
+.role-card.active-role p, .role-card.active-role span, .role-card.active-role i {
+  color: #FFFFFF !important;
+}
+
+/* Circular Emblem Logo Glow */
+.emblem-container {
+  position: relative;
+  display: inline-block;
+}
+
+.emblem-container::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  background: radial-gradient(circle, rgba(255, 153, 51, 0.4) 0%, transparent 70%);
+  border-radius: 50%;
+  z-index: -1;
+}
+
+/* Executive Primary Button */
+.btn-apple-primary, .btn-primary {
+  background: linear-gradient(135deg, #12355B 0%, #0D2542 100%);
+  color: #FFFFFF !important;
+  box-shadow: 0 10px 24px -4px rgba(18, 53, 91, 0.4);
+  transition: all 0.25s ease;
+  border-radius: 14px;
+}
+
+.btn-apple-primary:hover, .btn-primary:hover {
+  background: linear-gradient(135deg, #1D4877 0%, #12355B 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px -4px rgba(18, 53, 91, 0.5);
+}
+
+/* Header Bar */
+.glass-header-bar {
+  background: var(--primary-navy);
+  border-bottom: 3px solid var(--accent-saffron);
+  color: #FFFFFF;
+}
+
+.glass-footer-bar {
+  background: var(--primary-navy);
+  border-top: 3px solid var(--accent-saffron);
+  color: #FFFFFF;
+}

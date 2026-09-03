@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Indian Railways — AI Personnel Terminal</title>
+    <meta
+      name="description"
+      content="Indian Railways - Track Monitoring, Operations & Predictive Safety Control System"
+    />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- FontAwesome 6 Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <!-- Chart.js for High-Fidelity Charts & USFD Telemetry -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Theme Stylesheet -->
+    <link rel="stylesheet" href="../css/theme.css" />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background-color: #eaf3f8;
+        color: #0f172a;
+      }
+      .glass-card {
+        background: #ffffff !important;
+        border: 1px solid #d6e3ec !important;
+        box-shadow: 0 4px 20px -2px rgba(18, 53, 91, 0.08) !important;
+        border-radius: 16px;
+        color: #0f172a !important;
+      }
+      .glass-nav {
+        background: #12355b !important;
+        border-bottom: 3px solid #ff9933 !important;
+        color: #ffffff !important;
+      }
+      .sidebar-link {
+        transition: all 0.2s ease-in-out;
+        color: #475569;
+      }
+      .sidebar-link.active {
+        background-color: #12355b !important;
+        color: #ffffff !important;
+        border-left: 4px solid #ff9933 !important;
+        box-shadow: 0 4px 15px rgba(18, 53, 91, 0.25);
+      }
+      .sidebar-link:hover:not(.active) {
+        background-color: #eaf3f8 !important;
+        color: #12355b !important;
+      }
+      .dept-sub-link.active {
+        background-color: rgba(18, 53, 91, 0.15) !important;
+        color: #12355b !important;
+        border: 1px solid #12355b !important;
+      }
+      #toastContainer {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+    </style>
+  </head>
+
+  <body
+    class="min-h-screen font-['Plus_Jakarta_Sans',sans-serif] bg-[#EAF3F8] text-slate-800 antialiased flex flex-col justify-between"
+  >
+    <!-- =========================================================================
+       TOP HEADER BAR (Official Government Indian Railways Theme)
+       ========================================================================= -->
+    <header
+      class="glass-nav sticky top-0 z-50 px-4 sm:px-6 py-3 flex items-center justify-between gap-4 bg-[#12355B] text-white border-b-4 border-[#FF9933]"
+    >
+      <!-- Left: Official Logo & Railway Control Title -->
+      <div class="flex items-center gap-3.5 shrink-0">
+        <img
+          src="../assets/images/indian_railways_emblem.png"
+          alt="Indian Railways Emblem"
+          class="w-9 h-9 object-contain drop-shadow-md"
+        />
+        <div>
+          <div class="flex items-center gap-2">
+            <h1
+              class="text-base font-black tracking-wide text-white uppercase font-['Outfit'] flex items-center gap-2"
+            >
+              Government of India
+              <span
+                class="text-[#FF9933] font-mono text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-white/10 border border-[#FF9933] tracking-wider"
+                >MINISTRY OF RAILWAYS</span
+              >
+            </h1>
+          </div>
+          <p
+            class="text-[10px] text-slate-200 font-mono tracking-wider uppercase font-medium"
+          >
+            AI-POWERED RAILWAY DELAY MANAGEMENT & KAVACH PORTAL
+          </p>
+        </div>
+      </div>
+
+      <!-- Center: Global Search Bar (Guaranteed Search Icon at Starting + Crisp Input) -->
+      <div class="flex-1 max-w-md hidden sm:block">
+        <div class="relative flex items-center">
+          <div
+            class="absolute left-3 z-10 flex items-center pointer-events-none"
+          >
+            <i
+              class="fa-solid fa-magnifying-glass text-sm font-black text-[#12355B]"
+              style="color: #12355b !important"
+            ></i>
+          </div>
+          <input
+            type="text"
+            id="globalSearchInput"
+            class="w-full pl-9 pr-3 py-1.5 bg-white text-xs text-[#0F172A] placeholder-[#475569] border-2 border-[#12355B] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#FF9933] font-extrabold shadow-sm"
+            placeholder="Search trains, stations, routes..."
+          />
+        </div>
+      </div>
+
+      <!-- Right: Department Switcher, Bell Notification, Live Clock, User Profile & Exit -->
+      <div class="flex items-center gap-2.5 shrink-0 text-xs">
+        <!-- Top Department Switcher Dropdown (Compact & Accurate Size) -->
+        <div
+          class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-[#FF9933] text-xs shadow-sm text-[#12355B]"
+        >
+          <i
+            class="fa-solid fa-building-user text-[#12355B] font-bold text-xs"
+            style="color: #12355b !important"
+          ></i>
+          <span
+            class="text-[#12355B] font-extrabold hidden lg:inline text-[11px]"
+            >Dept:</span
+          >
+          <select
+            id="headerDepartmentSelect"
+            onchange="switchDepartmentWorkspace(this.value)"
+            class="bg-white text-[#12355B] font-extrabold text-[11px] py-0.5 focus:outline-none cursor-pointer border-none max-w-[190px] truncate"
+            style="
+              color: #12355b !important;
+              background-color: #ffffff !important;
+            "
+          >
+            <option
+              value="overview"
+              class="bg-white text-[#12355B] font-extrabold"
+            >
+              🌐 All Operations (Executive)
+            </option>
+            <option
+              value="station_master"
+              class="bg-white text-[#12355B] font-extrabold"
+            >
+              Station Master Console
+            </option>
+            <option
+              value="maintenance_engineer"
+              class="bg-white text-[#12355B] font-extrabold"
+            >
+              Maintenance Engineer Hub
+            </option>
+            <option
+              value="control_room"
+              class="bg-white text-[#12355B] font-extrabold"
+            >
+              Control Room Officer
+            </option>
+            <option
+              value="admin_superintendent"
+              class="bg-white text-[#12355B] font-extrabold"
+            >
+              Admin & Superintendent
+            </option>
+          </select>
+        </div>
+
+        <!-- Live Notification Bell -->
+        <button
+          onclick="switchNavView('notifications')"
+          class="relative p-2 rounded-xl bg-[#0D2542] hover:bg-[#1D4877] border border-white/20 text-white transition-all cursor-pointer"
+        >
+          <i class="fa-solid fa-bell text-sm"></i>
+          <span
+            class="absolute top-1 right-1 w-2 h-2 rounded-full bg-[#DC2626] animate-ping"
+          ></span>
+          <span
+            class="absolute top-1 right-1 w-2 h-2 rounded-full bg-[#DC2626]"
+          ></span>
+        </button>
+
+        <!-- Live Clock -->
+        <div
+          class="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0D2542] border border-white/20 text-xs font-mono text-white"
+        >
+          <i class="fa-regular fa-clock text-[#FF9933]"></i>
+          <span id="dashClock">10:30:45 AM</span>
+        </div>
+
+        <!-- User Profile Badge (Controller 1 - Admin) -->
+        <div
+          class="flex items-center gap-2.5 px-3 py-1 rounded-xl bg-[#0D2542] border border-white/20 text-white"
+        >
+          <div
+            class="w-7 h-7 rounded-full bg-[#12355B] text-white font-bold text-xs flex items-center justify-center border border-white/30"
+          >
+            <i class="fa-solid fa-user text-xs"></i>
+          </div>
+          <div class="text-left leading-tight hidden sm:block">
+            <p class="text-xs font-bold text-white">Controller 1</p>
+            <p class="text-[10px] text-slate-300">Admin</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer"></div>
+
+    <!-- Main Layout Shell -->
+    <div class="flex-1 flex w-full max-w-[1750px] mx-auto p-4 sm:p-5 gap-5">
+      <!-- =========================================================================
+         LEFT SIDEBAR NAVIGATION (Matching Reference Screenshot + Depts)
+         ========================================================================= -->
+      <aside
+        class="w-60 shrink-0 glass-card p-3.5 flex flex-col justify-between hidden md:flex"
+      >
+        <div class="space-y-3">
+          <nav class="space-y-1 text-xs font-semibold" id="mainSidebarNav">
+            <a
+              href="#"
+              onclick="
+                switchNavView('overview');
+                return false;
+              "
+              id="nav_overview"
+              class="sidebar-link active flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-white font-bold"
+            >
+              <i class="fa-solid fa-border-all text-sm w-4"></i> Dashboard
+            </a>
+            <a
+              href="#"
+              onclick="
+                switchNavView('live_map');
+                return false;
+              "
+              id="nav_live_map"
+              class="sidebar-link text-slate-400 hover:text-slate-200 flex items-center gap-3 px-3.5 py-2.5 rounded-xl"
+            >
+              <i class="fa-solid fa-map-location-dot text-sm w-4"></i> Live
+              Train Map
+            </a>
+            <a
+              href="#"
+              onclick="
+                switchNavView('train_list');
+                return false;
+              "
+              id="nav_train_list"
+              class="sidebar-link text-slate-400 hover:text-slate-200 flex items-center gap-3 px-3.5 py-2.5 rounded-xl"
+            >
+              <i class="fa-solid fa-list-check text-sm w-4"></i> Train List
+            </a>
+            <a
+              href="#"
+              onclick="
+                switchNavView('conflict_alerts');
+                return false;
+              "
+              id="nav_conflict_alerts"
+              class="sidebar-link text-slate-400 hover:text-slate-200 flex items-center gap-3 px-3.5 py-2.5 rounded-xl"
+            >
+              <i class="fa-solid fa-triangle-exclamation text-sm w-4"></i> AI
+              Conflict Alerts
+            </a>
+            <a
+              href="#"
+              onclick="
+                switchNavView('rescheduling');
+                return false;
+              "
+              id="nav_rescheduling"
+              class="sidebar-link text-slate-400 hover:text-slate-200 flex items-center gap-3 px-3.5 py-2.5 rounded-xl"
+            >
+              <i class="fa-solid fa-clock-rotate-left text-sm w-4"></i>
+              Rescheduling
+            </a>
+            <a
+              href="#"
+              onclick="
+                switchNavView('analytics');
+                return false;
+              "
+              id="nav_analytics"
+              class="sidebar-link text-slate-400 hover:text-slate-200 flex items-center gap-3 px-3.5 py-2.5 rounded-xl"
+            >
+              <i class="fa-solid fa-chart-column text-sm w-4"></i> Analytics
+            </a>
+            <a
+              href="#"
+              onclick="
+                switchNavView('notifications');
+                return false;
+              "
+              id="nav_notifications"
+              class="sidebar-link text-slate-400 hover:text-slate-200 flex items-center gap-3 px-3.5 py-2.5 rounded-xl"
+            >
+              <i class="fa-solid fa-bell text-sm w-4"></i> Notifications
+            </a>
+            <a
+              href="#"
+              onclick="
+                switchNavView('settings');
+                return false;
+              "
+              id="nav_settings"
+              class="sidebar-link text-slate-400 hover:text-slate-200 flex items-center gap-3 px-3.5 py-2.5 rounded-xl"
+            >
+              <i class="fa-solid fa-gear text-sm w-4"></i> Settings
+            </a>
+          </nav>
+        </div>
+
+        <!-- Bottom Logout Button -->
+        <div class="pt-4 border-t border-white/10 space-y-2">
+          <a
+            href="login.html"
+            class="sidebar-link text-slate-400 hover:text-red-400 flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold"
+          >
+            <i class="fa-solid fa-arrow-right-from-bracket text-sm w-4"></i>
+            Logout
+          </a>
+        </div>
+      </aside>
+
+      <!-- =========================================================================
+         MAIN DASHBOARD WORKSPACE
+         ========================================================================= -->
+      <main class="flex-1 space-y-5">
+        <!-- Dynamic Active View Workspace Container -->
+        <div id="activeSubTabContainer" class="space-y-5">
+          <!-- Main Content Area rendered by JS -->
+        </div>
+      </main>
+    </div>
+
+    <!-- =========================================================================
+       NEW WORK ORDER DISPATCH MODAL (FOR MAINTENANCE ENGINEER)
+       ========================================================================= -->
+    <div
+      id="newWorkOrderModal"
+      class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4"
+    >
+      <div
+        class="glass-card max-w-md w-full p-6 space-y-4 border border-blue-500/40 shadow-2xl relative"
+      >
+        <button
+          onclick="closeNewWorkOrderModal()"
+          class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="flex items-center gap-3">
+          <div
+            class="w-10 h-10 rounded-xl bg-blue-600/30 text-blue-400 flex items-center justify-center text-lg"
+          >
+            <i class="fa-solid fa-wrench"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-black text-white font-['Outfit']">
+              Dispatch New P-Way Work Order
+            </h3>
+            <p class="text-xs text-slate-400">
+              Issue track repair order to P-Way maintenance crew
+            </p>
+          </div>
+        </div>
+
+        <form
+          id="newWorkOrderForm"
+          onsubmit="submitNewWorkOrder(event)"
+          class="space-y-3 text-xs"
+        >
+          <div>
+            <label class="block font-bold text-slate-300 mb-1"
+              >Section / Track Location</label
+            >
+            <input
+              type="text"
+              id="woSection"
+              required
+              placeholder="e.g. NDLS-NZM Up Main Km 18/2"
+              class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-white/10 text-white focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <label class="block font-bold text-slate-300 mb-1"
+              >Defect / Hazard Description</label
+            >
+            <input
+              type="text"
+              id="woDefect"
+              required
+              placeholder="e.g. Rail Joint Micro-crack / Worn Switch Point"
+              class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-white/10 text-white focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-300 mb-1"
+                >Priority Level</label
+              >
+              <select
+                id="woPriority"
+                class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-white/10 text-white focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="CRITICAL">CRITICAL</option>
+                <option value="HIGH" selected>HIGH</option>
+                <option value="MEDIUM">MEDIUM</option>
+                <option value="LOW">LOW</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-bold text-slate-300 mb-1"
+                >Assigned Crew</label
+              >
+              <select
+                id="woCrew"
+                class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-white/10 text-white focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="SSE P-Way Unit Hazrat Nizamuddin">
+                  SSE P-Way Unit Nizamuddin
+                </option>
+                <option value="Specialist USFD Team 02">
+                  Specialist USFD Team 02
+                </option>
+                <option value="P-Way Gang 04 Faridabad">
+                  P-Way Gang 04 Faridabad
+                </option>
+                <option value="Maintenance Crew Delhi Main">
+                  Maintenance Crew Delhi Main
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="flex justify-end gap-2 pt-2">
+            <button
+              type="button"
+              onclick="closeNewWorkOrderModal()"
+              class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 font-bold hover:bg-slate-700"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold shadow-lg"
+            >
+              Dispatch Work Order
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- =========================================================================
+       DEPARTMENT SECURITY AUTHENTICATION MODAL
+       ========================================================================= -->
+    <div
+      id="departmentSecurityModal"
+      class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4"
+    >
+      <div
+        class="glass-card max-w-md w-full p-6 space-y-4 border border-blue-500/50 shadow-2xl relative"
+      >
+        <button
+          onclick="closeDepartmentSecurityModal()"
+          class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="flex items-center gap-3 border-b border-white/10 pb-3">
+          <div
+            class="w-10 h-10 rounded-xl bg-blue-600/30 text-blue-400 flex items-center justify-center text-lg border border-blue-500/40"
+          >
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <div>
+            <h3
+              class="text-base font-black text-white font-['Outfit']"
+              id="deptModalTitle"
+            >
+              Department Access Security
+            </h3>
+            <p class="text-xs text-slate-400" id="deptModalSubtitle">
+              Enter official security password to access this department
+            </p>
+          </div>
+        </div>
+
+        <form
+          id="departmentSecurityForm"
+          onsubmit="verifyDepartmentSecurity(event)"
+          class="space-y-3.5 text-xs"
+        >
+          <div>
+            <label class="block font-bold text-slate-300 mb-1"
+              >Department Officer ID / Email</label
+            >
+            <input
+              type="text"
+              id="deptAuthOfficerId"
+              readonly
+              class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-white/10 text-cyan-300 font-mono font-bold"
+            />
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-300 mb-1"
+              >Department Security Password</label
+            >
+            <div class="relative">
+              <input
+                type="password"
+                id="deptAuthPassword"
+                required
+                placeholder="Enter Department Password"
+                class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white font-bold focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              />
+            </div>
+            <p
+              class="text-[10px] text-slate-400 mt-1 font-mono"
+              id="deptPassHint"
+            ></p>
+          </div>
+
+          <div class="flex justify-end gap-2 pt-2">
+            <button
+              type="button"
+              onclick="closeDepartmentSecurityModal()"
+              class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 font-bold hover:bg-slate-700 cursor-pointer"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold shadow-lg cursor-pointer"
+            >
+              Authenticate & Enter
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- JavaScript Entry Point -->
+    <script src="../js/pages/dashboard.js"></script>
+  </body>
+</html>
