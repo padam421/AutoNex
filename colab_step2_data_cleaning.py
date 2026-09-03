@@ -21,6 +21,18 @@ class KavachDataCleanerAndFeatureEngine:
         initial_len = len(df)
         df.drop_duplicates(inplace=True)
         
+        # Harmonize column names
+        if 'weather_temp' in df.columns and 'weather_temp_c' not in df.columns:
+            df['weather_temp_c'] = df['weather_temp']
+        if 'axle_load' in df.columns and 'axle_load_tonnes' not in df.columns:
+            df['axle_load_tonnes'] = df['axle_load']
+        if 'superfast_speed' in df.columns and 'superfast_speed_kmh' not in df.columns:
+            df['superfast_speed_kmh'] = df['superfast_speed']
+        if 'track_max_speed' in df.columns and 'track_max_speed_kmh' not in df.columns:
+            df['track_max_speed_kmh'] = df['track_max_speed']
+        if 'inter_station_km' in df.columns and 'inter_station_dist_km' not in df.columns:
+            df['inter_station_dist_km'] = df['inter_station_km']
+
         df['weather_temp_c'] = df['weather_temp_c'].fillna(32.0)
         df['vibration_rms'] = df['vibration_rms'].fillna(1.2)
         df['kurtosis'] = df['kurtosis'].fillna(3.0)

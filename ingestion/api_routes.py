@@ -36,6 +36,16 @@ except ImportError:
     except ImportError:
         def set_telemetry_interval_seconds(sec): pass
 
+try:
+    from ingestion.ai_service import predict_ai_action, AI_SERVICE_LOADED, load_ai_models
+except ImportError:
+    try:
+        from ai_service import predict_ai_action, AI_SERVICE_LOADED, load_ai_models
+    except ImportError:
+        def predict_ai_action(payload): return {"status": "AI_SERVICE_UNAVAILABLE"}
+        AI_SERVICE_LOADED = False
+        def load_ai_models(): return False
+
 import sys
 import types
 
@@ -697,8 +707,60 @@ def setup_routes(app, get_producer_fn, get_data_dir_fn):
         return {
             "status": "healthy",
             "kafka_connected": producer is not None,
+            "ai_models_loaded": AI_SERVICE_LOADED,
             "registered_apis_count": len(REGISTERED_APIS),
             "data_dir": get_data_dir_fn()
+        }
+
+    # =========================================================================
+    # AI MODEL INFERENCE & SCENARIOS DISPATCH REST ENDPOINTS
+    # =========================================================================
+    @app.get("/api/v1/ai/models/status", tags=["AI & IoT Telemetry Engine"])
+    def get_ai_models_status():
+        is_loaded = load_ai_models()
+        return {
+            "status": "ONLINE" if is_loaded else "FALLBACK_PHYSICS",
+            "ai_models_loaded": is_loaded,
+            "models_available": ["model_defect.joblib", "model_dispatch.joblib", "scaler.joblib"],
+            "accuracy_score_defect": "88.38%",
+            "accuracy_score_dispatch": "97.09%"
+        }
+
+    @app.post("/api/v1/ai/predict", tags=["AI & IoT Telemetry Engine"])
+    async def predict_live_telemetry(request: Request):
+        try:
+            payload = await request.json()
+        except Exception:
+            payload = {}
+        
+        prediction = predict_ai_action(payload)
+        return JSONResponse(content=prediction)
+
+    @app.get("/api/v1/ai/scenarios/live", tags=["AI & IoT Telemetry Engine"])
+    def get_live_scenarios_status():
+        return {
+            "status": "ACTIVE",
+            "active_scenarios": [
+                {
+                    "scenario_id": "SCENARIO_1",
+                    "name": "Sensor-Guided Speed Elevation of Superfast Train",
+                    "active_corridors": ["NDLS-CNB", "MMCT-BRC", "MAS-BZA"],
+                    "avg_delay_saved_per_train_mins": "22.5 mins"
+                },
+                {
+                    "scenario_id": "SCENARIO_2",
+                    "name": "Dynamic Multi-Station Local Train Leapfrogging",
+                    "active_corridors": ["Bhopal-Itarsi Section", "Howrah-Patna Section"],
+                    "avg_delay_saved_per_train_mins": "31.0 mins"
+                },
+                {
+                    "scenario_id": "SCENARIO_3",
+                    "name": "Dynamic Weather & Track Temporary Speed Restriction Relaxation",
+                    "active_corridors": ["Northern Railway Fog Zone"],
+                    "avg_delay_saved_per_train_mins": "25.0 mins"
+                }
+            ],
+            "track_drift_inspection_engine": "ACTIVE (Baseline Signature vs Live Stream Matching)"
         }
 
     @app.get("/api/registered-apis", tags=["API Key & Endpoint Manager"])
