@@ -131,18 +131,49 @@ Tumhare PROJECT-KAVACH system mein **8 core services** ek unified pipeline mein 
 
 Behind the scenes **Apache ZooKeeper** cluster components ko coordinate karta hai.
 
+### 🚨 ARCHITECTURAL UPGRADE: Why Apache NiFi Was Removed & What Replaced It
+
+Pehle architecture mein **Apache NiFi** ko data ingestion tool ke roop mein plan kiya gaya tha. Lekin development aur live testing ke dauran:
+- **High Memory Bloat:** NiFi Java/JVM based hone ki wajah se akele hi **2GB se 4GB RAM** consume kar raha tha, jisse system slow ho jata tha.
+- **High Latency & GC Pauses:** Sub-second locomotive telemetry (0.5s) ke liye Java Garbage Collection ke pauses acceptable nahi the.
+- **Complex UI & Fragile Flows:** NiFi ke XML/flow-based templates maintain karna complex tha.
+
+**SOLUTION: Humne NiFi ko COMPLETE REMOVE kar diya aur uski jagah banaya:**
+- **FastAPI-Native High-Speed Ingestion Service (`ingestion-service`):**
+  - Ultra-lightweight: NiFi ke 4GB ke mukable sirf **~30MB RAM** use karta hai (98% memory savings!).
+  - 100% Python Native & AsyncIO non-blocking engine.
+  - Sub-second latency (0.5s updates for real-time Kavach locomotive packets).
+  - Built-in Interactive API Management & Swagger UI at `http://localhost:8000/docs`.
+
 ---
 
-### 🔗 Service 1: Ingestion Engine (`ingestion-service`) — HIGH-SPEED DATA INGESTION ENGINE
+### 🔗 Service 1: Ingestion Engine (`ingestion-service`) — HIGH-SPEED DATA & SENSOR INGESTION ENGINE
 
 - **Container Name:** `ingestion-service` (Port: `8000`)
-- **Kya Karta Hai:**
-  - Overpass Turbo API se **Broad Gauge Tracks GeoJSON** (`india_railway_tracks.geojson`) aur OpenRailwayMap Signals download karta hai.
-  - Open-Meteo Satellite API se **All-India Station Weather Telemetry** fetch karta hai.
-  - 100% Real Master Datasets (**8,990+ Stations & 11,000+ Trains**) ko direct load karke Kafka Topics mein publish karta hai.
-  - **24/7 Telemetry Stream Engine:** 0.5s interval pe live locomotive coordinates generate karke Kafka `train-telemetry` topic par bhejta hai.
-  - **Interactive API Control & Swagger UI:** `http://localhost:8000/docs` par API Key & Target Endpoint register/manage karne ka dashboard provide karta hai.
-  - Ultra-lightweight (~30MB RAM) aur fast performance ke sath chalta hai.
+- **Core Modules & Upgrades:**
+  1. **Master Railways Dataset Loader (`master_loader.py`):**
+     - 100% Real Indian Railways Master Network (**8,990+ Stations & 11,000+ Trains & Schedules**).
+     - Directly streams to Kafka topics `railway-stations` and `train-schedules`.
+  2. **RDSO 6-Sensor Spatial IoT Track Data Fusion Engine (`railway_iot_sensors.py`):**
+     - Indian Railways RDSO specifications ke 6 advanced IoT sensors ko 5 major electrified Broad Gauge corridors (NDLS-CNB, MMCT-BRC, MAS-BZA, HWH-PNBE, SBC-MYS) ke sath spatially fuse karta hai:
+       * **Sleeper MEMS Accelerometer:** Track vibration (RMS g) & ballast health (kurtosis).
+       * **Ultrasonic USFD Probe:** Rail steel internal micro-crack & flaw depth detection (mm).
+       * **Rail Web Foil Strain Gauge:** Dynamic axle weight (tonnes) & overload safety check.
+       * **Wayside IR Pyrometer:** Non-contact rail steel temperature & buckling hazard alert (>55°C / >65°C).
+       * **Distributed Acoustic Sensing (DAS):** Fiber-optic acoustic perimeter intrusion signature.
+       * **Under-chassis Laser Sheet Profiler:** Rail head wear (mm) & 1676mm gauge alignment.
+       * Calculates real-time **Track Structural Health Index (0-100%)** and streams to Cassandra.
+  3. **Live Train Running Simulator & Dynamic Station Boards (`telemetry_engine.py`):**
+     - Dynamic Live Station Boards for **ALL 8,990+ Indian Railways Stations** (`/api/v1/stations/board/{code}`).
+     - Realistic Indian Railways delay engine (+0 to +45 min based on signal holds, precedence rank, fog).
+     - Physics-based calculations: Emergency Braking Distance ($EBD = v^2 / (250 \cdot \mu)$), track gradient/slope resistance, and Indian Railways 4-Tier Precedence Ranking (Vande Bharat > Rajdhani > MEMU > Freight).
+  4. **Satellite Meteorology Engine (`weather_service.py`):**
+     - Open-Meteo / IMD Live Satellite weather (temperature, humidity, wind, fog/rain hazard, visibility).
+  5. **GIS Railway Infrastructure Extractor (`gis_extractor.py`):**
+     - Overpass Turbo API & OpenRailwayMap Broad Gauge tracks and signal nodes sync.
+  6. **12 Complete Indian Railways ATP & Telemetry APIs (`api_registry.json` & `api_routes.py`):**
+     - 12 verified endpoints registered into Cassandra NoSQL DB with deduplication and zero disk bloat.
+     - Control Room Swagger UI at `http://localhost:8000/docs`.
 
 ---
 
@@ -197,7 +228,9 @@ Behind the scenes **Apache ZooKeeper** cluster components ko coordinate karta ha
   1. `train_telemetry`: High-speed time-series telemetry data (train_id, timestamp, precedence_rank, speed, EBD, slope, rail_temp, rfid_tag, signal_status, collision_risk).
   2. `weather_history`: Live satellite weather telemetry per station.
   3. `kavach_alerts`: Safety alerts, collision alerts, auto-brake triggers.
-  4. `api_responses_vault`: Dynamically registered API payloads.
+  4. `api_responses_vault`: Dynamically registered API payloads (100% direct streaming, no disk bloat).
+  5. `fused_railway_telemetry`: RDSO 6-sensor track health fusion records.
+  6. `live_train_running`: Real-time train delay, timetable and station board telemetry.
 
 ---
 
@@ -214,6 +247,33 @@ Behind the scenes **Apache ZooKeeper** cluster components ko coordinate karta ha
 - **Container Name:** `zookeeper` (Port: `2181`)
 - **Kya Karta Hai:**
   - Kafka brokers aur distributed nodes ka state coordinate karta hai.
+
+---
+
+### 🔗 Service 9: Node.js / Express Backend (`backend/`) — APPLICATION & WEBSOCKET ENGINE
+
+- **Kya Karta Hai:**
+  - RESTful APIs aur real-time WebSocket connection provide karta hai.
+  - AI Delay Cascade Predictor (`cascadePredictor.js`), Conflict Detection (`conflictDetection.js`), Fuel Optimizer (`fuelOptimizer.js`), aur Dynamic Rescheduling Engine (`reschedulingEngine.js`) ka orchestration karta hai.
+
+---
+
+### 🔗 Service 10: Frontend UI Suite (`frontend/`) — 17 SPECIALIZED CONTROL ROOM PAGES
+
+- **Kya Karta Hai:**
+  - Modern Tailwind CSS & Vanilla JS UI jisme 17 dedicated monitoring views hain:
+    1. `dashboard.html`: Executive Station & Section Master Overview
+    2. `live-map.html`: Real-Time GIS Track Map with Moving Locomotives
+    3. `kavach.html`: 3D Kavach Collision Avoidance & Head-On / Rear-End Simulator
+    4. `conflict-alerts.html`: Signal-Passed-At-Danger (SPAD) & Block Section Alerts
+    5. `track-sensor.html`: RDSO 6-Sensor Live Health & Rail Buckling Heatmap
+    6. `weather.html`: IMD / Satellite Weather, Fog Hazard & Visibility Tracker
+    7. `cascade-delay.html`: AI Cascade Delay Propagation Graph
+    8. `fuel-saving.html`: Regenerative Braking & Energy Conservation Analytics
+    9. `rescheduling.html`: Automated Precedence-based Train Pathing
+    10. `train-list.html` & `train-details.html`: Locomotive Specs & Active Route Status
+    11. `controller-approval.html`: Station Master Manual Override & Interlocking
+    12. `analytics.html`, `notifications.html`, `settings.html`, `404.html`, etc.
 
 ---
 

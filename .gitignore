@@ -1,11 +1,29 @@
+# Environment & Secret Keys (DO NOT COMMIT)
+.env
+.env.*
+*.env
+**/.env
+**/.env.*
+*.key
+*.pem
+*.cert
+certs/
+**/certs/
+
 # Node modules
 node_modules/
+**/node_modules/
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# Byte-compiled / optimized files
+# Python byte-compiled / optimized files
 __pycache__/
+**/__pycache__/
 *.py[cod]
 *$py.class
+.pytest_cache/
+.coverage
 
 # Data & Database exports
 data/kavach_db_export.*
@@ -17,11 +35,12 @@ data/seed/*.json
 *.parquet
 *.csv
 
-# Environment & IDE
-.env
-.env.local
+# IDE & OS files
 .vscode/
 .idea/
+.DS_Store
+Thumbs.db
 
-# Docker build logs
+# Docker build & system logs
 *.log
+
