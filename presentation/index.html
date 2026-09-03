@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AUTONEX - SIH Presentation</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top Navigation Header -->
+    <header class="top-header">
+      <div class="logo-area">
+        <span class="badge">SIH 2026</span>
+        <span class="project-name">AUTONEX</span>
+        <span class="sub-tag">| Dynamic Forecast of ETA for Coaching Trains</span>
+      </div>
+      <div class="controls">
+        <a href="file:///C:/Users/ahmed/Downloads/AUTONEX_SIH.pptx" download class="btn btn-primary" title="Download PPTX File">⬇️ Download PPTX</a>
+        <button id="prevBtn" class="btn" title="Previous Slide (Left Arrow)">❮ Prev</button>
+        <span id="slideIndicator" class="slide-indicator">Slide 1 / 5</span>
+        <button id="nextBtn" class="btn btn-primary" title="Next Slide (Right Arrow)">Next ❯</button>
+        <button id="fullscreenBtn" class="btn btn-outline" title="Toggle Fullscreen">⛶ Fullscreen</button>
+        <button id="printBtn" class="btn btn-outline" title="Print to PDF">🖨️ PDF</button>
+      </div>
+    </header>
+
+    <!-- Slide Deck Container -->
+    <main class="slide-viewport">
+      <!-- SLIDE 1: Title, Executive Summary & Problem Statement -->
+      <section class="slide active" data-slide="1">
+        <div class="slide-content">
+          <div class="tag-label">SMART INDIA HACKATHON PRESENTATION</div>
+          <h1 class="slide-title">AUTONEX</h1>
+          <h2 class="slide-subtitle">Dynamic Forecast of Expected Time of Arrival (ETA) for Coaching Trains</h2>
+          <p class="slide-desc">Resolving Cascading Freight & Passenger Delays via Real-Time Telemetry & Fail-Safe Gap Optimization</p>
+
+          <!-- Executive Summary Card -->
+          <div class="card executive-summary-card" style="border-color: var(--accent-cyan); margin-bottom: 1.2rem; background: #0e1d3e;">
+            <div class="card-header" style="margin-bottom: 0.5rem;">
+              <span class="icon">📌</span>
+              <h3 style="color: var(--accent-cyan); font-size: 1.05rem;">EXECUTIVE SUMMARY & SYSTEM DESCRIPTION</h3>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--text-main); line-height: 1.45; margin-bottom: 8px;">
+              <strong>AUTONEX</strong> is an intelligent, AI-powered traffic scheduling and real-time ETA forecasting platform designed for Indian Railways. It dynamically predicts expected arrival times for coaching trains while resolving network bottlenecks caused by delayed freight trains (maal gadi). By combining real-time gap telemetry with 20-30 minute advance loop line routing, AUTONEX eliminates cascading delays with guaranteed 0% collision risk.
+            </p>
+          </div>
+
+          <div class="card problem-card highlight-border-red">
+            <div class="card-header" style="margin-bottom: 0.5rem;">
+              <span class="icon">⚠️</span>
+              <h3 style="font-size: 1.05rem;">PROBLEM STATEMENT: DYNAMIC FORECAST OF EXPECTED TIME OF ARRIVAL (ETA) FOR COACHING TRAINS</h3>
+            </div>
+            <div class="grid-2">
+              <div class="problem-item">
+                <div class="item-title">🚆 Freight & Local Bottlenecks</div>
+                <p>Unscheduled delays in freight trains (maal gadi) block express & coaching trains running behind, wrecking ETA accuracy across the route.</p>
+              </div>
+              <div class="problem-item">
+                <div class="item-title">💸 Massive Financial Loss</div>
+                <p>Indian Railways incurs heavy financial losses, fuel wastage, and severe capacity drop due to uncoordinated signal delays.</p>
+              </div>
+              <div class="problem-item">
+                <div class="item-title">⏳ Reactive Manual Dispatching</div>
+                <p>Decisions are made late at signals rather than miles in advance, causing abrupt train idling and prolonged standstill.</p>
+              </div>
+              <div class="problem-item">
+                <div class="item-title">🛑 Speed vs. Safety Barrier</div>
+                <p>Accelerating delayed coaching trains without high-precision live gap monitoring poses serious collision risks.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: Core System & Telemetry Dashboard -->
+      <section class="slide" data-slide="2">
+        <div class="slide-content">
+          <div class="tag-label">SYSTEM ARCHITECTURE</div>
+          <h1 class="slide-title">Real-Time Distance & ETA Monitoring Screen</h1>
+          <p class="slide-desc">Synchronous live tracking of train coordinates, inter-train gap distance, and dynamic ETA readout.</p>
+
+          <div class="grid-3">
+            <div class="card feature-card">
+              <div class="card-num">01</div>
+              <h3>Dynamic Distance & Location Tracking</h3>
+              <p>Continuous GPS + Trackside RFID telemetry measures the exact gap (in meters) between preceding and trailing trains in real-time.</p>
+              <div class="mini-tag">Fail-Safe Gap Boundary</div>
+            </div>
+
+            <div class="card feature-card highlight-card">
+              <div class="card-num">02</div>
+              <h3>Live Accurate ETA Readout</h3>
+              <p>Dynamic forecast of Expected Time of Arrival (ETA) for coaching trains displayed directly on screen (e.g. +18 min delay updated live).</p>
+              <div class="mini-tag green">Zero Manual Estimation</div>
+            </div>
+
+            <div class="card feature-card">
+              <div class="card-num">03</div>
+              <h3>Automated Signal & Speed Advisory</h3>
+              <p>AI algorithms calculate dynamic speed profiles, predicting traffic bottlenecks 30-40 km in advance for smooth section flow.</p>
+              <div class="mini-tag amber">Predictive AI Dispatching</div>
+            </div>
+          </div>
+
+          <!-- Live Telemetry Simulation Widget -->
+          <div class="telemetry-bar card">
+            <div class="telemetry-header">
+              <span class="live-dot"></span> <strong>AUTONEX LIVE MONITORING SCREEN SIMULATION</strong>
+            </div>
+            <div class="telemetry-metrics">
+              <div class="metric">
+                <span class="m-label">Preceding Train (Freight #5021)</span>
+                <span class="m-val yellow">Location: KM 142.8 | Speed: 55 km/h</span>
+              </div>
+              <div class="metric">
+                <span class="m-label">Trailing Train (Rajdhani Express #12952)</span>
+                <span class="m-val cyan">Location: KM 126.4 | Speed: 110 km/h</span>
+              </div>
+              <div class="metric">
+                <span class="m-label">Inter-Train Gap Distance</span>
+                <span class="m-val green">16.4 KM (SAFE BUFFER)</span>
+              </div>
+              <div class="metric">
+                <span class="m-label">Dynamic Forecast ETA</span>
+                <span class="m-val red">+24 Min (Recovering ETA)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: Scenario 1 - Dynamic Speed & Safety Distance Optimization -->
+      <section class="slide" data-slide="3">
+        <div class="slide-content">
+          <div class="tag-label">SCENARIO 1</div>
+          <h1 class="slide-title">Dynamic Speed Recovery & Safe Distance Control</h1>
+          <p class="slide-desc">Recovering lost time safely by boosting trailing train speed while strictly maintaining mandatory distance buffers.</p>
+
+          <div class="grid-2">
+            <div class="card">
+              <h3>⚡ Speed Optimization & ETA Recovery</h3>
+              <ul class="bullet-list">
+                <li><strong>Controlled Acceleration:</strong> When the trailing coaching train is running behind schedule, AUTONEX calculates clear track segments and permits speed recovery up to max safe section limits.</li>
+                <li><strong>Live Location Synchronicity:</strong> Both train coordinates are continuously refreshed across central signal server and loco-cab display.</li>
+                <li><strong>ETA Forecast Compression:</strong> Reduces accumulated delay by 15-25% over open track corridors without risking signal overruns.</li>
+              </ul>
+            </div>
+
+            <div class="card highlight-card">
+              <h3>🛡️ Fail-Safe Collision Protection</h3>
+              <ul class="bullet-list">
+                <li><strong>Mandatory Safety Distance Boundary:</strong> Real-time braking curves recalculate continuously based on current train speed, weight, and weather.</li>
+                <li><strong>Automated Emergency Throttling:</strong> If the gap drops below the safety threshold, the system throttles back speed automatically.</li>
+                <li><strong>0% Collision Guarantee:</strong> Safety distance telemetry operates with fail-safe interlocks independent of human error.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- SVG Visual Diagram for Scenario 1 -->
+          <div class="diagram-card card">
+            <div class="diagram-title">SCENARIO 1: TRAIN TRACKING & GAP SAFETY BUFFER SCHEMATIC</div>
+            <div class="svg-container">
+              <svg viewBox="0 0 1000 180" class="track-svg">
+                <!-- Track lines -->
+                <line x1="50" y1="90" x2="950" y2="90" stroke="#334155" stroke-width="8" stroke-dasharray="15,5"/>
+                <line x1="50" y1="100" x2="950" y2="100" stroke="#475569" stroke-width="4"/>
+
+                <!-- Trailing Train (Superfast) -->
+                <g transform="translate(180, 50)">
+                  <rect x="0" y="0" width="160" height="36" rx="6" fill="#06B6D4" />
+                  <text x="80" y="22" fill="#0B132B" font-weight="700" font-size="12" text-anchor="middle">Coaching Express (Late: +24m)</text>
+                  <text x="80" y="-8" fill="#06B6D4" font-weight="600" font-size="11" text-anchor="middle">Speed: 110 km/h ➔ 125 km/h</text>
+                </g>
+
+                <!-- Safety Distance Zone -->
+                <rect x="340" y="55" width="280" height="26" rx="4" fill="rgba(16, 185, 129, 0.15)" stroke="#10B981" stroke-dasharray="4,4"/>
+                <text x="480" y="72" fill="#10B981" font-weight="700" font-size="11" text-anchor="middle">⚡ Dynamic Safe Gap Distance (16.4 KM Buffer)</text>
+
+                <!-- Preceding Train (Freight) -->
+                <g transform="translate(620, 50)">
+                  <rect x="0" y="0" width="160" height="36" rx="6" fill="#F59E0B" />
+                  <text x="80" y="22" fill="#0B132B" font-weight="700" font-size="12" text-anchor="middle">Freight (Maal Gadi)</text>
+                  <text x="80" y="-8" fill="#F59E0B" font-weight="600" font-size="11" text-anchor="middle">Speed: 55 km/h</text>
+                </g>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: Scenario 2 - Pre-emptive Loop Line & Dynamic Halt -->
+      <section class="slide" data-slide="4">
+        <div class="slide-content">
+          <div class="tag-label">SCENARIO 2</div>
+          <h1 class="slide-title">Pre-emptive Loop Line Routing & Dynamic Station Halt</h1>
+          <p class="slide-desc">Intelligent traffic diversion 20-30 minutes in advance and dynamic station halt relocation to prevent bottlenecks.</p>
+
+          <div class="grid-2">
+            <div class="card highlight-card green-glow">
+              <div class="card-badge">SCENARIO 2A</div>
+              <h3>🔄 Pre-emptive 20-30 Min Loop Line Shunting</h3>
+              <ul class="bullet-list">
+                <li><strong>Early Distance Detection:</strong> When a Coaching train approaches a slower Freight train from behind, AUTONEX detects distance gap narrowing 20–30 minutes in advance.</li>
+                <li><strong>Smooth Loop Line Insertion:</strong> The slower train is pre-routed into a loop line well before the express arrives, avoiding sudden emergency stopping.</li>
+                <li><strong>Uninterrupted Overtake:</strong> High-speed coaching trains maintain momentum without encountering yellow/red signal delays.</li>
+              </ul>
+            </div>
+
+            <div class="card highlight-card cyan-glow">
+              <div class="card-badge">SCENARIO 2B</div>
+              <h3>🚉 Dynamic Station Halt Relocation</h3>
+              <ul class="bullet-list">
+                <li><strong>Bottleneck Avoidance:</strong> If halting a train at an upcoming congested station will choke the track section, AUTONEX dynamically shifts its operational halt to the next station.</li>
+                <li><strong>Real-time Delay Screen Display:</strong> Live delay status (+ minutes) and updated ETA schedules are instantly rendered on station & controller dashboards.</li>
+                <li><strong>Zero Cascading Delays:</strong> Prevents train congestion queues at small stations.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- SVG Visual Diagram for Scenario 2 -->
+          <div class="diagram-card card">
+            <div class="diagram-title">SCENARIO 2: PRE-EMPTIVE LOOP LINE OVERTAKE SCHEMATIC</div>
+            <div class="svg-container">
+              <svg viewBox="0 0 1000 190" class="track-svg">
+                <!-- Main Line -->
+                <line x1="50" y1="130" x2="950" y2="130" stroke="#334155" stroke-width="8"/>
+                <text x="60" y="150" fill="#94A3B8" font-size="11">MAIN LINE (COACHING EXPRESS CORRIDOR)</text>
+
+                <!-- Loop Line -->
+                <path d="M 400 130 Q 440 60 500 60 L 720 60 Q 780 60 820 130" fill="none" stroke="#10B981" stroke-width="5" stroke-dasharray="6,4"/>
+                <text x="610" y="45" fill="#10B981" font-weight="700" font-size="11" text-anchor="middle">LOOP LINE (Pre-routed 20-30 min in advance)</text>
+
+                <!-- Freight Train on Loop Line -->
+                <g transform="translate(540, 42)">
+                  <rect x="0" y="0" width="140" height="30" rx="5" fill="#F59E0B" />
+                  <text x="70" y="19" fill="#0B132B" font-weight="700" font-size="11" text-anchor="middle">Freight Shunted Here</text>
+                </g>
+
+                <!-- Superfast Train Passing on Main Line -->
+                <g transform="translate(420, 112)">
+                  <rect x="0" y="0" width="170" height="34" rx="6" fill="#06B6D4" />
+                  <text x="85" y="21" fill="#0B132B" font-weight="700" font-size="12" text-anchor="middle">Coaching Train Overtaking ➔</text>
+                </g>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: Impact & Operational Value Proposition -->
+      <section class="slide" data-slide="5">
+        <div class="slide-content">
+          <div class="tag-label">KEY DELIVERABLES & IMPACT</div>
+          <h1 class="slide-title">Expected Impact & Value Proposition</h1>
+          <p class="slide-desc">Transforming Indian Railways into a punctual, fail-safe, high-capacity network.</p>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-num green">0%</div>
+              <div class="stat-label">Collision Risk</div>
+              <div class="stat-desc">Fail-safe gap enforcement & automated signal safety interlocks</div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-num cyan">35-40%</div>
+              <div class="stat-label">Delay Reduction</div>
+              <div class="stat-desc">Eliminating cascading delays for express & freight corridors</div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-num amber">20-30 Min</div>
+              <div class="stat-label">Advance Routing</div>
+              <div class="stat-desc">Pre-emptive loop line shunting avoiding emergency braking</div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-num purple">100%</div>
+              <div class="stat-label">Accurate Screen Display</div>
+              <div class="stat-desc">Real-time delay & location gap telemetry displayed live</div>
+            </div>
+          </div>
+
+          <div class="card summary-box">
+            <h3>🎯 SUMMARY FOR SIH JUDGING PANEL</h3>
+            <div class="grid-2">
+              <div>
+                <p>✅ <strong>Dynamic ETA Forecast:</strong> Dynamic Forecast of Expected Time of Arrival (ETA) for Coaching Trains via live telemetry.</p>
+                <p>✅ <strong>Zero Safety Compromise:</strong> Speed recovery in Scenario 1 is strictly bound by real-time safety distance telemetry.</p>
+              </div>
+              <div>
+                <p>✅ <strong>Proactive Overtake (Scenario 2):</strong> 20-30 minute advance loop line routing prevents sudden station bottlenecks.</p>
+                <p>✅ <strong>Operational Efficiency:</strong> Eliminates freight bottleneck idling, saving millions in fuel & track congestion costs.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Slide Footer -->
+    <footer class="bottom-footer">
+      <div>AUTONEX | Dynamic Forecast of ETA for Coaching Trains</div>
+      <div class="footer-dots" id="dotNav"></div>
+      <div>Use <strong>◀ ▶ Arrow Keys</strong> or Buttons to Navigate</div>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

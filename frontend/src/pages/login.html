@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Indian Railways - Kavach AI Command Login Portal</title>
+  <meta name="description" content="Official Executive Indian Railways Kavach AI Track Monitoring & Predictive Safety Portal" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Outfit:wght@500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Theme Stylesheet -->
+  <link rel="stylesheet" href="../css/theme.css">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #EAF3F8;
+    }
+    .full-train-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background-image: url('../assets/images/train_hero.jpg');
+      background-size: cover;
+      background-position: center;
+    }
+    .full-train-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(270deg, rgba(18, 53, 91, 0.95) 0%, rgba(18, 53, 91, 0.75) 45%, rgba(234, 243, 248, 0.45) 100%);
+    }
+    .glass-card {
+      background: #FFFFFF !important;
+      border: 1px solid #D6E3EC !important;
+      box-shadow: 0 25px 60px -10px rgba(18, 53, 91, 0.3) !important;
+      border-radius: 24px;
+      color: #0F172A !important;
+    }
+    .glass-input {
+      background: #FFFFFF !important;
+      border: 1px solid #D6E3EC !important;
+      color: #0F172A !important;
+    }
+    .glass-input:focus {
+      border-color: #12355B !important;
+      box-shadow: 0 0 0 3px rgba(18, 53, 91, 0.15) !important;
+    }
+  </style>
+</head>
+
+<body class="h-screen font-['Plus_Jakarta_Sans',sans-serif] text-slate-800 antialiased selection:bg-[#FF9933] selection:text-white overflow-hidden flex flex-col justify-between relative">
+
+  <!-- Full-Bleed Train Photo Background (No Dark Blank Screen) -->
+  <div class="full-train-bg"></div>
+  <div class="full-train-overlay"></div>
+
+  <!-- Top Header Bar (Light Background with Dark Navy Bold Text) -->
+  <header class="w-full px-6 py-3 flex items-center justify-between border-b-4 border-[#FF9933] shrink-0 bg-white header-light shadow-md z-20 text-[#12355B]">
+    <div class="flex items-center gap-3">
+      <img src="../assets/images/indian_railways_emblem.png" alt="Indian Railways Crest" class="w-9 h-9 object-contain drop-shadow-md" />
+      <div>
+        <h1 class="text-xs font-black tracking-wider text-[#12355B] uppercase font-['Outfit'] flex items-center gap-2">
+          Government of India
+          <span class="text-[10px] font-black px-2.5 py-1 rounded-md bg-[#FF9933] text-white uppercase tracking-wider shadow-sm" style="color: #FFFFFF !important; background-color: #FF9933 !important;">MINISTRY OF RAILWAYS</span>
+        </h1>
+        <p class="text-[11px] text-[#0F172A] font-extrabold tracking-wide mt-0.5">AI-Powered Railway Delay Management & Kavach Safety Portal</p>
+      </div>
+    </div>
+    
+    <div class="hidden sm:flex items-center gap-3 text-xs font-bold">
+      <span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F0FDF4] border-2 border-[#138808] text-[#138808] text-[11px] font-black">
+        <span class="w-2 h-2 rounded-full bg-[#138808] animate-pulse"></span>
+        Kavach AI Live
+      </span>
+      <div class="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#EAF3F8] border-2 border-[#12355B] text-[#12355B] font-mono text-[11px] font-extrabold">
+        <i class="fa-regular fa-clock text-[#12355B]"></i>
+        <span id="liveClock">2026-08-16 05:50:00 IST</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container: Glass Login Card Positioned on Right Side over Full Train Background -->
+  <main class="flex-1 flex items-center justify-end p-4 sm:p-8 md:p-12 z-20">
+    <div class="w-full max-w-md glass-card p-6 sm:p-8 space-y-5 bg-white text-slate-900 border border-[#D6E3EC]">
+      
+      <!-- Emblem Logo & Header -->
+      <div class="text-center">
+        <img src="../assets/images/indian_railways_emblem.png" alt="Indian Railways Emblem" class="w-14 h-14 object-contain mx-auto mb-2 drop-shadow-xl hover:scale-105 transition-transform duration-300" />
+        <h2 class="text-2xl font-black text-[#12355B] tracking-tight font-['Outfit'] uppercase">
+          INDIAN RAILWAYS
+        </h2>
+        <p class="text-xs text-[#FF9933] font-bold tracking-wide mt-1">
+          AI-Powered Railway Delay Management Portal
+        </p>
+      </div>
+
+      <!-- Alert Notification Container -->
+      <div id="alertContainer" class="hidden">
+        <span id="alertMessage"></span>
+      </div>
+
+      <!-- Login Form (Supports Any ID & Password) -->
+      <form id="loginForm" class="space-y-4">
+        <!-- Official Email / Username -->
+        <div>
+          <label class="block text-xs font-black text-[#12355B] uppercase tracking-wider mb-1.5" for="usernameInput">
+            Official Email / Officer ID
+          </label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#12355B]">
+              <i class="fa-regular fa-user text-[#12355B] text-xs"></i>
+            </div>
+            <input type="text" id="usernameInput" 
+              class="w-full pl-10 pr-3.5 py-3 glass-input text-xs font-bold text-[#0F172A] border border-[#D6E3EC] rounded-xl" 
+              placeholder="Enter Officer ID / Email" value="officer.ndls@ir.gov.in" />
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div>
+          <label class="block text-xs font-black text-[#12355B] uppercase tracking-wider mb-1.5" for="passwordInput">
+            Officer Security Password
+          </label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#12355B]">
+              <i class="fa-solid fa-lock text-[#12355B] text-xs"></i>
+            </div>
+            <input type="password" id="passwordInput" 
+              class="w-full pl-10 pr-10 py-3 glass-input text-xs font-bold text-[#0F172A] border border-[#D6E3EC] rounded-xl" 
+              placeholder="Enter Password" value="kavach2026" />
+            <button type="button" id="togglePasswordBtn" title="Toggle password visibility" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-[#64748B] hover:text-[#12355B] transition-colors cursor-pointer">
+              <i class="fa-solid fa-eye-slash text-xs" id="eyeIcon"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Remember Me Checkbox -->
+        <div class="flex items-center justify-between py-0.5">
+          <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-[#1E293B] select-none">
+            <input type="checkbox" checked class="w-3.5 h-3.5 rounded border-[#D6E3EC] bg-white text-[#12355B] focus:ring-[#12355B] accent-[#12355B]" />
+            Keep session active
+          </label>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" id="loginBtn" class="w-full py-3.5 bg-[#12355B] hover:bg-[#0D2542] text-white font-black text-xs tracking-wider uppercase flex items-center justify-center gap-2 group rounded-xl shadow-lg transition-all cursor-pointer">
+          <span id="loginBtnText">Sign In to Railway Command Portal</span>
+          <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform text-white"></i>
+          <span id="loginBtnSpinner" class="hidden">
+            <i class="fa-solid fa-circle-notch animate-spin text-sm text-white"></i>
+          </span>
+        </button>
+
+        <!-- Forgot Password Link Positioned Right Below Sign In Button -->
+        <div class="text-center pt-2">
+          <a href="#" onclick="alert('Password reset instructions sent to official Indian Railways email.')" class="text-xs text-[#12355B] hover:underline font-extrabold transition-colors">
+            Forgot Password?
+          </a>
+        </div>
+      </form>
+
+      <!-- Aligned Footer Line Directly Below Login Card -->
+      <div class="pt-3 border-t border-[#D6E3EC] text-center">
+        <p class="text-[11px] text-[#475569] font-bold flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-building-columns text-[#12355B]"></i>
+          Ministry of Railways, Govt. of India • © 2026 Indian Railways
+        </p>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Clean Bottom Footer Bar -->
+  <footer class="w-full px-6 py-2.5 bg-slate-950/80 border-t border-white/10 text-xs text-slate-400 shrink-0 z-20">
+    <div class="max-w-7xl mx-auto flex items-center justify-center text-center font-medium">
+      <p class="flex items-center gap-2">
+        Ministry of Railways, Govt. of India • © 2026 Indian Railways
+      </p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/pages/login.js"></script>
+  <script>
+    // Live Indian Standard Time (IST) Clock
+    function updateClock() {
+      const now = new Date();
+      const options = { timeZone: 'Asia/Kolkata', hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' };
+      const timeStr = now.toLocaleTimeString('en-IN', options);
+      const dateStr = now.toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit' });
+      const el = document.getElementById('liveClock');
+      if (el) el.textContent = `${dateStr} ${timeStr} IST`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+  </script>
+</body>
+</html>
