@@ -557,20 +557,51 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 3500);
   };
 
-  // Live IST Clock
+  // Live IST Clock & Calendar Engine (Synchronized with Indian Standard Time)
+  function getLiveIndianTime() {
+    const now = new Date();
+    const formatter = new Intl.DateTimeFormat("en-IN", {
+      timeZone: "Asia/Kolkata",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+      hour12: false
+    });
+    const parts = formatter.formatToParts(now);
+    let h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
+    parts.forEach(p => {
+      if (p.type === "hour") h = parseInt(p.value, 10);
+      if (p.type === "minute") m = parseInt(p.value, 10);
+      if (p.type === "second") s = parseInt(p.value, 10);
+    });
+    const totalMinutes = h * 60 + m + s / 60;
+    return { now, h, m, s, totalMinutes };
+  }
+
   function updateClock() {
     const el = document.getElementById("dashClock");
     if (el) {
       const now = new Date();
-      const options = {
+      const timeStr = now.toLocaleTimeString("en-IN", {
         timeZone: "Asia/Kolkata",
         hour12: false,
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit",
-      };
-      const timeStr = now.toLocaleTimeString("en-IN", options);
-      el.textContent = `${timeStr} IST`;
+      });
+      const dateStr = now.toLocaleDateString("en-IN", {
+        timeZone: "Asia/Kolkata",
+        weekday: "short",
+        day: "numeric",
+        month: "short",
+      });
+      el.innerHTML = `
+        <span style="display: inline-flex; align-items: center; gap: 5px;">
+          <span style="width: 7px; height: 7px; border-radius: 50%; background: #10B981; box-shadow: 0 0 8px #10B981; display: inline-block;"></span>
+          <span style="color: #FF9933; font-weight: 700;">${dateStr}</span>
+          <span style="color: #FFFFFF; font-weight: 800; letter-spacing: 0.5px;">${timeStr} IST</span>
+        </span>
+      `;
     }
   }
   setInterval(updateClock, 1000);
@@ -749,6 +780,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const container = document.getElementById("activeSubTabContainer");
     if (!container) return;
 
+    if (activeNavView !== "train_list") {
+      if (typeof stopLiveDetailTicker === "function") stopLiveDetailTicker();
+    }
+
     if (activeNavView === "overview" || activeNavView === "train_list") {
       activeNavView = "train_list";
       renderTrainListSection(container);
@@ -816,8 +851,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Forward Route Track Timeline & Distance/ETA Scrubber.
   // =========================================================================
 
-  // Comprehensive Pan-India Train Corridors Dataset
-  const panIndiaTrainData = [
+  // Comprehensive Pan-India Train Corridors Dataset (Dynamically Synchronized with Real Time Fleet)
+  let panIndiaTrainData = [
     {
       id: "22436",
       number: "22436",
@@ -1398,12 +1433,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Calculation Helper: Interpolate coordinates along train path
   function getTrainPositionAndBearing(train) {
+    if (train.kinematics && typeof train.kinematics.gpsLat === 'number' && typeof train.kinematics.gpsLng === 'number') {
+      return {
+        lat: train.kinematics.gpsLat,
+        lng: train.kinematics.gpsLng,
+        bearing: train.kinematics.bearing || 0,
+        currentSegmentIdx: train.kinematics.currentStnIdx || 0
+      };
+    }
     const stations = train.stations;
     if (!stations || stations.length < 2) {
       return { lat: 28.6139, lng: 77.2090, bearing: 0, currentSegmentIdx: 0 };
     }
     const totalSegments = stations.length - 1;
-    const scaledProgress = train.progress * totalSegments;
+    const scaledProgress = (train.progress || 0) * totalSegments;
     const segIdx = Math.min(Math.floor(scaledProgress), totalSegments - 1);
     const frac = scaledProgress - segIdx;
 
@@ -2481,7 +2524,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
           <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200">
             <span class="text-[10px] text-slate-500 font-bold uppercase font-mono">Braking Reserve</span>
-            <div class="text-base font-black text-[#138808] font-mono mt-1">
+            <div id="hudBrakingReserve" class="text-base font-black text-[#138808] font-mono mt-1">
               ${train.brakingMargin}
             </div>
             <div class="text-[10px] font-bold text-slate-600 mt-0.5">
@@ -2494,22 +2537,22 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="p-3 rounded-xl bg-white border-2 border-slate-200 space-y-2 text-xs font-mono">
           <div class="flex items-center justify-between">
             <span class="text-slate-500">Cab Signal Aspect:</span>
-            <span class="font-extrabold flex items-center gap-1.5 ${train.cabSignalClass}">
+            <span id="hudCabSignal" class="font-extrabold flex items-center gap-1.5 ${train.cabSignalClass}">
               <span class="w-2.5 h-2.5 rounded-full ${train.cabSignalClass.includes('emerald') ? 'bg-emerald-500' : 'bg-amber-500'} animate-pulse"></span>
               ${train.cabSignal}
             </span>
           </div>
           <div class="flex items-center justify-between">
             <span class="text-slate-500">Active Section:</span>
-            <span class="font-bold text-[#12355B]">${train.currentSection}</span>
+            <span id="hudActiveSection" class="font-bold text-[#12355B]">${train.currentSection}</span>
           </div>
           <div class="flex items-center justify-between">
             <span class="text-slate-500">Next Scheduled Halt:</span>
-            <span class="font-bold text-slate-800">${train.nextStation}</span>
+            <span id="hudNextStation" class="font-bold text-slate-800">${train.nextStation}</span>
           </div>
           <div class="flex items-center justify-between">
             <span class="text-slate-500">Estimated Arrival:</span>
-            <span class="font-bold text-emerald-700">${train.etaNextStation}</span>
+            <span id="hudEtaNext" class="font-bold text-emerald-700">${train.etaNextStation}</span>
           </div>
           <div class="flex items-center justify-between border-t border-slate-100 pt-1.5">
             <span class="text-slate-500">Kavach RF Transceiver:</span>
@@ -2535,17 +2578,55 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
   }
 
-  // Smooth continuous train movement loop
+  // Smooth continuous real-time train movement & physics loop
   function startTrainAnimationLoop() {
     let lastTimestamp = performance.now();
+    let lastKinematicsUpdate = 0;
 
     function stepAnimation(timestamp) {
       const delta = (timestamp - lastTimestamp) / 1000;
       lastTimestamp = timestamp;
 
+      // Update real-time kinematics every 600ms
+      const shouldUpdateKinematics = (timestamp - lastKinematicsUpdate) > 600;
+      if (shouldUpdateKinematics) {
+        lastKinematicsUpdate = timestamp;
+        const curIST = getLiveIndianTime();
+        panIndiaTrainData.forEach((train) => {
+          const kin = calculateLiveTrainKinematics(train, curIST);
+          if (kin) {
+            train.speed = kin.curSpeed;
+            train.progress = kin.progressPct / 100;
+            train.kinematics = kin;
+            train.currentSection = `${kin.currentStn.name} → ${kin.nextStn.name}`;
+            train.nextStation = `${kin.nextStn.name} (${kin.nextStn.code})`;
+            train.etaNextStation = `${kin.minsToNext} mins`;
+            train.kavachStatus = kin.status === "HALTED" ? "STATION INTERLOCK (ARMED)" : "ARMED (SIL-4 Certified)";
+          }
+        });
+
+        // If inspector card is visible for activeSelectedTrain, update its numbers
+        if (activeSelectedTrain) {
+          const kin = activeSelectedTrain.kinematics || calculateLiveTrainKinematics(activeSelectedTrain, curIST);
+          if (kin) {
+            const spdEl = document.getElementById("hudSpeedReading");
+            if (spdEl) spdEl.innerHTML = `${kin.curSpeed} <span class="text-xs font-bold text-slate-600">km/h</span>`;
+            const nxtStnEl = document.getElementById("hudNextStation");
+            if (nxtStnEl) nxtStnEl.textContent = `${kin.nextStn.name} (${kin.nextStn.code})`;
+            const etaEl = document.getElementById("hudEtaNext");
+            if (etaEl) etaEl.textContent = `${kin.minsToNext} mins`;
+            const secEl = document.getElementById("hudActiveSection");
+            if (secEl) secEl.textContent = `${kin.currentStn.name} → ${kin.nextStn.name}`;
+          }
+        }
+      }
+
       panIndiaTrainData.forEach((train) => {
-        const progressIncrement = (train.speed / 130) * 0.00035 * Math.min(delta, 0.1);
-        train.progress = (train.progress + progressIncrement) % 1;
+        // Micro-progress for smooth visual motion
+        if (train.speed > 0) {
+          const progressIncrement = (train.speed / 130) * 0.00015 * Math.min(delta, 0.1);
+          train.progress = ((train.progress || 0) + progressIncrement) % 1;
+        }
 
         const pos = getTrainPositionAndBearing(train);
 
@@ -2995,6 +3076,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       isRealDatasetsLoaded = true;
+      syncLiveTrainFleet();
 
       // Re-render current active screen to reflect real data if currently viewing train list or search
       const container = document.getElementById("activeSubTabContainer");
@@ -3008,6 +3090,368 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Trigger real data ingestion immediately on DOM load
   loadRealRailwayDatasets();
+
+  // =========================================================================
+  // REAL-TIME INDIAN RAILWAYS LIVE KINEMATICS & TIMETABLE SCHEDULER
+  // Evaluates every train's live state against actual Indian Standard Time (IST)
+  // Kinematics: Acceleration (departing), Cruising (en route), Deceleration (approaching), Halt (platform)
+  // =========================================================================
+  function calculateLiveTrainKinematics(train, timeObj) {
+    if (!train) return null;
+    const curMins = (timeObj && typeof timeObj.totalMinutes === "number")
+      ? timeObj.totalMinutes
+      : getLiveIndianTime().totalMinutes;
+
+    const seed = parseInt((train.number || "12000").replace(/\D/g, "")) || 12000;
+    const stops = (train.stations && train.stations.length > 1)
+      ? train.stations
+      : (irSchedulesIndex[train.number] || []);
+
+    const parseM = (str) => {
+      if (!str || str === "--") return null;
+      const parts = str.split(":");
+      return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+    };
+
+    const depM = parseM(train.depart);
+    const arrM = parseM(train.arrive);
+    if (depM === null || arrM === null) {
+      return {
+        status: "SCHEDULED",
+        statusText: "SCHEDULED",
+        curSpeed: 0,
+        currentStn: { name: train.fromName || train.from, code: train.from, pf: 1, lat: 28.6139, lng: 77.2090 },
+        nextStn: { name: train.toName || train.to, code: train.to, pf: 2, lat: 18.9712, lng: 72.8197 },
+        currentStnIdx: 0,
+        distCompletedKm: 0,
+        distRemainingKm: train.distance || 500,
+        totalDistKm: train.distance || 500,
+        progressPct: 0,
+        delayMinutes: 0,
+        delayText: "ON TIME",
+        gpsLat: 28.6139,
+        gpsLng: 77.2090,
+        bearing: 90,
+        brakePressure: 5.0,
+        oheVoltage: "25.0",
+        mps: 110,
+        minsToNext: 20,
+        enrichedStops: []
+      };
+    }
+
+    const overnight = arrM < depM;
+    let isRunning = false;
+    let elapsedMins = 0;
+    const totalDurationMins = overnight ? (1440 - depM + arrM) : (arrM - depM);
+
+    if (!overnight) {
+      if (curMins >= depM && curMins <= arrM) {
+        isRunning = true;
+        elapsedMins = curMins - depM;
+      }
+    } else {
+      if (curMins >= depM) {
+        isRunning = true;
+        elapsedMins = curMins - depM;
+      } else if (curMins <= arrM) {
+        isRunning = true;
+        elapsedMins = (1440 - depM) + curMins;
+      }
+    }
+
+    // MPS determination based on train category
+    const tType = (train.type || "").toLowerCase();
+    const tName = (train.name || "").toLowerCase();
+    let mps = 110;
+    if (tType.includes("vande") || tName.includes("vande")) mps = 160;
+    else if (tType.includes("rajdhani") || tType.includes("shatabdi") || tType.includes("tejas") || tType.includes("duronto")) mps = 130;
+    else if (tType.includes("superfast")) mps = 120;
+    else if (tType.includes("passenger") || tType.includes("local") || tType.includes("memu")) mps = 80;
+
+    // Delay calculation using real statistical delay model
+    let delayMinutes = train.delay || 0;
+    if (irDelayModel && irDelayModel.avgDelayByType) {
+      delayMinutes = irDelayModel.avgDelayByType[train.type] || (mps >= 130 ? 0 : 7);
+    }
+    if (window.liveWeatherState && window.liveWeatherState.riskLevel === "HIGH HAZARD") {
+      delayMinutes += 12;
+    }
+
+    const totalDistKm = train.distance || 600;
+
+    // Enrich stops with coordinates from irStations if missing
+    const enrichedStops = stops.map((s, idx) => {
+      let lat = s.lat;
+      let lng = s.lng;
+      if (typeof lat !== "number" || typeof lng !== "number") {
+        const found = irStations.find(st => st.code === s.code);
+        if (found && typeof found.lat === "number") {
+          lat = found.lat;
+          lng = found.lng;
+        } else {
+          lat = 22.0 + (idx * 1.1);
+          lng = 75.0 + (idx * 0.7);
+        }
+      }
+      return {
+        ...s,
+        lat,
+        lng,
+        dist: s.dist || s.distKm || Math.round((idx / Math.max(1, stops.length - 1)) * totalDistKm)
+      };
+    });
+
+    if (!isRunning) {
+      const isFuture = (!overnight && curMins < depM) || (overnight && curMins < depM && curMins > arrM);
+      const minsToDep = isFuture ? (depM - curMins) : (1440 - curMins + depM);
+      const originStn = enrichedStops[0] || { name: train.fromName || train.from, code: train.from, pf: 1, lat: 28.6139, lng: 77.2090, dist: 0 };
+      const destStn = enrichedStops[enrichedStops.length - 1] || { name: train.toName || train.to, code: train.to, pf: 2, lat: 18.9712, lng: 72.8197, dist: totalDistKm };
+
+      return {
+        status: isFuture ? "SCHEDULED" : "TERMINATED",
+        statusText: isFuture 
+          ? `SCHEDULED • Departs ${train.depart} (in ${Math.floor(minsToDep / 60)}h ${Math.round(minsToDep % 60)}m)`
+          : `ARRIVED • Reached ${destStn.name} at ${train.arrive}`,
+        curSpeed: 0,
+        currentStn: isFuture ? originStn : destStn,
+        nextStn: isFuture ? (enrichedStops[1] || destStn) : destStn,
+        currentStnIdx: isFuture ? 0 : Math.max(0, enrichedStops.length - 1),
+        distCompletedKm: isFuture ? 0 : totalDistKm,
+        distRemainingKm: isFuture ? totalDistKm : 0,
+        totalDistKm,
+        progressPct: isFuture ? 0 : 100,
+        delayMinutes,
+        delayText: delayMinutes === 0 ? "ON TIME" : `+${delayMinutes} MIN`,
+        gpsLat: isFuture ? originStn.lat : destStn.lat,
+        gpsLng: isFuture ? originStn.lng : destStn.lng,
+        bearing: 0,
+        brakePressure: 5.0,
+        oheVoltage: "25.0",
+        mps,
+        minsToNext: Math.round(minsToDep),
+        enrichedStops
+      };
+    }
+
+    // TRAIN IS ACTIVELY RUNNING RIGHT NOW!
+    let state = "CRUISING";
+    let speed = Math.round(mps * 0.93);
+    let curStopIdx = 0;
+    let nextStopIdx = 1;
+    let curStn = enrichedStops[0] || { name: train.fromName || train.from, code: train.from, pf: 1, lat: 28.6139, lng: 77.2090, dist: 0 };
+    let nextStn = enrichedStops[1] || { name: train.toName || train.to, code: train.to, pf: 2, lat: 18.9712, lng: 72.8197, dist: totalDistKm };
+    let legFraction = 0.5;
+    let minsToNext = 15;
+
+    if (enrichedStops.length >= 2) {
+      const runStops = enrichedStops.map(s => {
+        const a = parseM(s.arr);
+        const d = parseM(s.dep);
+        const sDay = s.day || 1;
+        const sArrM = a !== null ? ((sDay - 1) * 1440 + a) : null;
+        const sDepM = d !== null ? ((sDay - 1) * 1440 + d) : null;
+        return { ...s, sArrM, sDepM };
+      });
+      const originDepM = runStops[0].sDepM !== null ? runStops[0].sDepM : depM;
+
+      for (let i = 0; i < runStops.length; i++) {
+        const st = runStops[i];
+        const relArr = st.sArrM !== null ? (st.sArrM - originDepM) : null;
+        const relDep = st.sDepM !== null ? (st.sDepM - originDepM) : null;
+
+        // Check if train is currently HALTED at this station
+        if (relArr !== null && relDep !== null && relArr <= elapsedMins && elapsedMins <= relDep) {
+          state = "HALTED";
+          speed = 0;
+          curStopIdx = i;
+          nextStopIdx = Math.min(runStops.length - 1, i + 1);
+          curStn = st;
+          nextStn = runStops[nextStopIdx];
+          legFraction = 0;
+          minsToNext = Math.max(1, Math.ceil(relDep - elapsedMins));
+          break;
+        }
+
+        // Check if train is moving on the leg between stop i and stop i+1
+        if (i < runStops.length - 1) {
+          const nextSt = runStops[i + 1];
+          const thisDep = relDep !== null ? relDep : (relArr || 0);
+          const nextArr = nextSt.sArrM !== null ? (nextSt.sArrM - originDepM) : totalDurationMins;
+
+          if (thisDep <= elapsedMins && elapsedMins <= nextArr) {
+            curStopIdx = i;
+            nextStopIdx = i + 1;
+            curStn = st;
+            nextStn = nextSt;
+            const legDur = Math.max(1, nextArr - thisDep);
+            const legEl = elapsedMins - thisDep;
+            legFraction = Math.min(1, Math.max(0, legEl / legDur));
+            minsToNext = Math.max(1, Math.round(nextArr - elapsedMins));
+
+            if (legFraction < 0.12) {
+              state = "ACCELERATING";
+              speed = Math.max(15, Math.round(mps * Math.pow(legFraction / 0.12, 0.65)));
+            } else if (legFraction > 0.88) {
+              state = "BRAKING";
+              speed = Math.max(10, Math.round(mps * Math.pow((1 - legFraction) / 0.12, 0.75)));
+            } else {
+              state = "CRUISING";
+              const jitter = ((seed + Math.floor(curMins * 60)) % 7) - 3;
+              speed = Math.min(mps, Math.max(80, Math.round(mps * 0.94) + jitter));
+            }
+            break;
+          }
+        }
+      }
+    }
+
+    // Interpolate live GPS coordinates & bearing
+    const lat1 = curStn.lat || 22.0;
+    const lng1 = curStn.lng || 75.0;
+    const lat2 = nextStn.lat || lat1;
+    const lng2 = nextStn.lng || lng1;
+
+    let gpsLat, gpsLng;
+    if (state === "HALTED") {
+      gpsLat = lat1;
+      gpsLng = lng1;
+    } else {
+      gpsLat = lat1 + legFraction * (lat2 - lat1);
+      gpsLng = lng1 + legFraction * (lng2 - lng1);
+    }
+    const bearing = calculateBearingAngle(lat1, lng1, lat2, lng2);
+
+    const curDistStart = curStn.dist || 0;
+    const nextDistEnd = nextStn.dist || (curDistStart + 80);
+    const distCoveredKm = Math.round(curDistStart + legFraction * (nextDistEnd - curDistStart));
+    const distRemainingKm = Math.max(0, totalDistKm - distCoveredKm);
+    const progressPct = Math.min(100, Math.max(0, Math.round((elapsedMins / Math.max(1, totalDurationMins)) * 100)));
+
+    let statusText = "";
+    if (state === "HALTED") {
+      statusText = `HALTED AT ${curStn.name.toUpperCase()} (PF #${curStn.pf || 1}) • Departs in ${minsToNext}m`;
+    } else if (state === "ACCELERATING") {
+      statusText = `ACCELERATING (${speed} km/h) • En Route to ${nextStn.name.toUpperCase()}`;
+    } else if (state === "BRAKING") {
+      statusText = `APPROACHING ${nextStn.name.toUpperCase()} (${speed} km/h) • PF #${nextStn.pf || 1}`;
+    } else {
+      statusText = `CRUISING (${speed} km/h) • Next: ${nextStn.name.toUpperCase()} (ETA ${minsToNext}m)`;
+    }
+
+    const brakePressure = state === "HALTED" ? 2.5 : state === "BRAKING" ? 3.8 : 5.0;
+    const oheVoltage = (24.8 + ((seed + speed) % 5) / 10).toFixed(1);
+
+    return {
+      status: state,
+      statusText,
+      curSpeed: speed,
+      currentStn: curStn,
+      nextStn: nextStn,
+      currentStnIdx: curStopIdx,
+      nextStnIdx: nextStopIdx,
+      distCompletedKm: distCoveredKm,
+      distRemainingKm,
+      totalDistKm,
+      progressPct,
+      delayMinutes,
+      delayText: delayMinutes === 0 ? "ON TIME" : `+${delayMinutes} MIN`,
+      gpsLat: Number(gpsLat.toFixed(4)),
+      gpsLng: Number(gpsLng.toFixed(4)),
+      bearing,
+      brakePressure,
+      oheVoltage,
+      mps,
+      minsToNext,
+      enrichedStops
+    };
+  }
+
+  // Dynamic Fleet Synchronizer: Keeps map fleet populated with real active trains
+  function syncLiveTrainFleet() {
+    if (!irTrainDatabase || irTrainDatabase.length === 0) return;
+    const curIST = getLiveIndianTime();
+
+    const keyNumbers = [
+      "12951", "12953", "12952", // Western Rajdhanis
+      "12003", "12004", "12002", // Northern/Central Shatabdis
+      "12301", "12302", "12259", // Eastern Rajdhanis/Duronto
+      "11019", "11020", "11026", // Central/Konark
+      "12625", "12626", "12431", // Southern/Kerala
+      "04728", "04603", "12801", // SF / DMU / Purushottam
+      "22436"                    // Vande Bharat
+    ];
+
+    const fleet = [];
+    const addedSet = new Set();
+
+    keyNumbers.forEach(num => {
+      const tr = irTrainDatabase.find(t => t.number === num);
+      if (tr && !addedSet.has(tr.number)) {
+        addedSet.add(tr.number);
+        fleet.push(tr);
+      }
+    });
+
+    for (let i = 0; i < irTrainDatabase.length && fleet.length < 24; i++) {
+      const tr = irTrainDatabase[i];
+      if (!addedSet.has(tr.number)) {
+        const kin = calculateLiveTrainKinematics(tr, curIST);
+        if (kin && (kin.status === "CRUISING" || kin.status === "ACCELERATING" || kin.status === "BRAKING" || kin.status === "HALTED")) {
+          addedSet.add(tr.number);
+          fleet.push(tr);
+        }
+      }
+    }
+
+    const colors = {
+      vande_bharat: "#0284c7",
+      rajdhani: "#e11d48",
+      shatabdi: "#0284c7",
+      superfast: "#ea580c",
+      express: "#16a34a"
+    };
+
+    panIndiaTrainData.length = 0;
+    fleet.forEach(tr => {
+      const kin = calculateLiveTrainKinematics(tr, curIST);
+      const tType = (tr.type || "").toLowerCase().replace(/\s+/g, "_");
+      const stops = (tr.stations && tr.stations.length > 1) 
+        ? tr.stations 
+        : (kin && kin.enrichedStops ? kin.enrichedStops : []);
+
+      panIndiaTrainData.push({
+        id: tr.number,
+        number: tr.number,
+        name: tr.name,
+        shortName: `${tr.name} (${tr.from} - ${tr.to})`,
+        type: tType.includes("vande") ? "vande_bharat" : tType.includes("rajdhani") ? "rajdhani" : tType.includes("shatabdi") ? "shatabdi" : "express",
+        color: colors[tType] || "#2563eb",
+        speed: kin ? kin.curSpeed : (tr.speed || 110),
+        maxSpeed: kin ? kin.mps : 130,
+        kavachStatus: "ARMED (SIL-4 Certified)",
+        kavachFreq: "160.225 MHz",
+        rssi: "-42 dBm",
+        satellites: 14,
+        locoPilot: "Sr. Loco Pilot (HQ " + (tr.from || "NDLS") + ")",
+        locoModel: tr.type === "Rajdhani" ? "WAP-7 High Speed #30489" : "WAP-7 Dual Cab #30211",
+        currentSection: kin ? `${kin.currentStn.name} → ${kin.nextStn.name}` : `${tr.from} - ${tr.to}`,
+        nextStation: kin ? `${kin.nextStn.name} (${kin.nextStn.code})` : tr.to,
+        etaNextStation: kin ? `${kin.minsToNext} mins` : "25 mins",
+        brakingMargin: kin && kin.status === "BRAKING" ? "650m (Braking Applied)" : "1,450m (Safe Curve)",
+        cabSignal: kin && kin.status === "BRAKING" ? "CAUTION (YELLOW)" : kin && kin.status === "HALTED" ? "HALT (RED)" : "PROCEED (GREEN)",
+        cabSignalClass: kin && kin.status === "HALTED" ? "text-red-400" : kin && kin.status === "BRAKING" ? "text-yellow-400" : "text-emerald-400",
+        routeDescription: `${tr.fromName || tr.from} ➔ ${tr.toName || tr.to}`,
+        stations: stops,
+        progress: kin ? (kin.progressPct / 100) : 0.35,
+        kinematics: kin
+      });
+    });
+
+    if (panIndiaMap && activeNavView === "live_map") {
+      renderAllPanIndiaTrainMarkers();
+    }
+  }
 
   // Helper: Get station display name
   function getStationDisplay(code) {
@@ -3125,6 +3569,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Go back to search from results
   window.goBackToSearch = function () {
+    stopLiveDetailTicker();
     trainSearchScreen = "search";
     const container = document.getElementById("activeSubTabContainer");
     if (container) renderTrainListSection(container);
@@ -3132,6 +3577,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Go back to results from detail
   window.goBackToResults = function () {
+    stopLiveDetailTicker();
     trainSearchScreen = "results";
     const container = document.getElementById("activeSubTabContainer");
     if (container) renderTrainListSection(container);
@@ -3239,10 +3685,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // =========================================================================
   function renderTrainListSection(container) {
     if (trainSearchScreen === "results") {
+      stopLiveDetailTicker();
       renderTrainResultsScreen(container);
     } else if (trainSearchScreen === "detail") {
       renderTrainDetailScreen(container);
+      startLiveDetailTicker();
     } else {
+      stopLiveDetailTicker();
       renderTrainSearchScreen(container);
     }
   }
@@ -3258,6 +3707,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const fromStation = trainSearchFrom ? irStations.find(s => s.code === trainSearchFrom) : null;
     const toStation = trainSearchTo ? irStations.find(s => s.code === trainSearchTo) : null;
+
+    const curIST = getLiveIndianTime();
+    const candidateNumbers = ["12951", "22436", "12003", "12301", "12626", "11020", "12953", "12002"];
+    let activeFleetList = [];
+    candidateNumbers.forEach(num => {
+      const tr = irTrainDatabase.find(t => t.number === num);
+      if (tr && !activeFleetList.some(item => item.number === tr.number)) {
+        activeFleetList.push(tr);
+      }
+    });
+    for (let i = 0; i < irTrainDatabase.length && activeFleetList.length < 6; i++) {
+      const tr = irTrainDatabase[i];
+      if (!activeFleetList.some(item => item.number === tr.number)) {
+        activeFleetList.push(tr);
+      }
+    }
+    activeFleetList = activeFleetList.slice(0, 6);
 
     container.innerHTML = `
       <div class="space-y-5" style="max-width: 620px; margin: 0 auto;">
@@ -3440,10 +3906,34 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
 
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-            ${irTrainDatabase.slice(0, 6).map(tr => {
-              const dCol = tr.delay === 0 ? '#138808' : tr.delay <= 15 ? '#f59e0b' : '#dc2626';
-              const dBg = tr.delay === 0 ? '#f0fdf4' : tr.delay <= 15 ? '#fffbeb' : '#fef2f2';
+            ${activeFleetList.map(tr => {
+              const kin = calculateLiveTrainKinematics(tr, curIST);
+              const delayVal = kin ? kin.delayMinutes : (tr.delay || 0);
+              const dCol = delayVal === 0 ? '#138808' : delayVal <= 15 ? '#f59e0b' : '#dc2626';
+              const dBg = delayVal === 0 ? '#f0fdf4' : delayVal <= 15 ? '#fffbeb' : '#fef2f2';
               const typeColor = tr.type === 'Vande Bharat' ? '#ea580c' : tr.type === 'Rajdhani' ? '#991b1b' : tr.type === 'Shatabdi' ? '#0284c7' : '#2563eb';
+
+              let statusBadge = "";
+              if (kin) {
+                if (kin.status === "CRUISING") {
+                  statusBadge = `<span style="padding: 2px 7px; border-radius: 8px; font-size: 9px; font-weight: 800; background: #ecfdf5; color: #166534; border: 1px solid #bbf7d0;">🟢 ${kin.curSpeed} km/h</span>`;
+                } else if (kin.status === "HALTED") {
+                  statusBadge = `<span style="padding: 2px 7px; border-radius: 8px; font-size: 9px; font-weight: 800; background: #fffbeb; color: #b45309; border: 1px solid #fde68a;">🟡 HALTED (${kin.currentStn.code})</span>`;
+                } else if (kin.status === "BRAKING") {
+                  statusBadge = `<span style="padding: 2px 7px; border-radius: 8px; font-size: 9px; font-weight: 800; background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa;">🟠 ${kin.curSpeed} km/h (APP)</span>`;
+                } else if (kin.status === "ACCELERATING") {
+                  statusBadge = `<span style="padding: 2px 7px; border-radius: 8px; font-size: 9px; font-weight: 800; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe;">🔵 ${kin.curSpeed} km/h (DEP)</span>`;
+                } else if (kin.status === "SCHEDULED") {
+                  statusBadge = `<span style="padding: 2px 7px; border-radius: 8px; font-size: 9px; font-weight: 800; background: #f8fafc; color: #475569; border: 1px solid #e2e8f0;">⚪ DEP ${tr.depart}</span>`;
+                } else {
+                  statusBadge = `<span style="padding: 2px 7px; border-radius: 8px; font-size: 9px; font-weight: 800; background: #f8fafc; color: #64748b; border: 1px solid #e2e8f0;">🏁 ARRIVED</span>`;
+                }
+              }
+
+              const liveLoc = kin 
+                ? (kin.status === 'HALTED' ? `At ${kin.currentStn.name}` : `${kin.currentStn.name} → ${kin.nextStn.name}`)
+                : `${tr.from} → ${tr.to}`;
+
               return `
                 <div onclick="viewTrainDetail('${tr.number}')"
                   class="glass-card" style="padding: 14px 16px; border-radius: 18px !important; cursor: pointer; transition: all 0.2s; border-left: 4px solid ${dCol} !important;"
@@ -3451,14 +3941,17 @@ document.addEventListener("DOMContentLoaded", () => {
                   onmouseout="this.style.boxShadow=''; this.style.transform=''">
                   <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
                     <span style="font-size: 11px; font-weight: 800; color: ${typeColor}; font-family: 'JetBrains Mono', monospace;">${tr.number}</span>
-                    <span style="padding: 2px 8px; border-radius: 8px; font-size: 9px; font-weight: 800; background: ${dBg}; color: ${dCol}; border: 1px solid ${dCol}30;">
-                      ${tr.delayText}
-                    </span>
+                    <div style="display: flex; align-items: center; gap: 4px;">
+                      ${statusBadge}
+                      <span style="padding: 2px 7px; border-radius: 8px; font-size: 9px; font-weight: 800; background: ${dBg}; color: ${dCol}; border: 1px solid ${dCol}30;">
+                        ${kin ? kin.delayText : tr.delayText}
+                      </span>
+                    </div>
                   </div>
                   <h5 style="margin: 0; font-size: 13px; font-weight: 800; color: #12355B; font-family: 'Outfit', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${tr.name}</h5>
                   <div style="margin: 6px 0 0 0; font-size: 10px; color: #64748b; font-weight: 600; display: flex; align-items: center; justify-content: space-between;">
-                    <span>${tr.from} → ${tr.to}</span>
-                    <span style="color: #2563eb; font-weight: 700;">Open Dashboard →</span>
+                    <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 170px;">${liveLoc}</span>
+                    <span style="color: #2563eb; font-weight: 700; flex-shrink: 0;">Open Dashboard →</span>
                   </div>
                 </div>
               `;
@@ -3577,11 +4070,28 @@ document.addEventListener("DOMContentLoaded", () => {
           const fromStName = fromStIdx !== -1 ? stList[fromStIdx].name : (train.fromName || train.from);
           const toStName = toStIdx !== -1 ? stList[toStIdx].name : (train.toName || train.to);
 
-          const delayColor = train.delay === 0 ? '#138808' : train.delay <= 15 ? '#f59e0b' : '#dc2626';
-          const delayBg = train.delay === 0 ? '#f0fdf4' : train.delay <= 15 ? '#fffbeb' : '#fef2f2';
+          const kin = calculateLiveTrainKinematics(train, getLiveIndianTime());
+          const delayVal = kin ? kin.delayMinutes : (train.delay || 0);
+          const delayColor = delayVal === 0 ? '#138808' : delayVal <= 15 ? '#f59e0b' : '#dc2626';
+          const delayBg = delayVal === 0 ? '#f0fdf4' : delayVal <= 15 ? '#fffbeb' : '#fef2f2';
+
+          let liveKinBadge = "";
+          if (kin) {
+            if (kin.status === "CRUISING") {
+              liveKinBadge = `<span style="padding: 4px 10px; border-radius: 10px; font-size: 10px; font-weight: 800; background: #ecfdf5; color: #166534; border: 1px solid #bbf7d0;">🟢 ${kin.curSpeed} KM/H</span>`;
+            } else if (kin.status === "HALTED") {
+              liveKinBadge = `<span style="padding: 4px 10px; border-radius: 10px; font-size: 10px; font-weight: 800; background: #fffbeb; color: #b45309; border: 1px solid #fde68a;">🟡 HALTED (${kin.currentStn.code})</span>`;
+            } else if (kin.status === "BRAKING") {
+              liveKinBadge = `<span style="padding: 4px 10px; border-radius: 10px; font-size: 10px; font-weight: 800; background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa;">🟠 ${kin.curSpeed} KM/H</span>`;
+            } else if (kin.status === "ACCELERATING") {
+              liveKinBadge = `<span style="padding: 4px 10px; border-radius: 10px; font-size: 10px; font-weight: 800; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe;">🔵 ${kin.curSpeed} KM/H</span>`;
+            } else if (kin.status === "SCHEDULED") {
+              liveKinBadge = `<span style="padding: 4px 10px; border-radius: 10px; font-size: 10px; font-weight: 800; background: #f8fafc; color: #475569; border: 1px solid #e2e8f0;">⚪ DEP ${train.depart}</span>`;
+            }
+          }
 
           return `
-            <div class="glass-card" onclick="viewTrainDetail('${train.number}')" style="padding: 20px 22px; border-radius: 20px !important; cursor: pointer; transition: all 0.2s; border-left: 5px solid ${train.delay === 0 ? '#138808' : train.delay <= 15 ? '#f59e0b' : '#dc2626'} !important; box-shadow: 0 4px 18px rgba(18,53,91,0.06);"
+            <div class="glass-card" onclick="viewTrainDetail('${train.number}')" style="padding: 20px 22px; border-radius: 20px !important; cursor: pointer; transition: all 0.2s; border-left: 5px solid ${delayColor} !important; box-shadow: 0 4px 18px rgba(18,53,91,0.06);"
               onmouseover="this.style.boxShadow='0 8px 30px rgba(18,53,91,0.14)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.boxShadow='0 4px 18px rgba(18,53,91,0.06)'; this.style.transform='translateY(0)'">
 
               <!-- Top: Train Number & Name -->
@@ -3590,8 +4100,9 @@ document.addEventListener("DOMContentLoaded", () => {
                   <span style="font-size: 11px; font-weight: 700; color: #64748b; font-family: 'JetBrains Mono', monospace;">${train.number}</span>
                   <h4 style="font-size: 15px; font-weight: 800; color: #12355B; margin: 2px 0 0 0; font-family: 'Outfit', sans-serif;">${train.name}</h4>
                 </div>
-                <div style="display: flex; gap: 6px;">
-                  <span style="padding: 4px 10px; border-radius: 10px; font-size: 10px; font-weight: 800; background: ${delayBg}; color: ${delayColor}; border: 1px solid ${delayColor}30;">${train.delayText}</span>
+                <div style="display: flex; gap: 6px; align-items: center;">
+                  ${liveKinBadge}
+                  <span style="padding: 4px 10px; border-radius: 10px; font-size: 10px; font-weight: 800; background: ${delayBg}; color: ${delayColor}; border: 1px solid ${delayColor}30;">${kin ? kin.delayText : train.delayText}</span>
                 </div>
               </div>
 
@@ -3958,17 +4469,29 @@ document.addEventListener("DOMContentLoaded", () => {
       ? irMaintenanceDataset[seed % irMaintenanceDataset.length] 
       : null;
 
-    const numStations = (t.stations && t.stations.length > 0) ? t.stations.length : 1;
-    const currentStnIdx = Math.max(0, Math.min(Math.floor(numStations / 2), numStations - 2));
-    const currentStn = (t.stations && t.stations[currentStnIdx]) || { name: t.fromName || t.from, code: t.from, pf: 1, arr: t.depart, dep: t.depart };
-    const nextStn = (t.stations && t.stations[currentStnIdx + 1]) || currentStn;
+    const curIST = getLiveIndianTime();
+    const kin = calculateLiveTrainKinematics(t, curIST);
 
-    const totalDistKm = t.distance || ((seed * 67) % 450 + 480);
-    const distCompletedKm = Math.round(totalDistKm * ((currentStnIdx + 0.6) / numStations));
-    const distRemainingKm = Math.max(0, totalDistKm - distCompletedKm);
-    const progressPct = Math.min(100, Math.round((distCompletedKm / totalDistKm) * 100));
+    const numStations = (kin && kin.enrichedStops && kin.enrichedStops.length > 0)
+      ? kin.enrichedStops.length
+      : ((t.stations && t.stations.length > 0) ? t.stations.length : 1);
 
-    const curSpeed = t.delay > 20 ? Math.round(theme.baseSpeed * 0.88) : theme.baseSpeed;
+    const currentStnIdx = kin ? kin.currentStnIdx : Math.max(0, Math.min(Math.floor(numStations / 2), numStations - 2));
+    const currentStn = kin ? kin.currentStn : ((t.stations && t.stations[currentStnIdx]) || { name: t.fromName || t.from, code: t.from, pf: 1, arr: t.depart, dep: t.depart });
+    const nextStn = kin ? kin.nextStn : ((t.stations && t.stations[currentStnIdx + 1]) || currentStn);
+
+    const totalDistKm = kin ? kin.totalDistKm : (t.distance || ((seed * 67) % 450 + 480));
+    const distCompletedKm = kin ? kin.distCompletedKm : Math.round(totalDistKm * ((currentStnIdx + 0.6) / numStations));
+    const distRemainingKm = kin ? kin.distRemainingKm : Math.max(0, totalDistKm - distCompletedKm);
+    const progressPct = kin ? kin.progressPct : Math.min(100, Math.round((distCompletedKm / totalDistKm) * 100));
+
+    const curSpeed = kin ? kin.curSpeed : (t.delay > 20 ? Math.round(theme.baseSpeed * 0.88) : theme.baseSpeed);
+    const gpsLat = kin ? kin.gpsLat : (25.1 + (seed % 400) / 100).toFixed(4);
+    const gpsLng = kin ? kin.gpsLng : (72.8 + (seed % 350) / 100).toFixed(4);
+    const oheVoltage = kin ? kin.oheVoltage : (24.8 + (seed % 9) / 10).toFixed(1);
+    const statusText = kin ? kin.statusText : "CRUISING";
+    const status = kin ? kin.status : "CRUISING";
+    const brakePressure = kin ? kin.brakePressure : 5.0;
 
     return {
       theme,
@@ -3982,10 +4505,13 @@ document.addEventListener("DOMContentLoaded", () => {
       distCompletedKm,
       distRemainingKm,
       progressPct,
-      gpsLat: (25.1 + (seed % 400) / 100).toFixed(4),
-      gpsLng: (72.8 + (seed % 350) / 100).toFixed(4),
+      kin,
+      status,
+      statusText,
+      gpsLat,
+      gpsLng,
       trackKm: `KM ${120 + (seed % 150)} / ${(seed % 9) + 1}`,
-      oheVoltage: (24.8 + (seed % 9) / 10).toFixed(1),
+      oheVoltage,
       oheCurrent: 320 + (seed % 90),
       tractionPower: mRecord ? Math.round(mRecord.powerKw / 10) : 72 + (seed % 22),
       tractionMotorTemp: mRecord ? Math.round(mRecord.tractionMotorTempC) : 60 + (seed % 18),
@@ -3994,14 +4520,14 @@ document.addEventListener("DOMContentLoaded", () => {
       trackVibrationG: mRecord ? mRecord.trackVibrationG.toFixed(2) : (0.12 + (seed % 6) / 100).toFixed(2),
       railTempC: mRecord ? Math.round(mRecord.trackTempC) : 34 + (seed % 8),
       rfidTagId: `#TAG-KAV-${(seed % 8999) + 1000}`,
-      signalAspect: t.delay === 0 ? "GREEN / PROCEED" : (t.delay <= 15 ? "DOUBLE YELLOW / ATTN" : "YELLOW / CAUTION"),
-      signalDistance: 820 + (seed % 400),
-      movementAuthorityM: 4200 + (seed % 1200),
-      brakingEnvelopeM: 460 + (seed % 80),
+      signalAspect: kin && kin.status === "HALTED" ? "RED / DANGER (STOP)" : kin && kin.status === "BRAKING" ? "YELLOW / CAUTION" : (t.delay === 0 ? "GREEN / PROCEED" : "DOUBLE YELLOW / ATTN"),
+      signalDistance: kin && kin.status === "HALTED" ? 0 : 820 + (seed % 400),
+      movementAuthorityM: kin && kin.status === "HALTED" ? 0 : 4200 + (seed % 1200),
+      brakingEnvelopeM: kin && kin.status === "HALTED" ? 0 : 460 + (seed % 80),
       tsrLocation: `Bridge #${(seed % 80) + 12}: Caution 30 km/h at KM ${140 + (seed % 40)}/2`,
       lastPohDate: `${(seed % 25) + 1}-Jan-2026 at Ajmer Central`,
       nextInspectionDue: `In ${(seed % 5) + 2} days (${(seed * 17) % 900 + 700} km remaining)`,
-      usfdStatus: mRecord && mRecord.failureType !== 'None' ? `USFD Alert: ${mRecord.failureType} Detected` : "0 Flaws Detected • Class-1 Track Standard",
+      usfdStatus: mRecord && mRecord.failureType !== "None" ? `USFD Alert: ${mRecord.failureType} Detected` : "0 Flaws Detected • Class-1 Track Standard",
       energyRegenerated: 1240 + (seed % 600),
       mRecord
     };
@@ -4101,12 +4627,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
             <!-- Right Live Status Pill -->
             <div style="text-align: right; background: #f8fafc; padding: 10px 16px; border-radius: 16px; border: 1px solid #e2e8f0; min-width: 140px;">
-              <p style="font-size: 9px; font-weight: 800; color: #64748b; margin: 0; text-transform: uppercase;">Current Status</p>
-              <p style="font-size: 16px; font-weight: 900; color: ${delayColor}; margin: 2px 0 0 0; font-family: 'Outfit', sans-serif;">
-                ${t.delayText}
+              <p style="font-size: 9px; font-weight: 800; color: #64748b; margin: 0; text-transform: uppercase;">Real-Time Status</p>
+              <p id="liveHeroStatusText" style="font-size: 14px; font-weight: 900; color: ${data.status === 'HALTED' ? '#d97706' : '#138808'}; margin: 2px 0 0 0; font-family: 'Outfit', sans-serif;">
+                ${data.statusText}
               </p>
               <p style="font-size: 10px; color: #16a34a; margin: 2px 0 0 0; font-weight: 700;">
-                <i class="fa-solid fa-satellite-dish" style="margin-right: 3px;"></i> GPS ±0.5m Locked
+                <i class="fa-solid fa-satellite-dish" style="margin-right: 3px;"></i> GPS ±0.5m Locked • ${t.delayText}
               </p>
             </div>
           </div>
@@ -4119,7 +4645,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <span style="color: #64748b; font-weight: 600;">(${t.depart})</span>
               </div>
               <div>
-                <span style="color: ${data.theme.accentColor}; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 800;">
+                <span id="liveDetailProgText" style="color: ${data.theme.accentColor}; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 800;">
                   Covered ${data.distCompletedKm} / ${data.totalDistKm} km (${data.progressPct}%)
                 </span>
               </div>
@@ -4130,15 +4656,15 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
 
             <div style="height: 8px; width: 100%; background: #e2e8f0; border-radius: 8px; position: relative; overflow: visible;">
-              <div style="height: 100%; width: ${data.progressPct}%; background: linear-gradient(90deg, #2563eb, ${data.theme.accentColor}); border-radius: 8px;"></div>
-              <div style="position: absolute; left: calc(${data.progressPct}% - 10px); top: -6px; width: 20px; height: 20px; border-radius: 50%; background: #12355B; color: white; display: flex; align-items: center; justify-content: center; font-size: 9px; box-shadow: 0 2px 6px rgba(0,0,0,0.25); border: 2px solid white;">
+              <div id="liveDetailProgBar" style="height: 100%; width: ${data.progressPct}%; background: linear-gradient(90deg, #2563eb, ${data.theme.accentColor}); border-radius: 8px; transition: width 1s ease;"></div>
+              <div id="liveDetailProgIcon" style="position: absolute; left: calc(${data.progressPct}% - 10px); top: -6px; width: 20px; height: 20px; border-radius: 50%; background: #12355B; color: white; display: flex; align-items: center; justify-content: center; font-size: 9px; box-shadow: 0 2px 6px rgba(0,0,0,0.25); border: 2px solid white; transition: left 1s ease;">
                 <i class="fa-solid fa-train"></i>
               </div>
             </div>
 
             <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 10px; color: #64748b; font-weight: 600;">
               <span>Origin: <strong style="color: #12355B;">${t.stations[0] ? t.stations[0].name : t.from}</strong></span>
-              <span style="color: #166534; font-weight: 700;">Cruising: <strong style="color: #166534;">${data.currentStn.name} → ${data.nextStn.name}</strong></span>
+              <span style="color: #166534; font-weight: 700;">Active: <strong id="liveDetailActiveSectionSub" style="color: #166534;">${data.currentStn.name} → ${data.nextStn.name}</strong></span>
               <span>Destination: <strong style="color: #12355B;">${t.stations[t.stations.length - 1] ? t.stations[t.stations.length - 1].name : t.to}</strong></span>
             </div>
           </div>
@@ -4154,15 +4680,15 @@ document.addEventListener("DOMContentLoaded", () => {
               <span style="font-size: 10px; font-weight: 800; color: #2563eb; text-transform: uppercase;">
                 <i class="fa-solid fa-gauge-high" style="margin-right: 3px;"></i> Speed & Throttle
               </span>
-              <span style="font-size: 9px; font-weight: 800; color: #166534; background: #dcfce7; padding: 2px 8px; border-radius: 8px;">
-                ACTIVE
+              <span id="liveDetailThrottleBadge" style="font-size: 9px; font-weight: 800; color: #166534; background: #dcfce7; padding: 2px 8px; border-radius: 8px;">
+                ${data.status}
               </span>
             </div>
 
             <div style="display: flex; align-items: center; justify-content: center; margin: 2px 0;">
               <svg viewBox="0 0 140 75" style="width: 110px; height: 62px;">
                 <path d="M 15 68 A 55 55 0 0 1 125 68" fill="none" stroke="#e2e8f0" stroke-width="10" stroke-linecap="round" />
-                <path d="M 15 68 A 55 55 0 0 1 125 68" fill="none" stroke="url(#speedMeterGrad2)" stroke-width="10" stroke-linecap="round" stroke-dasharray="172.8" stroke-dashoffset="${dashOffset}" style="transition: stroke-dashoffset 1s ease;" />
+                <path id="liveDetailSpeedArc" d="M 15 68 A 55 55 0 0 1 125 68" fill="none" stroke="url(#speedMeterGrad2)" stroke-width="10" stroke-linecap="round" stroke-dasharray="172.8" stroke-dashoffset="${dashOffset}" style="transition: stroke-dashoffset 0.8s ease;" />
                 <defs>
                   <linearGradient id="speedMeterGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="0%" stop-color="#10b981" />
@@ -4170,14 +4696,14 @@ document.addEventListener("DOMContentLoaded", () => {
                     <stop offset="100%" stop-color="#f59e0b" />
                   </linearGradient>
                 </defs>
-                <text x="70" y="58" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="24" font-weight="900" fill="#12355B">${data.curSpeed}</text>
+                <text id="liveDetailSpeedText" x="70" y="58" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="24" font-weight="900" fill="#12355B">${data.curSpeed}</text>
                 <text x="70" y="70" text-anchor="middle" font-family="'Outfit', sans-serif" font-size="8" font-weight="800" fill="#64748b">KM / H</text>
               </svg>
             </div>
 
             <div style="display: flex; justify-content: space-between; padding-top: 6px; border-top: 1px solid #f1f5f9; font-size: 10px;">
               <span style="color: #64748b;">MPS: <strong style="color: #0f172a;">${data.theme.mps} km/h</strong></span>
-              <span style="color: #64748b;">OHE: <strong style="color: #0f172a;">${data.oheVoltage} kV</strong></span>
+              <span style="color: #64748b;">OHE: <strong id="liveDetailOheText" style="color: #0f172a;">${data.oheVoltage} kV</strong></span>
             </div>
           </div>
 
@@ -4193,18 +4719,18 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
 
             <p style="font-size: 10px; color: #64748b; margin: 0; font-weight: 600;">Active Section</p>
-            <div style="font-size: 13px; font-weight: 800; color: #12355B; margin: 2px 0 4px 0; font-family: 'Outfit', sans-serif;">
+            <div id="liveDetailSectionText" style="font-size: 13px; font-weight: 800; color: #12355B; margin: 2px 0 4px 0; font-family: 'Outfit', sans-serif;">
               ${data.currentStn.name} → ${data.nextStn.name}
             </div>
 
             <div style="background: #f8fafc; padding: 7px 10px; border-radius: 14px; border: 1px solid #e2e8f0; margin-bottom: 6px; font-family: 'JetBrains Mono', monospace; font-size: 10px;">
               <div style="display: flex; justify-content: space-between;">
                 <span style="color: #64748b;">Coords:</span>
-                <span style="font-weight: 700; color: #0f172a;">${data.gpsLat}°N, ${data.gpsLng}°E</span>
+                <span id="liveDetailCoordsText" style="font-weight: 700; color: #0f172a;">${data.gpsLat}°N, ${data.gpsLng}°E</span>
               </div>
               <div style="display: flex; justify-content: space-between;">
                 <span style="color: #64748b;">Post:</span>
-                <span style="font-weight: 800; color: #2563eb;">${data.trackKm}</span>
+                <span id="liveDetailTrackKmText" style="font-weight: 800; color: #2563eb;">${data.trackKm}</span>
               </div>
             </div>
 
@@ -4440,21 +4966,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
             <div style="position: relative; padding-left: 6px;">
               ${t.stations.map((st, idx) => {
-                const isPassed = idx <= data.currentStnIdx;
-                const isCurrentNext = idx === data.currentStnIdx + 1;
+                const isDeparted = idx < data.currentStnIdx || (idx === data.currentStnIdx && data.status !== 'HALTED' && idx < t.stations.length - 1);
+                const isHaltedHere = idx === data.currentStnIdx && data.status === 'HALTED';
+                const isNextImmediate = idx === data.currentStnIdx + 1 && data.status !== 'HALTED';
+                const isPassed = isDeparted;
                 const isLast = idx === t.stations.length - 1;
-                const delayVal = typeof st.delay === 'number' ? st.delay : (t.delay || 0);
+                const delayVal = typeof st.delay === 'number' ? st.delay : (data.kin ? data.kin.delayMinutes : (t.delay || 0));
                 const stDelayCol = delayVal === 0 ? '#138808' : delayVal <= 15 ? '#d97706' : '#dc2626';
                 const stDelayBg = delayVal === 0 ? '#f0fdf4' : delayVal <= 15 ? '#fffbeb' : '#fef2f2';
 
                 return `
                   <div style="position: relative; padding-left: 32px; padding-bottom: ${isLast ? '0' : '12px'};">
                     ${!isLast ? `
-                      <div style="position: absolute; left: 11px; top: 18px; bottom: 0; width: 2px; background: ${isPassed ? '#10b981' : '#e2e8f0'};"></div>
+                      <div style="position: absolute; left: 11px; top: 18px; bottom: 0; width: 2px; background: ${isPassed ? '#10b981' : isHaltedHere ? '#f59e0b' : '#e2e8f0'};"></div>
                     ` : ''}
 
-                    <div style="position: absolute; left: 0; top: 0; width: 24px; height: 24px; border-radius: 50%; background: ${isPassed ? '#10b981' : isCurrentNext ? '#2563eb' : '#94a3b8'}; color: white; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; box-shadow: ${isCurrentNext ? '0 0 0 3px rgba(37,99,235,0.2)' : 'none'};">
-                      ${isPassed ? '<i class="fa-solid fa-check" style="font-size: 9px;"></i>' : idx + 1}
+                    <div style="position: absolute; left: 0; top: 0; width: 24px; height: 24px; border-radius: 50%; background: ${isPassed ? '#10b981' : isHaltedHere ? '#f59e0b' : isNextImmediate ? '#2563eb' : '#94a3b8'}; color: white; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; box-shadow: ${isNextImmediate ? '0 0 0 3px rgba(37,99,235,0.2)' : isHaltedHere ? '0 0 0 3px rgba(245,158,11,0.25)' : 'none'};">
+                      ${isPassed ? '<i class="fa-solid fa-check" style="font-size: 9px;"></i>' : isHaltedHere ? '<i class="fa-solid fa-hand" style="font-size: 8px;"></i>' : idx + 1}
                     </div>
 
                     <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px;">
@@ -4463,7 +4991,8 @@ document.addEventListener("DOMContentLoaded", () => {
                           <div style="font-size: 13px; font-weight: 800; color: #12355B; font-family: 'Outfit', sans-serif;">${st.name}</div>
                           <span style="font-size: 9px; font-weight: 700; color: #64748b; font-family: 'JetBrains Mono', monospace; background: #f1f5f9; padding: 2px 6px; border-radius: 8px;">${st.code}</span>
                           ${isPassed ? '<span style="font-size: 8px; font-weight: 800; color: #166534; background: #dcfce7; padding: 2px 6px; border-radius: 8px;">DEPARTED</span>' : ''}
-                          ${isCurrentNext ? '<span style="font-size: 8px; font-weight: 800; color: #1e40af; background: #dbeafe; padding: 2px 6px; border-radius: 8px;">NEXT STOP</span>' : ''}
+                          ${isHaltedHere ? '<span style="font-size: 8px; font-weight: 800; color: #b45309; background: #fef3c7; padding: 2px 6px; border-radius: 8px;">HALTED (PF #' + (st.pf || 1) + ')</span>' : ''}
+                          ${isNextImmediate ? '<span style="font-size: 8px; font-weight: 800; color: #1e40af; background: #dbeafe; padding: 2px 6px; border-radius: 8px;">NEXT STOP</span>' : ''}
                         </div>
                         <p style="margin: 1px 0 0 0; font-size: 10px; color: #64748b; font-weight: 600;">
                           PF #${st.pf || (idx + 1)} &nbsp;•&nbsp; Arr: <span style="color: #0f172a; font-family: 'JetBrains Mono', monospace; font-weight: 700;">${st.arr}</span> &nbsp;•&nbsp; Dep: <span style="color: #0f172a; font-family: 'JetBrains Mono', monospace; font-weight: 700;">${st.dep}</span>
@@ -4478,13 +5007,17 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>
 
                     ${idx === data.currentStnIdx && !isLast ? `
-                      <div style="margin: 8px 0 4px 0; background: #eff6ff; border: 1.5px dashed #2563eb; padding: 8px 12px; border-radius: 14px; display: flex; align-items: center; justify-content: space-between; font-size: 10px;">
-                        <span style="color: #1e40af; font-weight: 800; display: flex; align-items: center; gap: 5px;">
-                          <i class="fa-solid fa-train" style="color: #2563eb;"></i>
-                          TRAIN HERE • ${data.curSpeed} km/h
+                      <div id="liveDetailTrainHereBanner" style="margin: 8px 0 4px 0; background: ${data.status === 'HALTED' ? '#fffbeb' : '#eff6ff'}; border: 1.5px ${data.status === 'HALTED' ? 'solid #f59e0b' : 'dashed #2563eb'}; padding: 8px 12px; border-radius: 14px; display: flex; align-items: center; justify-content: space-between; font-size: 10px;">
+                        <span style="color: ${data.status === 'HALTED' ? '#b45309' : '#1e40af'}; font-weight: 800; display: flex; align-items: center; gap: 5px;">
+                          <span style="width: 7px; height: 7px; border-radius: 50%; background: ${data.status === 'HALTED' ? '#f59e0b' : '#2563eb'}; display: inline-block;"></span>
+                          ${data.status === 'HALTED' 
+                            ? `HALTED AT ${st.name.toUpperCase()} (PF #${st.pf || 1}) • 0 km/h • BP 2.5 kg/cm²`
+                            : `TRAIN ${data.status} • ${data.curSpeed} km/h • BP ${data.kin ? data.kin.brakePressure : 5.0} kg/cm²`}
                         </span>
-                        <span style="color: #2563eb; font-weight: 700; font-family: 'JetBrains Mono', monospace;">
-                          ${(data.seed * 11) % 25 + 8} km to ${data.nextStn.code}
+                        <span style="color: ${data.status === 'HALTED' ? '#b45309' : '#2563eb'}; font-weight: 700; font-family: 'JetBrains Mono', monospace;">
+                          ${data.status === 'HALTED' 
+                            ? `Departs in ${data.kin ? data.kin.minsToNext : 2}m`
+                            : `${data.kin ? data.kin.minsToNext : 15}m to ${data.nextStn.code} (${data.distRemainingKm} km)`}
                         </span>
                       </div>
                     ` : ''}
@@ -4704,6 +5237,122 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
   }
+
+  // Live Real-Time Ticker for Individual Train Personal Dashboard
+  let liveDetailTickerInterval = null;
+
+  function stopLiveDetailTicker() {
+    if (liveDetailTickerInterval) {
+      clearInterval(liveDetailTickerInterval);
+      liveDetailTickerInterval = null;
+    }
+  }
+
+  function startLiveDetailTicker() {
+    stopLiveDetailTicker();
+    liveDetailTickerInterval = setInterval(() => {
+      if (trainSearchScreen !== "detail" || !trainDetailSelected) {
+        stopLiveDetailTicker();
+        return;
+      }
+      updateLiveDetailDOM();
+    }, 1000);
+  }
+
+  function updateLiveDetailDOM() {
+    if (trainSearchScreen !== "detail" || !trainDetailSelected) return;
+    const t = trainDetailSelected;
+    const data = getTrainPersonalDashboardData(t);
+
+    const heroStatus = document.getElementById("liveHeroStatusText");
+    if (heroStatus) {
+      heroStatus.textContent = data.statusText;
+      heroStatus.style.color = data.status === "HALTED" ? "#d97706" : "#138808";
+    }
+
+    const progText = document.getElementById("liveDetailProgText");
+    if (progText) {
+      progText.textContent = `Covered ${data.distCompletedKm} / ${data.totalDistKm} km (${data.progressPct}%)`;
+    }
+
+    const progBar = document.getElementById("liveDetailProgBar");
+    if (progBar) progBar.style.width = `${data.progressPct}%`;
+
+    const progIcon = document.getElementById("liveDetailProgIcon");
+    if (progIcon) progIcon.style.left = `calc(${data.progressPct}% - 10px)`;
+
+    const activeSecSub = document.getElementById("liveDetailActiveSectionSub");
+    if (activeSecSub) activeSecSub.textContent = `${data.currentStn.name} → ${data.nextStn.name}`;
+
+    const spdText = document.getElementById("liveDetailSpeedText");
+    if (spdText) spdText.textContent = data.curSpeed;
+
+    const spdArc = document.getElementById("liveDetailSpeedArc");
+    if (spdArc) {
+      const gaugeRadius = 55;
+      const gaugeCircumference = Math.PI * gaugeRadius;
+      const speedRatio = Math.min(data.curSpeed, data.theme.mps) / data.theme.mps;
+      const dashOffset = gaugeCircumference * (1 - speedRatio);
+      spdArc.setAttribute("stroke-dashoffset", dashOffset.toFixed(1));
+    }
+
+    const throttleBadge = document.getElementById("liveDetailThrottleBadge");
+    if (throttleBadge) {
+      throttleBadge.textContent = data.status;
+      if (data.status === "HALTED") {
+        throttleBadge.style.color = "#b45309";
+        throttleBadge.style.background = "#fef3c7";
+      } else if (data.status === "BRAKING") {
+        throttleBadge.style.color = "#c2410c";
+        throttleBadge.style.background = "#ffedd5";
+      } else if (data.status === "ACCELERATING") {
+        throttleBadge.style.color = "#1d4ed8";
+        throttleBadge.style.background = "#eff6ff";
+      } else {
+        throttleBadge.style.color = "#166534";
+        throttleBadge.style.background = "#dcfce7";
+      }
+    }
+
+    const oheText = document.getElementById("liveDetailOheText");
+    if (oheText) oheText.textContent = `${data.oheVoltage} kV`;
+
+    const secText = document.getElementById("liveDetailSectionText");
+    if (secText) secText.textContent = `${data.currentStn.name} → ${data.nextStn.name}`;
+
+    const coordsText = document.getElementById("liveDetailCoordsText");
+    if (coordsText) coordsText.textContent = `${data.gpsLat}°N, ${data.gpsLng}°E`;
+
+    const banner = document.getElementById("liveDetailTrainHereBanner");
+    if (banner) {
+      if (data.status === "HALTED") {
+        banner.innerHTML = `
+          <span style="color: #b45309; font-weight: 800; display: flex; align-items: center; gap: 5px;">
+            <span style="width: 7px; height: 7px; border-radius: 50%; background: #f59e0b; display: inline-block;"></span>
+            HALTED AT ${data.currentStn.name.toUpperCase()} (PF #${data.currentStn.pf || 1}) • 0 km/h • BP 2.5 kg/cm²
+          </span>
+          <span style="color: #b45309; font-weight: 700; font-family: 'JetBrains Mono', monospace;">
+            Departs in ${data.kin ? data.kin.minsToNext : 2}m
+          </span>
+        `;
+        banner.style.background = "#fffbeb";
+        banner.style.borderColor = "#f59e0b";
+      } else {
+        banner.innerHTML = `
+          <span style="color: #1e40af; font-weight: 800; display: flex; align-items: center; gap: 5px;">
+            <span style="width: 7px; height: 7px; border-radius: 50%; background: #2563eb; display: inline-block;"></span>
+            TRAIN ${data.status} • ${data.curSpeed} km/h • BP ${data.kin ? data.kin.brakePressure : 5.0} kg/cm²
+          </span>
+          <span style="color: #2563eb; font-weight: 700; font-family: 'JetBrains Mono', monospace;">
+            ${data.kin ? data.kin.minsToNext : 15}m to ${data.nextStn.code} (${data.distRemainingKm} km)
+          </span>
+        `;
+        banner.style.background = "#eff6ff";
+        banner.style.borderColor = "#2563eb";
+      }
+    }
+  }
+
   // VIEW 3: AI ANTI-SPAD & COLLISION RISK CENTER (conflict_alerts)
   function renderConflictAlertsSection(container) {
     container.innerHTML = `
