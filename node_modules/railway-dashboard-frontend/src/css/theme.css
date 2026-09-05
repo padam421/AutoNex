@@ -515,3 +515,538 @@ footer p, footer span, footer a {
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
   white-space: nowrap;
 }
+
+/* ==========================================================================
+   PAN-INDIA HIERARCHICAL GEOGRAPHY MARKERS (States, Cities, Towns)
+   ========================================================================== */
+
+/* State Badges (Zoom 4 - 6) */
+.state-map-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(18, 53, 91, 0.92);
+  color: #FFFFFF;
+  border: 1.5px solid #FF9933;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 900;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  padding: 3px 8px;
+  border-radius: 8px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.35);
+  text-transform: uppercase;
+  pointer-events: none;
+  white-space: nowrap;
+  backdrop-filter: blur(4px);
+  z-index: 100;
+}
+
+/* City Badges (Zoom 6 - 9) */
+.city-map-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #FFFFFF;
+  color: #12355B;
+  border: 1.5px solid #12355B;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(18, 53, 91, 0.2);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 150;
+}
+.city-map-label span.city-dot {
+  width: 6px;
+  height: 6px;
+  background-color: #FF9933;
+  border-radius: 50%;
+  box-shadow: 0 0 4px #FF9933;
+}
+
+/* Town & Small Station Badges (Zoom 10+) */
+.town-map-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: rgba(248, 250, 252, 0.95);
+  color: #334155;
+  border: 1px solid #94A3B8;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 9px;
+  padding: 1.5px 5px;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 160;
+}
+.town-map-label span.town-dot {
+  width: 4px;
+  height: 4px;
+  background-color: #0284C7;
+  border-radius: 50%;
+}
+
+/* ==========================================================================
+   REALISTIC TRAIN RAKE (Loco + Articulated Trailing Coaches)
+   ========================================================================== */
+
+.realistic-train-rake {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: auto;
+  cursor: pointer;
+  filter: drop-shadow(0 6px 14px rgba(0,0,0,0.5));
+}
+
+.train-coach-box {
+  width: 16px;
+  height: 24px;
+  border-radius: 3px;
+  margin-top: 3px;
+  border: 1.5px solid rgba(0,0,0,0.3);
+  position: relative;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.25);
+}
+
+.train-coach-box::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 3px;
+  background-color: #475569;
+}
+
+/* Targeting Radar Reticle Lock */
+.targeting-radar-reticle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 72px;
+  height: 72px;
+  margin-top: -36px;
+  margin-left: -36px;
+  border: 2px dashed #00F0FF;
+  border-radius: 50%;
+  animation: reticleSpin 6s linear infinite;
+  pointer-events: none;
+}
+@keyframes reticleSpin {
+  0% { transform: rotate(0deg) scale(0.9); }
+  50% { transform: rotate(180deg) scale(1.1); }
+  100% { transform: rotate(360deg) scale(0.9); }
+}
+
+/* ==========================================================================
+   INTERACTIVE FORWARD ROUTE TIMELINE & TRACK SCRUBBER
+   ========================================================================== */
+
+.route-timeline-container {
+  background: #FFFFFF;
+  border: 2px solid #12355B;
+  border-radius: 14px;
+  padding: 12px 16px;
+  box-shadow: 0 6px 20px rgba(18, 53, 91, 0.12);
+}
+
+.route-timeline-strip {
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+  gap: 12px;
+  padding: 8px 4px;
+  scrollbar-width: thin;
+  scrollbar-color: #12355B #EAF3F8;
+}
+
+.route-timeline-strip::-webkit-scrollbar {
+  height: 6px;
+}
+.route-timeline-strip::-webkit-scrollbar-thumb {
+  background-color: #12355B;
+  border-radius: 3px;
+}
+
+.timeline-station-node {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 90px;
+  text-align: center;
+}
+.timeline-station-node:hover {
+  transform: translateY(-2px);
+}
+.timeline-station-node.active-passed {
+  opacity: 0.65;
+}
+.timeline-station-node.active-current {
+  transform: scale(1.08);
+}
+
+.timeline-node-pin {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  font-weight: 900;
+  color: white;
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 0 6px rgba(0,0,0,0.3);
+  margin-bottom: 4px;
+  z-index: 2;
+}
+
+.timeline-connector-bar {
+  flex: 1;
+  height: 4px;
+  min-width: 24px;
+  background-color: #CBD5E1;
+  margin-top: -24px;
+  z-index: 1;
+}
+.timeline-connector-bar.completed {
+  background-color: #138808;
+}
+.timeline-connector-bar.upcoming {
+  background: repeating-linear-gradient(90deg, #0284C7, #0284C7 6px, #BAE6FD 6px, #BAE6FD 12px);
+}
+
+/* Waypoint Milestone Station Pins on Map */
+.milestone-station-pin {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.milestone-station-pin:hover {
+  transform: scale(1.15);
+}
+
+/* ==========================================================================
+   PAN-INDIA HIERARCHICAL GEOGRAPHY MARKERS (States, Cities, Towns)
+   ========================================================================== */
+
+/* State Badges (Zoom 4 - 6) */
+.state-map-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(18, 53, 91, 0.92);
+  color: #FFFFFF;
+  border: 1.5px solid #FF9933;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 900;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  padding: 3px 8px;
+  border-radius: 8px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.35);
+  text-transform: uppercase;
+  pointer-events: none;
+  white-space: nowrap;
+  backdrop-filter: blur(4px);
+  z-index: 100;
+}
+
+/* City Badges (Zoom 6 - 9) */
+.city-map-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #FFFFFF;
+  color: #12355B;
+  border: 1.5px solid #12355B;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(18, 53, 91, 0.2);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 150;
+}
+.city-map-label span.city-dot {
+  width: 6px;
+  height: 6px;
+  background-color: #FF9933;
+  border-radius: 50%;
+  box-shadow: 0 0 4px #FF9933;
+}
+
+/* Town & Small Station Badges (Zoom 10+) */
+.town-map-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: rgba(248, 250, 252, 0.95);
+  color: #334155;
+  border: 1px solid #94A3B8;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 9px;
+  padding: 1.5px 5px;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 160;
+}
+.town-map-label span.town-dot {
+  width: 4px;
+  height: 4px;
+  background-color: #0284C7;
+  border-radius: 50%;
+}
+
+/* ==========================================================================
+   REALISTIC TRAIN RAKE (Loco + Articulated Trailing Coaches)
+   ========================================================================== */
+
+.realistic-train-rake {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: auto;
+  cursor: pointer;
+  filter: drop-shadow(0 6px 14px rgba(0,0,0,0.5));
+}
+
+.train-coach-box {
+  width: 16px;
+  height: 24px;
+  border-radius: 3px;
+  margin-top: 3px;
+  border: 1.5px solid rgba(0,0,0,0.3);
+  position: relative;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.25);
+}
+
+.train-coach-box::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 3px;
+  background-color: #475569;
+}
+
+/* Targeting Radar Reticle Lock */
+.targeting-radar-reticle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 72px;
+  height: 72px;
+  margin-top: -36px;
+  margin-left: -36px;
+  border: 2px dashed #00F0FF;
+  border-radius: 50%;
+  animation: reticleSpin 6s linear infinite;
+  pointer-events: none;
+}
+@keyframes reticleSpin {
+  0% { transform: rotate(0deg) scale(0.9); }
+  50% { transform: rotate(180deg) scale(1.1); }
+  100% { transform: rotate(360deg) scale(0.9); }
+}
+
+/* ==========================================================================
+   INTERACTIVE FORWARD ROUTE TIMELINE & TRACK SCRUBBER
+   ========================================================================== */
+
+.route-timeline-container {
+  background: #FFFFFF;
+  border: 2px solid #12355B;
+  border-radius: 14px;
+  padding: 12px 16px;
+  box-shadow: 0 6px 20px rgba(18, 53, 91, 0.12);
+}
+
+.route-timeline-strip {
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+  gap: 12px;
+  padding: 8px 4px;
+  scrollbar-width: thin;
+  scrollbar-color: #12355B #EAF3F8;
+}
+
+.route-timeline-strip::-webkit-scrollbar {
+  height: 6px;
+}
+.route-timeline-strip::-webkit-scrollbar-thumb {
+  background-color: #12355B;
+  border-radius: 3px;
+}
+
+.timeline-station-node {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 90px;
+  text-align: center;
+}
+.timeline-station-node:hover {
+  transform: translateY(-2px);
+}
+.timeline-station-node.active-passed {
+  opacity: 0.65;
+}
+.timeline-station-node.active-current {
+  transform: scale(1.08);
+}
+
+.timeline-node-pin {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  font-weight: 900;
+  color: white;
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 0 6px rgba(0,0,0,0.3);
+  margin-bottom: 4px;
+  z-index: 2;
+}
+
+.timeline-connector-bar {
+  flex: 1;
+  height: 4px;
+  min-width: 24px;
+  background-color: #CBD5E1;
+  margin-top: -24px;
+  z-index: 1;
+}
+.timeline-connector-bar.completed {
+  background-color: #138808;
+}
+.timeline-connector-bar.upcoming {
+  background: repeating-linear-gradient(90deg, #0284C7, #0284C7 6px, #BAE6FD 6px, #BAE6FD 12px);
+}
+
+/* Waypoint Milestone Station Pins on Map */
+.milestone-station-pin {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  position: relative;
+  z-index: 10;
+}
+.milestone-station-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.milestone-station-pin:hover .milestone-station-dot {
+  transform: scale(1.6);
+  box-shadow: 0 0 12px #FF9933 !important;
+}
+.milestone-station-label {
+  display: none;
+  transition: opacity 0.2s ease;
+}
+.milestone-station-pin:hover .milestone-station-label,
+.station-leaflet-icon.expanded-label .milestone-station-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ==========================================================================
+   PAN-INDIA COMPLETE RAILWAY TRACK SYSTEM & INFRASTRUCTURE
+   ========================================================================== */
+
+/* Main Electrified Trunk Line (Golden Quadrilateral GQ/GD) */
+.rail-track-main-trunk {
+  stroke-dasharray: 6, 2;
+  stroke-linecap: round;
+  filter: drop-shadow(0 1px 3px rgba(18, 53, 91, 0.4));
+  cursor: pointer;
+}
+
+/* Dedicated Freight Corridor (WDFC & EDFC Heavy Double Track) */
+.rail-track-dfc {
+  stroke-dasharray: 8, 4;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 4px rgba(234, 179, 8, 0.7));
+  cursor: pointer;
+}
+
+/* Kavach SIL-4 High-Speed Monitored Corridors */
+.rail-track-kavach {
+  animation: kavachTrackGlow 3s infinite alternate ease-in-out;
+}
+@keyframes kavachTrackGlow {
+  0% { filter: drop-shadow(0 0 2px rgba(19, 136, 8, 0.4)); }
+  100% { filter: drop-shadow(0 0 6px rgba(19, 136, 8, 0.9)); }
+}
+
+/* Railway Track Junction Nodes */
+.rail-junction-node {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.rail-junction-node:hover {
+  transform: scale(1.2);
+}
+.rail-junction-dot {
+  width: 7px;
+  height: 7px;
+  background-color: #12355B;
+  border: 2px solid #FFFFFF;
+  border-radius: 50%;
+  box-shadow: 0 0 5px rgba(0,0,0,0.4);
+}
+.rail-junction-dot.major {
+  width: 10px;
+  height: 10px;
+  background-color: #FF9933;
+  box-shadow: 0 0 8px #FF9933;
+}
+.rail-junction-label {
+  background: #FFFFFF;
+  color: #12355B;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 800;
+  font-size: 9px;
+  padding: 1px 4px;
+  border-radius: 4px;
+  border: 1px solid #12355B;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  white-space: nowrap;
+}

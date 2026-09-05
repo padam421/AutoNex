@@ -30,78 +30,79 @@
 
     <!-- Slide Deck Container -->
     <main class="slide-viewport">
-      <!-- SLIDE 1: Title, Executive Summary & Problem Statement -->
+      <!-- SLIDE 1: Title, Problem Statement & Objective -->
       <section class="slide active" data-slide="1">
         <div class="slide-content">
           <div class="tag-label">SMART INDIA HACKATHON PRESENTATION</div>
           <h1 class="slide-title">AUTONEX</h1>
-          <h2 class="slide-subtitle">Dynamic Forecast of Expected Time of Arrival (ETA) for Coaching Trains</h2>
-          <p class="slide-desc">Resolving Cascading Freight & Passenger Delays via Real-Time Telemetry & Fail-Safe Gap Optimization</p>
+          <h2 class="slide-subtitle">Dynamic Forecast of Expected Time of Arrival (ETA) & Safety Management for Coaching Trains</h2>
+          <p class="slide-desc">Smart India Hackathon (SIH) | Intelligent Multi-Sensor Traffic, Safety & Predictive Maintenance Platform</p>
 
-          <!-- Executive Summary Card -->
-          <div class="card executive-summary-card" style="border-color: var(--accent-cyan); margin-bottom: 1.2rem; background: #0e1d3e;">
-            <div class="card-header" style="margin-bottom: 0.5rem;">
-              <span class="icon">📌</span>
-              <h3 style="color: var(--accent-cyan); font-size: 1.05rem;">EXECUTIVE SUMMARY & SYSTEM DESCRIPTION</h3>
+          <!-- Problem Statement Card -->
+          <div class="card problem-card highlight-border-red" style="margin-bottom: 1.0rem;">
+            <div class="card-header" style="margin-bottom: 0.4rem;">
+              <span class="icon">⚠️</span>
+              <h3 style="font-size: 0.98rem; color: var(--accent-amber);">PROBLEM STATEMENT: STUDENT INNOVATION TECHNOLOGY IDEAS IN TERTIARY SECTORS LIKE HOSPITALITY, FINANCIAL SERVICES, ENTERTAINMENT AND RETAILS</h3>
             </div>
-            <p style="font-size: 0.88rem; color: var(--text-main); line-height: 1.45; margin-bottom: 8px;">
-              <strong>AUTONEX</strong> is an intelligent, AI-powered traffic scheduling and real-time ETA forecasting platform designed for Indian Railways. It dynamically predicts expected arrival times for coaching trains while resolving network bottlenecks caused by delayed freight trains (maal gadi). By combining real-time gap telemetry with 20-30 minute advance loop line routing, AUTONEX eliminates cascading delays with guaranteed 0% collision risk.
+            <p style="font-size: 0.88rem; color: var(--text-main); line-height: 1.45; margin-bottom: 4px;">
+              <strong>Cross-Sector Innovation Transfer:</strong> Translating high-efficiency data analytics, IoT sensor telemetry, dynamic queue optimization, and automated resource management from tertiary service sectors into heavy railway transport logistics.
             </p>
           </div>
 
-          <div class="card problem-card highlight-border-red">
-            <div class="card-header" style="margin-bottom: 0.5rem;">
-              <span class="icon">⚠️</span>
-              <h3 style="font-size: 1.05rem;">PROBLEM STATEMENT: DYNAMIC FORECAST OF EXPECTED TIME OF ARRIVAL (ETA) FOR COACHING TRAINS</h3>
+          <!-- Objective Card (Dedicated Railway Problem & Sensor Integration) -->
+          <div class="card executive-summary-card" style="border-color: var(--accent-cyan); background: #0e1d3e;">
+            <div class="card-header" style="margin-bottom: 0.4rem;">
+              <span class="icon">🎯</span>
+              <h3 style="color: var(--accent-cyan); font-size: 0.98rem;">OBJECTIVE: RAILWAY TRAFFIC BOTTLENECK ELIMINATION, MULTI-SENSOR INTEGRATION & ETA FORECAST</h3>
             </div>
-            <div class="grid-2">
+            <div class="grid-2" style="gap: 12px;">
               <div class="problem-item">
-                <div class="item-title">🚆 Freight & Local Bottlenecks</div>
-                <p>Unscheduled delays in freight trains (maal gadi) block express & coaching trains running behind, wrecking ETA accuracy across the route.</p>
+                <div class="item-title">🚆 Freight Delays & Cascading Bottlenecks</div>
+                <p style="font-size: 0.82rem;">Freight trains (maal gadi) choke express corridors, wrecking ETA accuracy across Indian Railways networks.</p>
               </div>
               <div class="problem-item">
-                <div class="item-title">💸 Massive Financial Loss</div>
-                <p>Indian Railways incurs heavy financial losses, fuel wastage, and severe capacity drop due to uncoordinated signal delays.</p>
+                <div class="item-title">📡 Multi-Sensor Telemetry (Speed, Safety & Track Health)</div>
+                <p style="font-size: 0.82rem;">Integrates train speed sensors (axle counters, tachometers), proximity/brake sensors, and trackside strain & vibration sensors for predictive track maintenance.</p>
               </div>
               <div class="problem-item">
-                <div class="item-title">⏳ Reactive Manual Dispatching</div>
-                <p>Decisions are made late at signals rather than miles in advance, causing abrupt train idling and prolonged standstill.</p>
+                <div class="item-title">🔄 Pre-emptive Loop Line Overtake</div>
+                <p style="font-size: 0.82rem;">Detects speed deltas 20-30 minutes in advance to shunt slower freight trains into loop lines with zero collision risk.</p>
               </div>
               <div class="problem-item">
-                <div class="item-title">🛑 Speed vs. Safety Barrier</div>
-                <p>Accelerating delayed coaching trains without high-precision live gap monitoring poses serious collision risks.</p>
+                <div class="item-title">📊 Dynamic ETA Readout & Controller Visibility</div>
+                <p style="font-size: 0.82rem;">Provides live accurate ETA updates to Station Master screens and passenger displays with sub-second precision.</p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- SLIDE 2: Core System & Telemetry Dashboard -->
+      <!-- SLIDE 2: Core System & Multi-Sensor Telemetry Dashboard -->
       <section class="slide" data-slide="2">
         <div class="slide-content">
           <div class="tag-label">SYSTEM ARCHITECTURE</div>
-          <h1 class="slide-title">Real-Time Distance & ETA Monitoring Screen</h1>
-          <p class="slide-desc">Synchronous live tracking of train coordinates, inter-train gap distance, and dynamic ETA readout.</p>
+          <h1 class="slide-title">Multi-Sensor Telemetry & Real-Time Monitoring Screen</h1>
+          <p class="slide-desc">Synchronous live tracking of train speed, track maintenance health, inter-train gap distance, and dynamic ETA.</p>
 
           <div class="grid-3">
             <div class="card feature-card">
               <div class="card-num">01</div>
-              <h3>Dynamic Distance & Location Tracking</h3>
-              <p>Continuous GPS + Trackside RFID telemetry measures the exact gap (in meters) between preceding and trailing trains in real-time.</p>
+              <h3>Train Speed & Telemetry Sensors</h3>
+              <p>Axle counters and wheel tachometers capture live train velocity, while GPS + RFID telemetry calculates precise inter-train distance gaps (in meters).</p>
               <div class="mini-tag">Fail-Safe Gap Boundary</div>
             </div>
 
             <div class="card feature-card highlight-card">
               <div class="card-num">02</div>
-              <h3>Live Accurate ETA Readout</h3>
-              <p>Dynamic forecast of Expected Time of Arrival (ETA) for coaching trains displayed directly on screen (e.g. +18 min delay updated live).</p>
-              <div class="mini-tag green">Zero Manual Estimation</div>
+              <h3>Track Maintenance & Health Sensors</h3>
+              <p>Trackside strain gauges and vibration accelerometers continuously monitor rail stress, load distribution, and track wear for predictive maintenance.</p>
+              <div class="mini-tag green">Preventive Track Health</div>
             </div>
 
             <div class="card feature-card">
               <div class="card-num">03</div>
-              <h3>Automated Signal & Speed Advisory</h3>
-              <p>AI algorithms calculate dynamic speed profiles, predicting traffic bottlenecks 30-40 km in advance for smooth section flow.</p>
+              <h3>Live Accurate ETA & Signal Advisory</h3>
+              <p>AI algorithms calculate dynamic speed recovery profiles, predicting bottlenecks 30-40 km ahead and displaying live ETA (+18 min delay recovery).</p>
               <div class="mini-tag amber">Predictive AI Dispatching</div>
             </div>
           </div>

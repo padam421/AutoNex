@@ -809,45 +809,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // =========================================================================
   // VIEW: ADVANCED PAN-INDIA INTERACTIVE RAILWAY MAP & REALISTIC TRAIN SYSTEM
-  // Features: All India States & Progressive Zoom (Cities -> Towns -> Tracks),
-  // Intelligent Train Search & Auto-Detection, Track Route Visualizer,
-  // Realistic Animated Locomotives with Directional Bearing, Headlight Beam & Kavach Beacon.
+  // Strictly India-Confined Bounds, Progressive Geographic Zoom (States -> Cities -> Towns -> Tracks),
+  // Multi-Coach Realistic Train Rakes with Headlight Beam & Kavach Radar,
+  // Intelligent Search with Auto-Detection & Camera Fly-To,
+  // Forward Route Track Timeline & Distance/ETA Scrubber.
   // =========================================================================
 
   // Comprehensive Pan-India Train Corridors Dataset
   const panIndiaTrainData = [
     {
-      id: "12012",
-      number: "12012",
-      name: "Vande Bharat Express (Northern Trunk)",
-      shortName: "Vande Bharat (NDLS - ASR)",
+      id: "22436",
+      number: "22436",
+      name: "Vande Bharat Express (Kashi / Varanasi)",
+      shortName: "Kashi Vande Bharat (NDLS - BSB)",
       type: "vande_bharat",
       color: "#0284c7",
       speed: 130,
       maxSpeed: 160,
-      kavachStatus: "ARMED",
+      kavachStatus: "ARMED (160.225 MHz)",
       kavachFreq: "160.225 MHz",
-      rssi: "-42 dBm",
-      satellites: 14,
-      locoPilot: "Rajesh Sharma (HQ NDLS)",
-      locoModel: "Train 18 / Vande Bharat 2.0 (16-Coach EMU)",
-      currentSection: "Panipat - Kurukshetra Up Fast",
-      nextStation: "Ambala Cantt Junction (UMB)",
-      etaNextStation: "18 mins",
-      brakingMargin: "1,620m (Full Dynamic Reserve)",
+      rssi: "-39 dBm",
+      satellites: 15,
+      locoPilot: "Manish Tiwari (HQ CNB)",
+      locoModel: "Train 18 Vande Bharat (16 Coaches)",
+      currentSection: "Aligarh - Tundla High-Speed Track",
+      nextStation: "Kanpur Central (CNB)",
+      etaNextStation: "52 mins",
+      brakingMargin: "1,750m (Optimal)",
       cabSignal: "PROCEED (GREEN)",
       cabSignalClass: "text-emerald-400",
-      routeDescription: "New Delhi (NDLS) ➔ Ambala Cantt ➔ Ludhiana ➔ Amritsar",
+      routeDescription: "New Delhi (NDLS) ➔ Aligarh ➔ Kanpur Central ➔ Prayagraj ➔ Varanasi",
       stations: [
-        { name: "New Delhi", code: "NDLS", lat: 28.6139, lng: 77.2090, pf: "PF 1", arr: "Departed 06:00" },
-        { name: "Panipat Jn", code: "PNP", lat: 29.3909, lng: 76.9635, pf: "PF 2", arr: "06:55" },
-        { name: "Kurukshetra Jn", code: "KKDE", lat: 29.9695, lng: 76.8783, pf: "PF 1", arr: "07:32" },
-        { name: "Ambala Cantt", code: "UMB", lat: 30.3752, lng: 76.7821, pf: "PF 3", arr: "08:10" },
-        { name: "Ludhiana Jn", code: "LDH", lat: 30.9010, lng: 75.8573, pf: "PF 2", arr: "09:05" },
-        { name: "Jalandhar City", code: "JUC", lat: 31.3260, lng: 75.5762, pf: "PF 1", arr: "09:48" },
-        { name: "Amritsar Jn", code: "ASR", lat: 31.6340, lng: 74.8723, pf: "PF 1", arr: "10:45" }
+        { name: "New Delhi", code: "NDLS", lat: 28.6139, lng: 77.2090, pf: "PF 16", arr: "Departed 06:00", distKm: 0 },
+        { name: "Aligarh Jn", code: "ALJN", lat: 27.8974, lng: 78.0880, pf: "PF 3", arr: "07:30", distKm: 131 },
+        { name: "Kanpur Central", code: "CNB", lat: 26.4499, lng: 80.3319, pf: "PF 1", arr: "10:08", distKm: 440 },
+        { name: "Prayagraj Jn", code: "PRYJ", lat: 25.4358, lng: 81.8463, pf: "PF 6", arr: "12:08", distKm: 635 },
+        { name: "Varanasi Jn", code: "BSB", lat: 25.3176, lng: 82.9739, pf: "PF 1", arr: "14:00", distKm: 759 }
       ],
-      progress: 0.28
+      progress: 0.35
     },
     {
       id: "12951",
@@ -855,10 +854,10 @@ document.addEventListener("DOMContentLoaded", () => {
       name: "Mumbai Tejas Rajdhani Express",
       shortName: "Tejas Rajdhani (MMCT - NDLS)",
       type: "rajdhani",
-      color: "#dc2626",
-      speed: 125,
+      color: "#e11d48",
+      speed: 130,
       maxSpeed: 130,
-      kavachStatus: "ARMED",
+      kavachStatus: "ARMED (SIL-4 Certified)",
       kavachFreq: "160.225 MHz",
       rssi: "-46 dBm",
       satellites: 13,
@@ -872,216 +871,503 @@ document.addEventListener("DOMContentLoaded", () => {
       cabSignalClass: "text-emerald-400",
       routeDescription: "Mumbai Central (MMCT) ➔ Surat ➔ Vadodara ➔ Ratlam ➔ Kota ➔ New Delhi",
       stations: [
-        { name: "Mumbai Central", code: "MMCT", lat: 18.9712, lng: 72.8197, pf: "PF 1", arr: "Departed 17:00" },
-        { name: "Surat", code: "ST", lat: 21.1702, lng: 72.8311, pf: "PF 1", arr: "19:32" },
-        { name: "Vadodara Jn", code: "BRC", lat: 22.3072, lng: 73.1812, pf: "PF 2", arr: "21:05" },
-        { name: "Ratlam Jn", code: "RTM", lat: 23.3315, lng: 75.0367, pf: "PF 4", arr: "00:25" },
-        { name: "Kota Jn", code: "KOTA", lat: 25.1800, lng: 75.8300, pf: "PF 1", arr: "03:15" },
-        { name: "Mathura Jn", code: "MTJ", lat: 27.4924, lng: 77.6737, pf: "PF 3", arr: "06:40" },
-        { name: "New Delhi", code: "NDLS", lat: 28.6139, lng: 77.2090, pf: "PF 1", arr: "08:32" }
+        { name: "Mumbai Central", code: "MMCT", lat: 18.9712, lng: 72.8197, pf: "PF 1", arr: "Departed 17:00", distKm: 0 },
+        { name: "Surat", code: "ST", lat: 21.1702, lng: 72.8311, pf: "PF 1", arr: "19:32", distKm: 263 },
+        { name: "Vadodara Jn", code: "BRC", lat: 22.3072, lng: 73.1812, pf: "PF 2", arr: "21:05", distKm: 392 },
+        { name: "Ratlam Jn", code: "RTM", lat: 23.3315, lng: 75.0367, pf: "PF 4", arr: "00:25", distKm: 653 },
+        { name: "Kota Jn", code: "KOTA", lat: 25.1800, lng: 75.8300, pf: "PF 1", arr: "03:15", distKm: 919 },
+        { name: "Mathura Jn", code: "MTJ", lat: 27.4924, lng: 77.6737, pf: "PF 3", arr: "06:40", distKm: 1243 },
+        { name: "New Delhi", code: "NDLS", lat: 28.6139, lng: 77.2090, pf: "PF 1", arr: "08:32", distKm: 1384 }
       ],
-      progress: 0.38
-    },
-    {
-      id: "12301",
-      number: "12301",
-      name: "Howrah Rajdhani Express (via Gaya)",
-      shortName: "Howrah Rajdhani (HWH - NDLS)",
-      type: "rajdhani",
-      color: "#b91c1c",
-      speed: 120,
-      maxSpeed: 130,
-      kavachStatus: "ARMED",
-      kavachFreq: "160.250 MHz",
-      rssi: "-48 dBm",
-      satellites: 12,
-      locoPilot: "Amitabh Banerjee (HQ HWH)",
-      locoModel: "WAP-7 HOG Equipped 30421",
-      currentSection: "DDU - Prayagraj Grand Chord",
-      nextStation: "Prayagraj Junction (PRYJ)",
-      etaNextStation: "32 mins",
-      brakingMargin: "1,520m (Safe)",
-      cabSignal: "CAUTION (DOUBLE YELLOW)",
-      cabSignalClass: "text-amber-400",
-      routeDescription: "Howrah (HWH) ➔ Asansol ➔ Gaya ➔ DDU ➔ Prayagraj ➔ Kanpur ➔ New Delhi",
-      stations: [
-        { name: "Howrah Jn", code: "HWH", lat: 22.5850, lng: 88.3426, pf: "PF 9", arr: "Departed 16:50" },
-        { name: "Asansol Jn", code: "ASN", lat: 23.6889, lng: 86.9661, pf: "PF 2", arr: "19:10" },
-        { name: "Dhanbad Jn", code: "DHN", lat: 23.7957, lng: 86.4304, pf: "PF 3", arr: "20:00" },
-        { name: "Gaya Jn", code: "GAYA", lat: 24.7955, lng: 85.0002, pf: "PF 1", arr: "22:20" },
-        { name: "Pt. Deen Dayal Upadhyaya", code: "DDU", lat: 25.2818, lng: 83.1162, pf: "PF 4", arr: "00:45" },
-        { name: "Prayagraj Jn", code: "PRYJ", lat: 25.4358, lng: 81.8463, pf: "PF 1", arr: "02:35" },
-        { name: "Kanpur Central", code: "CNB", lat: 26.4499, lng: 80.3319, pf: "PF 1", arr: "04:40" },
-        { name: "New Delhi", code: "NDLS", lat: 28.6139, lng: 77.2090, pf: "PF 12", arr: "10:05" }
-      ],
-      progress: 0.58
-    },
-    {
-      id: "12434",
-      number: "12434",
-      name: "Chennai Rajdhani Express (Grand Trunk)",
-      shortName: "Chennai Rajdhani (MAS - NZM)",
-      type: "rajdhani",
-      color: "#c2410c",
-      speed: 115,
-      maxSpeed: 130,
-      kavachStatus: "ARMED",
-      kavachFreq: "160.225 MHz",
-      rssi: "-51 dBm",
-      satellites: 11,
-      locoPilot: "K. Venkatesh (HQ MAS)",
-      locoModel: "WAP-7 RPM Shed",
-      currentSection: "Bhopal - Jhansi North-South Corridor",
-      nextStation: "VGL Jhansi Junction (VGLJ)",
-      etaNextStation: "41 mins",
-      brakingMargin: "1,410m (Normal)",
-      cabSignal: "PROCEED (GREEN)",
-      cabSignalClass: "text-emerald-400",
-      routeDescription: "Chennai Central (MAS) ➔ Vijayawada ➔ Nagpur ➔ Bhopal ➔ Jhansi ➔ Agra ➔ NZM",
-      stations: [
-        { name: "Chennai Central", code: "MAS", lat: 13.0827, lng: 80.2707, pf: "PF 2", arr: "Departed 06:10" },
-        { name: "Vijayawada Jn", code: "BZA", lat: 16.5062, lng: 80.6480, pf: "PF 1", arr: "11:50" },
-        { name: "Warangal", code: "WL", lat: 17.9689, lng: 79.5941, pf: "PF 2", arr: "14:15" },
-        { name: "Balharshah Jn", code: "BPQ", lat: 19.8519, lng: 79.3789, pf: "PF 4", arr: "17:45" },
-        { name: "Nagpur Jn", code: "NGP", lat: 21.1458, lng: 79.0882, pf: "PF 1", arr: "20:50" },
-        { name: "Bhopal Jn", code: "BPL", lat: 23.2599, lng: 77.4126, pf: "PF 1", arr: "02:05" },
-        { name: "VGL Jhansi Jn", code: "VGLJ", lat: 25.4484, lng: 78.5685, pf: "PF 2", arr: "05:20" },
-        { name: "Gwalior Jn", code: "GWL", lat: 26.2183, lng: 78.1828, pf: "PF 2", arr: "06:28" },
-        { name: "Agra Cantt", code: "AGC", lat: 27.1767, lng: 78.0081, pf: "PF 2", arr: "07:50" },
-        { name: "Hazrat Nizamuddin", code: "NZM", lat: 28.5885, lng: 77.2534, pf: "PF 5", arr: "10:25" }
-      ],
-      progress: 0.62
-    },
-    {
-      id: "22436",
-      number: "22436",
-      name: "Vande Bharat Express (Kashi / Varanasi)",
-      shortName: "Kashi Vande Bharat (NDLS - BSB)",
-      type: "vande_bharat",
-      color: "#0369a1",
-      speed: 130,
-      maxSpeed: 160,
-      kavachStatus: "ARMED",
-      kavachFreq: "160.225 MHz",
-      rssi: "-39 dBm",
-      satellites: 15,
-      locoPilot: "Manish Tiwari (HQ CNB)",
-      locoModel: "Train 18 Vande Bharat (ICF)",
-      currentSection: "Aligarh - Tundla High-Speed Track",
-      nextStation: "Kanpur Central (CNB)",
-      etaNextStation: "52 mins",
-      brakingMargin: "1,750m (Optimal)",
-      cabSignal: "PROCEED (GREEN)",
-      cabSignalClass: "text-emerald-400",
-      routeDescription: "New Delhi (NDLS) ➔ Aligarh ➔ Kanpur Central ➔ Prayagraj ➔ Varanasi",
-      stations: [
-        { name: "New Delhi", code: "NDLS", lat: 28.6139, lng: 77.2090, pf: "PF 16", arr: "Departed 06:00" },
-        { name: "Aligarh Jn", code: "ALJN", lat: 27.8974, lng: 78.0880, pf: "PF 3", arr: "07:30" },
-        { name: "Kanpur Central", code: "CNB", lat: 26.4499, lng: 80.3319, pf: "PF 1", arr: "10:08" },
-        { name: "Prayagraj Jn", code: "PRYJ", lat: 25.4358, lng: 81.8463, pf: "PF 6", arr: "12:08" },
-        { name: "Varanasi Jn", code: "BSB", lat: 25.3176, lng: 82.9739, pf: "PF 1", arr: "14:00" }
-      ],
-      progress: 0.32
-    },
-    {
-      id: "12626",
-      number: "12626",
-      name: "Kerala Superfast Express",
-      shortName: "Kerala Express (NDLS - TVC)",
-      type: "superfast",
-      color: "#15803d",
-      speed: 105,
-      maxSpeed: 110,
-      kavachStatus: "ACTIVE (TSR 45 km/h)",
-      kavachFreq: "160.225 MHz",
-      rssi: "-54 dBm",
-      satellites: 11,
-      locoPilot: "S. Murugan (HQ TVC)",
-      locoModel: "WAP-4 Erode Shed 22510",
-      currentSection: "Coimbatore - Palakkad Gap",
-      nextStation: "Ernakulam Town (ERN)",
-      etaNextStation: "1 hr 10 mins",
-      brakingMargin: "1,310m (Controlled)",
-      cabSignal: "CAUTION (YELLOW)",
-      cabSignalClass: "text-amber-400",
-      routeDescription: "New Delhi ➔ Bhopal ➔ Nagpur ➔ Katpadi ➔ Coimbatore ➔ Ernakulam ➔ Trivandrum",
-      stations: [
-        { name: "New Delhi", code: "NDLS", lat: 28.6139, lng: 77.2090, pf: "PF 3", arr: "Departed 20:10" },
-        { name: "Agra Cantt", code: "AGC", lat: 27.1767, lng: 78.0081, pf: "PF 1", arr: "22:20" },
-        { name: "Bhopal Jn", code: "BPL", lat: 23.2599, lng: 77.4126, pf: "PF 2", arr: "05:30" },
-        { name: "Nagpur Jn", code: "NGP", lat: 21.1458, lng: 79.0882, pf: "PF 2", arr: "10:15" },
-        { name: "Vijayawada Jn", code: "BZA", lat: 16.5062, lng: 80.6480, pf: "PF 6", arr: "17:30" },
-        { name: "Katpadi Jn", code: "KPD", lat: 12.9698, lng: 79.1325, pf: "PF 1", arr: "23:05" },
-        { name: "Coimbatore Jn", code: "CBE", lat: 11.0168, lng: 76.9558, pf: "PF 2", arr: "05:15" },
-        { name: "Ernakulam Town", code: "ERN", lat: 9.9816, lng: 76.2999, pf: "PF 1", arr: "09:40" },
-        { name: "Thiruvananthapuram", code: "TVC", lat: 8.5241, lng: 76.9366, pf: "PF 1", arr: "14:15" }
-      ],
-      progress: 0.74
-    },
-    {
-      id: "20901",
-      number: "20901",
-      name: "Vande Bharat Express (Western Corridor)",
-      shortName: "Vande Bharat (MMCT - GNC)",
-      type: "vande_bharat",
-      color: "#0891b2",
-      speed: 130,
-      maxSpeed: 160,
-      kavachStatus: "ARMED",
-      kavachFreq: "160.225 MHz",
-      rssi: "-40 dBm",
-      satellites: 14,
-      locoPilot: "Ketan Patel (HQ BRC)",
-      locoModel: "Train 18 Vande Bharat (16-Car)",
-      currentSection: "Surat - Bharuch High-Speed Zone",
-      nextStation: "Vadodara Junction (BRC)",
-      etaNextStation: "36 mins",
-      brakingMargin: "1,680m (Full Reserve)",
-      cabSignal: "PROCEED (GREEN)",
-      cabSignalClass: "text-emerald-400",
-      routeDescription: "Mumbai Central (MMCT) ➔ Vapi ➔ Surat ➔ Vadodara ➔ Ahmedabad ➔ Gandhinagar",
-      stations: [
-        { name: "Mumbai Central", code: "MMCT", lat: 18.9712, lng: 72.8197, pf: "PF 5", arr: "Departed 06:10" },
-        { name: "Vapi", code: "VAPI", lat: 20.3712, lng: 72.9048, pf: "PF 1", arr: "08:00" },
-        { name: "Surat", code: "ST", lat: 21.1702, lng: 72.8311, pf: "PF 1", arr: "08:58" },
-        { name: "Vadodara Jn", code: "BRC", lat: 22.3072, lng: 73.1812, pf: "PF 2", arr: "10:13" },
-        { name: "Ahmedabad Jn", code: "ADI", lat: 23.0225, lng: 72.5714, pf: "PF 1", arr: "11:25" },
-        { name: "Gandhinagar Cap.", code: "GNC", lat: 23.2156, lng: 72.6369, pf: "PF 1", arr: "12:25" }
-      ],
-      progress: 0.44
-    },
-    {
-      id: "31088",
-      number: "31088",
-      name: "WDFC Heavy Freight (Double Stack Container)",
-      shortName: "Freight WAG-9 (Dadri - Sanand)",
-      type: "freight",
-      color: "#eab308",
-      speed: 78,
-      maxSpeed: 100,
-      kavachStatus: "ARMED",
-      kavachFreq: "160.225 MHz",
-      rssi: "-47 dBm",
-      satellites: 12,
-      locoPilot: "Devendra Singh (HQ Rewari)",
-      locoModel: "Twin WAG-9 Heavy Freight (12,000 HP)",
-      currentSection: "Phulera - Marwar Junction WDFC",
-      nextStation: "Palanpur Junction (PNU)",
-      etaNextStation: "1 hr 45 mins",
-      brakingMargin: "1,980m (Heavy Loaded Freight)",
-      cabSignal: "PROCEED (GREEN)",
-      cabSignalClass: "text-emerald-400",
-      routeDescription: "Dadri WDFC ➔ Rewari ➔ Phulera ➔ Marwar ➔ Palanpur ➔ Sanand Freight Terminal",
-      stations: [
-        { name: "Dadri WDFC", code: "DER", lat: 28.5528, lng: 77.5540, pf: "Yard", arr: "Departed 02:30" },
-        { name: "Rewari Jn", code: "RE", lat: 28.1920, lng: 76.6239, pf: "Line 4", arr: "04:45" },
-        { name: "Phulera Jn", code: "FL", lat: 26.8727, lng: 75.2348, pf: "Line 2", arr: "08:15" },
-        { name: "Marwar Jn", code: "MJ", lat: 25.7289, lng: 73.3644, pf: "Line 1", arr: "11:50" },
-        { name: "Palanpur Jn", code: "PNU", lat: 24.1724, lng: 72.4346, pf: "Yard", arr: "15:20" },
-        { name: "Sanand WDFC", code: "SAU", lat: 22.9868, lng: 72.3813, pf: "Terminal", arr: "18:00" }
-      ],
-      progress: 0.52
+      progress: 0.42
     }
+  ];
+
+  // =========================================================================
+  // PAN-INDIA COMPLETE RAILWAY TRACK NETWORK INFRASTRUCTURE (GQ/GD & DFC)
+  // Real Broad-Gauge Track System Across India
+  // =========================================================================
+  const panIndiaRailwayTrackSystem = [
+    {
+      id: "track_western_trunk",
+      name: "Delhi - Mumbai Western Electrified Trunk (GQ-1)",
+      type: "electrified_main",
+      color: "#0284c7",
+      speedRating: "130-160 km/h",
+      gauge: "Broad Gauge 1676mm (Double/Quad Line)",
+      electrification: "25 kV AC 50 Hz",
+      kavachStatus: "ACTIVE (SIL-4)",
+      coordinates: [
+        [28.6139, 77.2090], // NDLS
+        [27.4924, 77.6737], // Mathura
+        [27.2152, 77.4892], // Bharatpur
+        [26.7297, 76.9856], // Hindaun City
+        [26.4716, 76.7214], // Gangapur City
+        [25.9928, 76.3533], // Sawai Madhopur
+        [25.1800, 75.8300], // Kota Jn
+        [24.1878, 75.6412], // Shamgarh
+        [23.4560, 75.4124], // Nagda Jn
+        [23.3315, 75.0367], // Ratlam Jn
+        [22.8373, 74.2554], // Dahod
+        [22.7554, 73.6146], // Godhra
+        [22.3072, 73.1812], // Vadodara Jn
+        [21.7051, 72.9959], // Bharuch Jn
+        [21.6264, 73.0039], // Ankleshwar
+        [21.1702, 72.8311], // Surat
+        [20.9507, 72.9258], // Navsari
+        [20.6103, 72.9342], // Valsad
+        [20.3712, 72.9048], // Vapi
+        [19.6967, 72.7699], // Palghar
+        [19.4564, 72.8081], // Virar
+        [19.2288, 72.8541], // Borivali
+        [18.9712, 72.8197]  // Mumbai Central
+      ]
+    },
+    {
+      id: "track_eastern_trunk",
+      name: "Delhi - Howrah Eastern Electrified Trunk (GQ-2)",
+      type: "electrified_main",
+      color: "#dc2626",
+      speedRating: "130-160 km/h",
+      gauge: "Broad Gauge 1676mm (Triple/Double Line)",
+      electrification: "25 kV AC 50 Hz",
+      kavachStatus: "ACTIVE (SIL-4)",
+      coordinates: [
+        [28.6139, 77.2090], // NDLS
+        [28.6692, 77.4538], // Ghaziabad
+        [27.8974, 78.0880], // Aligarh
+        [27.2062, 78.2438], // Tundla
+        [26.7855, 79.0270], // Etawah
+        [26.4499, 80.3319], // Kanpur Central
+        [25.9284, 80.8128], // Fatehpur
+        [25.4358, 81.8463], // Prayagraj Jn
+        [25.1460, 82.5690], // Mirzapur
+        [25.2818, 83.1162], // Pt. Deen Dayal Upadhyaya
+        [24.9535, 84.0289], // Sasaram
+        [24.9126, 84.1856], // Dehri-on-Sone
+        [24.7955, 85.0002], // Gaya Jn
+        [24.4674, 85.5936], // Koderma
+        [23.9482, 86.0694], // Parasnath
+        [23.8722, 86.1554], // Gomoh
+        [23.7957, 86.4304], // Dhanbad Jn
+        [23.6889, 86.9661], // Asansol Jn
+        [23.5204, 87.3119], // Durgapur
+        [23.2324, 87.8615], // Bardhaman
+        [22.5850, 88.3426]  // Howrah
+      ]
+    },
+    {
+      id: "track_grand_trunk",
+      name: "Delhi - Chennai Grand Trunk Corridor (GD-1)",
+      type: "electrified_main",
+      color: "#c2410c",
+      speedRating: "130 km/h",
+      gauge: "Broad Gauge 1676mm (Double Line)",
+      electrification: "25 kV AC",
+      kavachStatus: "ACTIVE (SIL-4)",
+      coordinates: [
+        [28.6139, 77.2090], // NDLS
+        [27.4924, 77.6737], // Mathura
+        [27.1767, 78.0081], // Agra Cantt
+        [26.2183, 78.1828], // Gwalior
+        [25.4484, 78.5685], // VGL Jhansi
+        [24.6900, 78.4100], // Lalitpur
+        [24.1800, 78.1800], // Bina Jn
+        [23.2599, 77.4126], // Bhopal Jn
+        [22.6100, 77.7600], // Itarsi Jn
+        [21.9000, 77.9000], // Betul
+        [21.1458, 79.0882], // Nagpur Jn
+        [20.7400, 78.6000], // Sewagram
+        [19.8519, 79.3789], // Balharshah
+        [18.7600, 79.5100], // Ramagundam
+        [17.9689, 79.5941], // Warangal / Kazipet
+        [17.2500, 80.1500], // Khammam
+        [16.5062, 80.6480], // Vijayawada Jn
+        [16.2400, 80.6400], // Tenali
+        [15.5000, 80.0500], // Ongole
+        [14.4400, 79.9800], // Nellore
+        [13.8200, 79.8500], // Gudur
+        [13.0827, 80.2707]  // Chennai Central
+      ]
+    },
+    {
+      id: "track_mumbai_howrah",
+      name: "Mumbai - Howrah Trans-India Central Corridor (GD-2)",
+      type: "electrified_main",
+      color: "#0891b2",
+      speedRating: "130 km/h",
+      gauge: "Broad Gauge 1676mm (Double Line)",
+      electrification: "25 kV AC",
+      kavachStatus: "ACTIVE (SIL-4)",
+      coordinates: [
+        [18.9400, 72.8350], // Mumbai CSMT
+        [19.2400, 73.1300], // Kalyan
+        [19.9975, 73.7898], // Nashik
+        [20.2500, 74.4400], // Manmad
+        [20.8200, 75.7000], // Jalgaon
+        [21.0500, 75.7900], // Bhusawal
+        [20.7000, 77.0000], // Akola
+        [20.9300, 77.7500], // Badnera / Amravati
+        [20.7400, 78.6000], // Wardha
+        [21.1458, 79.0882], // Nagpur
+        [21.4600, 80.2000], // Gondia
+        [21.1900, 81.2800], // Durg
+        [21.2500, 81.6300], // Raipur
+        [22.0800, 82.1500], // Bilaspur
+        [21.8500, 83.9200], // Jharsuguda
+        [22.2500, 84.8800], // Rourkela
+        [22.7500, 86.2000], // Tatanagar (Jamshedpur)
+        [22.3400, 87.3200], // Kharagpur
+        [22.5850, 88.3426]  // Howrah
+      ]
+    },
+    {
+      id: "track_mumbai_chennai",
+      name: "Mumbai - Chennai South-Central Trunk (GQ-3)",
+      type: "electrified_main",
+      color: "#9333ea",
+      speedRating: "130 km/h",
+      gauge: "Broad Gauge 1676mm",
+      electrification: "25 kV AC",
+      kavachStatus: "DEPLOYED",
+      coordinates: [
+        [18.9400, 72.8350], // Mumbai
+        [18.5204, 73.8567], // Pune
+        [18.4600, 74.5800], // Daund
+        [17.6600, 75.9100], // Solapur
+        [17.0500, 76.9900], // Wadi Jn
+        [16.2000, 77.3600], // Raichur
+        [15.1700, 77.3800], // Guntakal Jn
+        [14.4700, 78.8200], // Cuddapah (Kadapa)
+        [13.6300, 79.4200], // Renigunta
+        [13.0827, 80.2707]  // Chennai Central
+      ]
+    },
+    {
+      id: "track_east_coast",
+      name: "Howrah - Chennai East Coast Golden Trunk (GQ-4)",
+      type: "electrified_main",
+      color: "#16a34a",
+      speedRating: "130 km/h",
+      gauge: "Broad Gauge 1676mm",
+      electrification: "25 kV AC",
+      kavachStatus: "ACTIVE (SIL-4)",
+      coordinates: [
+        [22.5850, 88.3426], // Howrah
+        [22.3400, 87.3200], // Kharagpur
+        [21.5000, 86.9200], // Balasore
+        [21.0500, 86.5000], // Bhadrak
+        [20.4600, 85.8800], // Cuttack
+        [20.2700, 85.8400], // Bhubaneswar
+        [19.3200, 84.7900], // Brahmapur
+        [18.6000, 84.1400], // Srikakulam
+        [18.1200, 83.4200], // Vizianagaram
+        [17.6868, 83.2185], // Visakhapatnam
+        [17.0000, 81.7800], // Rajahmundry
+        [16.7100, 81.1000], // Eluru
+        [16.5062, 80.6480], // Vijayawada
+        [15.5000, 80.0500], // Ongole
+        [14.4400, 79.9800], // Nellore
+        [13.0827, 80.2707]  // Chennai Central
+      ]
+    },
+    {
+      id: "track_northern_trunk",
+      name: "Delhi - Amritsar / Jammu Northern Trunk",
+      type: "electrified_main",
+      color: "#0284c7",
+      speedRating: "130-160 km/h",
+      gauge: "Broad Gauge (Double Line)",
+      electrification: "25 kV AC",
+      kavachStatus: "ACTIVE (160.225 MHz)",
+      coordinates: [
+        [28.6139, 77.2090], // NDLS
+        [29.3909, 76.9635], // Panipat
+        [29.6857, 76.9905], // Karnal
+        [29.9695, 76.8783], // Kurukshetra
+        [30.3752, 76.7821], // Ambala Cantt
+        [30.9010, 75.8573], // Ludhiana
+        [31.3260, 75.5762], // Jalandhar City
+        [31.5168, 75.3023], // Beas
+        [31.6340, 74.8723]  // Amritsar
+      ]
+    },
+    {
+      id: "track_wdfc",
+      name: "Western Dedicated Freight Corridor (WDFC)",
+      type: "dfc_freight",
+      color: "#eab308",
+      speedRating: "100 km/h (Heavy Loaded)",
+      gauge: "Broad Gauge Heavy Haul (Double Stack)",
+      electrification: "2x25 kV AC High Rise OHE",
+      kavachStatus: "ACTIVE (SIL-4)",
+      coordinates: [
+        [28.5528, 77.5540], // Dadri WDFC
+        [28.1920, 76.6239], // Rewari
+        [27.9900, 76.1000], // Narnaul
+        [27.7000, 75.8000], // Neem Ka Thana
+        [27.3500, 75.5700], // Ringas
+        [26.8727, 75.2348], // Phulera
+        [26.4700, 74.6400], // Ajmer
+        [25.7289, 73.3644], // Marwar Jn
+        [25.2200, 73.0500], // Falna
+        [24.4700, 72.7800], // Abu Road
+        [24.1724, 72.4346], // Palanpur
+        [23.6000, 72.4000], // Mehsana
+        [22.9868, 72.3813], // Sanand Freight
+        [22.3072, 73.1812], // Vadodara DFC
+        [21.1702, 72.8311], // Surat DFC
+        [18.9500, 72.9500]  // JNPT Terminal
+      ]
+    },
+    {
+      id: "track_edfc",
+      name: "Eastern Dedicated Freight Corridor (EDFC)",
+      type: "dfc_freight",
+      color: "#ca8a04",
+      speedRating: "100 km/h",
+      gauge: "Heavy Double Track Automated",
+      electrification: "2x25 kV AC",
+      kavachStatus: "ACTIVE (SIL-4)",
+      coordinates: [
+        [30.8500, 75.9500], // Sahnewal (Ludhiana)
+        [30.3500, 76.8500], // Shambhu
+        [28.2500, 77.8500], // Khurja DFC
+        [27.2000, 78.2500], // Tundla DFC
+        [26.4000, 80.2000], // Bhaupur (Kanpur)
+        [25.3500, 81.9000], // New Karchhana
+        [25.2818, 83.1162], // Pt. Deen Dayal Upadhyaya
+        [24.8500, 84.2500]  // Sonnagar DFC
+      ]
+    },
+    {
+      id: "track_southern_kerala",
+      name: "Southern Trunk & Kerala Corridor",
+      type: "electrified_main",
+      color: "#15803d",
+      speedRating: "110-130 km/h",
+      gauge: "Broad Gauge (Double Line)",
+      electrification: "25 kV AC",
+      kavachStatus: "DEPLOYED",
+      coordinates: [
+        [13.0827, 80.2707], // Chennai
+        [12.9698, 79.1325], // Katpadi
+        [12.5500, 78.5800], // Jolarpettai
+        [11.6600, 78.1400], // Salem
+        [11.3400, 77.7200], // Erode
+        [11.1000, 77.3400], // Tiruppur
+        [11.0168, 76.9558], // Coimbatore
+        [10.7800, 76.6500], // Palakkad
+        [10.7600, 76.2800], // Shoranur
+        [10.5200, 76.2100], // Thrissur
+        [9.9816, 76.2999],  // Ernakulam Town
+        [9.5900, 76.5200],  // Kottayam
+        [8.8900, 76.6000],  // Kollam
+        [8.5241, 76.9366],  // Thiruvananthapuram
+        [8.0800, 77.5500]   // Kanyakumari
+      ]
+    },
+    {
+      id: "track_konkan_railway",
+      name: "Konkan Railway Coastal Route",
+      type: "electrified_main",
+      color: "#0284c7",
+      speedRating: "120 km/h",
+      gauge: "Broad Gauge (Tunnels & Bridges)",
+      electrification: "100% Electrified 25 kV AC",
+      kavachStatus: "ACTIVE (Anti-Collision Device)",
+      coordinates: [
+        [18.4300, 73.1200], // Roha
+        [17.5300, 73.5200], // Chiplun
+        [16.9900, 73.3000], // Ratnagiri
+        [15.9000, 73.7000], // Kudal
+        [15.2800, 73.9800], // Madgaon (Goa)
+        [14.8200, 74.1300], // Karwar
+        [13.9100, 74.5700], // Bhatkal
+        [13.3400, 74.7400], // Udupi
+        [12.8700, 74.8400]  // Mangaluru Central
+      ]
+    },
+    {
+      id: "track_bengaluru_hyderabad",
+      name: "Bengaluru - Hyderabad / Secunderabad Trunk",
+      type: "electrified_main",
+      color: "#6366f1",
+      speedRating: "130 km/h",
+      gauge: "Broad Gauge",
+      electrification: "25 kV AC",
+      kavachStatus: "ACTIVE (SIL-4)",
+      coordinates: [
+        [12.9716, 77.5946], // Bengaluru
+        [14.1500, 77.7200], // Dharmavaram
+        [14.6800, 77.6000], // Anantapur
+        [15.1700, 77.3800], // Guntakal
+        [15.8200, 78.0300], // Kurnool
+        [16.7400, 77.9800], // Mahbubnagar
+        [17.3850, 78.4867]  // Hyderabad / Kacheguda
+      ]
+    },
+    {
+      id: "track_northeast",
+      name: "North-Eastern & Assam Gateway Corridor",
+      type: "electrified_main",
+      color: "#059669",
+      speedRating: "110-130 km/h",
+      gauge: "Broad Gauge",
+      electrification: "25 kV AC Electrified",
+      kavachStatus: "DEPLOYED",
+      coordinates: [
+        [22.5850, 88.3426], // Kolkata
+        [25.0100, 88.1400], // Malda Town
+        [26.7200, 88.4300], // New Jalpaiguri (Siliguri)
+        [26.3200, 89.4600], // New Cooch Behar
+        [26.5000, 90.5500], // New Bongaigaon
+        [26.1445, 91.7362], // Guwahati
+        [25.7500, 93.1700], // Lumding
+        [27.4700, 94.9100]  // Dibrugarh
+      ]
+    },
+    {
+      id: "track_rajasthan_link",
+      name: "Jaipur - Ajmer - Marwar - Jodhpur Link",
+      type: "secondary_main",
+      color: "#d97706",
+      speedRating: "110-130 km/h",
+      gauge: "Broad Gauge Electrified",
+      electrification: "25 kV AC",
+      kavachStatus: "DEPLOYED",
+      coordinates: [
+        [26.9124, 75.7873], // Jaipur
+        [26.4700, 74.6400], // Ajmer
+        [25.7289, 73.3644], // Marwar Jn
+        [26.2900, 73.0200]  // Jodhpur
+      ]
+    },
+    {
+      id: "track_central_link",
+      name: "Bhopal - Ujjain - Indore / Ahmedabad Link",
+      type: "secondary_main",
+      color: "#2563eb",
+      speedRating: "110-130 km/h",
+      gauge: "Broad Gauge Electrified",
+      electrification: "25 kV AC",
+      kavachStatus: "ACTIVE",
+      coordinates: [
+        [23.2599, 77.4126], // Bhopal
+        [23.1800, 75.7800], // Ujjain
+        [22.7196, 75.8577], // Indore
+        [23.4560, 75.4124], // Nagda
+        [23.3315, 75.0367], // Ratlam
+        [23.0225, 72.5714]  // Ahmedabad
+      ]
+    }
+  ];
+
+  // Pan-India Hierarchical Geography Dataset (States -> Metros -> Junctions -> Towns)
+  const panIndiaGeoPlaces = [
+    // Tier 1: Indian States & Union Territories (Visible at Zoom 4 - 6)
+    { name: "RAJASTHAN (NWR)", lat: 26.58, lng: 73.85, tier: "state" },
+    { name: "UTTAR PRADESH (NCR/NR)", lat: 27.12, lng: 80.95, tier: "state" },
+    { name: "MAHARASHTRA (CR/WR)", lat: 19.55, lng: 75.52, tier: "state" },
+    { name: "MADHYA PRADESH (WCR)", lat: 23.50, lng: 78.25, tier: "state" },
+    { name: "GUJARAT (WR)", lat: 22.85, lng: 71.55, tier: "state" },
+    { name: "PUNJAB (NR)", lat: 31.05, lng: 75.40, tier: "state" },
+    { name: "HARYANA (NR)", lat: 29.25, lng: 76.50, tier: "state" },
+    { name: "BIHAR (ECR)", lat: 25.65, lng: 85.80, tier: "state" },
+    { name: "WEST BENGAL (ER/SER)", lat: 23.35, lng: 87.80, tier: "state" },
+    { name: "TAMIL NADU (SR)", lat: 11.05, lng: 78.50, tier: "state" },
+    { name: "KARNATAKA (SWR)", lat: 14.50, lng: 75.80, tier: "state" },
+    { name: "ANDHRA PRADESH (SCR)", lat: 15.80, lng: 79.70, tier: "state" },
+    { name: "TELANGANA (SCR)", lat: 17.80, lng: 79.10, tier: "state" },
+    { name: "KERALA (SR)", lat: 10.20, lng: 76.40, tier: "state" },
+    { name: "ODISHA (ECoR)", lat: 20.50, lng: 84.50, tier: "state" },
+    { name: "JHARKHAND (SER/ECR)", lat: 23.60, lng: 85.30, tier: "state" },
+    { name: "CHHATTISGARH (SECR)", lat: 21.30, lng: 81.90, tier: "state" },
+    { name: "ASSAM (NFR)", lat: 26.20, lng: 92.90, tier: "state" },
+    { name: "UTTARAKHAND (NR)", lat: 30.10, lng: 79.10, tier: "state" },
+    { name: "HIMACHAL PRADESH (NR)", lat: 31.80, lng: 77.20, tier: "state" },
+    { name: "JAMMU & KASHMIR (NR)", lat: 33.50, lng: 75.00, tier: "state" },
+    { name: "DELHI NCR (HQ)", lat: 28.6139, lng: 77.2090, tier: "state" },
+
+    // Tier 2: Metros & Primary Cities (Visible at Zoom 6 - 8)
+    { name: "New Delhi", lat: 28.6139, lng: 77.2090, tier: "city" },
+    { name: "Mumbai", lat: 18.9712, lng: 72.8197, tier: "city" },
+    { name: "Kolkata", lat: 22.5726, lng: 88.3639, tier: "city" },
+    { name: "Chennai", lat: 13.0827, lng: 80.2707, tier: "city" },
+    { name: "Bengaluru", lat: 12.9716, lng: 77.5946, tier: "city" },
+    { name: "Hyderabad", lat: 17.3850, lng: 78.4867, tier: "city" },
+    { name: "Ahmedabad", lat: 23.0225, lng: 72.5714, tier: "city" },
+    { name: "Jaipur", lat: 26.9124, lng: 75.7873, tier: "city" },
+    { name: "Lucknow", lat: 26.8467, lng: 80.9462, tier: "city" },
+    { name: "Kanpur", lat: 26.4499, lng: 80.3319, tier: "city" },
+    { name: "Nagpur", lat: 21.1458, lng: 79.0882, tier: "city" },
+    { name: "Bhopal", lat: 23.2599, lng: 77.4126, tier: "city" },
+    { name: "Patna", lat: 25.5941, lng: 85.1376, tier: "city" },
+    { name: "Surat", lat: 21.1702, lng: 72.8311, tier: "city" },
+    { name: "Vadodara", lat: 22.3072, lng: 73.1812, tier: "city" },
+    { name: "Varanasi", lat: 25.3176, lng: 82.9739, tier: "city" },
+    { name: "Agra", lat: 27.1767, lng: 78.0081, tier: "city" },
+    { name: "Amritsar", lat: 31.6340, lng: 74.8723, tier: "city" },
+    { name: "Chandigarh", lat: 30.7333, lng: 76.7794, tier: "city" },
+    { name: "Indore", lat: 22.7196, lng: 75.8577, tier: "city" },
+    { name: "Coimbatore", lat: 11.0168, lng: 76.9558, tier: "city" },
+    { name: "Thiruvananthapuram", lat: 8.5241, lng: 76.9366, tier: "city" },
+    { name: "Guwahati", lat: 26.1445, lng: 91.7362, tier: "city" },
+
+    // Tier 3: District Junctions (Visible at Zoom 9 - 11)
+    { name: "Kota Jn", lat: 25.1800, lng: 75.8300, tier: "junction" },
+    { name: "Ratlam Jn", lat: 23.3315, lng: 75.0367, tier: "junction" },
+    { name: "Mathura Jn", lat: 27.4924, lng: 77.6737, tier: "junction" },
+    { name: "Prayagraj Jn", lat: 25.4358, lng: 81.8463, tier: "junction" },
+    { name: "Pt. Deen Dayal Upadhyaya", lat: 25.2818, lng: 83.1162, tier: "junction" },
+    { name: "Asansol Jn", lat: 23.6889, lng: 86.9661, tier: "junction" },
+    { name: "Dhanbad Jn", lat: 23.7957, lng: 86.4304, tier: "junction" },
+    { name: "Gaya Jn", lat: 24.7955, lng: 85.0002, tier: "junction" },
+    { name: "Ambala Cantt", lat: 30.3752, lng: 76.7821, tier: "junction" },
+    { name: "Panipat Jn", lat: 29.3909, lng: 76.9635, tier: "junction" },
+    { name: "Kurukshetra Jn", lat: 29.9695, lng: 76.8783, tier: "junction" },
+    { name: "Ludhiana Jn", lat: 30.9010, lng: 75.8573, tier: "junction" },
+    { name: "Jalandhar City", lat: 31.3260, lng: 75.5762, tier: "junction" },
+    { name: "Gwalior Jn", lat: 26.2183, lng: 78.1828, tier: "junction" },
+    { name: "VGL Jhansi", lat: 25.4484, lng: 78.5685, tier: "junction" },
+    { name: "Vijayawada Jn", lat: 16.5062, lng: 80.6480, tier: "junction" },
+    { name: "Warangal", lat: 17.9689, lng: 79.5941, tier: "junction" },
+    { name: "Palanpur Jn", lat: 24.1724, lng: 72.4346, tier: "junction" },
+    { name: "Rewari Jn", lat: 28.1920, lng: 76.6239, tier: "junction" },
+    { name: "Phulera Jn", lat: 26.8727, lng: 75.2348, tier: "junction" },
+    { name: "Marwar Jn", lat: 25.7289, lng: 73.3644, tier: "junction" },
+    { name: "Vapi", lat: 20.3712, lng: 72.9048, tier: "junction" },
+    { name: "Bharuch Jn", lat: 21.7051, lng: 72.9959, tier: "junction" },
+    { name: "Anand Jn", lat: 22.5645, lng: 72.9289, tier: "junction" },
+
+    // Tier 4: Intermediate Towns, Halts & Track Stations (Visible at Zoom 12+)
+    { name: "Gangapur City", lat: 26.4716, lng: 76.7214, tier: "town" },
+    { name: "Sawai Madhopur", lat: 25.9928, lng: 76.3533, tier: "town" },
+    { name: "Bharatpur Jn", lat: 27.2152, lng: 77.4892, tier: "town" },
+    { name: "Hindaun City", lat: 26.7297, lng: 76.9856, tier: "town" },
+    { name: "Nagda Jn", lat: 23.4560, lng: 75.4124, tier: "town" },
+    { name: "Shamgarh", lat: 24.1878, lng: 75.6412, tier: "town" },
+    { name: "Dahod", lat: 22.8373, lng: 74.2554, tier: "town" },
+    { name: "Ankleshwar", lat: 21.6264, lng: 73.0039, tier: "town" },
+    { name: "Navsari", lat: 20.9507, lng: 72.9258, tier: "town" },
+    { name: "Valsad", lat: 20.6103, lng: 72.9342, tier: "town" },
+    { name: "Ganaur", lat: 29.1332, lng: 77.0195, tier: "town" },
+    { name: "Samalkha", lat: 29.2372, lng: 77.0117, tier: "town" },
+    { name: "Gharaunda", lat: 29.5398, lng: 76.9698, tier: "town" },
+    { name: "Karnal", lat: 29.6857, lng: 76.9905, tier: "town" },
+    { name: "Taraori", lat: 29.8055, lng: 76.9272, tier: "town" },
+    { name: "Shahabad Markanda", lat: 30.1685, lng: 76.8711, tier: "town" },
+    { name: "Sirhind Jn", lat: 30.6425, lng: 76.3846, tier: "town" },
+    { name: "Khanna", lat: 30.7071, lng: 76.2163, tier: "town" },
+    { name: "Phagwara Jn", lat: 31.2240, lng: 75.7708, tier: "town" },
+    { name: "Beas Jn", lat: 31.5168, lng: 75.3023, tier: "town" },
+    { name: "Fatehpur", lat: 25.9284, lng: 80.8128, tier: "town" },
+    { name: "Mirzapur", lat: 25.1460, lng: 82.5690, tier: "town" },
+    { name: "Sasaram Jn", lat: 24.9535, lng: 84.0289, tier: "town" },
+    { name: "Dehri-on-Sone", lat: 24.9126, lng: 84.1856, tier: "town" },
+    { name: "Koderma Jn", lat: 24.4674, lng: 85.5936, tier: "town" },
+    { name: "Gomoh Jn", lat: 23.8722, lng: 86.1554, tier: "town" },
+    { name: "Parasnath", lat: 23.9482, lng: 86.0694, tier: "town" }
   ];
 
   // Map Global State
@@ -1090,6 +1376,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let isFollowingTrainCamera = false;
   let mapRoutePolyline = null;
   let mapStationMarkersGroup = null;
+  let mapGeoLabelsGroup = null;
+  let mapGhostScrubberMarker = null;
   let mapTrainMarkers = {};
   let trainAnimationTimer = null;
   let mapCurrentTileLayer = null;
@@ -1125,7 +1413,55 @@ document.addEventListener("DOMContentLoaded", () => {
     return { lat, lng, bearing, currentSegmentIdx: segIdx };
   }
 
-  // Generator: Realistic SVG Train Sprite based on Locomotive Type
+  // Calculate Forward Station Milestones, Distances & Remaining ETAs
+  function calculateForwardMilestones(train) {
+    if (!train || !train.stations) return [];
+
+    const totalSegments = train.stations.length - 1;
+    const scaledProgress = train.progress * totalSegments;
+    const currentSegIdx = Math.floor(scaledProgress);
+    const speed = train.speed > 0 ? train.speed : 110;
+
+    const milestones = train.stations.map((stn, idx) => {
+      const isPassed = idx <= currentSegIdx;
+      const isNextImmediate = idx === currentSegIdx + 1;
+      let distFromTrain = 0;
+      let etaMins = 0;
+      let etaText = "";
+
+      if (isPassed) {
+        etaText = "DEPARTED";
+      } else {
+        const segFrac = scaledProgress - currentSegIdx;
+        const currentDist = train.stations[currentSegIdx].distKm + 
+          (train.stations[currentSegIdx + 1].distKm - train.stations[currentSegIdx].distKm) * segFrac;
+        distFromTrain = Math.max(0, Math.round(stn.distKm - currentDist));
+        etaMins = Math.round((distFromTrain / speed) * 60);
+
+        if (etaMins < 60) {
+          etaText = `${etaMins} mins`;
+        } else {
+          const hrs = Math.floor(etaMins / 60);
+          const mins = etaMins % 60;
+          etaText = `${hrs}h ${mins}m`;
+        }
+      }
+
+      return {
+        ...stn,
+        index: idx,
+        isPassed,
+        isNextImmediate,
+        distFromTrain,
+        etaMins,
+        etaText
+      };
+    });
+
+    return milestones;
+  }
+
+  // Generator: Ultra-Realistic Multi-Coach Train Rake SVG with Always-Visible Live Badge
   function generateRealisticTrainSVG(train, isSelected) {
     const isVB = train.type === "vande_bharat";
     const isRaj = train.type === "rajdhani";
@@ -1133,48 +1469,108 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let bodyColor = isVB ? "#FFFFFF" : isRaj ? "#DC2626" : isFreight ? "#15803D" : "#2563EB";
     let stripeColor = isVB ? "#0284C7" : isRaj ? "#F59E0B" : isFreight ? "#EAB308" : "#93C5FD";
-    let noseColor = isVB ? "#0F172A" : isRaj ? "#991B1B" : isFreight ? "#064E3B" : "#1E3A8A";
-    let glowColor = isSelected ? "#00F0FF" : "rgba(255,255,255,0.7)";
+    let coachBg = isVB ? "#F8FAFC" : isRaj ? "#B91C1C" : isFreight ? "#166534" : "#1D4ED8";
+    let coachStripe = isVB ? "#0284C7" : isRaj ? "#F59E0B" : isFreight ? "#CA8A04" : "#60A5FA";
+    let badgeColor = isVB ? "#0284C7" : isRaj ? "#DC2626" : isFreight ? "#EAB308" : "#2563EB";
 
     return `
-      <div class="train-marker-wrapper" style="width: 44px; height: 52px;" title="${train.number} - ${train.name}">
-        <!-- Kavach 160 MHz RF Radar Aura Bubble -->
-        <div class="kavach-radar-beacon ${train.kavachStatus.includes('TSR') ? 'caution' : ''}"></div>
-        
-        <!-- Forward Headlight Beam Cone -->
-        <div class="train-headlight-cone"></div>
+      <div style="position: relative; display: flex; flex-direction: column; align-items: center;">
+        <!-- Always Visible High-Tech Live Status Badge -->
+        <div class="train-live-status-badge" style="position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 8px; z-index: 1000; pointer-events: none; white-space: nowrap;">
+          <div style="background: rgba(10, 25, 47, 0.94); color: #FFFFFF; border: 1.5px solid ${badgeColor}; border-radius: 8px; padding: 3px 8px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 10px; font-weight: 800; box-shadow: 0 4px 14px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 5px; backdrop-filter: blur(6px);">
+            <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background-color: #10B981; box-shadow: 0 0 8px #10B981;"></span>
+            <span style="color: #FF9933; font-weight: 900; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.05em;">${train.number}</span>
+            <span style="color: #FFFFFF; font-weight: 800; text-transform: uppercase;">${train.shortName || train.name}</span>
+            <span style="color: #38BDF8; font-family: 'JetBrains Mono', monospace; font-weight: 800; background: rgba(56, 189, 248, 0.15); padding: 1px 4px; border-radius: 4px;">${train.speed} km/h</span>
+            <span style="color: #34D399; font-weight: 800; font-size: 9px; background: rgba(16, 185, 129, 0.2); padding: 1px 5px; border-radius: 4px; border: 1px solid rgba(16, 185, 129, 0.4);">
+              ETA ${train.etaNextStation}
+            </span>
+          </div>
+        </div>
 
-        <!-- Realistic Locomotive SVG -->
-        <svg viewBox="0 0 44 54" width="44" height="54" style="filter: drop-shadow(0 4px 10px rgba(0,0,0,0.6)); position: relative; z-index: 2;">
-          <!-- Train Aerodynamic Nose & Main Body -->
-          <path d="M 12 52 L 12 18 C 12 7, 22 2, 22 2 C 22 2, 32 7, 32 18 L 32 52 Z" fill="${bodyColor}" stroke="${stripeColor}" stroke-width="2" />
+        <div class="realistic-train-rake" title="${train.number} - ${train.name}">
+          <!-- Kavach 160.225 MHz Radar Aura Bubble -->
+          <div class="kavach-radar-beacon ${train.kavachStatus.includes('TSR') ? 'caution' : ''}"></div>
           
-          <!-- Aerodynamic Windshield Glass -->
-          <path d="M 15 17 C 15 11, 22 7, 22 7 C 22 7, 29 11, 29 17 Z" fill="#0F172A" stroke="#38BDF8" stroke-width="1.2" />
-          
-          <!-- High-Intensity Twin LED Headlights (Glowing) -->
-          <circle cx="16" cy="6" r="2.5" fill="#FEF08A" filter="drop-shadow(0 0 4px #FACC15)" />
-          <circle cx="28" cy="6" r="2.5" fill="#FEF08A" filter="drop-shadow(0 0 4px #FACC15)" />
-          
-          <!-- Middle Stripe & Indian Railways Livery -->
-          <rect x="13" y="24" width="18" height="4" fill="${stripeColor}" rx="1" />
-          <rect x="13" y="32" width="18" height="2" fill="${stripeColor}" opacity="0.8" rx="0.5" />
-          <rect x="13" y="38" width="18" height="2" fill="${stripeColor}" opacity="0.8" rx="0.5" />
-          
-          <!-- Roof Pantograph / AC Unit -->
-          <rect x="18" y="44" width="8" height="5" fill="#475569" rx="1" />
-          <line x1="22" y1="44" x2="22" y2="40" stroke="#CBD5E1" stroke-width="1.5" />
-          
-          <!-- Selection Glow Ring -->
-          ${isSelected ? `<circle cx="22" cy="27" r="20" fill="none" stroke="${glowColor}" stroke-width="2.5" stroke-dasharray="3,3" />` : ''}
-        </svg>
+          <!-- Forward Headlight Beam Cone -->
+          <div class="train-headlight-cone"></div>
+
+          <!-- Targeting Radar Reticle (When Selected) -->
+          ${isSelected ? '<div class="targeting-radar-reticle"></div>' : ''}
+
+          <!-- Locomotive Engine SVG -->
+          <svg viewBox="0 0 36 46" width="36" height="46" style="position: relative; z-index: 3;">
+            <path d="M 8 44 L 8 16 C 8 6, 18 2, 18 2 C 18 2, 28 6, 28 16 L 28 44 Z" fill="${bodyColor}" stroke="${stripeColor}" stroke-width="1.8" />
+            <path d="M 11 15 C 11 10, 18 6, 18 6 C 18 6, 25 10, 25 15 Z" fill="#0F172A" stroke="#38BDF8" stroke-width="1" />
+            <circle cx="12" cy="5" r="2.2" fill="#FEF08A" filter="drop-shadow(0 0 4px #FACC15)" />
+            <circle cx="24" cy="5" r="2.2" fill="#FEF08A" filter="drop-shadow(0 0 4px #FACC15)" />
+            <rect x="9" y="22" width="18" height="3" fill="${stripeColor}" rx="0.5" />
+            <rect x="9" y="28" width="18" height="1.8" fill="${stripeColor}" opacity="0.8" />
+            <rect x="9" y="33" width="18" height="1.8" fill="${stripeColor}" opacity="0.8" />
+            <rect x="14" y="38" width="8" height="4" fill="#334155" rx="1" />
+            <line x1="18" y1="38" x2="18" y2="34" stroke="#CBD5E1" stroke-width="1.5" />
+          </svg>
+
+          <!-- Articulated Trailing Coaches -->
+          <div style="display: flex; flex-direction: column; align-items: center; margin-top: -3px; z-index: 2;">
+            <div class="train-coach-box" style="background: ${coachBg}; border-color: ${coachStripe};">
+              <div style="width: 100%; height: 3px; background: ${coachStripe}; margin-top: 6px;"></div>
+              <div style="width: 100%; height: 2px; background: ${coachStripe}; margin-top: 5px; opacity: 0.8;"></div>
+            </div>
+            <div class="train-coach-box" style="background: ${coachBg}; border-color: ${coachStripe}; margin-top: 3px;">
+              <div style="width: 100%; height: 3px; background: ${coachStripe}; margin-top: 6px;"></div>
+              <div style="width: 100%; height: 2px; background: ${coachStripe}; margin-top: 5px; opacity: 0.8;"></div>
+            </div>
+          </div>
+        </div>
       </div>
     `;
   }
 
+  // Update Dynamic Hierarchical Geography Labels on Zoom Change
+  function updateDynamicLODMarkers() {
+    if (!panIndiaMap || !mapGeoLabelsGroup) return;
+
+    const currentZoom = panIndiaMap.getZoom();
+    mapGeoLabelsGroup.clearLayers();
+
+    panIndiaGeoPlaces.forEach((place) => {
+      let shouldShow = false;
+      let markerHtml = "";
+      let iconSize = [100, 24];
+
+      if (place.tier === "state" && currentZoom >= 4 && currentZoom <= 7) {
+        shouldShow = true;
+        markerHtml = `<div class="state-map-label"><i class="fa-solid fa-landmark text-amber-300 text-[10px]"></i> ${place.name}</div>`;
+        iconSize = [130, 24];
+      } else if (place.tier === "city" && currentZoom >= 6 && currentZoom <= 9) {
+        shouldShow = true;
+        markerHtml = `<div class="city-map-label"><span class="city-dot"></span> ${place.name}</div>`;
+        iconSize = [100, 20];
+      } else if (place.tier === "junction" && currentZoom >= 8 && currentZoom <= 12) {
+        shouldShow = true;
+        markerHtml = `<div class="city-map-label" style="border-color: #0284C7;"><span class="city-dot" style="background-color: #0284C7;"></span> ${place.name}</div>`;
+        iconSize = [110, 20];
+      } else if (place.tier === "town" && currentZoom >= 11) {
+        shouldShow = true;
+        markerHtml = `<div class="town-map-label"><span class="town-dot"></span> ${place.name}</div>`;
+        iconSize = [90, 18];
+      }
+
+      if (shouldShow) {
+        const icon = L.divIcon({
+          className: "custom-geo-lod-label",
+          html: markerHtml,
+          iconSize: iconSize,
+          iconAnchor: [iconSize[0] / 2, iconSize[1] / 2]
+        });
+        L.marker([place.lat, place.lng], { icon: icon, interactive: false }).addTo(mapGeoLabelsGroup);
+      }
+    });
+  }
+
   // Core Map View Renderer
   function renderLiveMapSection(container) {
-    // Clear existing animation timer if any
     if (trainAnimationTimer) {
       cancelAnimationFrame(trainAnimationTimer);
       trainAnimationTimer = null;
@@ -1183,7 +1579,7 @@ document.addEventListener("DOMContentLoaded", () => {
     container.innerHTML = `
       <div class="space-y-4">
         
-        <!-- Top Operations Bar: Search, Quick Chips & Centering -->
+        <!-- Top Operations Bar: Search, Quick Chips & Controls -->
         <div class="glass-card p-4 space-y-3 border-l-4 border-[#FF9933] shadow-lg">
           <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
             <div>
@@ -1191,7 +1587,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-[#138808] border border-emerald-500/40 text-[11px] font-extrabold uppercase tracking-wider font-mono">
                   ● 100% KAVACH GIS RADAR
                 </span>
-                <span class="px-2 py-0.5 rounded bg-blue-100 text-[#12355B] font-mono text-[10px] font-black">PAN-INDIA NETWORK</span>
+                <span class="px-2 py-0.5 rounded bg-blue-100 text-[#12355B] font-mono text-[10px] font-black">STRICT INDIA BOUNDS</span>
               </div>
               <h2 class="text-xl font-black text-[#0F172A] font-['Outfit'] mt-1 flex items-center gap-2">
                 🗺️ Indian Railways Pan-India Interactive Live Radar Map
@@ -1203,7 +1599,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
             <!-- Map View Switchers & Controls -->
             <div class="flex flex-wrap items-center gap-2">
-              <button onclick="switchLiveMapTileLayer('voyager')" id="btnLayerVoyager" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition-all cursor-pointer bg-[#12355B] text-white shadow">
+              <button onclick="switchLiveMapTileLayer('iri')" id="btnLayerIRI" class="px-3 py-1.5 rounded-xl border border-[#FF9933] text-xs font-black transition-all cursor-pointer bg-[#FF9933] text-white shadow flex items-center gap-1.5">
+                <i class="fa-solid fa-route text-white"></i> 🛤️ IndiaRailInfo Atlas View
+              </button>
+              <button onclick="switchLiveMapTileLayer('voyager')" id="btnLayerVoyager" class="px-3 py-1.5 rounded-xl border border-slate-300 text-slate-700 bg-white hover:bg-slate-100 text-xs font-bold transition-all cursor-pointer">
                 <i class="fa-solid fa-map"></i> Official Railway Map
               </button>
               <button onclick="switchLiveMapTileLayer('dark')" id="btnLayerDark" class="px-3 py-1.5 rounded-xl border border-slate-300 text-slate-700 bg-white hover:bg-slate-100 text-xs font-bold transition-all cursor-pointer">
@@ -1224,7 +1623,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 id="liveMapTrainSearchInput" 
                 oninput="handleLiveMapTrainSearch(this.value)" 
                 onfocus="handleLiveMapTrainSearch(this.value)"
-                placeholder="Search any train by number, name or station (e.g. 12012, Vande Bharat, Rajdhani, Mumbai, Howrah, Kerala)..." 
+                placeholder="Search any train by number, name or station (e.g. 12012, 12951, Vande Bharat, Rajdhani, Mumbai, Kota, Amritsar)..." 
                 class="w-full pl-11 pr-28 py-3 rounded-xl bg-white border-2 border-[#12355B] text-slate-900 font-bold text-sm focus:outline-none focus:ring-2 focus:ring-[#FF9933] shadow-sm transition-all"
               />
               <span class="absolute right-3 px-2 py-1 rounded bg-[#EAF3F8] text-[#12355B] text-[10px] font-mono font-extrabold border border-blue-200">
@@ -1240,37 +1639,49 @@ document.addEventListener("DOMContentLoaded", () => {
 
           <!-- Quick Corridor Filter Chips -->
           <div class="flex flex-wrap items-center gap-2 pt-1 border-t border-slate-200">
-            <span class="text-[11px] font-extrabold text-slate-500 uppercase font-mono">Quick Locate:</span>
-            <button onclick="selectAndFocusTrain('12012')" class="px-3 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 border border-blue-300 text-blue-900 text-xs font-bold transition-all cursor-pointer">
-              🚅 12012 Vande Bharat (Delhi-Amritsar)
+            <span class="text-[11px] font-extrabold text-slate-500 uppercase font-mono">Select Flagship Train:</span>
+            <button onclick="selectAndFocusTrain('22436')" class="px-3.5 py-1.5 rounded-xl bg-sky-50 hover:bg-sky-100 border-2 border-sky-400 text-sky-950 text-xs font-black transition-all cursor-pointer shadow-sm">
+              🚅 22436 Kashi Vande Bharat Express (New Delhi ➔ Varanasi)
             </button>
-            <button onclick="selectAndFocusTrain('12951')" class="px-3 py-1 rounded-lg bg-red-50 hover:bg-red-100 border border-red-300 text-red-900 text-xs font-bold transition-all cursor-pointer">
-              ⭐ 12951 Tejas Rajdhani (Mumbai-Delhi)
+            <button onclick="selectAndFocusTrain('12951')" class="px-3.5 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 border-2 border-rose-400 text-rose-950 text-xs font-black transition-all cursor-pointer shadow-sm">
+              ⭐ 12951 Tejas Rajdhani Express (Mumbai ➔ New Delhi)
             </button>
-            <button onclick="selectAndFocusTrain('12301')" class="px-3 py-1 rounded-lg bg-red-50 hover:bg-red-100 border border-red-300 text-red-900 text-xs font-bold transition-all cursor-pointer">
-              ⚡ 12301 Howrah Rajdhani
-            </button>
-            <button onclick="selectAndFocusTrain('12434')" class="px-3 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-900 text-xs font-bold transition-all cursor-pointer">
-              🏛️ 12434 Chennai Rajdhani
-            </button>
-            <button onclick="selectAndFocusTrain('22436')" class="px-3 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 border border-sky-300 text-sky-900 text-xs font-bold transition-all cursor-pointer">
-              🕉️ 22436 Kashi Vande Bharat
-            </button>
-            <button onclick="selectAndFocusTrain('31088')" class="px-3 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-900 text-xs font-bold transition-all cursor-pointer">
-              📦 31088 DFC Freight WAG-9
-            </button>
+          </div>
+
+          <!-- Railway Track System Filter Toolbar -->
+          <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-200">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="text-[11px] font-extrabold text-[#12355B] uppercase font-mono">
+                <i class="fa-solid fa-bars-staggered mr-1 text-[#FF9933]"></i> Track System:
+              </span>
+              <button onclick="filterRailwayTracks('all')" id="btnTrackAll" class="px-2.5 py-1 rounded-lg bg-[#12355B] text-white text-xs font-black shadow transition-all cursor-pointer">
+                🛤️ All Indian Tracks (15 Corridors)
+              </button>
+              <button onclick="filterRailwayTracks('kavach')" id="btnTrackKavach" class="px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-300 text-emerald-900 hover:bg-emerald-100 text-xs font-bold transition-all cursor-pointer">
+                🛡️ Kavach SIL-4 Corridors
+              </button>
+              <button onclick="filterRailwayTracks('dfc')" id="btnTrackDfc" class="px-2.5 py-1 rounded-lg bg-amber-50 border border-amber-300 text-amber-900 hover:bg-amber-100 text-xs font-bold transition-all cursor-pointer">
+                📦 WDFC / EDFC Freight
+              </button>
+              <button onclick="filterRailwayTracks('electrified')" id="btnTrackElec" class="px-2.5 py-1 rounded-lg bg-sky-50 border border-sky-300 text-sky-900 hover:bg-sky-100 text-xs font-bold transition-all cursor-pointer">
+                ⚡ 25 kV AC Electrified
+              </button>
+            </div>
+            <span class="text-[11px] font-mono text-slate-500 font-bold hidden sm:inline">
+              🇮🇳 Exclusive India Boundary Mask Active
+            </span>
           </div>
         </div>
 
         <!-- Main Map Viewport & Right Locomotive Telemetry HUD -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
           
-          <!-- Leaflet Interactive Map Canvas (8 cols on lg, full width on sm) -->
+          <!-- Leaflet Interactive Map Canvas (8 cols on lg) -->
           <div class="lg:col-span-8 glass-card p-3 space-y-2 border-2 border-slate-200 relative overflow-hidden flex flex-col justify-between">
             <div class="flex items-center justify-between text-xs px-2 pb-1 border-b border-slate-200">
               <div class="flex items-center gap-2">
                 <span class="font-extrabold text-[#12355B] font-mono uppercase">MAP STATUS:</span>
-                <span id="mapStatusText" class="font-bold text-emerald-600 font-mono">LIVE GPS FEED ACTIVE • 8 TRAINS TRACKED</span>
+                <span id="mapStatusText" class="font-bold text-emerald-600 font-mono">LIVE GPS FEED ACTIVE • 8 TRAINS TRACKED • FULL TRACK SYSTEM</span>
               </div>
               <div class="flex items-center gap-3">
                 <label class="flex items-center gap-1.5 cursor-pointer font-bold text-[#12355B] text-[11px]">
@@ -1283,13 +1694,18 @@ document.addEventListener("DOMContentLoaded", () => {
             <!-- Leaflet Container -->
             <div id="panIndiaRailMap" class="w-full relative shadow-inner"></div>
 
+            <!-- Forward Route Track Timeline & Distance/ETA Scrubber -->
+            <div class="route-timeline-container space-y-2" id="routeTimelineContainer">
+              <!-- Populated via renderForwardRouteTimeline -->
+            </div>
+
             <!-- Dynamic Bottom Legend Bar -->
             <div class="flex flex-wrap items-center justify-between text-[11px] font-mono text-slate-700 bg-slate-100 p-2.5 rounded-xl border border-slate-200">
               <div class="flex items-center gap-3">
-                <span><strong class="text-[#0284C7]">━━━</strong> Vande Bharat Corridor</span>
-                <span><strong class="text-[#DC2626]">━━━</strong> Rajdhani Route</span>
-                <span><strong class="text-[#15803D]">━━━</strong> Superfast Route</span>
-                <span><strong class="text-[#EAB308]">━━━</strong> Dedicated Freight Corridor (WDFC)</span>
+                <span><strong class="text-[#0284C7]">━━━</strong> Electrified Double Line</span>
+                <span><strong class="text-[#EAB308]">━━━</strong> Dedicated Freight (WDFC/EDFC)</span>
+                <span><strong class="text-[#15803D]">━━━</strong> Kavach SIL-4 Monitored</span>
+                <span><strong class="text-[#9333EA]">━━━</strong> South-Central Trunk</span>
               </div>
               <div class="flex items-center gap-3">
                 <span class="text-emerald-700 font-bold">● Green (Normal)</span>
@@ -1322,42 +1738,158 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Initialize the Leaflet Map instance
+  // Map Tracks Layer Group & Filter State
+  let mapTracksLayerGroup = null;
+  let activeTrackSystemFilter = 'all';
+
+  window.filterRailwayTracks = function(filterType) {
+    activeTrackSystemFilter = filterType;
+    
+    const btnAll = document.getElementById("btnTrackAll");
+    const btnKavach = document.getElementById("btnTrackKavach");
+    const btnDfc = document.getElementById("btnTrackDfc");
+    const btnElec = document.getElementById("btnTrackElec");
+
+    const defaultClass = "px-2.5 py-1 rounded-lg border text-xs font-bold transition-all cursor-pointer";
+    const activeClass = "px-2.5 py-1 rounded-lg bg-[#12355B] text-white text-xs font-black shadow transition-all cursor-pointer";
+
+    if (btnAll) btnAll.className = filterType === 'all' ? activeClass : defaultClass + " bg-slate-50 border-slate-300 text-slate-700";
+    if (btnKavach) btnKavach.className = filterType === 'kavach' ? activeClass : defaultClass + " bg-emerald-50 border-emerald-300 text-emerald-900";
+    if (btnDfc) btnDfc.className = filterType === 'dfc' ? activeClass : defaultClass + " bg-amber-50 border-amber-300 text-amber-900";
+    if (btnElec) btnElec.className = filterType === 'electrified' ? activeClass : defaultClass + " bg-sky-50 border-sky-300 text-sky-900";
+
+    renderPanIndiaRailwayTracks(filterType);
+    showToast(`Track System Filter: ${filterType.toUpperCase()}`, "info");
+  };
+
+  // Render Complete Indian Railway Track Network on Leaflet
+  function renderPanIndiaRailwayTracks(filter = 'all') {
+    if (!panIndiaMap || !mapTracksLayerGroup) return;
+    mapTracksLayerGroup.clearLayers();
+
+    panIndiaRailwayTrackSystem.forEach((track) => {
+      let isVisible = true;
+      if (filter === 'kavach') isVisible = track.kavachStatus.includes('ACTIVE');
+      else if (filter === 'dfc') isVisible = track.type === 'dfc_freight';
+      else if (filter === 'electrified') isVisible = track.electrification.includes('25 kV');
+
+      if (!isVisible) return;
+
+      const isDfc = track.type === 'dfc_freight';
+
+      // 1. Bed / Base Rail Layer
+      L.polyline(track.coordinates, {
+        color: isDfc ? '#78350F' : '#0F172A',
+        weight: isDfc ? 6 : 4.5,
+        opacity: 0.85,
+        lineCap: 'round',
+        interactive: false
+      }).addTo(mapTracksLayerGroup);
+
+      // 2. Center / Sleeper Track Layer
+      const centerLine = L.polyline(track.coordinates, {
+        color: track.color,
+        weight: isDfc ? 3.5 : 2.5,
+        dashArray: isDfc ? '8, 4' : '5, 3',
+        opacity: 0.95,
+        interactive: true
+      }).addTo(mapTracksLayerGroup);
+
+      // Hover tooltip & Click popup
+      centerLine.bindTooltip(`
+        <div class="font-['Plus_Jakarta_Sans'] text-xs font-bold text-[#12355B]">
+          <span>🛤️ ${track.name}</span><br>
+          <span class="text-emerald-700 font-mono">Speed: ${track.speedRating} • ${track.kavachStatus}</span>
+        </div>
+      `, { sticky: true });
+
+      centerLine.bindPopup(`
+        <div class="p-2 font-['Plus_Jakarta_Sans'] min-w-[220px]">
+          <div class="flex items-center gap-2 border-b border-slate-200 pb-1.5 mb-2">
+            <i class="fa-solid fa-road text-sm text-[#FF9933]"></i>
+            <strong class="text-sm text-[#12355B]">${track.name}</strong>
+          </div>
+          <div class="space-y-1 text-xs text-slate-700 font-mono">
+            <p><strong>Track Gauge:</strong> ${track.gauge}</p>
+            <p><strong>Permitted Speed:</strong> <span class="text-emerald-700 font-bold">${track.speedRating}</span></p>
+            <p><strong>Traction:</strong> ${track.electrification}</p>
+            <p><strong>Safety / Kavach:</strong> <span class="text-blue-900 font-extrabold">${track.kavachStatus}</span></p>
+          </div>
+        </div>
+      `);
+    });
+  }
+
+  // Initialize the Leaflet Map instance with strict India confinement
   function initPanIndiaLeafletMap() {
     const mapElement = document.getElementById("panIndiaRailMap");
     if (!mapElement) return;
 
-    // Destroy existing instance if any
     if (panIndiaMap) {
       panIndiaMap.remove();
       panIndiaMap = null;
     }
 
-    // Create Leaflet map centered at India's Geographic Center [22.9734, 78.6569], Zoom 5
+    // Strict India Bounding Box: SW 6.5°N, 68°E | NE 37.5°N, 97.5°E
+    const indiaBounds = L.latLngBounds(
+      L.latLng(6.5, 68.0),
+      L.latLng(37.5, 97.5)
+    );
+
     panIndiaMap = L.map("panIndiaRailMap", {
-      center: [22.9734, 78.6569],
+      center: [22.8, 78.9],
       zoom: 5,
       minZoom: 4,
-      maxZoom: 16,
+      maxZoom: 17,
+      maxBounds: indiaBounds,
+      maxBoundsViscosity: 1.0,
       zoomControl: true,
       scrollWheelZoom: true
     });
 
-    // Carto Voyager High-Definition Layer (Highlights states at zoom 4-6, reveals cities/towns/tracks at zoom 7-15)
-    mapCurrentTileLayer = L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
-      attribution: '&copy; <a href="https://carto.com/">CARTO</a> &copy; OpenStreetMap contributors',
-      subdomains: "abcd",
-      maxZoom: 19
+    // Layer Groups
+    mapTracksLayerGroup = L.layerGroup().addTo(panIndiaMap);
+    mapStationMarkersGroup = L.layerGroup().addTo(panIndiaMap);
+    mapGeoLabelsGroup = L.layerGroup().addTo(panIndiaMap);
+    mapTrainMarkers = {};
+
+    // Initialize default tile layer to Clean Command-Center Dark View (No patchy colors or label clutter)
+    switchLiveMapTileLayer('dark');
+
+    // Exclusive India Boundary Spotlight Mask:
+    // Inverted polygon that covers the world outside India in dark command-center navy,
+    // making only India and its railway track system illuminated with a golden Saffron border!
+    const worldOuterBounds = [
+      [90, -180], [90, 180], [-90, 180], [-90, -180], [90, -180]
+    ];
+    const indiaBorderCutout = [
+      [35.67, 74.84], [34.70, 77.03], [32.90, 78.96], [30.41, 80.89],
+      [28.78, 81.33], [27.70, 88.13], [28.21, 97.40], [27.20, 96.80],
+      [24.50, 94.80], [22.00, 89.10], [21.60, 87.00], [17.80, 83.30],
+      [13.10, 80.30], [8.08, 77.55],  [9.90, 76.20],  [15.40, 73.80],
+      [18.90, 72.80], [22.80, 69.10], [23.80, 68.20], [24.70, 71.00],
+      [27.50, 70.30], [31.50, 74.40], [35.67, 74.84]
+    ];
+    L.polygon([worldOuterBounds, indiaBorderCutout], {
+      fillColor: '#050D1A',
+      fillOpacity: 0.90,
+      stroke: true,
+      color: '#FF9933',
+      weight: 2.5,
+      interactive: false
     }).addTo(panIndiaMap);
 
-    // Create Layer Groups
-    mapStationMarkersGroup = L.layerGroup().addTo(panIndiaMap);
-    mapTrainMarkers = {};
+    // Render Complete Indian Railway Track Infrastructure Lines
+    renderPanIndiaRailwayTracks('all');
+
+    // Listen for zoom changes to update progressive geographic labels (States -> Cities -> Towns)
+    panIndiaMap.on("zoomend", updateDynamicLODMarkers);
+    updateDynamicLODMarkers();
 
     // Render all initial train markers and routes
     renderAllPanIndiaTrainMarkers();
 
-    // Render selected train route track & stations
+    // Render selected train route track, forward waypoints & timeline
     highlightActiveTrainRoute(activeSelectedTrain);
 
     // Update the HUD Card
@@ -1367,29 +1899,58 @@ document.addEventListener("DOMContentLoaded", () => {
     startTrainAnimationLoop();
   }
 
-  // Switch between Tile Layers (Voyager vs Dark Night Radar)
+  let mapIRIRailOverlayLayer = null;
+
+  // Switch between Tile Layers (IRI Atlas vs Voyager vs Dark Night Radar)
   window.switchLiveMapTileLayer = function(layerType) {
     if (!panIndiaMap) return;
+
     if (mapCurrentTileLayer) {
       panIndiaMap.removeLayer(mapCurrentTileLayer);
     }
+    if (mapIRIRailOverlayLayer) {
+      panIndiaMap.removeLayer(mapIRIRailOverlayLayer);
+      mapIRIRailOverlayLayer = null;
+    }
 
+    const btnIri = document.getElementById("btnLayerIRI");
     const btnVoyager = document.getElementById("btnLayerVoyager");
     const btnDark = document.getElementById("btnLayerDark");
 
-    if (layerType === "dark") {
+    const defaultBtn = "px-3 py-1.5 rounded-xl border border-slate-300 text-slate-700 bg-white hover:bg-slate-100 text-xs font-bold transition-all cursor-pointer";
+    const activeBtn = "px-3 py-1.5 rounded-xl border text-xs font-bold transition-all cursor-pointer bg-[#12355B] text-white shadow";
+    const activeIriBtn = "px-3 py-1.5 rounded-xl border border-[#FF9933] text-xs font-black transition-all cursor-pointer bg-[#FF9933] text-white shadow flex items-center gap-1.5";
+
+    if (layerType === "iri") {
+      // 1. Base Layer (Carto Voyager)
+      mapCurrentTileLayer = L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+        attribution: '&copy; CARTO &copy; OpenStreetMap',
+        subdomains: "abcd",
+        maxZoom: 19
+      }).addTo(panIndiaMap);
+
+      // 2. OpenRailwayMap Standard Track Tile Layer (1:1 Match with IndiaRailInfo Atlas)
+      mapIRIRailOverlayLayer = L.tileLayer("https://{s}.tile.openrailwaymap.org/standard/{z}/{x}/{y}.png", {
+        attribution: '&copy; OpenRailwayMap &copy; OpenStreetMap contributors',
+        subdomains: "abc",
+        maxZoom: 19,
+        opacity: 0.95
+      }).addTo(panIndiaMap);
+
+      if (btnIri) btnIri.className = activeIriBtn;
+      if (btnVoyager) btnVoyager.className = defaultBtn;
+      if (btnDark) btnDark.className = defaultBtn;
+      showToast("Activated IndiaRailInfo Atlas GIS Railway Track Overlay", "success");
+    } else if (layerType === "dark") {
       mapCurrentTileLayer = L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
         attribution: '&copy; CARTO &copy; OpenStreetMap',
         subdomains: "abcd",
         maxZoom: 19
       }).addTo(panIndiaMap);
 
-      if (btnDark) {
-        btnDark.className = "px-3 py-1.5 rounded-xl border text-xs font-bold transition-all cursor-pointer bg-[#12355B] text-white shadow";
-      }
-      if (btnVoyager) {
-        btnVoyager.className = "px-3 py-1.5 rounded-xl border border-slate-300 text-slate-700 bg-white hover:bg-slate-100 text-xs font-bold transition-all cursor-pointer";
-      }
+      if (btnDark) btnDark.className = activeBtn;
+      if (btnIri) btnIri.className = defaultBtn;
+      if (btnVoyager) btnVoyager.className = defaultBtn;
     } else {
       mapCurrentTileLayer = L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
         attribution: '&copy; CARTO &copy; OpenStreetMap',
@@ -1397,12 +1958,9 @@ document.addEventListener("DOMContentLoaded", () => {
         maxZoom: 19
       }).addTo(panIndiaMap);
 
-      if (btnVoyager) {
-        btnVoyager.className = "px-3 py-1.5 rounded-xl border text-xs font-bold transition-all cursor-pointer bg-[#12355B] text-white shadow";
-      }
-      if (btnDark) {
-        btnDark.className = "px-3 py-1.5 rounded-xl border border-slate-300 text-slate-700 bg-white hover:bg-slate-100 text-xs font-bold transition-all cursor-pointer";
-      }
+      if (btnVoyager) btnVoyager.className = activeBtn;
+      if (btnIri) btnIri.className = defaultBtn;
+      if (btnDark) btnDark.className = defaultBtn;
     }
   };
 
@@ -1413,7 +1971,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const chk = document.getElementById("chkFollowCamera");
     if (chk) chk.checked = false;
 
-    panIndiaMap.flyTo([22.9734, 78.6569], 5, {
+    panIndiaMap.flyTo([22.8, 78.9], 5, {
       duration: 1.5,
       easeLinearity: 0.25
     });
@@ -1433,8 +1991,8 @@ document.addEventListener("DOMContentLoaded", () => {
         html: `<div id="trainMarker_${train.id}" style="transform: rotate(${pos.bearing}deg); transition: transform 0.2s linear;">
                  ${generateRealisticTrainSVG(train, isSelected)}
                </div>`,
-        iconSize: [44, 54],
-        iconAnchor: [22, 27]
+        iconSize: [44, 76],
+        iconAnchor: [22, 23]
       });
 
       const marker = L.marker([pos.lat, pos.lng], { icon: customIcon }).addTo(panIndiaMap);
@@ -1443,7 +2001,6 @@ document.addEventListener("DOMContentLoaded", () => {
         selectAndFocusTrain(train.id);
       });
 
-      // Bind tooltip
       marker.bindTooltip(`
         <div class="font-bold text-xs text-[#12355B]">
           <span>${train.number} ${train.shortName}</span><br>
@@ -1455,7 +2012,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Draw full illuminated track route and station markers for selected train
+  // Draw full illuminated track route, station milestone pins & forward timeline
   function highlightActiveTrainRoute(train) {
     if (!panIndiaMap || !train) return;
 
@@ -1475,44 +2032,194 @@ document.addEventListener("DOMContentLoaded", () => {
     // Draw main glowing route polyline
     mapRoutePolyline = L.polyline(latLngs, {
       color: train.color,
-      weight: 5,
-      opacity: 0.9,
+      weight: 6,
+      opacity: 0.95,
       lineCap: "round",
-      dashArray: "1, 10",
-      dashOffset: "0",
+      dashArray: "2, 8",
       className: "illuminated-rail-track"
     }).addTo(panIndiaMap);
 
+    // Calculate forward station milestones
+    const milestones = calculateForwardMilestones(train);
+
     // Station Markers along route
-    train.stations.forEach((stn, idx) => {
-      const isTerminus = idx === 0 || idx === train.stations.length - 1;
-      const markerColor = isTerminus ? "#FF9933" : "#12355B";
+    milestones.forEach((stn) => {
+      const isTerminus = stn.index === 0 || stn.index === train.stations.length - 1;
+      const markerColor = isTerminus ? "#FF9933" : stn.isPassed ? "#64748B" : "#12355B";
+      const statusBadge = stn.isPassed 
+        ? '<span class="text-[9px] text-slate-400 font-bold ml-1">✓ Passed</span>' 
+        : `<span class="text-[9px] text-emerald-600 font-mono font-bold ml-1">+${stn.distFromTrain}km (${stn.etaText})</span>`;
 
       const stationIcon = L.divIcon({
         className: "station-leaflet-icon",
         html: `
-          <div style="display: flex; align-items: center; gap: 4px; pointer-events: auto;">
-            <div style="width: ${isTerminus ? "12px" : "8px"}; height: ${isTerminus ? "12px" : "8px"}; background: #FFFFFF; border: 2.5px solid ${markerColor}; border-radius: 50%; box-shadow: 0 0 6px rgba(0,0,0,0.3);"></div>
-            <div class="station-pill-label" style="border-color: ${markerColor};">${stn.name} (${stn.code})</div>
+          <div class="milestone-station-pin" title="${stn.name} (${stn.code}) • Scheduled: ${stn.arr}">
+            <div class="milestone-station-dot" style="background: ${isTerminus ? '#FF9933' : stn.isPassed ? '#94A3B8' : '#38BDF8'}; border: 2px solid #FFFFFF; box-shadow: 0 0 8px ${isTerminus ? '#FF9933' : '#38BDF8'};"></div>
+            <div class="milestone-station-label" style="border-color: ${markerColor}; opacity: ${stn.isPassed ? '0.75' : '1'};">
+              <strong>${stn.name} (${stn.code})</strong> ${statusBadge}
+            </div>
           </div>
         `,
-        iconSize: [120, 20],
-        iconAnchor: [isTerminus ? 6 : 4, isTerminus ? 6 : 4]
+        iconSize: [160, 22],
+        iconAnchor: [4, 4]
       });
 
       const stnMarker = L.marker([stn.lat, stn.lng], { icon: stationIcon }).addTo(mapStationMarkersGroup);
+      
       stnMarker.bindPopup(`
-        <div class="p-1 font-['Plus_Jakarta_Sans']">
-          <div class="flex items-center gap-1.5 border-b border-slate-200 pb-1 mb-1.5">
-            <span class="w-2 h-2 rounded-full bg-[#138808]"></span>
-            <strong class="text-sm text-[#12355B]">${stn.name} (${stn.code})</strong>
+        <div class="p-2 font-['Plus_Jakarta_Sans'] min-w-[200px]">
+          <div class="flex items-center justify-between border-b border-slate-200 pb-1.5 mb-2">
+            <span class="font-extrabold text-sm text-[#12355B]">${stn.name} (${stn.code})</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-black ${stn.isPassed ? 'bg-slate-100 text-slate-500' : 'bg-emerald-100 text-emerald-800'}">
+              ${stn.isPassed ? 'DEPARTED' : 'UPCOMING'}
+            </span>
           </div>
-          <p class="text-xs text-slate-600 mb-1"><strong>Platform:</strong> ${stn.pf}</p>
-          <p class="text-xs text-slate-600"><strong>Scheduled Time:</strong> ${stn.arr}</p>
+          <div class="space-y-1 text-xs text-slate-700">
+            <p><strong>Scheduled Time:</strong> ${stn.arr}</p>
+            <p><strong>Platform:</strong> ${stn.pf}</p>
+            ${!stn.isPassed ? `
+              <p class="text-emerald-700 font-bold"><strong>Distance from Train:</strong> +${stn.distFromTrain} km</p>
+              <p class="text-blue-900 font-bold"><strong>Estimated Time to Reach:</strong> ${stn.etaText}</p>
+              <p class="text-slate-500 text-[11px]"><strong>Signal Block:</strong> 🟢 PROCEED (130 km/h)</p>
+            ` : ''}
+          </div>
         </div>
       `);
     });
+
+    // Render the Forward Route Timeline Bar
+    renderForwardRouteTimeline(train, milestones);
   }
+
+  // Render Horizontal Forward Route Timeline & Track Scrubber
+  function renderForwardRouteTimeline(train, milestones) {
+    const timelineContainer = document.getElementById("routeTimelineContainer");
+    if (!timelineContainer || !train) return;
+
+    if (!milestones) {
+      milestones = calculateForwardMilestones(train);
+    }
+
+    const nextStn = milestones.find((m) => !m.isPassed) || milestones[milestones.length - 1];
+
+    timelineContainer.innerHTML = `
+      <div class="space-y-2">
+        
+        <!-- Timeline Header: Next Stop & Distance Remaining -->
+        <div class="flex items-center justify-between text-xs pb-1 border-b border-slate-200">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="font-extrabold text-[#12355B] uppercase font-mono">TRACK FORWARD TIMELINE:</span>
+            <span class="text-slate-800 font-bold">Next: ${nextStn.name} (${nextStn.code}) in ${nextStn.etaText} (+${nextStn.distFromTrain} km)</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-[11px] font-bold text-slate-500 font-mono">Click any station to inspect track ahead</span>
+          </div>
+        </div>
+
+        <!-- Horizontal Station Sequence Nodes -->
+        <div class="route-timeline-strip">
+          ${milestones.map((m, idx) => {
+            const isLast = idx === milestones.length - 1;
+            const nodeClass = m.isPassed ? "active-passed" : m.isNextImmediate ? "active-current" : "";
+            const pinColor = m.isPassed ? "bg-slate-400" : m.isNextImmediate ? "bg-[#138808]" : "bg-[#12355B]";
+            const connectorClass = m.isPassed ? "completed" : "upcoming";
+
+            return `
+              <div class="timeline-station-node ${nodeClass}" onclick="inspectAheadStation('${train.id}', ${idx})" title="Click to fly to ${m.name}">
+                <div class="timeline-node-pin ${pinColor}">
+                  ${m.isPassed ? '✓' : idx + 1}
+                </div>
+                <div class="text-[11px] font-black text-[#12355B] truncate max-w-[85px]">${m.code}</div>
+                <div class="text-[9px] font-mono text-slate-500 truncate max-w-[85px]">${m.name}</div>
+                <div class="text-[9px] font-mono font-extrabold ${m.isPassed ? 'text-slate-400' : 'text-emerald-700'}">
+                  ${m.isPassed ? 'Departed' : m.etaText}
+                </div>
+              </div>
+              ${!isLast ? `<div class="timeline-connector-bar ${connectorClass}"></div>` : ''}
+            `;
+          }).join("")}
+        </div>
+
+        <!-- Interactive Forward Track Inspector Slider -->
+        <div class="flex items-center gap-3 pt-1 border-t border-slate-100 text-xs">
+          <span class="font-mono font-bold text-[#12355B] shrink-0 text-[11px]">
+            <i class="fa-solid fa-route text-blue-600"></i> Track Scrubber:
+          </span>
+          <input 
+            type="range" 
+            min="0" 
+            max="100" 
+            value="${Math.round(train.progress * 100)}" 
+            class="flex-1 accent-[#12355B] cursor-pointer"
+            oninput="handleForwardTrackScrubber('${train.id}', this.value)"
+          />
+          <span id="scrubberReading" class="font-mono font-black text-[#12355B] text-[11px] shrink-0">
+            Progress: ${Math.round(train.progress * 100)}%
+          </span>
+        </div>
+
+      </div>
+    `;
+  }
+
+  // Handle Forward Track Scrubber Slider: Move camera and preview ahead track
+  window.handleForwardTrackScrubber = function(trainId, percentVal) {
+    const train = panIndiaTrainData.find((t) => t.id === trainId);
+    if (!train || !panIndiaMap) return;
+
+    const val = parseFloat(percentVal) / 100;
+    const stations = train.stations;
+    if (!stations || stations.length < 2) return;
+
+    const totalSegments = stations.length - 1;
+    const scaledProgress = val * totalSegments;
+    const segIdx = Math.min(Math.floor(scaledProgress), totalSegments - 1);
+    const frac = scaledProgress - segIdx;
+
+    const p1 = stations[segIdx];
+    const p2 = stations[segIdx + 1];
+
+    const lat = p1.lat + (p2.lat - p1.lat) * frac;
+    const lng = p1.lng + (p2.lng - p1.lng) * frac;
+
+    // Pan camera to preview this track position
+    panIndiaMap.panTo([lat, lng], { animate: true });
+
+    // Place or update ghost scrubber marker
+    if (mapGhostScrubberMarker) {
+      mapGhostScrubberMarker.setLatLng([lat, lng]);
+    } else {
+      const ghostIcon = L.divIcon({
+        className: "ghost-scrubber-icon",
+        html: `<div style="width: 16px; height: 16px; background: #00F0FF; border: 3px solid #12355B; border-radius: 50%; box-shadow: 0 0 10px #00F0FF;"></div>`,
+        iconSize: [16, 16],
+        iconAnchor: [8, 8]
+      });
+      mapGhostScrubberMarker = L.marker([lat, lng], { icon: ghostIcon }).addTo(panIndiaMap);
+    }
+
+    const readingEl = document.getElementById("scrubberReading");
+    if (readingEl) {
+      readingEl.innerText = `Track Progress: ${percentVal}% (Near ${p1.code} - ${p2.code})`;
+    }
+  };
+
+  // Inspect Ahead Station: Glide camera to that station and pop open details
+  window.inspectAheadStation = function(trainId, stationIndex) {
+    const train = panIndiaTrainData.find((t) => t.id === trainId);
+    if (!train || !panIndiaMap) return;
+
+    const stn = train.stations[stationIndex];
+    if (!stn) return;
+
+    panIndiaMap.flyTo([stn.lat, stn.lng], 13, {
+      duration: 1.5,
+      easeLinearity: 0.25
+    });
+
+    showToast(`Inspecting Track Ahead at ${stn.name} (${stn.code})`, "info");
+  };
 
   // Handle Search Input & Render Dropdown
   window.handleLiveMapTrainSearch = function(query) {
@@ -1522,7 +2229,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const q = (query || "").trim().toLowerCase();
 
     const matches = panIndiaTrainData.filter((t) => {
-      if (!q) return true; // Show all when focused and empty
+      if (!q) return true;
       const inNum = t.number.toLowerCase().includes(q);
       const inName = t.name.toLowerCase().includes(q);
       const inRoute = t.routeDescription.toLowerCase().includes(q);
@@ -1533,7 +2240,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (matches.length === 0) {
       dropdown.innerHTML = `
         <div class="p-4 text-center text-xs text-slate-500 font-bold">
-          No trains found matching "${query}". Try searching "12012", "Rajdhani", or "Mumbai".
+          No trains found matching "${query}". Try searching "12012", "12951", "Rajdhani", or "Varanasi".
         </div>
       `;
       dropdown.classList.remove("hidden");
@@ -1582,16 +2289,18 @@ document.addEventListener("DOMContentLoaded", () => {
     // Get current interpolated position
     const pos = getTrainPositionAndBearing(train);
 
-    // Smooth cinematic camera flight directly to train GPS location
-    if (panIndiaMap) {
-      panIndiaMap.flyTo([pos.lat, pos.lng], 13, {
-        duration: 1.8,
-        easeLinearity: 0.25
+    // Highlight route, station milestone markers & forward timeline
+    highlightActiveTrainRoute(train);
+
+    // Smooth camera view fitting the complete train track route across India cleanly
+    if (panIndiaMap && mapRoutePolyline) {
+      panIndiaMap.fitBounds(mapRoutePolyline.getBounds(), {
+        padding: [60, 60],
+        maxZoom: 8.5,
+        animate: true,
+        duration: 1.5
       });
     }
-
-    // Highlight route and update markers
-    highlightActiveTrainRoute(train);
 
     // Update marker icons to reflect active selection
     Object.keys(mapTrainMarkers).forEach((tid) => {
@@ -1603,8 +2312,8 @@ document.addEventListener("DOMContentLoaded", () => {
         html: `<div id="trainMarker_${t.id}" style="transform: rotate(${p.bearing}deg); transition: transform 0.2s linear;">
                  ${generateRealisticTrainSVG(t, isSel)}
                </div>`,
-        iconSize: [44, 54],
-        iconAnchor: [22, 27]
+        iconSize: [44, 76],
+        iconAnchor: [22, 23]
       });
       mapTrainMarkers[tid].setIcon(icon);
     });
@@ -1618,7 +2327,7 @@ document.addEventListener("DOMContentLoaded", () => {
       statusText.innerHTML = `LOCKED ON TRAIN ${train.number} (${train.shortName}) • SPEED: ${train.speed} KM/H`;
     }
 
-    showToast(`Detected & Locked on ${train.number} ${train.name}`, "success");
+    showToast(`🎯 Auto-Detected & Camera Locked on ${train.number} ${train.name}`, "success");
   };
 
   // Toggle Camera Lock to follow train continuously
@@ -1751,20 +2460,16 @@ document.addEventListener("DOMContentLoaded", () => {
       const delta = (timestamp - lastTimestamp) / 1000;
       lastTimestamp = timestamp;
 
-      // Increment progress of each train realistically
       panIndiaTrainData.forEach((train) => {
-        // Speed progress calculation (130 km/h moves around 0.0004 per second on national corridor scale)
         const progressIncrement = (train.speed / 130) * 0.00035 * Math.min(delta, 0.1);
         train.progress = (train.progress + progressIncrement) % 1;
 
         const pos = getTrainPositionAndBearing(train);
 
-        // Update marker position on map
         const marker = mapTrainMarkers[train.id];
         if (marker) {
           marker.setLatLng([pos.lat, pos.lng]);
 
-          // Update rotation element inside divIcon
           const rotElement = document.getElementById(`trainMarker_${train.id}`);
           if (rotElement) {
             rotElement.style.transform = `rotate(${pos.bearing}deg)`;
@@ -1772,13 +2477,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
 
-      // Follow active train camera if checked
       if (isFollowingTrainCamera && activeSelectedTrain && panIndiaMap) {
         const activePos = getTrainPositionAndBearing(activeSelectedTrain);
         panIndiaMap.panTo([activePos.lat, activePos.lng], { animate: false });
       }
 
-      // Keep animation running as long as map container exists
       if (document.getElementById("panIndiaRailMap")) {
         trainAnimationTimer = requestAnimationFrame(stepAnimation);
       }
@@ -1787,158 +2490,987 @@ document.addEventListener("DOMContentLoaded", () => {
     trainAnimationTimer = requestAnimationFrame(stepAnimation);
   }
 
-  // VIEW 2: SEARCHABLE INTERACTIVE TRAIN ROSTER (train_list)
-  let trainListSearchQuery = "";
-  let trainListFilter = "all";
+  // =========================================================================
+  // VIEW 2: IRCTC-STYLE TRAIN SEARCH, RESULTS & DETAIL (train_list)
+  // 3-Screen Flow: Search Form → Train Results → Train Detail
+  // =========================================================================
 
-  window.setTrainSearchQuery = function (query) {
-    trainListSearchQuery = query.toLowerCase();
-    const container = document.getElementById("activeSubTabContainer");
-    if (container && activeNavView === "train_list") {
-      renderTrainListSection(container);
+  let trainSearchScreen = "search"; // "search" | "results" | "detail"
+  let trainSearchFrom = "";
+  let trainSearchTo = "";
+  let trainSearchDate = "";
+  let trainSearchClass = "All";
+  let trainSearchQuota = "General";
+  let trainSearchResults = [];
+  let trainDetailSelected = null;
+  let trainRecentSearches = [];
+
+  // Comprehensive Indian Railway Station Database
+  const irStations = [
+    { code: "NDLS", name: "New Delhi", zone: "NR" },
+    { code: "MMCT", name: "Mumbai Central", zone: "WR" },
+    { code: "HWH", name: "Howrah Jn", zone: "ER" },
+    { code: "MAS", name: "Chennai Central", zone: "SR" },
+    { code: "SBC", name: "KSR Bengaluru", zone: "SWR" },
+    { code: "JP", name: "Jaipur Jn", zone: "NWR" },
+    { code: "LKO", name: "Lucknow Charbagh", zone: "NR" },
+    { code: "PNBE", name: "Patna Jn", zone: "ECR" },
+    { code: "BRC", name: "Vadodara Jn", zone: "WR" },
+    { code: "CNB", name: "Kanpur Central", zone: "NCR" },
+    { code: "BSB", name: "Varanasi Jn", zone: "NER" },
+    { code: "ADI", name: "Ahmedabad Jn", zone: "WR" },
+    { code: "KOTA", name: "Kota Jn", zone: "WCR" },
+    { code: "AGC", name: "Agra Cantt", zone: "NCR" },
+    { code: "BPL", name: "Bhopal Jn", zone: "WCR" },
+    { code: "NGP", name: "Nagpur Jn", zone: "CR" },
+    { code: "SC", name: "Secunderabad Jn", zone: "SCR" },
+    { code: "TVC", name: "Thiruvananthapuram", zone: "SR" },
+    { code: "GHY", name: "Guwahati", zone: "NFR" },
+    { code: "PUNE", name: "Pune Jn", zone: "CR" },
+    { code: "CDG", name: "Chandigarh Jn", zone: "NR" },
+    { code: "JAT", name: "Jammu Tawi", zone: "NR" },
+    { code: "UDZ", name: "Udaipur City", zone: "NWR" },
+    { code: "JU", name: "Jodhpur Jn", zone: "NWR" },
+    { code: "AII", name: "Ajmer Jn", zone: "NWR" },
+    { code: "ST", name: "Surat", zone: "WR" },
+    { code: "PRYJ", name: "Prayagraj Jn", zone: "NCR" },
+    { code: "GWL", name: "Gwalior Jn", zone: "NCR" },
+    { code: "LJN", name: "Lucknow NR", zone: "NR" },
+    { code: "MTJ", name: "Mathura Jn", zone: "NCR" },
+    { code: "BLT", name: "Balotra Jn", zone: "NWR" },
+    { code: "LUNI", name: "Luni Jn", zone: "NWR" },
+    { code: "BME", name: "Barmer", zone: "NWR" },
+    { code: "RTM", name: "Ratlam Jn", zone: "WR" },
+    { code: "UMT", name: "Ummed Hospital", zone: "NWR" },
+    { code: "DEE", name: "Delhi Sarai Rohilla", zone: "NR" },
+    { code: "SBIB", name: "Sabarmati BG", zone: "WR" },
+  ];
+
+  // Comprehensive Train Database — 20 Realistic Indian Trains
+  const irTrainDatabase = [
+    {
+      number: "22436", name: "VANDE BHARAT EXP", type: "Vande Bharat",
+      from: "NDLS", to: "BSB", depart: "06:00", arrive: "14:00", duration: "08h 00m",
+      classes: ["CC", "EC"], days: [true,true,true,true,true,true,false],
+      delay: 0, delayText: "ON TIME",
+      stations: [
+        { code: "NDLS", name: "New Delhi", arr: "--", dep: "06:00", pf: 16, delay: 0 },
+        { code: "CNB", name: "Kanpur Central", arr: "10:08", dep: "10:13", pf: 1, delay: 0 },
+        { code: "PRYJ", name: "Prayagraj Jn", arr: "12:08", dep: "12:13", pf: 6, delay: 0 },
+        { code: "BSB", name: "Varanasi Jn", arr: "14:00", dep: "--", pf: 1, delay: 0 },
+      ],
+      speed: "160 km/h", kavach: "ARMED (SIL-4)"
+    },
+    {
+      number: "12951", name: "MUMBAI RAJDHANI", type: "Rajdhani",
+      from: "MMCT", to: "NDLS", depart: "17:00", arrive: "08:32", duration: "15h 32m",
+      classes: ["1A", "2A", "3A"], days: [true,true,true,true,true,true,true],
+      delay: 0, delayText: "ON TIME",
+      stations: [
+        { code: "MMCT", name: "Mumbai Central", arr: "--", dep: "17:00", pf: 1, delay: 0 },
+        { code: "BRC", name: "Vadodara Jn", arr: "21:05", dep: "21:15", pf: 2, delay: 0 },
+        { code: "RTM", name: "Ratlam Jn", arr: "00:25", dep: "00:30", pf: 4, delay: 0 },
+        { code: "KOTA", name: "Kota Jn", arr: "03:15", dep: "03:20", pf: 1, delay: 0 },
+        { code: "NDLS", name: "New Delhi", arr: "08:32", dep: "--", pf: 1, delay: 0 },
+      ],
+      speed: "130 km/h", kavach: "ARMED (SIL-4)"
+    },
+    {
+      number: "12302", name: "HOWRAH RAJDHANI", type: "Rajdhani",
+      from: "NDLS", to: "HWH", depart: "16:55", arrive: "10:00", duration: "17h 05m",
+      classes: ["1A", "2A", "3A"], days: [true,true,true,true,true,true,true],
+      delay: 12, delayText: "+12 MIN",
+      stations: [
+        { code: "NDLS", name: "New Delhi", arr: "--", dep: "16:55", pf: 16, delay: 0 },
+        { code: "CNB", name: "Kanpur Central", arr: "21:38", dep: "21:43", pf: 1, delay: 5 },
+        { code: "PRYJ", name: "Prayagraj Jn", arr: "00:05", dep: "00:10", pf: 4, delay: 8 },
+        { code: "PNBE", name: "Patna Jn", arr: "05:45", dep: "05:50", pf: 1, delay: 10 },
+        { code: "HWH", name: "Howrah Jn", arr: "10:00", dep: "--", pf: 9, delay: 12 },
+      ],
+      speed: "130 km/h", kavach: "ARMED (SIL-4)"
+    },
+    {
+      number: "12952", name: "MUMBAI RAJDHANI", type: "Rajdhani",
+      from: "NDLS", to: "MMCT", depart: "16:25", arrive: "08:15", duration: "15h 50m",
+      classes: ["1A", "2A", "3A"], days: [true,true,true,true,true,true,true],
+      delay: 0, delayText: "ON TIME",
+      stations: [
+        { code: "NDLS", name: "New Delhi", arr: "--", dep: "16:25", pf: 2, delay: 0 },
+        { code: "KOTA", name: "Kota Jn", arr: "21:50", dep: "21:55", pf: 1, delay: 0 },
+        { code: "BRC", name: "Vadodara Jn", arr: "03:05", dep: "03:10", pf: 3, delay: 0 },
+        { code: "MMCT", name: "Mumbai Central", arr: "08:15", dep: "--", pf: 1, delay: 0 },
+      ],
+      speed: "130 km/h", kavach: "ARMED (SIL-4)"
+    },
+    {
+      number: "12059", name: "KOTA JAN SHTBDI", type: "Jan Shatabdi",
+      from: "NDLS", to: "KOTA", depart: "17:50", arrive: "23:20", duration: "05h 30m",
+      classes: ["CC", "2S"], days: [true,true,true,true,true,true,false],
+      delay: 28, delayText: "+28 MIN",
+      stations: [
+        { code: "NDLS", name: "New Delhi", arr: "--", dep: "17:50", pf: 9, delay: 0 },
+        { code: "MTJ", name: "Mathura Jn", arr: "19:45", dep: "19:47", pf: 3, delay: 8 },
+        { code: "AGC", name: "Agra Cantt", arr: "20:15", dep: "20:18", pf: 1, delay: 12 },
+        { code: "GWL", name: "Gwalior Jn", arr: "21:32", dep: "21:35", pf: 2, delay: 18 },
+        { code: "KOTA", name: "Kota Jn", arr: "23:20", dep: "--", pf: 1, delay: 28 },
+      ],
+      speed: "110 km/h", kavach: "TSR ENFORCED"
+    },
+    {
+      number: "12626", name: "KERALA EXPRESS", type: "Superfast",
+      from: "NDLS", to: "TVC", depart: "11:25", arrive: "19:05", duration: "31h 40m",
+      classes: ["SL", "3A", "2A", "1A"], days: [true,true,true,true,true,true,true],
+      delay: 45, delayText: "+45 MIN",
+      stations: [
+        { code: "NDLS", name: "New Delhi", arr: "--", dep: "11:25", pf: 5, delay: 0 },
+        { code: "AGC", name: "Agra Cantt", arr: "14:05", dep: "14:10", pf: 1, delay: 10 },
+        { code: "BPL", name: "Bhopal Jn", arr: "20:10", dep: "20:20", pf: 4, delay: 22 },
+        { code: "NGP", name: "Nagpur Jn", arr: "02:45", dep: "02:55", pf: 3, delay: 30 },
+        { code: "SC", name: "Secunderabad Jn", arr: "10:30", dep: "10:40", pf: 1, delay: 38 },
+        { code: "TVC", name: "Thiruvananthapuram", arr: "19:05", dep: "--", pf: 1, delay: 45 },
+      ],
+      speed: "110 km/h", kavach: "CAB SIGNAL PROCEED"
+    },
+    {
+      number: "20488", name: "MALANI EXPRESS", type: "Express",
+      from: "LUNI", to: "BLT", depart: "02:35", arrive: "03:53", duration: "01h 18m",
+      classes: ["SL", "3A", "2A", "1A"], days: [true,true,true,true,true,true,true],
+      delay: 0, delayText: "ON TIME",
+      stations: [
+        { code: "LUNI", name: "Luni Jn", arr: "--", dep: "02:35", pf: 1, delay: 0 },
+        { code: "BLT", name: "Balotra Jn", arr: "03:53", dep: "--", pf: 2, delay: 0 },
+      ],
+      speed: "80 km/h", kavach: "ARMED"
+    },
+    {
+      number: "14887", name: "RKSH BME EXP", type: "Express",
+      from: "LUNI", to: "BLT", depart: "16:22", arrive: "17:43", duration: "01h 21m",
+      classes: ["SL", "3A", "2A"], days: [true,true,true,true,true,true,true],
+      delay: 0, delayText: "ON TIME",
+      stations: [
+        { code: "LUNI", name: "Luni Jn", arr: "--", dep: "16:22", pf: 2, delay: 0 },
+        { code: "BLT", name: "Balotra Jn", arr: "17:43", dep: "--", pf: 1, delay: 0 },
+      ],
+      speed: "75 km/h", kavach: "ARMED"
+    },
+    {
+      number: "04812", name: "HW BME SPL", type: "Special",
+      from: "LUNI", to: "BLT", depart: "03:12", arrive: "04:35", duration: "01h 23m",
+      classes: ["SL", "3A", "2A"], days: [true,false,true,false,true,true,true],
+      delay: 0, delayText: "ON TIME",
+      stations: [
+        { code: "LUNI", name: "Luni Jn", arr: "--", dep: "03:12", pf: 1, delay: 0 },
+        { code: "BLT", name: "Balotra Jn", arr: "04:35", dep: "--", pf: 2, delay: 0 },
+      ],
+      speed: "70 km/h", kavach: "ARMED"
+    },
+    {
+      number: "15632", name: "GHY BME EXPRESS", type: "Express",
+      from: "LUNI", to: "BLT", depart: "04:23", arrive: "06:05", duration: "01h 42m",
+      classes: ["SL", "3A", "2A"], days: [true,true,true,true,true,true,true],
+      delay: 0, delayText: "ON TIME",
+      stations: [
+        { code: "LUNI", name: "Luni Jn", arr: "--", dep: "04:23", pf: 1, delay: 0 },
+        { code: "BLT", name: "Balotra Jn", arr: "06:05", dep: "--", pf: 1, delay: 0 },
+      ],
+      speed: "70 km/h", kavach: "ARMED"
+    },
+    {
+      number: "12015", name: "AJMER SHATABDI", type: "Shatabdi",
+      from: "NDLS", to: "AII", depart: "06:15", arrive: "12:40", duration: "06h 25m",
+      classes: ["CC", "EC"], days: [true,true,true,true,true,true,false],
+      delay: 0, delayText: "ON TIME",
+      stations: [
+        { code: "NDLS", name: "New Delhi", arr: "--", dep: "06:15", pf: 1, delay: 0 },
+        { code: "JP", name: "Jaipur Jn", arr: "10:40", dep: "10:50", pf: 1, delay: 0 },
+        { code: "AII", name: "Ajmer Jn", arr: "12:40", dep: "--", pf: 3, delay: 0 },
+      ],
+      speed: "130 km/h", kavach: "ARMED (SIL-4)"
+    },
+    {
+      number: "12958", name: "ADI RAJDHANI", type: "Rajdhani",
+      from: "NDLS", to: "ADI", depart: "19:25", arrive: "07:40", duration: "12h 15m",
+      classes: ["1A", "2A", "3A"], days: [true,true,true,true,true,true,true],
+      delay: 8, delayText: "+8 MIN",
+      stations: [
+        { code: "NDLS", name: "New Delhi", arr: "--", dep: "19:25", pf: 4, delay: 0 },
+        { code: "KOTA", name: "Kota Jn", arr: "00:20", dep: "00:25", pf: 3, delay: 5 },
+        { code: "ADI", name: "Ahmedabad Jn", arr: "07:40", dep: "--", pf: 1, delay: 8 },
+      ],
+      speed: "130 km/h", kavach: "ARMED (SIL-4)"
+    },
+    {
+      number: "12904", name: "GOLDEN TEMPLE ML", type: "Superfast",
+      from: "MMCT", to: "NDLS", depart: "21:30", arrive: "14:45", duration: "17h 15m",
+      classes: ["SL", "3A", "2A", "1A"], days: [true,true,true,true,true,true,true],
+      delay: 15, delayText: "+15 MIN",
+      stations: [
+        { code: "MMCT", name: "Mumbai Central", arr: "--", dep: "21:30", pf: 5, delay: 0 },
+        { code: "ST", name: "Surat", arr: "00:30", dep: "00:35", pf: 2, delay: 5 },
+        { code: "BRC", name: "Vadodara Jn", arr: "02:30", dep: "02:35", pf: 3, delay: 8 },
+        { code: "KOTA", name: "Kota Jn", arr: "09:10", dep: "09:15", pf: 1, delay: 12 },
+        { code: "NDLS", name: "New Delhi", arr: "14:45", dep: "--", pf: 6, delay: 15 },
+      ],
+      speed: "110 km/h", kavach: "CAB SIGNAL PROCEED"
+    },
+    {
+      number: "12622", name: "TAMIL NADU EXP", type: "Superfast",
+      from: "NDLS", to: "MAS", depart: "22:00", arrive: "07:10", duration: "33h 10m",
+      classes: ["SL", "3A", "2A", "1A"], days: [true,true,true,true,true,true,true],
+      delay: 0, delayText: "ON TIME",
+      stations: [
+        { code: "NDLS", name: "New Delhi", arr: "--", dep: "22:00", pf: 8, delay: 0 },
+        { code: "AGC", name: "Agra Cantt", arr: "00:38", dep: "00:43", pf: 1, delay: 0 },
+        { code: "GWL", name: "Gwalior Jn", arr: "02:25", dep: "02:30", pf: 3, delay: 0 },
+        { code: "BPL", name: "Bhopal Jn", arr: "07:10", dep: "07:20", pf: 6, delay: 0 },
+        { code: "NGP", name: "Nagpur Jn", arr: "14:20", dep: "14:30", pf: 4, delay: 0 },
+        { code: "MAS", name: "Chennai Central", arr: "07:10", dep: "--", pf: 3, delay: 0 },
+      ],
+      speed: "110 km/h", kavach: "ARMED"
+    },
+    {
+      number: "12432", name: "TRIVNDRM RAJDHNI", type: "Rajdhani",
+      from: "NDLS", to: "TVC", depart: "10:55", arrive: "05:30", duration: "30h 35m",
+      classes: ["1A", "2A", "3A"], days: [true,false,true,false,true,false,true],
+      delay: 20, delayText: "+20 MIN",
+      stations: [
+        { code: "NDLS", name: "New Delhi", arr: "--", dep: "10:55", pf: 3, delay: 0 },
+        { code: "BPL", name: "Bhopal Jn", arr: "17:45", dep: "17:55", pf: 4, delay: 5 },
+        { code: "NGP", name: "Nagpur Jn", arr: "23:20", dep: "23:30", pf: 3, delay: 10 },
+        { code: "SC", name: "Secunderabad Jn", arr: "06:30", dep: "06:40", pf: 1, delay: 14 },
+        { code: "TVC", name: "Thiruvananthapuram", arr: "05:30", dep: "--", pf: 1, delay: 20 },
+      ],
+      speed: "110 km/h", kavach: "ARMED"
+    },
+    {
+      number: "12650", name: "KSK SAMPARK KRNTI", type: "Superfast",
+      from: "NDLS", to: "SBC", depart: "21:00", arrive: "05:40", duration: "32h 40m",
+      classes: ["SL", "3A", "2A"], days: [true,true,true,true,true,false,true],
+      delay: 0, delayText: "ON TIME",
+      stations: [
+        { code: "NDLS", name: "New Delhi", arr: "--", dep: "21:00", pf: 12, delay: 0 },
+        { code: "AGC", name: "Agra Cantt", arr: "00:05", dep: "00:10", pf: 1, delay: 0 },
+        { code: "BPL", name: "Bhopal Jn", arr: "06:45", dep: "06:55", pf: 5, delay: 0 },
+        { code: "SC", name: "Secunderabad Jn", arr: "19:15", dep: "19:30", pf: 1, delay: 0 },
+        { code: "SBC", name: "KSR Bengaluru", arr: "05:40", dep: "--", pf: 5, delay: 0 },
+      ],
+      speed: "110 km/h", kavach: "ARMED"
+    },
+    {
+      number: "14660", name: "JSM DLI EXPRESS", type: "Express",
+      from: "BME", to: "NDLS", depart: "06:30", arrive: "06:45", duration: "24h 15m",
+      classes: ["SL", "3A", "2A"], days: [true,true,true,true,true,true,true],
+      delay: 35, delayText: "+35 MIN",
+      stations: [
+        { code: "BME", name: "Barmer", arr: "--", dep: "06:30", pf: 1, delay: 0 },
+        { code: "BLT", name: "Balotra Jn", arr: "08:15", dep: "08:20", pf: 2, delay: 5 },
+        { code: "LUNI", name: "Luni Jn", arr: "09:55", dep: "10:00", pf: 1, delay: 10 },
+        { code: "JU", name: "Jodhpur Jn", arr: "11:30", dep: "11:45", pf: 3, delay: 15 },
+        { code: "JP", name: "Jaipur Jn", arr: "18:00", dep: "18:10", pf: 2, delay: 25 },
+        { code: "NDLS", name: "New Delhi", arr: "06:45", dep: "--", pf: 7, delay: 35 },
+      ],
+      speed: "75 km/h", kavach: "CAB SIGNAL PROCEED"
+    },
+    {
+      number: "12462", name: "MANDORE EXPRESS", type: "Superfast",
+      from: "JU", to: "NDLS", depart: "19:45", arrive: "06:10", duration: "10h 25m",
+      classes: ["SL", "3A", "2A", "1A"], days: [true,true,true,true,true,true,true],
+      delay: 0, delayText: "ON TIME",
+      stations: [
+        { code: "JU", name: "Jodhpur Jn", arr: "--", dep: "19:45", pf: 1, delay: 0 },
+        { code: "AII", name: "Ajmer Jn", arr: "23:20", dep: "23:30", pf: 3, delay: 0 },
+        { code: "JP", name: "Jaipur Jn", arr: "01:40", dep: "01:50", pf: 1, delay: 0 },
+        { code: "NDLS", name: "New Delhi", arr: "06:10", dep: "--", pf: 11, delay: 0 },
+      ],
+      speed: "110 km/h", kavach: "ARMED"
+    },
+    {
+      number: "12308", name: "JODHPUR RAJDHANI", type: "Rajdhani",
+      from: "JU", to: "NDLS", depart: "14:45", arrive: "05:05", duration: "14h 20m",
+      classes: ["1A", "2A", "3A"], days: [false,true,false,true,false,true,false],
+      delay: 0, delayText: "ON TIME",
+      stations: [
+        { code: "JU", name: "Jodhpur Jn", arr: "--", dep: "14:45", pf: 1, delay: 0 },
+        { code: "AII", name: "Ajmer Jn", arr: "18:05", dep: "18:15", pf: 3, delay: 0 },
+        { code: "JP", name: "Jaipur Jn", arr: "20:20", dep: "20:30", pf: 1, delay: 0 },
+        { code: "NDLS", name: "New Delhi", arr: "05:05", dep: "--", pf: 16, delay: 0 },
+      ],
+      speed: "130 km/h", kavach: "ARMED (SIL-4)"
+    },
+    {
+      number: "22478", name: "JODHPUR SF EXP", type: "Superfast",
+      from: "NDLS", to: "JU", depart: "05:35", arrive: "16:00", duration: "10h 25m",
+      classes: ["SL", "3A", "2A"], days: [true,true,true,true,true,true,true],
+      delay: 5, delayText: "+5 MIN",
+      stations: [
+        { code: "NDLS", name: "New Delhi", arr: "--", dep: "05:35", pf: 13, delay: 0 },
+        { code: "JP", name: "Jaipur Jn", arr: "10:15", dep: "10:25", pf: 5, delay: 3 },
+        { code: "AII", name: "Ajmer Jn", arr: "12:30", dep: "12:35", pf: 1, delay: 5 },
+        { code: "JU", name: "Jodhpur Jn", arr: "16:00", dep: "--", pf: 4, delay: 5 },
+      ],
+      speed: "110 km/h", kavach: "ARMED"
+    },
+  ];
+
+  // Helper: Get station display name
+  function getStationDisplay(code) {
+    const s = irStations.find(st => st.code === code);
+    return s ? `${s.code} - ${s.name.toUpperCase()}` : code;
+  }
+
+  // Helper: Get today and upcoming dates
+  function getSearchDates() {
+    const dates = [];
+    const now = new Date();
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(now);
+      d.setDate(now.getDate() + i);
+      dates.push({
+        full: d.toISOString().split("T")[0],
+        day: d.toLocaleDateString("en-IN", { weekday: "short" }),
+        date: d.getDate(),
+        month: d.toLocaleDateString("en-IN", { month: "short" }),
+        label: i === 0 ? "Today" : i === 1 ? "Tomorrow" : `${d.toLocaleDateString("en-IN", { weekday: "short" })}, ${d.getDate()} ${d.toLocaleDateString("en-IN", { month: "short" })}`
+      });
     }
+    return dates;
+  }
+
+  // Swap From/To
+  window.swapTrainStations = function () {
+    const temp = trainSearchFrom;
+    trainSearchFrom = trainSearchTo;
+    trainSearchTo = temp;
+    const container = document.getElementById("activeSubTabContainer");
+    if (container) renderTrainListSection(container);
   };
 
-  window.setTrainFilter = function (filter) {
-    trainListFilter = filter;
-    const container = document.getElementById("activeSubTabContainer");
-    if (container && activeNavView === "train_list") {
-      renderTrainListSection(container);
+  // Search trains
+  window.executeTrainSearch = function () {
+    if (!trainSearchFrom || !trainSearchTo) {
+      showToast("⚠️ Please select both From and To stations!", "warning");
+      return;
     }
-  };
+    if (trainSearchFrom === trainSearchTo) {
+      showToast("⚠️ From and To stations cannot be same!", "warning");
+      return;
+    }
+    if (!trainSearchDate) {
+      const today = new Date().toISOString().split("T")[0];
+      trainSearchDate = today;
+    }
 
-  function renderTrainListSection(container) {
-    const trains = [
-      {
-        id: "12012",
-        name: "Vande Bharat Express",
-        route: "NDLS – GZB Up Main",
-        speed: "130 km/h",
-        delay: "ON TIME",
-        delayClass: "bg-emerald-950 text-emerald-400 border-emerald-500/30",
-        kavach: "Opto-Isolated RF Mesh",
-        loc: "28.6139° N, 77.2090° E",
-      },
-      {
-        id: "12951",
-        name: "Mumbai Rajdhani Express",
-        route: "NZM – FDB Main",
-        speed: "110 km/h",
-        delay: "ON TIME",
-        delayClass: "bg-emerald-950 text-emerald-400 border-emerald-500/30",
-        kavach: "Automatic Brake (FSB)",
-        loc: "28.4089° N, 77.3178° E",
-      },
-      {
-        id: "12059",
-        name: "Kota Jan Shatabdi",
-        route: "TKD – MTJ Section",
-        speed: "45 km/h (TSR)",
-        delay: "+12 MIN",
-        delayClass: "bg-amber-950 text-amber-400 border-amber-500/30",
-        kavach: "TSR Target Enforced",
-        loc: "27.4924° N, 77.6737° E",
-      },
-      {
-        id: "12626",
-        name: "Kerala Express",
-        route: "MTJ – BPL Line",
-        speed: "105 km/h",
-        delay: "+28 MIN",
-        delayClass: "bg-red-950 text-red-400 border-red-500/30",
-        kavach: "Cab Signal Proceed",
-        loc: "26.2183° N, 78.1828° E",
-      },
-      {
-        id: "31088",
-        name: "Freight BOXN Coal Special",
-        route: "NDLS Yard Line 4",
-        speed: "30 km/h",
-        delay: "ON TIME",
-        delayClass: "bg-slate-800 text-slate-300 border-slate-700",
-        kavach: "Shunting Permit Active",
-        loc: "28.6448° N, 77.2150° E",
-      },
-    ];
-
-    const filteredTrains = trains.filter((t) => {
-      const matchQuery =
-        t.id.toLowerCase().includes(trainListSearchQuery) ||
-        t.name.toLowerCase().includes(trainListSearchQuery) ||
-        t.route.toLowerCase().includes(trainListSearchQuery);
-      if (trainListFilter === "ontime")
-        return matchQuery && t.delay === "ON TIME";
-      if (trainListFilter === "delayed")
-        return matchQuery && t.delay !== "ON TIME";
-      return matchQuery;
+    // Find matching trains (from→to route or bidirectional, and also check intermediate stations)
+    trainSearchResults = irTrainDatabase.filter(t => {
+      // Direct match
+      if (t.from === trainSearchFrom && t.to === trainSearchTo) return true;
+      // Check if both stations exist in the route's station list in order
+      const stationCodes = t.stations.map(s => s.code);
+      const fromIdx = stationCodes.indexOf(trainSearchFrom);
+      const toIdx = stationCodes.indexOf(trainSearchTo);
+      if (fromIdx !== -1 && toIdx !== -1 && fromIdx < toIdx) return true;
+      return false;
     });
 
+    // Add to recent searches
+    const searchEntry = { from: trainSearchFrom, to: trainSearchTo, date: trainSearchDate };
+    trainRecentSearches = [searchEntry, ...trainRecentSearches.filter(r => !(r.from === searchEntry.from && r.to === searchEntry.to))].slice(0, 5);
+
+    trainSearchScreen = "results";
+    const container = document.getElementById("activeSubTabContainer");
+    if (container) renderTrainListSection(container);
+  };
+
+  // Go back to search from results
+  window.goBackToSearch = function () {
+    trainSearchScreen = "search";
+    const container = document.getElementById("activeSubTabContainer");
+    if (container) renderTrainListSection(container);
+  };
+
+  // Go back to results from detail
+  window.goBackToResults = function () {
+    trainSearchScreen = "results";
+    const container = document.getElementById("activeSubTabContainer");
+    if (container) renderTrainListSection(container);
+  };
+
+  // View train detail
+  window.viewTrainDetail = function (trainNumber) {
+    trainDetailSelected = irTrainDatabase.find(t => t.number === trainNumber);
+    if (trainDetailSelected) {
+      trainSearchScreen = "detail";
+      const container = document.getElementById("activeSubTabContainer");
+      if (container) renderTrainListSection(container);
+    }
+  };
+
+  // Use recent search
+  window.useRecentSearch = function (from, to) {
+    trainSearchFrom = from;
+    trainSearchTo = to;
+    const container = document.getElementById("activeSubTabContainer");
+    if (container) renderTrainListSection(container);
+  };
+
+  // Station autocomplete filter
+  window.filterStationDropdown = function (inputId, listId) {
+    const input = document.getElementById(inputId);
+    const list = document.getElementById(listId);
+    if (!input || !list) return;
+    const query = input.value.toLowerCase();
+    const items = list.querySelectorAll(".station-option");
+    items.forEach(item => {
+      const text = item.textContent.toLowerCase();
+      item.style.display = text.includes(query) ? "block" : "none";
+    });
+    list.classList.remove("hidden");
+  };
+
+  window.selectStation = function (field, code) {
+    if (field === "from") trainSearchFrom = code;
+    else trainSearchTo = code;
+    const container = document.getElementById("activeSubTabContainer");
+    if (container) renderTrainListSection(container);
+  };
+
+  window.toggleStationDropdown = function (listId) {
+    const list = document.getElementById(listId);
+    if (list) list.classList.toggle("hidden");
+  };
+
+  window.setTrainSearchClass = function (cls) {
+    trainSearchClass = cls;
+    const container = document.getElementById("activeSubTabContainer");
+    if (container && trainSearchScreen === "search") renderTrainListSection(container);
+  };
+
+  window.setTrainSearchDate = function (date) {
+    trainSearchDate = date;
+    const container = document.getElementById("activeSubTabContainer");
+    if (container) renderTrainListSection(container);
+  };
+
+  // =========================================================================
+  // RENDER: TRAIN LIST SECTION (3 SCREENS)
+  // =========================================================================
+  function renderTrainListSection(container) {
+    if (trainSearchScreen === "results") {
+      renderTrainResultsScreen(container);
+    } else if (trainSearchScreen === "detail") {
+      renderTrainDetailScreen(container);
+    } else {
+      renderTrainSearchScreen(container);
+    }
+  }
+
+  // =========================================================================
+  // SCREEN 1: IRCTC-STYLE SEARCH FORM
+  // =========================================================================
+  function renderTrainSearchScreen(container) {
+    const dates = getSearchDates();
+    if (!trainSearchDate) trainSearchDate = dates[0].full;
+    const dayNames = ["M", "T", "W", "T", "F", "S", "S"];
+    const classOptions = ["All", "2S", "SL", "3A", "2A", "1A", "CC", "EC"];
+
+    const fromStation = trainSearchFrom ? irStations.find(s => s.code === trainSearchFrom) : null;
+    const toStation = trainSearchTo ? irStations.find(s => s.code === trainSearchTo) : null;
+
     container.innerHTML = `
-      <div class="glass-card p-5 space-y-4">
-        <!-- Top Action Bar -->
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
-          <div>
-            <h3 class="text-base font-extrabold text-white font-['Outfit'] flex items-center gap-2">
-              <i class="fa-solid fa-list-check text-blue-400"></i> Active Locomotive & Train Roster
-            </h3>
-            <p class="text-xs text-slate-400">128 Total Trains Monitored • Real-Time GPS & Kavach OBC Interlocking</p>
+      <div class="space-y-5" style="max-width: 620px; margin: 0 auto;">
+
+        <!-- Header -->
+        <div class="text-center">
+          <div style="display: inline-flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+            <i class="fa-solid fa-train" style="color: #12355B; font-size: 20px;"></i>
+            <h2 style="font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 22px; color: #12355B; margin: 0;">
+              Search Trains
+            </h2>
+          </div>
+          <p style="font-size: 12px; color: #64748b; font-weight: 500;">Find trains between stations across Indian Railways network</p>
+        </div>
+
+        <!-- Search Card -->
+        <div class="glass-card" style="padding: 24px; position: relative;">
+
+          <!-- From Station -->
+          <div style="margin-bottom: 20px;">
+            <label style="display: block; font-size: 13px; font-weight: 700; color: #2563eb; margin-bottom: 6px;">
+              <i class="fa-solid fa-location-dot" style="margin-right: 4px;"></i> From
+            </label>
+            <div style="position: relative;">
+              <div onclick="toggleStationDropdown('fromStationList')"
+                   style="display: flex; align-items: center; gap: 10px; padding: 12px 14px; border: 2px solid #d6e3ec; border-radius: 12px; cursor: pointer; background: #f8fafc; transition: border-color 0.2s;"
+                   onmouseover="this.style.borderColor='#2563eb'" onmouseout="this.style.borderColor='#d6e3ec'">
+                <i class="fa-solid fa-train-tram" style="color: #12355B; font-size: 16px;"></i>
+                <span style="font-size: 14px; font-weight: 700; color: ${fromStation ? '#0f172a' : '#94a3b8'};">
+                  ${fromStation ? `${fromStation.code} - ${fromStation.name.toUpperCase()}` : 'Select Source Station'}
+                </span>
+              </div>
+              <div id="fromStationList" class="hidden" style="position: absolute; top: 100%; left: 0; right: 0; z-index: 40; max-height: 220px; overflow-y: auto; background: white; border: 2px solid #2563eb; border-radius: 12px; margin-top: 4px; box-shadow: 0 20px 40px rgba(18,53,91,0.18);">
+                <div style="padding: 8px; position: sticky; top: 0; background: white; border-bottom: 1px solid #e2e8f0;">
+                  <input type="text" placeholder="Type station name or code..." oninput="filterStationDropdown('fromSearchInput','fromStationList')" id="fromSearchInput"
+                    style="width: 100%; padding: 8px 12px; border: 1px solid #d6e3ec; border-radius: 8px; font-size: 12px; font-weight: 600; outline: none; box-sizing: border-box;" />
+                </div>
+                ${irStations.map(s => `
+                  <div class="station-option" onclick="selectStation('from','${s.code}'); document.getElementById('fromStationList').classList.add('hidden');"
+                    style="padding: 10px 14px; cursor: pointer; font-size: 13px; font-weight: 600; color: #0f172a; border-bottom: 1px solid #f1f5f9; transition: background 0.15s;"
+                    onmouseover="this.style.background='#eaf3f8'" onmouseout="this.style.background='white'">
+                    <i class="fa-solid fa-train" style="color: #12355B; margin-right: 8px; font-size: 11px;"></i>
+                    ${s.code} - ${s.name.toUpperCase()}
+                    <span style="float: right; font-size: 10px; color: #64748b; font-weight: 700;">${s.zone}</span>
+                  </div>
+                `).join("")}
+              </div>
+            </div>
           </div>
 
-          <div class="flex items-center gap-2">
-            <input type="text" value="${trainListSearchQuery}" oninput="setTrainSearchQuery(this.value)" placeholder="Search Train No / Name..." class="px-3.5 py-2 rounded-xl bg-slate-900 border border-white/10 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500" />
+          <!-- Swap Button -->
+          <div style="position: absolute; right: 36px; top: 120px; z-index: 10;">
+            <button onclick="swapTrainStations()"
+              style="width: 40px; height: 40px; border-radius: 50%; background: white; border: 2px solid #2563eb; color: #2563eb; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 12px rgba(37,99,235,0.2); transition: all 0.2s;"
+              onmouseover="this.style.background='#2563eb'; this.style.color='white'" onmouseout="this.style.background='white'; this.style.color='#2563eb'">
+              <i class="fa-solid fa-arrow-right-arrow-left" style="transform: rotate(90deg); font-size: 14px;"></i>
+            </button>
+          </div>
+
+          <!-- To Station -->
+          <div style="margin-bottom: 24px;">
+            <label style="display: block; font-size: 13px; font-weight: 700; color: #2563eb; margin-bottom: 6px;">
+              <i class="fa-solid fa-location-crosshairs" style="margin-right: 4px;"></i> To
+            </label>
+            <div style="position: relative;">
+              <div onclick="toggleStationDropdown('toStationList')"
+                   style="display: flex; align-items: center; gap: 10px; padding: 12px 14px; border: 2px solid #d6e3ec; border-radius: 12px; cursor: pointer; background: #f8fafc; transition: border-color 0.2s;"
+                   onmouseover="this.style.borderColor='#2563eb'" onmouseout="this.style.borderColor='#d6e3ec'">
+                <i class="fa-solid fa-train-tram" style="color: #12355B; font-size: 16px;"></i>
+                <span style="font-size: 14px; font-weight: 700; color: ${toStation ? '#0f172a' : '#94a3b8'};">
+                  ${toStation ? `${toStation.code} - ${toStation.name.toUpperCase()}` : 'Select Destination Station'}
+                </span>
+              </div>
+              <div id="toStationList" class="hidden" style="position: absolute; top: 100%; left: 0; right: 0; z-index: 40; max-height: 220px; overflow-y: auto; background: white; border: 2px solid #2563eb; border-radius: 12px; margin-top: 4px; box-shadow: 0 20px 40px rgba(18,53,91,0.18);">
+                <div style="padding: 8px; position: sticky; top: 0; background: white; border-bottom: 1px solid #e2e8f0;">
+                  <input type="text" placeholder="Type station name or code..." oninput="filterStationDropdown('toSearchInput','toStationList')" id="toSearchInput"
+                    style="width: 100%; padding: 8px 12px; border: 1px solid #d6e3ec; border-radius: 8px; font-size: 12px; font-weight: 600; outline: none; box-sizing: border-box;" />
+                </div>
+                ${irStations.map(s => `
+                  <div class="station-option" onclick="selectStation('to','${s.code}'); document.getElementById('toStationList').classList.add('hidden');"
+                    style="padding: 10px 14px; cursor: pointer; font-size: 13px; font-weight: 600; color: #0f172a; border-bottom: 1px solid #f1f5f9; transition: background 0.15s;"
+                    onmouseover="this.style.background='#eaf3f8'" onmouseout="this.style.background='white'">
+                    <i class="fa-solid fa-train" style="color: #12355B; margin-right: 8px; font-size: 11px;"></i>
+                    ${s.code} - ${s.name.toUpperCase()}
+                    <span style="float: right; font-size: 10px; color: #64748b; font-weight: 700;">${s.zone}</span>
+                  </div>
+                `).join("")}
+              </div>
+            </div>
+          </div>
+
+          <!-- Departure Date -->
+          <div style="margin-bottom: 20px;">
+            <label style="display: block; font-size: 13px; font-weight: 700; color: #2563eb; margin-bottom: 8px;">
+              <i class="fa-solid fa-calendar-days" style="margin-right: 4px;"></i> Departure Date
+            </label>
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <input type="date" value="${trainSearchDate}" onchange="setTrainSearchDate(this.value)"
+                style="padding: 10px 14px; border: 2px solid #d6e3ec; border-radius: 10px; font-size: 13px; font-weight: 700; color: #0f172a; background: #f8fafc; cursor: pointer; outline: none; font-family: 'Plus Jakarta Sans', sans-serif;" />
+              ${dates.slice(1, 4).map(d => `
+                <button onclick="setTrainSearchDate('${d.full}')"
+                  style="padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s; border: 1.5px solid ${trainSearchDate === d.full ? '#2563eb' : '#d6e3ec'}; background: ${trainSearchDate === d.full ? '#2563eb' : 'white'}; color: ${trainSearchDate === d.full ? 'white' : '#475569'};"
+                  onmouseover="if('${trainSearchDate}'!=='${d.full}'){this.style.borderColor='#2563eb';this.style.color='#2563eb'}" onmouseout="if('${trainSearchDate}'!=='${d.full}'){this.style.borderColor='#d6e3ec';this.style.color='#475569'}">
+                  ${d.date} ${d.month}
+                </button>
+              `).join("")}
+            </div>
+          </div>
+
+          <!-- Class Selector -->
+          <div style="margin-bottom: 20px;">
+            <label style="display: block; font-size: 13px; font-weight: 700; color: #2563eb; margin-bottom: 8px;">
+              <i class="fa-solid fa-chair" style="margin-right: 4px;"></i> Class
+            </label>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+              ${classOptions.map(cls => `
+                <button onclick="setTrainSearchClass('${cls}')"
+                  style="padding: 7px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; border: 1.5px solid ${trainSearchClass === cls ? '#2563eb' : '#d6e3ec'}; background: ${trainSearchClass === cls ? '#2563eb' : 'white'}; color: ${trainSearchClass === cls ? 'white' : '#475569'};"
+                  onmouseover="if('${trainSearchClass}'!=='${cls}'){this.style.borderColor='#2563eb';this.style.color='#2563eb'}" onmouseout="if('${trainSearchClass}'!=='${cls}'){this.style.borderColor='#d6e3ec';this.style.color='#475569'}">
+                  ${cls}
+                </button>
+              `).join("")}
+            </div>
+          </div>
+
+          <!-- Quota -->
+          <div style="margin-bottom: 24px;">
+            <label style="display: block; font-size: 13px; font-weight: 700; color: #2563eb; margin-bottom: 6px;">
+              <i class="fa-solid fa-ticket" style="margin-right: 4px;"></i> Quota
+            </label>
+            <select onchange="trainSearchQuota = this.value"
+              style="width: 100%; padding: 11px 14px; border: 2px solid #d6e3ec; border-radius: 12px; font-size: 13px; font-weight: 700; color: #0f172a; background: #f8fafc; cursor: pointer; outline: none; font-family: 'Plus Jakarta Sans', sans-serif; appearance: auto;">
+              <option value="General" ${trainSearchQuota === 'General' ? 'selected' : ''}>General</option>
+              <option value="Tatkal" ${trainSearchQuota === 'Tatkal' ? 'selected' : ''}>Tatkal</option>
+              <option value="Ladies" ${trainSearchQuota === 'Ladies' ? 'selected' : ''}>Ladies</option>
+              <option value="Lower Berth" ${trainSearchQuota === 'Lower Berth' ? 'selected' : ''}>Lower Berth / Senior Citizen</option>
+              <option value="Divyaang" ${trainSearchQuota === 'Divyaang' ? 'selected' : ''}>Divyaang</option>
+              <option value="Defence" ${trainSearchQuota === 'Defence' ? 'selected' : ''}>Defence</option>
+            </select>
+          </div>
+
+          <!-- Search Button -->
+          <button onclick="executeTrainSearch()"
+            style="width: 100%; padding: 14px; border-radius: 14px; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: white; font-size: 16px; font-weight: 800; border: none; cursor: pointer; font-family: 'Outfit', sans-serif; letter-spacing: 0.5px; box-shadow: 0 6px 24px rgba(37,99,235,0.35); transition: all 0.25s; display: flex; align-items: center; justify-content: center; gap: 10px;"
+            onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 30px rgba(37,99,235,0.45)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 24px rgba(37,99,235,0.35)'">
+            <i class="fa-solid fa-magnifying-glass"></i> Search Trains
+          </button>
+        </div>
+
+        <!-- Recent Searches -->
+        ${trainRecentSearches.length > 0 ? `
+          <div style="padding: 0 4px;">
+            <h4 style="font-size: 13px; font-weight: 800; color: #12355B; margin-bottom: 10px;">
+              <i class="fa-solid fa-clock-rotate-left" style="margin-right: 6px; color: #2563eb;"></i> Recent Searches
+            </h4>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              ${trainRecentSearches.map(r => `
+                <button onclick="useRecentSearch('${r.from}', '${r.to}')"
+                  style="padding: 8px 16px; border-radius: 12px; background: white; border: 1.5px solid #d6e3ec; font-size: 11px; font-weight: 700; color: #12355B; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.06); transition: all 0.2s; display: flex; align-items: center; gap: 6px;"
+                  onmouseover="this.style.borderColor='#2563eb'; this.style.boxShadow='0 4px 12px rgba(37,99,235,0.15)'" onmouseout="this.style.borderColor='#d6e3ec'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.06)'">
+                  <i class="fa-solid fa-route" style="color: #2563eb; font-size: 10px;"></i>
+                  ${r.from} → ${r.to}
+                </button>
+              `).join("")}
+            </div>
+          </div>
+        ` : ''}
+      </div>
+    `;
+
+    // Close dropdowns on outside click
+    setTimeout(() => {
+      document.addEventListener("click", function closeDropdowns(e) {
+        const fromList = document.getElementById("fromStationList");
+        const toList = document.getElementById("toStationList");
+        if (fromList && !fromList.parentElement.contains(e.target)) fromList.classList.add("hidden");
+        if (toList && !toList.parentElement.contains(e.target)) toList.classList.add("hidden");
+      }, { once: false });
+    }, 100);
+  }
+
+  // =========================================================================
+  // SCREEN 2: TRAIN RESULTS LIST (IRCTC-STYLE CARDS)
+  // =========================================================================
+  function renderTrainResultsScreen(container) {
+    const dates = getSearchDates();
+    const dayLabels = ["M", "T", "W", "T", "F", "S", "S"];
+    const fromStn = irStations.find(s => s.code === trainSearchFrom);
+    const toStn = irStations.find(s => s.code === trainSearchTo);
+    const selectedDateObj = new Date(trainSearchDate);
+    const dateStr = selectedDateObj.toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
+
+    // Filter by class if not "All"
+    let filteredResults = [...trainSearchResults];
+    if (trainSearchClass !== "All") {
+      filteredResults = filteredResults.filter(t => t.classes.includes(trainSearchClass));
+    }
+
+    container.innerHTML = `
+      <div class="space-y-4">
+
+        <!-- Results Header Bar -->
+        <div class="glass-card" style="padding: 16px 20px; background: linear-gradient(135deg, #12355B 0%, #1a4a7a 100%) !important; border: none !important; color: white !important;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <button onclick="goBackToSearch()"
+              style="width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; flex-shrink: 0;"
+              onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">
+              <i class="fa-solid fa-arrow-left" style="font-size: 14px;"></i>
+            </button>
+            <div style="flex: 1;">
+              <h3 style="font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 17px; margin: 0; display: flex; align-items: center; gap: 8px; color: white;">
+                ${fromStn ? fromStn.name.toUpperCase() : trainSearchFrom}
+                <span style="color: #FF9933;">→</span>
+                ${toStn ? toStn.name.toUpperCase() : trainSearchTo}
+              </h3>
+              <p style="font-size: 11px; color: rgba(255,255,255,0.7); margin: 2px 0 0 0; font-weight: 500;">
+                <i class="fa-regular fa-calendar" style="margin-right: 4px;"></i> ${dateStr}
+              </p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px; background: rgba(255,153,51,0.2); padding: 6px 14px; border-radius: 10px; border: 1px solid rgba(255,153,51,0.4);">
+              <i class="fa-solid fa-train" style="color: #FF9933; font-size: 13px;"></i>
+              <span style="color: #FF9933; font-weight: 800; font-size: 13px;">${filteredResults.length}</span>
+              <span style="color: rgba(255,255,255,0.7); font-size: 11px; font-weight: 600;">Trains</span>
+            </div>
           </div>
         </div>
 
-        <!-- Filter Pills -->
-        <div class="flex items-center gap-2 text-xs">
-          <button onclick="setTrainFilter('all')" class="px-3 py-1.5 rounded-xl border transition-all cursor-pointer ${trainListFilter === "all" ? "bg-blue-600/30 border-blue-400 text-blue-200 font-bold" : "bg-slate-900 border-white/10 text-slate-400"}">
-            All Trains (128)
-          </button>
-          <button onclick="setTrainFilter('ontime')" class="px-3 py-1.5 rounded-xl border transition-all cursor-pointer ${trainListFilter === "ontime" ? "bg-emerald-600/30 border-emerald-400 text-emerald-200 font-bold" : "bg-slate-900 border-white/10 text-slate-400"}">
-            On-Time (75)
-          </button>
-          <button onclick="setTrainFilter('delayed')" class="px-3 py-1.5 rounded-xl border transition-all cursor-pointer ${trainListFilter === "delayed" ? "bg-amber-600/30 border-amber-400 text-amber-200 font-bold" : "bg-slate-900 border-white/10 text-slate-400"}">
-            Delayed (32)
-          </button>
+        <!-- Date Tabs (Horizontal Scroll) -->
+        <div style="display: flex; gap: 8px; overflow-x: auto; padding: 2px 0; -webkit-overflow-scrolling: touch;">
+          ${dates.map(d => `
+            <button onclick="setTrainSearchDate('${d.full}'); executeTrainSearch();"
+              style="flex-shrink: 0; padding: 8px 18px; border-radius: 12px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; border: 1.5px solid ${trainSearchDate === d.full ? '#2563eb' : '#d6e3ec'}; background: ${trainSearchDate === d.full ? '#2563eb' : 'white'}; color: ${trainSearchDate === d.full ? 'white' : '#475569'}; box-shadow: ${trainSearchDate === d.full ? '0 4px 12px rgba(37,99,235,0.25)' : '0 1px 3px rgba(0,0,0,0.06)'};">
+              ${d.day}, ${d.date} ${d.month}
+            </button>
+          `).join("")}
         </div>
 
-        <!-- Table View -->
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse text-xs">
-            <thead>
-              <tr class="border-b border-white/10 text-slate-400 uppercase font-mono text-[10px]">
-                <th class="py-3 px-3">Train No & Name</th>
-                <th class="py-3 px-3">Route Section</th>
-                <th class="py-3 px-3">Current Speed</th>
-                <th class="py-3 px-3">Schedule Status</th>
-                <th class="py-3 px-3">Kavach Interlocking</th>
-                <th class="py-3 px-3 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-white/5 font-medium text-slate-200">
-              ${filteredTrains
-                .map(
-                  (t) => `
-                <tr class="hover:bg-white/5 transition-colors">
-                  <td class="py-3.5 px-3">
-                    <p class="font-bold text-white font-mono">${t.id}</p>
-                    <p class="text-slate-300 text-[11px] font-sans font-bold">${t.name}</p>
-                  </td>
-                  <td class="py-3.5 px-3 text-slate-300">${t.route}<br/><span class="text-[10px] text-slate-400 font-mono">${t.loc}</span></td>
-                  <td class="py-3.5 px-3 font-bold text-emerald-400 font-mono">${t.speed}</td>
-                  <td class="py-3.5 px-3"><span class="px-2 py-0.5 rounded border text-[10px] font-bold ${t.delayClass}">${t.delay}</span></td>
-                  <td class="py-3.5 px-3 text-cyan-300 font-mono text-[11px]">${t.kavach}</td>
-                  <td class="py-3.5 px-3 text-right">
-                    <button onclick="showToast('OBC Telemetry Log for Train ${t.id} ${t.name} Loaded', 'info')" class="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 text-blue-300 border border-slate-700 text-[10px] font-bold cursor-pointer">
-                      View Telemetry
-                    </button>
-                  </td>
+        <!-- Filter / Sort Bar -->
+        <div class="glass-card" style="padding: 10px 16px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+          <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #64748b; font-weight: 600;">
+            <i class="fa-solid fa-magnifying-glass" style="font-size: 11px;"></i>
+            Name/No.
+          </div>
+          <span style="font-size: 13px; font-weight: 800; color: #12355B;">(${filteredResults.length})</span>
+          <div style="flex: 1;"></div>
+          <div style="display: flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: 8px; border: 1.5px solid #d6e3ec; font-size: 11px; font-weight: 700; color: #475569; cursor: pointer;">
+            ${trainSearchQuota} <i class="fa-solid fa-chevron-down" style="font-size: 9px; margin-left: 4px;"></i>
+          </div>
+          <div style="display: flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: 8px; border: 1.5px solid #2563eb; background: #eef4ff; font-size: 11px; font-weight: 700; color: #2563eb; cursor: pointer;">
+            Available
+          </div>
+        </div>
+
+        <!-- Train Cards -->
+        ${filteredResults.length === 0 ? `
+          <div class="glass-card" style="padding: 48px 24px; text-align: center;">
+            <i class="fa-solid fa-train" style="font-size: 48px; color: #d6e3ec; margin-bottom: 16px;"></i>
+            <h4 style="font-size: 16px; font-weight: 800; color: #12355B; margin: 0 0 8px 0;">No Trains Found</h4>
+            <p style="font-size: 13px; color: #64748b; font-weight: 500;">No trains available between ${fromStn ? fromStn.name : trainSearchFrom} and ${toStn ? toStn.name : trainSearchTo} on this date.</p>
+            <button onclick="goBackToSearch()" style="margin-top: 16px; padding: 10px 24px; border-radius: 12px; background: #2563eb; color: white; font-size: 13px; font-weight: 700; border: none; cursor: pointer;">
+              <i class="fa-solid fa-arrow-left" style="margin-right: 6px;"></i> Modify Search
+            </button>
+          </div>
+        ` : filteredResults.map(train => {
+          // Calculate departure/arrival for this specific leg
+          const fromStIdx = train.stations.findIndex(s => s.code === trainSearchFrom);
+          const toStIdx = train.stations.findIndex(s => s.code === trainSearchTo);
+          const depTime = fromStIdx !== -1 ? (train.stations[fromStIdx].dep !== "--" ? train.stations[fromStIdx].dep : train.stations[fromStIdx].arr) : train.depart;
+          const arrTime = toStIdx !== -1 ? (train.stations[toStIdx].arr !== "--" ? train.stations[toStIdx].arr : train.stations[toStIdx].dep) : train.arrive;
+          const fromStName = fromStIdx !== -1 ? train.stations[fromStIdx].name : "";
+          const toStName = toStIdx !== -1 ? train.stations[toStIdx].name : "";
+
+          const delayColor = train.delay === 0 ? '#138808' : train.delay <= 15 ? '#f59e0b' : '#dc2626';
+          const delayBg = train.delay === 0 ? '#f0fdf4' : train.delay <= 15 ? '#fffbeb' : '#fef2f2';
+
+          return `
+            <div class="glass-card" style="padding: 18px 20px; cursor: pointer; transition: all 0.2s; border-left: 4px solid ${train.delay === 0 ? '#138808' : train.delay <= 15 ? '#f59e0b' : '#dc2626'} !important;"
+              onmouseover="this.style.boxShadow='0 8px 30px rgba(18,53,91,0.12)'; this.style.transform='translateY(-1px)'" onmouseout="this.style.boxShadow=''; this.style.transform=''">
+
+              <!-- Top: Train Number & Name -->
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                <div>
+                  <span style="font-size: 11px; font-weight: 700; color: #64748b; font-family: 'JetBrains Mono', monospace;">${train.number}</span>
+                  <h4 style="font-size: 14px; font-weight: 800; color: #12355B; margin: 2px 0 0 0; font-family: 'Outfit', sans-serif;">${train.name}</h4>
+                </div>
+                <div style="display: flex; gap: 6px;">
+                  <span style="padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; background: ${delayBg}; color: ${delayColor}; border: 1px solid ${delayColor}30;">${train.delayText}</span>
+                </div>
+              </div>
+
+              <!-- Middle: Timing Row -->
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                <!-- Departure -->
+                <div style="text-align: left;">
+                  <p style="font-size: 20px; font-weight: 900; color: #0f172a; margin: 0; font-family: 'Outfit', sans-serif;">${depTime}</p>
+                  <p style="font-size: 10px; color: #64748b; font-weight: 600; margin: 2px 0 0 0;">${fromStName.toUpperCase()}</p>
+                </div>
+
+                <!-- Duration -->
+                <div style="flex: 1; text-align: center; position: relative; padding: 0 20px;">
+                  <div style="position: absolute; left: 20px; right: 20px; top: 50%; height: 2px; background: #d6e3ec;"></div>
+                  <div style="position: absolute; left: 20px; top: calc(50% - 3px); width: 8px; height: 8px; border-radius: 50%; background: #2563eb; border: 2px solid white; box-shadow: 0 0 0 2px #2563eb;"></div>
+                  <div style="position: absolute; right: 20px; top: calc(50% - 3px); width: 8px; height: 8px; border-radius: 50%; background: #2563eb; border: 2px solid white; box-shadow: 0 0 0 2px #2563eb;"></div>
+                  <span style="position: relative; z-index: 1; padding: 2px 10px; background: white; font-size: 11px; font-weight: 700; color: #475569;">
+                    — ${train.duration} —
+                  </span>
+                </div>
+
+                <!-- Arrival -->
+                <div style="text-align: right;">
+                  <p style="font-size: 20px; font-weight: 900; color: ${delayColor}; margin: 0; font-family: 'Outfit', sans-serif;">${arrTime}</p>
+                  <p style="font-size: 10px; color: #64748b; font-weight: 600; margin: 2px 0 0 0;">${toStName.toUpperCase()}</p>
+                </div>
+              </div>
+
+              <!-- Running Days -->
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
+                <div style="display: flex; gap: 3px;">
+                  ${dayLabels.map((day, i) => `
+                    <span style="width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: ${train.days[i] ? '800' : '500'}; color: ${train.days[i] ? '#2563eb' : '#cbd5e1'}; background: ${train.days[i] ? '#eef4ff' : 'transparent'}; border: 1px solid ${train.days[i] ? '#2563eb30' : '#e2e8f030'};">
+                      ${day}
+                    </span>
+                  `).join("")}
+                </div>
+              </div>
+
+              <!-- Bottom: Classes & Action -->
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; gap: 5px;">
+                  ${train.classes.map(cls => `
+                    <span style="padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; color: #12355B; background: #eaf3f8; border: 1px solid #d6e3ec;">${cls}</span>
+                  `).join("")}
+                </div>
+                <button onclick="event.stopPropagation(); viewTrainDetail('${train.number}')"
+                  style="padding: 8px 18px; border-radius: 10px; background: white; border: 2px solid #2563eb; color: #2563eb; font-size: 12px; font-weight: 800; cursor: pointer; transition: all 0.2s; font-family: 'Outfit', sans-serif;"
+                  onmouseover="this.style.background='#2563eb'; this.style.color='white'" onmouseout="this.style.background='white'; this.style.color='#2563eb'">
+                  VIEW DETAILS <i class="fa-solid fa-chevron-right" style="margin-left: 4px; font-size: 10px;"></i>
+                </button>
+              </div>
+            </div>
+          `;
+        }).join("")}
+
+      </div>
+    `;
+  }
+
+  // =========================================================================
+  // SCREEN 3: TRAIN DETAIL VIEW
+  // =========================================================================
+  function renderTrainDetailScreen(container) {
+    if (!trainDetailSelected) return;
+    const t = trainDetailSelected;
+    const dayLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+    const delayColor = t.delay === 0 ? '#138808' : t.delay <= 15 ? '#f59e0b' : '#dc2626';
+    const delayBg = t.delay === 0 ? '#f0fdf4' : t.delay <= 15 ? '#fffbeb' : '#fef2f2';
+
+    container.innerHTML = `
+      <div class="space-y-5">
+
+        <!-- Detail Header -->
+        <div class="glass-card" style="padding: 20px 24px; background: linear-gradient(135deg, #12355B 0%, #1a4a7a 100%) !important; border: none !important; color: white !important;">
+          <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 14px;">
+            <button onclick="goBackToResults()"
+              style="width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; flex-shrink: 0;"
+              onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">
+              <i class="fa-solid fa-arrow-left" style="font-size: 14px;"></i>
+            </button>
+            <div style="flex: 1;">
+              <p style="font-size: 12px; color: #FF9933; font-weight: 700; font-family: 'JetBrains Mono', monospace; margin: 0 0 2px 0;">${t.number}</p>
+              <h3 style="font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 20px; margin: 0; color: white;">${t.name}</h3>
+              <p style="font-size: 11px; color: rgba(255,255,255,0.6); margin: 4px 0 0 0; font-weight: 500;">${t.type} Train</p>
+            </div>
+            <div style="padding: 8px 16px; border-radius: 10px; background: ${t.delay === 0 ? 'rgba(19,136,8,0.2)' : t.delay <= 15 ? 'rgba(245,158,11,0.2)' : 'rgba(220,38,38,0.2)'}; border: 1px solid ${t.delay === 0 ? 'rgba(19,136,8,0.4)' : t.delay <= 15 ? 'rgba(245,158,11,0.4)' : 'rgba(220,38,38,0.4)'};">
+              <span style="font-size: 14px; font-weight: 800; color: ${t.delay === 0 ? '#4ade80' : t.delay <= 15 ? '#fbbf24' : '#f87171'};">${t.delayText}</span>
+            </div>
+          </div>
+
+          <!-- Quick Stats -->
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.1);">
+            <div style="text-align: center;">
+              <p style="font-size: 10px; color: rgba(255,255,255,0.5); font-weight: 600; margin: 0;">MAX SPEED</p>
+              <p style="font-size: 15px; font-weight: 800; color: #4ade80; margin: 4px 0 0 0; font-family: 'JetBrains Mono', monospace;">${t.speed}</p>
+            </div>
+            <div style="text-align: center;">
+              <p style="font-size: 10px; color: rgba(255,255,255,0.5); font-weight: 600; margin: 0;">DURATION</p>
+              <p style="font-size: 15px; font-weight: 800; color: white; margin: 4px 0 0 0; font-family: 'JetBrains Mono', monospace;">${t.duration}</p>
+            </div>
+            <div style="text-align: center;">
+              <p style="font-size: 10px; color: rgba(255,255,255,0.5); font-weight: 600; margin: 0;">KAVACH</p>
+              <p style="font-size: 11px; font-weight: 800; color: #38bdf8; margin: 4px 0 0 0;">${t.kavach}</p>
+            </div>
+            <div style="text-align: center;">
+              <p style="font-size: 10px; color: rgba(255,255,255,0.5); font-weight: 600; margin: 0;">STOPS</p>
+              <p style="font-size: 15px; font-weight: 800; color: white; margin: 4px 0 0 0; font-family: 'JetBrains Mono', monospace;">${t.stations.length}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Running Days & Classes -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="glass-card" style="padding: 16px 20px;">
+            <h5 style="font-size: 12px; font-weight: 700; color: #2563eb; margin: 0 0 10px 0;">
+              <i class="fa-solid fa-calendar-week" style="margin-right: 6px;"></i> Running Days
+            </h5>
+            <div style="display: flex; gap: 6px;">
+              ${dayLabels.map((day, i) => `
+                <span style="padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; color: ${t.days[i] ? 'white' : '#94a3b8'}; background: ${t.days[i] ? '#2563eb' : '#f1f5f9'}; border: 1px solid ${t.days[i] ? '#2563eb' : '#e2e8f0'};">
+                  ${day}
+                </span>
+              `).join("")}
+            </div>
+          </div>
+          <div class="glass-card" style="padding: 16px 20px;">
+            <h5 style="font-size: 12px; font-weight: 700; color: #2563eb; margin: 0 0 10px 0;">
+              <i class="fa-solid fa-chair" style="margin-right: 6px;"></i> Available Classes
+            </h5>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+              ${t.classes.map(cls => `
+                <span style="padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 700; color: #12355B; background: #eaf3f8; border: 1.5px solid #12355B;">${cls}</span>
+              `).join("")}
+            </div>
+          </div>
+        </div>
+
+        <!-- Route / Station-wise Detail Table -->
+        <div class="glass-card" style="padding: 20px 24px;">
+          <h5 style="font-size: 14px; font-weight: 800; color: #12355B; margin: 0 0 16px 0; font-family: 'Outfit', sans-serif;">
+            <i class="fa-solid fa-route" style="margin-right: 8px; color: #2563eb;"></i> Station-wise Schedule & Delay Status
+          </h5>
+          <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+              <thead>
+                <tr style="border-bottom: 2px solid #e2e8f0;">
+                  <th style="padding: 10px 12px; text-align: left; font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">S.No</th>
+                  <th style="padding: 10px 12px; text-align: left; font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Station</th>
+                  <th style="padding: 10px 12px; text-align: center; font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Arrival</th>
+                  <th style="padding: 10px 12px; text-align: center; font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Departure</th>
+                  <th style="padding: 10px 12px; text-align: center; font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">PF</th>
+                  <th style="padding: 10px 12px; text-align: center; font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Delay</th>
                 </tr>
-              `,
-                )
-                .join("")}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                ${t.stations.map((st, idx) => {
+                  const stDelayColor = st.delay === 0 ? '#138808' : st.delay <= 15 ? '#f59e0b' : '#dc2626';
+                  const stDelayBg = st.delay === 0 ? '#f0fdf4' : st.delay <= 15 ? '#fffbeb' : '#fef2f2';
+                  const isFirst = idx === 0;
+                  const isLast = idx === t.stations.length - 1;
+                  return `
+                    <tr style="border-bottom: 1px solid #f1f5f9; transition: background 0.15s; ${isFirst || isLast ? 'background: #f8fafc;' : ''}"
+                      onmouseover="this.style.background='#eef4ff'" onmouseout="this.style.background='${isFirst || isLast ? '#f8fafc' : 'white'}'">
+                      <td style="padding: 12px; text-align: left;">
+                        <div style="width: 24px; height: 24px; border-radius: 50%; background: ${isFirst ? '#138808' : isLast ? '#dc2626' : '#2563eb'}; color: white; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center;">${idx + 1}</div>
+                      </td>
+                      <td style="padding: 12px;">
+                        <p style="font-weight: 800; color: #0f172a; margin: 0; font-size: 13px;">${st.name}</p>
+                        <p style="font-size: 10px; color: #64748b; font-weight: 600; margin: 2px 0 0 0; font-family: 'JetBrains Mono', monospace;">${st.code}</p>
+                      </td>
+                      <td style="padding: 12px; text-align: center; font-weight: 700; color: #0f172a; font-family: 'JetBrains Mono', monospace; font-size: 13px;">${st.arr}</td>
+                      <td style="padding: 12px; text-align: center; font-weight: 700; color: #0f172a; font-family: 'JetBrains Mono', monospace; font-size: 13px;">${st.dep}</td>
+                      <td style="padding: 12px; text-align: center;">
+                        <span style="padding: 3px 10px; border-radius: 6px; background: #eaf3f8; font-size: 12px; font-weight: 800; color: #12355B; border: 1px solid #d6e3ec;">PF ${st.pf}</span>
+                      </td>
+                      <td style="padding: 12px; text-align: center;">
+                        <span style="padding: 4px 12px; border-radius: 8px; font-size: 11px; font-weight: 800; background: ${stDelayBg}; color: ${stDelayColor}; border: 1px solid ${stDelayColor}30;">
+                          ${st.delay === 0 ? '✓ ON TIME' : `+${st.delay} MIN`}
+                        </span>
+                      </td>
+                    </tr>
+                  `;
+                }).join("")}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Kavach System Info Card -->
+        <div class="glass-card" style="padding: 18px 22px; border-left: 4px solid #FF9933 !important;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #FF9933, #f97316); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <i class="fa-solid fa-shield-halved" style="color: white; font-size: 18px;"></i>
+            </div>
+            <div style="flex: 1;">
+              <h5 style="font-size: 13px; font-weight: 800; color: #12355B; margin: 0;">Kavach Anti-Collision System</h5>
+              <p style="font-size: 11px; color: #64748b; font-weight: 500; margin: 3px 0 0 0;">
+                Status: <span style="font-weight: 800; color: #138808;">${t.kavach}</span>
+                &nbsp;•&nbsp; Equipped with TPWS, ATP & Automatic Brake Intervention
+              </p>
+            </div>
+            <div style="padding: 6px 16px; border-radius: 10px; background: #f0fdf4; border: 1.5px solid #138808;">
+              <span style="font-size: 11px; font-weight: 800; color: #138808;">
+                <i class="fa-solid fa-circle-check" style="margin-right: 4px;"></i> ACTIVE
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     `;
