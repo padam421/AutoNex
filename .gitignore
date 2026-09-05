@@ -26,14 +26,15 @@ __pycache__/
 .coverage
 
 # Data & Database exports
+data/raw/
 data/kavach_db_export.*
 data/api_responses/*.json
-data/raw/*.json
 data/geojson/*.geojson
 data/mock/*.json
 data/seed/*.json
 *.parquet
 *.csv
+*.sqlite3
 
 # IDE & OS files
 .vscode/

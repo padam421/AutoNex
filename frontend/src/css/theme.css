@@ -37,7 +37,20 @@ p, span, label, td, th, li, a, input, select, textarea, div {
 
 h1, h2, h3, h4, h5, h6, .font-bold, .font-extrabold, .font-black {
   font-weight: 900 !important;
-  color: var(--primary-navy) !important;
+  color: var(--primary-navy);
+}
+
+/* Ensure text-white and banner headers on dark backgrounds are crystal clear */
+.text-white, .text-white *, [class*="text-white"],
+.results-header-banner, .results-header-banner *,
+.results-header-banner h1, .results-header-banner h2, .results-header-banner h3, .results-header-banner p {
+  color: #FFFFFF !important;
+}
+
+.results-header-banner [style*="#FF9933"],
+.results-header-banner [style*="color: #FF9933"],
+.results-header-banner [style*="color:#FF9933"] {
+  color: #FF9933 !important;
 }
 
 /* Force All Slate Colors to High-Contrast Charcoal Slate */
@@ -157,14 +170,65 @@ select option, select#headerDepartmentSelect option {
 .glass-card, .card,
 .bg-slate-900, .bg-slate-950, .bg-slate-800,
 .bg-slate-900\/90, .bg-slate-900\/80, .bg-slate-900\/70, .bg-slate-900\/50, .bg-slate-800\/80,
-.bg-\[\#0b0f19\], .bg-\[\#030712\], .bg-\[\#0f1729\], .bg-\[\#131b2e\] {
+.bg-\[\#0b0f19\], .bg-\[\#030712\], .bg-\[\#0f1729\], .bg-\[\#131b2e\], .results-header-banner {
   background-color: #FFFFFF !important;
   background: #FFFFFF !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
   border: 1.5px solid var(--border-light) !important;
   box-shadow: 0 4px 20px -2px rgba(18, 53, 91, 0.08) !important;
+  border-radius: 20px !important;
   color: #0F172A !important;
+}
+
+/* ==========================================================================
+   GLOBAL ROUNDED DESIGN SYSTEM (ROUND SHAPE BOXES ACROSS ENTIRE WEBSITE)
+   ========================================================================== */
+
+.glass-card, .card, [class*="glass-card"] {
+  border-radius: 20px !important;
+}
+
+/* Results header banner styling */
+.results-header-banner {
+  background: linear-gradient(135deg, #12355B 0%, #1E4877 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 8px 25px rgba(18, 53, 91, 0.25) !important;
+  border-radius: 20px !important;
+  color: #FFFFFF !important;
+}
+
+/* Modals & Dialogs */
+.modal-box, [id*="Modal"] > div, .fixed .glass-card {
+  border-radius: 24px !important;
+}
+
+/* Form Inputs, Dropdowns & Controls */
+input, select, textarea, .glass-input {
+  border-radius: 14px !important;
+}
+
+/* Buttons */
+button, .btn, .btn-primary, .btn-saffron, .btn-success, .btn-danger {
+  border-radius: 14px !important;
+}
+
+/* Tailwind rounded utilities override to enhance rounded feel */
+.rounded-xl, .rounded-2xl, .rounded-3xl {
+  border-radius: 20px !important;
+}
+
+.rounded-lg {
+  border-radius: 14px !important;
+}
+
+.rounded-md {
+  border-radius: 10px !important;
+}
+
+/* Badges & Pills */
+.rounded-full, .badge, [class*="badge-"] {
+  border-radius: 9999px !important;
 }
 
 /* Internal Sub-Containers Inside Cards */
