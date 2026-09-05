@@ -711,7 +711,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   window.switchNavView = function (viewName) {
-    activeNavView = viewName || "overview";
+    activeNavView = (viewName === "overview" || !viewName) ? "train_list" : viewName;
 
     // Sync header dropdown to 'overview' if normal view selected
     const selectEl = document.getElementById("headerDepartmentSelect");
@@ -749,8 +749,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const container = document.getElementById("activeSubTabContainer");
     if (!container) return;
 
-    if (activeNavView === "overview") {
-      renderDashboardOverview(container);
+    if (activeNavView === "overview" || activeNavView === "train_list") {
+      activeNavView = "train_list";
+      renderTrainListSection(container);
     } else if (
       activeNavView === "station_master" ||
       activeNavView === "maintenance_engineer" ||
@@ -3142,6 +3143,42 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
           </div>
         ` : ''}
+
+        <!-- Featured Active Train Fleet (Direct 1-Click Dashboard Access) -->
+        <div style="padding: 4px 4px 0 4px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+            <h4 style="font-size: 13px; font-weight: 800; color: #12355B; margin: 0; display: flex; align-items: center; gap: 6px;">
+              <i class="fa-solid fa-gauge-high" style="color: #FF9933;"></i> Active Fleet (Click for Live Train Dashboard)
+            </h4>
+            <span style="font-size: 11px; color: #64748b; font-weight: 600;">20 Trains in Network</span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            ${irTrainDatabase.slice(0, 6).map(tr => {
+              const dCol = tr.delay === 0 ? '#138808' : tr.delay <= 15 ? '#f59e0b' : '#dc2626';
+              const dBg = tr.delay === 0 ? '#f0fdf4' : tr.delay <= 15 ? '#fffbeb' : '#fef2f2';
+              const typeColor = tr.type === 'Vande Bharat' ? '#ea580c' : tr.type === 'Rajdhani' ? '#991b1b' : tr.type === 'Shatabdi' ? '#0284c7' : '#2563eb';
+              return `
+                <div onclick="viewTrainDetail('${tr.number}')"
+                  class="glass-card" style="padding: 12px 14px; cursor: pointer; transition: all 0.2s; border-left: 3.5px solid ${dCol} !important;"
+                  onmouseover="this.style.boxShadow='0 6px 20px rgba(18,53,91,0.12)'; this.style.transform='translateY(-2px)'"
+                  onmouseout="this.style.boxShadow=''; this.style.transform=''">
+                  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+                    <span style="font-size: 11px; font-weight: 800; color: ${typeColor}; font-family: 'JetBrains Mono', monospace;">${tr.number}</span>
+                    <span style="padding: 1px 6px; border-radius: 4px; font-size: 9px; font-weight: 800; background: ${dBg}; color: ${dCol}; border: 1px solid ${dCol}30;">
+                      ${tr.delayText}
+                    </span>
+                  </div>
+                  <h5 style="margin: 0; font-size: 12px; font-weight: 800; color: #12355B; font-family: 'Outfit', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${tr.name}</h5>
+                  <div style="margin: 4px 0 0 0; font-size: 10px; color: #64748b; font-weight: 600; display: flex; align-items: center; justify-content: space-between;">
+                    <span>${tr.from} → ${tr.to}</span>
+                    <span style="color: #2563eb; font-weight: 700;">Open Dashboard →</span>
+                  </div>
+                </div>
+              `;
+            }).join("")}
+          </div>
+        </div>
       </div>
     `;
 
@@ -3251,7 +3288,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const delayBg = train.delay === 0 ? '#f0fdf4' : train.delay <= 15 ? '#fffbeb' : '#fef2f2';
 
           return `
-            <div class="glass-card" style="padding: 18px 20px; cursor: pointer; transition: all 0.2s; border-left: 4px solid ${train.delay === 0 ? '#138808' : train.delay <= 15 ? '#f59e0b' : '#dc2626'} !important;"
+            <div class="glass-card" onclick="viewTrainDetail('${train.number}')" style="padding: 18px 20px; cursor: pointer; transition: all 0.2s; border-left: 4px solid ${train.delay === 0 ? '#138808' : train.delay <= 15 ? '#f59e0b' : '#dc2626'} !important;"
               onmouseover="this.style.boxShadow='0 8px 30px rgba(18,53,91,0.12)'; this.style.transform='translateY(-1px)'" onmouseout="this.style.boxShadow=''; this.style.transform=''">
 
               <!-- Top: Train Number & Name -->
@@ -3323,159 +3360,1051 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =========================================================================
-  // SCREEN 3: TRAIN DETAIL VIEW
+  // SCREEN 3: INDIVIDUAL TRAIN PERSONAL DASHBOARD & TELEMETRY SYSTEM
   // =========================================================================
-  function renderTrainDetailScreen(container) {
-    if (!trainDetailSelected) return;
-    const t = trainDetailSelected;
-    const dayLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  let activeCoachInspectorIndex = 0;
 
-    const delayColor = t.delay === 0 ? '#138808' : t.delay <= 15 ? '#f59e0b' : '#dc2626';
-    const delayBg = t.delay === 0 ? '#f0fdf4' : t.delay <= 15 ? '#fffbeb' : '#fef2f2';
+  window.inspectCoach = function (coachIdx) {
+    activeCoachInspectorIndex = coachIdx;
+    if (window._currentTrainCoaches && window._currentTrainCoaches[coachIdx]) {
+      const c = window._currentTrainCoaches[coachIdx];
+      const inspectorEl = document.getElementById("coachDetailInspectorCard");
+      if (inspectorEl) {
+        inspectorEl.innerHTML = renderCoachInspectorHtml(c, coachIdx);
+      }
+      document.querySelectorAll(".coach-rake-box").forEach((box, i) => {
+        if (i === coachIdx) {
+          box.style.borderColor = "#FF9933";
+          box.style.transform = "translateY(-6px)";
+          box.style.boxShadow = "0 8px 20px rgba(255,153,51,0.4)";
+        } else {
+          box.style.borderColor = "rgba(255,255,255,0.15)";
+          box.style.transform = "translateY(0)";
+          box.style.boxShadow = "none";
+        }
+      });
+    }
+  };
 
-    container.innerHTML = `
-      <div class="space-y-5">
+  window.simulateKavachBrakeTest = function () {
+    showToast("Kavach 4.0 ATP Test Triggered: Emergency Braking Curve (EBD) calculated at 440m. SIL-4 Safety Interlock Nominal.", "success");
+  };
 
-        <!-- Detail Header -->
-        <div class="glass-card" style="padding: 20px 24px; background: linear-gradient(135deg, #12355B 0%, #1a4a7a 100%) !important; border: none !important; color: white !important;">
-          <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 14px;">
-            <button onclick="goBackToResults()"
-              style="width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; flex-shrink: 0;"
-              onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">
-              <i class="fa-solid fa-arrow-left" style="font-size: 14px;"></i>
-            </button>
-            <div style="flex: 1;">
-              <p style="font-size: 12px; color: #FF9933; font-weight: 700; font-family: 'JetBrains Mono', monospace; margin: 0 0 2px 0;">${t.number}</p>
-              <h3 style="font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 20px; margin: 0; color: white;">${t.name}</h3>
-              <p style="font-size: 11px; color: rgba(255,255,255,0.6); margin: 4px 0 0 0; font-weight: 500;">${t.type} Train</p>
-            </div>
-            <div style="padding: 8px 16px; border-radius: 10px; background: ${t.delay === 0 ? 'rgba(19,136,8,0.2)' : t.delay <= 15 ? 'rgba(245,158,11,0.2)' : 'rgba(220,38,38,0.2)'}; border: 1px solid ${t.delay === 0 ? 'rgba(19,136,8,0.4)' : t.delay <= 15 ? 'rgba(245,158,11,0.4)' : 'rgba(220,38,38,0.4)'};">
-              <span style="font-size: 14px; font-weight: 800; color: ${t.delay === 0 ? '#4ade80' : t.delay <= 15 ? '#fbbf24' : '#f87171'};">${t.delayText}</span>
-            </div>
-          </div>
+  window.refreshTrainTelemetry = function () {
+    showToast("Real-time Kavach & GPS Telemetry Synced with Central Server!", "info");
+    const container = document.getElementById("activeSubTabContainer");
+    if (container && trainSearchScreen === "detail") {
+      renderTrainDetailScreen(container);
+    }
+  };
 
-          <!-- Quick Stats -->
-          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.1);">
-            <div style="text-align: center;">
-              <p style="font-size: 10px; color: rgba(255,255,255,0.5); font-weight: 600; margin: 0;">MAX SPEED</p>
-              <p style="font-size: 15px; font-weight: 800; color: #4ade80; margin: 4px 0 0 0; font-family: 'JetBrains Mono', monospace;">${t.speed}</p>
-            </div>
-            <div style="text-align: center;">
-              <p style="font-size: 10px; color: rgba(255,255,255,0.5); font-weight: 600; margin: 0;">DURATION</p>
-              <p style="font-size: 15px; font-weight: 800; color: white; margin: 4px 0 0 0; font-family: 'JetBrains Mono', monospace;">${t.duration}</p>
-            </div>
-            <div style="text-align: center;">
-              <p style="font-size: 10px; color: rgba(255,255,255,0.5); font-weight: 600; margin: 0;">KAVACH</p>
-              <p style="font-size: 11px; font-weight: 800; color: #38bdf8; margin: 4px 0 0 0;">${t.kavach}</p>
-            </div>
-            <div style="text-align: center;">
-              <p style="font-size: 10px; color: rgba(255,255,255,0.5); font-weight: 600; margin: 0;">STOPS</p>
-              <p style="font-size: 15px; font-weight: 800; color: white; margin: 4px 0 0 0; font-family: 'JetBrains Mono', monospace;">${t.stations.length}</p>
-            </div>
-          </div>
-        </div>
+  window.exportTrainTelemetryPdf = function (trainNo) {
+    showToast(`Generating Official E-Telemetry & Safety Report for Train #${trainNo}... Ready.`, "success");
+  };
 
-        <!-- Running Days & Classes -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-          <div class="glass-card" style="padding: 16px 20px;">
-            <h5 style="font-size: 12px; font-weight: 700; color: #2563eb; margin: 0 0 10px 0;">
-              <i class="fa-solid fa-calendar-week" style="margin-right: 6px;"></i> Running Days
-            </h5>
-            <div style="display: flex; gap: 6px;">
-              ${dayLabels.map((day, i) => `
-                <span style="padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; color: ${t.days[i] ? 'white' : '#94a3b8'}; background: ${t.days[i] ? '#2563eb' : '#f1f5f9'}; border: 1px solid ${t.days[i] ? '#2563eb' : '#e2e8f0'};">
-                  ${day}
-                </span>
-              `).join("")}
-            </div>
-          </div>
-          <div class="glass-card" style="padding: 16px 20px;">
-            <h5 style="font-size: 12px; font-weight: 700; color: #2563eb; margin: 0 0 10px 0;">
-              <i class="fa-solid fa-chair" style="margin-right: 6px;"></i> Available Classes
-            </h5>
-            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-              ${t.classes.map(cls => `
-                <span style="padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 700; color: #12355B; background: #eaf3f8; border: 1.5px solid #12355B;">${cls}</span>
-              `).join("")}
-            </div>
+  function renderCoachInspectorHtml(c, coachIdx) {
+    const classBadgeColors = {
+      "ENG": { bg: "#475569", text: "#f8fafc" },
+      "1A": { bg: "#991B1B", text: "#fef2f2" },
+      "2A": { bg: "#6B21A8", text: "#faf5ff" },
+      "3A": { bg: "#1D4ED8", text: "#eff6ff" },
+      "CC": { bg: "#0284C7", text: "#f0f9ff" },
+      "EC": { bg: "#D97706", text: "#fffbeb" },
+      "SL": { bg: "#047857", text: "#ecfdf5" },
+      "PC": { bg: "#EA580C", text: "#fff7ed" },
+      "SLR": { bg: "#64748B", text: "#f8fafc" }
+    };
+    const badge = classBadgeColors[c.classKey] || { bg: "#2563eb", text: "white" };
+    const occPct = c.cap > 0 ? Math.round((c.booked / c.cap) * 100) : 100;
+
+    return `
+      <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="background: ${badge.bg}; color: ${badge.text}; font-size: 11px; font-weight: 900; padding: 2px 10px; border-radius: 6px; font-family: 'JetBrains Mono', monospace;">
+            COACH ${c.code}
+          </span>
+          <div>
+            <div style="font-size: 13px; font-weight: 800; color: #12355B; font-family: 'Outfit', sans-serif;">${c.label}</div>
+            <p style="margin: 0; color: #64748b; font-size: 10px; font-family: 'JetBrains Mono', monospace; font-weight: 600;">Serial: ${c.no} &nbsp;•&nbsp; Rake Pos: #${coachIdx + 1}</p>
           </div>
         </div>
-
-        <!-- Route / Station-wise Detail Table -->
-        <div class="glass-card" style="padding: 20px 24px;">
-          <h5 style="font-size: 14px; font-weight: 800; color: #12355B; margin: 0 0 16px 0; font-family: 'Outfit', sans-serif;">
-            <i class="fa-solid fa-route" style="margin-right: 8px; color: #2563eb;"></i> Station-wise Schedule & Delay Status
-          </h5>
-          <div style="overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
-              <thead>
-                <tr style="border-bottom: 2px solid #e2e8f0;">
-                  <th style="padding: 10px 12px; text-align: left; font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">S.No</th>
-                  <th style="padding: 10px 12px; text-align: left; font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Station</th>
-                  <th style="padding: 10px 12px; text-align: center; font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Arrival</th>
-                  <th style="padding: 10px 12px; text-align: center; font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Departure</th>
-                  <th style="padding: 10px 12px; text-align: center; font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">PF</th>
-                  <th style="padding: 10px 12px; text-align: center; font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Delay</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${t.stations.map((st, idx) => {
-                  const stDelayColor = st.delay === 0 ? '#138808' : st.delay <= 15 ? '#f59e0b' : '#dc2626';
-                  const stDelayBg = st.delay === 0 ? '#f0fdf4' : st.delay <= 15 ? '#fffbeb' : '#fef2f2';
-                  const isFirst = idx === 0;
-                  const isLast = idx === t.stations.length - 1;
-                  return `
-                    <tr style="border-bottom: 1px solid #f1f5f9; transition: background 0.15s; ${isFirst || isLast ? 'background: #f8fafc;' : ''}"
-                      onmouseover="this.style.background='#eef4ff'" onmouseout="this.style.background='${isFirst || isLast ? '#f8fafc' : 'white'}'">
-                      <td style="padding: 12px; text-align: left;">
-                        <div style="width: 24px; height: 24px; border-radius: 50%; background: ${isFirst ? '#138808' : isLast ? '#dc2626' : '#2563eb'}; color: white; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center;">${idx + 1}</div>
-                      </td>
-                      <td style="padding: 12px;">
-                        <p style="font-weight: 800; color: #0f172a; margin: 0; font-size: 13px;">${st.name}</p>
-                        <p style="font-size: 10px; color: #64748b; font-weight: 600; margin: 2px 0 0 0; font-family: 'JetBrains Mono', monospace;">${st.code}</p>
-                      </td>
-                      <td style="padding: 12px; text-align: center; font-weight: 700; color: #0f172a; font-family: 'JetBrains Mono', monospace; font-size: 13px;">${st.arr}</td>
-                      <td style="padding: 12px; text-align: center; font-weight: 700; color: #0f172a; font-family: 'JetBrains Mono', monospace; font-size: 13px;">${st.dep}</td>
-                      <td style="padding: 12px; text-align: center;">
-                        <span style="padding: 3px 10px; border-radius: 6px; background: #eaf3f8; font-size: 12px; font-weight: 800; color: #12355B; border: 1px solid #d6e3ec;">PF ${st.pf}</span>
-                      </td>
-                      <td style="padding: 12px; text-align: center;">
-                        <span style="padding: 4px 12px; border-radius: 8px; font-size: 11px; font-weight: 800; background: ${stDelayBg}; color: ${stDelayColor}; border: 1px solid ${stDelayColor}30;">
-                          ${st.delay === 0 ? '✓ ON TIME' : `+${st.delay} MIN`}
-                        </span>
-                      </td>
-                    </tr>
-                  `;
-                }).join("")}
-              </tbody>
-            </table>
-          </div>
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <span style="font-size: 10px; font-weight: 800; color: #166534; background: #dcfce7; padding: 3px 8px; border-radius: 6px; border: 1px solid #bbf7d0;">
+            <i class="fa-solid fa-circle-check" style="margin-right: 3px;"></i> DIAGNOSTICS HEALTHY
+          </span>
         </div>
+      </div>
 
-        <!-- Kavach System Info Card -->
-        <div class="glass-card" style="padding: 18px 22px; border-left: 4px solid #FF9933 !important;">
-          <div style="display: flex; align-items: center; gap: 12px;">
-            <div style="width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #FF9933, #f97316); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-              <i class="fa-solid fa-shield-halved" style="color: white; font-size: 18px;"></i>
-            </div>
-            <div style="flex: 1;">
-              <h5 style="font-size: 13px; font-weight: 800; color: #12355B; margin: 0;">Kavach Anti-Collision System</h5>
-              <p style="font-size: 11px; color: #64748b; font-weight: 500; margin: 3px 0 0 0;">
-                Status: <span style="font-weight: 800; color: #138808;">${t.kavach}</span>
-                &nbsp;•&nbsp; Equipped with TPWS, ATP & Automatic Brake Intervention
-              </p>
-            </div>
-            <div style="padding: 6px 16px; border-radius: 10px; background: #f0fdf4; border: 1.5px solid #138808;">
-              <span style="font-size: 11px; font-weight: 800; color: #138808;">
-                <i class="fa-solid fa-circle-check" style="margin-right: 4px;"></i> ACTIVE
-              </span>
-            </div>
-          </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px;">
+        <div style="background: white; border: 1px solid #e2e8f0; padding: 7px 10px; border-radius: 8px;">
+          <p style="font-size: 9px; color: #64748b; margin: 0; font-weight: 700; text-transform: uppercase;">Occupancy</p>
+          <p style="font-size: 12px; color: #0f172a; font-weight: 800; margin: 2px 0 0 0; font-family: 'JetBrains Mono', monospace;">${c.booked}/${c.cap} <span style="font-size: 10px; color: #2563eb;">(${occPct}%)</span></p>
+        </div>
+        <div style="background: white; border: 1px solid #e2e8f0; padding: 7px 10px; border-radius: 8px;">
+          <p style="font-size: 9px; color: #64748b; margin: 0; font-weight: 700; text-transform: uppercase;">Climate / AC</p>
+          <p style="font-size: 12px; color: #16a34a; font-weight: 800; margin: 2px 0 0 0; font-family: 'JetBrains Mono', monospace;">${c.temp}</p>
+        </div>
+        <div style="background: white; border: 1px solid #e2e8f0; padding: 7px 10px; border-radius: 8px;">
+          <p style="font-size: 9px; color: #64748b; margin: 0; font-weight: 700; text-transform: uppercase;">Water Tank</p>
+          <p style="font-size: 12px; color: #0284c7; font-weight: 800; margin: 2px 0 0 0; font-family: 'JetBrains Mono', monospace;">${c.water}</p>
+        </div>
+        <div style="background: white; border: 1px solid #e2e8f0; padding: 7px 10px; border-radius: 8px;">
+          <p style="font-size: 9px; color: #64748b; margin: 0; font-weight: 700; text-transform: uppercase;">Axle Bearing</p>
+          <p style="font-size: 12px; color: #0f172a; font-weight: 800; margin: 2px 0 0 0; font-family: 'JetBrains Mono', monospace;">${c.axleTemp}</p>
+        </div>
+        <div style="background: white; border: 1px solid #e2e8f0; padding: 7px 10px; border-radius: 8px;">
+          <p style="font-size: 9px; color: #64748b; margin: 0; font-weight: 700; text-transform: uppercase;">Bogie Frame</p>
+          <p style="font-size: 11px; color: #0f172a; font-weight: 700; margin: 2px 0 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${c.bogie}</p>
         </div>
       </div>
     `;
   }
 
+  function getTrainPersonalDashboardData(t) {
+    const seed = parseInt((t.number || "12000").replace(/\D/g, "")) || 12000;
+    const nameLower = (t.name || "").toLowerCase();
+    const typeLower = (t.type || "").toLowerCase();
+
+    const isVandeBharat = typeLower.includes("vande") || nameLower.includes("vande");
+    const isRajdhani = typeLower.includes("rajdhani") || nameLower.includes("rajdhani");
+    const isShatabdi = typeLower.includes("shatabdi") || nameLower.includes("shatabdi");
+    const isTejas = typeLower.includes("tejas") || nameLower.includes("tejas");
+    const isGaribRath = typeLower.includes("garib") || nameLower.includes("garib") || nameLower.includes("humsafar");
+
+    let theme = {
+      typeName: t.type,
+      categoryBadge: "SUPERFAST EXPRESS",
+      badgeColor: "#1d4ed8",
+      badgeBg: "#eff6ff",
+      badgeBorder: "#bfdbfe",
+      accentColor: "#2563eb",
+      mps: 110,
+      baseSpeed: 88 + (seed % 18),
+      locoModel: "WAP-7 Dual Cab #30211 (6,000 HP)",
+      locoShed: "Bhagat Ki Kothi (BGKT / NWR)",
+      rakeName: "LHB Mixed Superfast Composite Rake",
+      traction: "25 kV AC 50 Hz OHE",
+      icon: "fa-train",
+      coachPreset: "mixed"
+    };
+
+    if (isVandeBharat) {
+      theme = {
+        typeName: "Vande Bharat Express",
+        categoryBadge: "SEMI-HIGH SPEED EMU • TRAIN 18",
+        badgeColor: "#c2410c",
+        badgeBg: "#fff7ed",
+        badgeBorder: "#fed7aa",
+        accentColor: "#ea580c",
+        mps: 160,
+        baseSpeed: 124 + (seed % 28),
+        locoModel: "Distributed 3-Phase AC Traction (16 Bogies / 12,000 HP)",
+        locoShed: "Shakur Basti EMU Car Shed (SSB / NR)",
+        rakeName: "Aerodynamic 16-Car EMU Trainset (ICF Chennai)",
+        traction: "25 kV AC 50 Hz Pantograph High-Speed Catenary",
+        icon: "fa-bolt",
+        coachPreset: "vande_bharat"
+      };
+    } else if (isRajdhani) {
+      theme = {
+        typeName: "Rajdhani Superfast AC",
+        categoryBadge: "PREMIUM ALL-AC SUPERFAST RAJDHANI",
+        badgeColor: "#b91c1c",
+        badgeBg: "#fef2f2",
+        badgeBorder: "#fecaca",
+        accentColor: "#dc2626",
+        mps: 130,
+        baseSpeed: 108 + (seed % 20),
+        locoModel: "WAP-7 High Speed #30489 (6,000 HP / 140 km/h)",
+        locoShed: "Ghaziabad Electric Loco Shed (GZB / NR)",
+        rakeName: "LHB Red-Silver All-AC Smart Rake (22 Coaches)",
+        traction: "25 kV AC Single Phase OHE (2 x 25 kV AT System)",
+        icon: "fa-crown",
+        coachPreset: "rajdhani"
+      };
+    } else if (isShatabdi) {
+      theme = {
+        typeName: "Shatabdi Superfast Express",
+        categoryBadge: "INTERCITY HIGH-SPEED CHAIR CAR",
+        badgeColor: "#0369a1",
+        badgeBg: "#f0f9ff",
+        badgeBorder: "#bae6fd",
+        accentColor: "#0284c7",
+        mps: 130,
+        baseSpeed: 104 + (seed % 22),
+        locoModel: "WAP-7 Head-On Generation (HOG) #30312 (6,000 HP)",
+        locoShed: "Vadodara Electric Loco Shed (BRC / WR)",
+        rakeName: "LHB Executive & AC Chair Car Rake (16 Coaches)",
+        traction: "25 kV AC 50 Hz HOG Converter Fed System",
+        icon: "fa-gauge-high",
+        coachPreset: "shatabdi"
+      };
+    } else if (isTejas) {
+      theme = {
+        typeName: "Tejas Smart Express",
+        categoryBadge: "CORPORATE SEMI-HIGH SPEED SMART",
+        badgeColor: "#b45309",
+        badgeBg: "#fffbeb",
+        badgeBorder: "#fde68a",
+        accentColor: "#d97706",
+        mps: 140,
+        baseSpeed: 112 + (seed % 24),
+        locoModel: "WAP-7 Aerodynamic Streamlined Cab #37015 (6,350 HP)",
+        locoShed: "Royapuram Electric Shed (RPM / SR)",
+        rakeName: "Tejas Smart Automatic Plug-Door Rake (18 Coaches)",
+        traction: "25 kV AC 50 Hz with Regenerative Dynamic Brakes",
+        icon: "fa-rocket",
+        coachPreset: "shatabdi"
+      };
+    } else if (isGaribRath) {
+      theme = {
+        typeName: "Garib Rath / Humsafar AC",
+        categoryBadge: "ALL-AC 3-TIER AFFORDABLE EXPRESS",
+        badgeColor: "#047857",
+        badgeBg: "#ecfdf5",
+        badgeBorder: "#a7f3d0",
+        accentColor: "#059669",
+        mps: 130,
+        baseSpeed: 96 + (seed % 22),
+        locoModel: "WAP-5 High Acceleration #30022 (5,450 HP)",
+        locoShed: "Tughlakabad Electric Shed (TKD / NR)",
+        rakeName: "LHB AC 3-Tier Economy Green Rake (19 Coaches)",
+        traction: "25 kV AC 50 Hz Overhead Catenary",
+        icon: "fa-leaf",
+        coachPreset: "garib_rath"
+      };
+    }
+
+    let coaches = [];
+    if (theme.coachPreset === "vande_bharat") {
+      coaches = [
+        { code: "DTC", label: "Driving Trailer Car (Nose)", classKey: "ENG", cap: 44, booked: 42, temp: "22.1°C", water: "100%", bogie: "Motorized EMU Bogie", no: "VB 22001/DTC", axleTemp: "41°C" },
+        { code: "C1", label: "Executive Chair Car", classKey: "EC", cap: 52, booked: 50, temp: "21.8°C", water: "96%", bogie: "LHB Trailer Bogie", no: "VB 22002/EC", axleTemp: "39°C" },
+        { code: "C2", label: "Executive Chair Car", classKey: "EC", cap: 52, booked: 51, temp: "22.0°C", water: "95%", bogie: "LHB Trailer Bogie", no: "VB 22003/EC", axleTemp: "40°C" },
+        { code: "C3", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 78, temp: "22.3°C", water: "90%", bogie: "Motor Bogie", no: "VB 22004/CC", axleTemp: "42°C" },
+        { code: "C4", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 76, temp: "22.1°C", water: "88%", bogie: "Trailer Bogie", no: "VB 22005/CC", axleTemp: "41°C" },
+        { code: "C5", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 78, temp: "22.4°C", water: "85%", bogie: "Motor Bogie", no: "VB 22006/CC", axleTemp: "43°C" },
+        { code: "C6", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 75, temp: "21.9°C", water: "92%", bogie: "Trailer Bogie", no: "VB 22007/CC", axleTemp: "38°C" },
+        { code: "C7", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 77, temp: "22.2°C", water: "89%", bogie: "Motor Bogie", no: "VB 22008/CC", axleTemp: "42°C" },
+        { code: "C8", label: "Mini Pantry & Service Car", classKey: "PC", cap: 40, booked: 39, temp: "22.0°C", water: "98%", bogie: "Trailer Bogie", no: "VB 22009/PC", axleTemp: "39°C" },
+        { code: "C9", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 78, temp: "22.1°C", water: "84%", bogie: "Motor Bogie", no: "VB 22010/CC", axleTemp: "41°C" },
+        { code: "C10", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 76, temp: "22.3°C", water: "91%", bogie: "Trailer Bogie", no: "VB 22011/CC", axleTemp: "40°C" },
+        { code: "C11", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 77, temp: "22.0°C", water: "87%", bogie: "Motor Bogie", no: "VB 22012/CC", axleTemp: "43°C" },
+        { code: "C12", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 75, temp: "22.2°C", water: "89%", bogie: "Trailer Bogie", no: "VB 22013/CC", axleTemp: "39°C" },
+        { code: "C13", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 78, temp: "22.5°C", water: "86%", bogie: "Motor Bogie", no: "VB 22014/CC", axleTemp: "41°C" },
+        { code: "C14", label: "Executive Chair Car", classKey: "EC", cap: 52, booked: 52, temp: "21.9°C", water: "94%", bogie: "Trailer Bogie", no: "VB 22015/EC", axleTemp: "38°C" },
+        { code: "DTC", label: "Driving Trailer Car (Rear)", classKey: "ENG", cap: 44, booked: 41, temp: "22.0°C", water: "100%", bogie: "Motorized EMU Bogie", no: "VB 22016/DTC", axleTemp: "40°C" },
+      ];
+    } else if (theme.coachPreset === "rajdhani") {
+      coaches = [
+        { code: "LOCO", label: "Locomotive Front (WAP-7)", classKey: "ENG", cap: 2, booked: 2, temp: "Cab 24°C", water: "--", bogie: "Co-Co High Adhesion", no: theme.locoModel, axleTemp: "58°C" },
+        { code: "EOG", label: "Power Generator Car", classKey: "SLR", cap: 0, booked: 0, temp: "--", water: "100%", bogie: "FIAT LHB", no: "NR 21890/EOG", axleTemp: "42°C" },
+        { code: "H1", label: "AC First Class (1A)", classKey: "1A", cap: 24, booked: 24, temp: "21.5°C", water: "96%", bogie: "FIAT Disc Brake", no: "NR 21102/1A", axleTemp: "38°C" },
+        { code: "A1", label: "AC 2-Tier (2A)", classKey: "2A", cap: 52, booked: 52, temp: "22.0°C", water: "94%", bogie: "FIAT Disc Brake", no: "NR 21204/2A", axleTemp: "40°C" },
+        { code: "A2", label: "AC 2-Tier (2A)", classKey: "2A", cap: 52, booked: 50, temp: "22.1°C", water: "92%", bogie: "FIAT Disc Brake", no: "NR 21205/2A", axleTemp: "39°C" },
+        { code: "A3", label: "AC 2-Tier (2A)", classKey: "2A", cap: 52, booked: 51, temp: "21.9°C", water: "91%", bogie: "FIAT Disc Brake", no: "NR 21206/2A", axleTemp: "41°C" },
+        { code: "B1", label: "AC 3-Tier (3A)", classKey: "3A", cap: 72, booked: 72, temp: "22.4°C", water: "88%", bogie: "FIAT Disc Brake", no: "NR 21301/3A", axleTemp: "42°C" },
+        { code: "B2", label: "AC 3-Tier (3A)", classKey: "3A", cap: 72, booked: 72, temp: "22.2°C", water: "86%", bogie: "FIAT Disc Brake", no: "NR 21302/3A", axleTemp: "40°C" },
+        { code: "B3", label: "AC 3-Tier (3A)", classKey: "3A", cap: 72, booked: 70, temp: "22.3°C", water: "90%", bogie: "FIAT Disc Brake", no: "NR 21303/3A", axleTemp: "41°C" },
+        { code: "B4", label: "AC 3-Tier (3A)", classKey: "3A", cap: 72, booked: 72, temp: "22.5°C", water: "84%", bogie: "FIAT Disc Brake", no: "NR 21304/3A", axleTemp: "43°C" },
+        { code: "PC", label: "Hot Buffet Pantry Car", classKey: "PC", cap: 0, booked: 0, temp: "Kitchen 25°C", water: "98%", bogie: "FIAT Heavy Duty", no: "NR 21501/PC", axleTemp: "44°C" },
+        { code: "B5", label: "AC 3-Tier (3A)", classKey: "3A", cap: 72, booked: 72, temp: "22.1°C", water: "89%", bogie: "FIAT Disc Brake", no: "NR 21305/3A", axleTemp: "39°C" },
+        { code: "B6", label: "AC 3-Tier (3A)", classKey: "3A", cap: 72, booked: 71, temp: "22.2°C", water: "87%", bogie: "FIAT Disc Brake", no: "NR 21306/3A", axleTemp: "40°C" },
+        { code: "B7", label: "AC 3-Tier (3A)", classKey: "3A", cap: 72, booked: 72, temp: "22.4°C", water: "85%", bogie: "FIAT Disc Brake", no: "NR 21307/3A", axleTemp: "41°C" },
+        { code: "B8", label: "AC 3-Tier (3A)", classKey: "3A", cap: 72, booked: 72, temp: "22.0°C", water: "88%", bogie: "FIAT Disc Brake", no: "NR 21308/3A", axleTemp: "42°C" },
+        { code: "B9", label: "AC 3-Tier (3A)", classKey: "3A", cap: 72, booked: 69, temp: "22.3°C", water: "92%", bogie: "FIAT Disc Brake", no: "NR 21309/3A", axleTemp: "39°C" },
+        { code: "B10", label: "AC 3-Tier (3A)", classKey: "3A", cap: 72, booked: 72, temp: "22.1°C", water: "84%", bogie: "FIAT Disc Brake", no: "NR 21310/3A", axleTemp: "43°C" },
+        { code: "A4", label: "AC 2-Tier (2A)", classKey: "2A", cap: 52, booked: 52, temp: "21.8°C", water: "90%", bogie: "FIAT Disc Brake", no: "NR 21207/2A", axleTemp: "39°C" },
+        { code: "EOG", label: "Power Generator Car", classKey: "SLR", cap: 0, booked: 0, temp: "--", water: "100%", bogie: "FIAT LHB", no: "NR 21891/EOG", axleTemp: "41°C" },
+      ];
+    } else if (theme.coachPreset === "shatabdi") {
+      coaches = [
+        { code: "LOCO", label: "Locomotive WAP-7 HOG", classKey: "ENG", cap: 2, booked: 2, temp: "Cab 23°C", water: "--", bogie: "Co-Co High Adhesion", no: theme.locoModel, axleTemp: "56°C" },
+        { code: "EOG", label: "Power Generator Car", classKey: "SLR", cap: 0, booked: 0, temp: "--", water: "100%", bogie: "FIAT LHB", no: "WR 20110/EOG", axleTemp: "40°C" },
+        { code: "E1", label: "Executive Anubhuti Chair", classKey: "EC", cap: 56, booked: 56, temp: "21.8°C", water: "95%", bogie: "FIAT Disc Brake", no: "WR 20112/EC", axleTemp: "38°C" },
+        { code: "E2", label: "Executive Chair Car", classKey: "EC", cap: 56, booked: 54, temp: "22.0°C", water: "93%", bogie: "FIAT Disc Brake", no: "WR 20113/EC", axleTemp: "39°C" },
+        { code: "C1", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 78, temp: "22.2°C", water: "90%", bogie: "FIAT Disc Brake", no: "WR 20201/CC", axleTemp: "41°C" },
+        { code: "C2", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 77, temp: "22.1°C", water: "88%", bogie: "FIAT Disc Brake", no: "WR 20202/CC", axleTemp: "40°C" },
+        { code: "C3", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 78, temp: "22.4°C", water: "85%", bogie: "FIAT Disc Brake", no: "WR 20203/CC", axleTemp: "42°C" },
+        { code: "C4", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 76, temp: "22.0°C", water: "89%", bogie: "FIAT Disc Brake", no: "WR 20204/CC", axleTemp: "39°C" },
+        { code: "C5", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 78, temp: "22.3°C", water: "86%", bogie: "FIAT Disc Brake", no: "WR 20205/CC", axleTemp: "41°C" },
+        { code: "C6", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 74, temp: "22.1°C", water: "91%", bogie: "FIAT Disc Brake", no: "WR 20206/CC", axleTemp: "38°C" },
+        { code: "C7", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 78, temp: "22.2°C", water: "87%", bogie: "FIAT Disc Brake", no: "WR 20207/CC", axleTemp: "42°C" },
+        { code: "C8", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 75, temp: "22.5°C", water: "83%", bogie: "FIAT Disc Brake", no: "WR 20208/CC", axleTemp: "43°C" },
+        { code: "C9", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 78, temp: "21.9°C", water: "92%", bogie: "FIAT Disc Brake", no: "WR 20209/CC", axleTemp: "39°C" },
+        { code: "C10", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 78, temp: "22.0°C", water: "86%", bogie: "FIAT Disc Brake", no: "WR 20210/CC", axleTemp: "41°C" },
+        { code: "EOG", label: "Power Generator Car", classKey: "SLR", cap: 0, booked: 0, temp: "--", water: "100%", bogie: "FIAT LHB", no: "WR 20111/EOG", axleTemp: "40°C" },
+      ];
+    } else {
+      coaches = [
+        { code: "LOCO", label: "Locomotive WAP-7 / WDG-4D", classKey: "ENG", cap: 2, booked: 2, temp: "Cab 24°C", water: "--", bogie: "Co-Co High Traction", no: theme.locoModel, axleTemp: "59°C" },
+        { code: "SLR", label: "Seating-cum-Luggage Rake", classKey: "SLR", cap: 36, booked: 36, temp: "--", water: "100%", bogie: "LHB Non-AC", no: "NWR 19210/SLR", axleTemp: "39°C" },
+        { code: "GS", label: "General Unreserved", classKey: "SLR", cap: 100, booked: 98, temp: "--", water: "85%", bogie: "LHB Non-AC", no: "NWR 19211/GS", axleTemp: "40°C" },
+        { code: "S1", label: "Sleeper Class (SL)", classKey: "SL", cap: 72, booked: 72, temp: "Ambient", water: "90%", bogie: "LHB Non-AC", no: "NWR 19301/S1", axleTemp: "41°C" },
+        { code: "S2", label: "Sleeper Class (SL)", classKey: "SL", cap: 72, booked: 72, temp: "Ambient", water: "88%", bogie: "LHB Non-AC", no: "NWR 19302/S2", axleTemp: "42°C" },
+        { code: "S3", label: "Sleeper Class (SL)", classKey: "SL", cap: 72, booked: 70, temp: "Ambient", water: "85%", bogie: "LHB Non-AC", no: "NWR 19303/S3", axleTemp: "39°C" },
+        { code: "S4", label: "Sleeper Class (SL)", classKey: "SL", cap: 72, booked: 72, temp: "Ambient", water: "87%", bogie: "LHB Non-AC", no: "NWR 19304/S4", axleTemp: "40°C" },
+        { code: "S5", label: "Sleeper Class (SL)", classKey: "SL", cap: 72, booked: 72, temp: "Ambient", water: "82%", bogie: "LHB Non-AC", no: "NWR 19305/S5", axleTemp: "43°C" },
+        { code: "S6", label: "Sleeper Class (SL)", classKey: "SL", cap: 72, booked: 71, temp: "Ambient", water: "86%", bogie: "LHB Non-AC", no: "NWR 19306/S6", axleTemp: "41°C" },
+        { code: "PC", label: "Pantry Car", classKey: "PC", cap: 0, booked: 0, temp: "26°C", water: "96%", bogie: "LHB Pantry", no: "NWR 19401/PC", axleTemp: "44°C" },
+        { code: "B1", label: "AC 3-Tier (3A)", classKey: "3A", cap: 72, booked: 72, temp: "22.1°C", water: "92%", bogie: "LHB AC", no: "NWR 19501/B1", axleTemp: "40°C" },
+        { code: "B2", label: "AC 3-Tier (3A)", classKey: "3A", cap: 72, booked: 72, temp: "22.3°C", water: "89%", bogie: "LHB AC", no: "NWR 19502/B2", axleTemp: "39°C" },
+        { code: "B3", label: "AC 3-Tier (3A)", classKey: "3A", cap: 72, booked: 72, temp: "22.0°C", water: "88%", bogie: "LHB AC", no: "NWR 19503/B3", axleTemp: "41°C" },
+        { code: "B4", label: "AC 3-Tier (3A)", classKey: "3A", cap: 72, booked: 70, temp: "22.2°C", water: "91%", bogie: "LHB AC", no: "NWR 19504/B4", axleTemp: "42°C" },
+        { code: "A1", label: "AC 2-Tier (2A)", classKey: "2A", cap: 52, booked: 52, temp: "21.9°C", water: "94%", bogie: "LHB AC", no: "NWR 19601/A1", axleTemp: "38°C" },
+        { code: "A2", label: "AC 2-Tier (2A)", classKey: "2A", cap: 52, booked: 51, temp: "22.0°C", water: "93%", bogie: "LHB AC", no: "NWR 19602/A2", axleTemp: "39°C" },
+        { code: "H1", label: "AC First Class (1A)", classKey: "1A", cap: 24, booked: 24, temp: "21.5°C", water: "98%", bogie: "LHB AC", no: "NWR 19701/H1", axleTemp: "37°C" },
+        { code: "GS", label: "General Unreserved", classKey: "SLR", cap: 100, booked: 95, temp: "--", water: "84%", bogie: "LHB Non-AC", no: "NWR 19212/GS", axleTemp: "41°C" },
+        { code: "SLR", label: "Guard Brake Van", classKey: "SLR", cap: 36, booked: 36, temp: "--", water: "100%", bogie: "LHB Non-AC", no: "NWR 19213/SLR", axleTemp: "40°C" },
+      ];
+    }
+
+    window._currentTrainCoaches = coaches;
+
+    const numStations = t.stations.length;
+    const currentStnIdx = Math.max(0, Math.min(Math.floor(numStations / 2), numStations - 2));
+    const currentStn = t.stations[currentStnIdx];
+    const nextStn = t.stations[currentStnIdx + 1] || currentStn;
+
+    const totalDistKm = (seed * 67) % 450 + 480;
+    const distCompletedKm = Math.round(totalDistKm * ((currentStnIdx + 0.6) / numStations));
+    const distRemainingKm = Math.max(0, totalDistKm - distCompletedKm);
+    const progressPct = Math.min(100, Math.round((distCompletedKm / totalDistKm) * 100));
+
+    const curSpeed = t.delay > 20 ? Math.round(theme.baseSpeed * 0.88) : theme.baseSpeed;
+
+    return {
+      theme,
+      coaches,
+      seed,
+      currentStn,
+      nextStn,
+      currentStnIdx,
+      curSpeed,
+      totalDistKm,
+      distCompletedKm,
+      distRemainingKm,
+      progressPct,
+      gpsLat: (25.1 + (seed % 400) / 100).toFixed(4),
+      gpsLng: (72.8 + (seed % 350) / 100).toFixed(4),
+      trackKm: `KM ${120 + (seed % 150)} / ${(seed % 9) + 1}`,
+      oheVoltage: (24.8 + (seed % 9) / 10).toFixed(1),
+      oheCurrent: 320 + (seed % 90),
+      tractionPower: 72 + (seed % 22),
+      tractionMotorTemp: 60 + (seed % 18),
+      transformerTemp: 54 + (seed % 14),
+      rfSignalDbm: -(58 + (seed % 16)),
+      trackVibrationG: (0.12 + (seed % 6) / 100).toFixed(2),
+      railTempC: 34 + (seed % 8),
+      rfidTagId: `#TAG-KAV-${(seed % 8999) + 1000}`,
+      signalAspect: t.delay === 0 ? "GREEN / PROCEED" : (t.delay <= 15 ? "DOUBLE YELLOW / ATTN" : "YELLOW / CAUTION"),
+      signalDistance: 820 + (seed % 400),
+      movementAuthorityM: 4200 + (seed % 1200),
+      brakingEnvelopeM: 460 + (seed % 80),
+      tsrLocation: `Bridge #${(seed % 80) + 12}: Caution 30 km/h at KM ${140 + (seed % 40)}/2`,
+      lastPohDate: `${(seed % 25) + 1}-Jan-2026 at Ajmer Central`,
+      nextInspectionDue: `In ${(seed % 5) + 2} days (${(seed * 17) % 900 + 700} km remaining)`,
+      usfdStatus: "0 Flaws Detected • Class-1 Track Standard",
+      energyRegenerated: 1240 + (seed % 600),
+    };
+  }
+
+  function renderTrainDetailScreen(container) {
+    if (!trainDetailSelected) return;
+    const t = trainDetailSelected;
+    const data = getTrainPersonalDashboardData(t);
+
+    const delayColor = t.delay === 0 ? '#138808' : t.delay <= 15 ? '#d97706' : '#dc2626';
+    const delayBg = t.delay === 0 ? '#f0fdf4' : t.delay <= 15 ? '#fffbeb' : '#fef2f2';
+
+    // Speedometer calculation
+    const gaugeRadius = 55;
+    const gaugeCircumference = Math.PI * gaugeRadius; // ~172.8
+    const speedRatio = Math.min(data.curSpeed, data.theme.mps) / data.theme.mps;
+    const dashOffset = gaugeCircumference * (1 - speedRatio);
+
+    // Initial coach inspector HTML
+    const initialCoach = data.coaches[activeCoachInspectorIndex] || data.coaches[0];
+
+    container.innerHTML = `
+      <div class="space-y-4" style="max-width: 1400px; margin: 0 auto;">
+
+        <!-- Top Navigation & Actions -->
+        <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 2px 0;">
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <button onclick="goBackToResults()"
+              style="display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: 8px; background: white; border: 1.5px solid #d6e3ec; color: #12355B; font-size: 11px; font-weight: 800; cursor: pointer; transition: all 0.2s;"
+              onmouseover="this.style.borderColor='#2563eb'; this.style.color='#2563eb'" onmouseout="this.style.borderColor='#d6e3ec'; this.style.color='#12355B'">
+              <i class="fa-solid fa-arrow-left"></i> Results
+            </button>
+            <button onclick="goBackToSearch()"
+              style="display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: 8px; background: white; border: 1.5px solid #d6e3ec; color: #64748b; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s;"
+              onmouseover="this.style.borderColor='#12355B'; this.style.color='#12355B'" onmouseout="this.style.borderColor='#d6e3ec'; this.style.color='#64748b'">
+              <i class="fa-solid fa-magnifying-glass"></i> New Search
+            </button>
+            <span style="display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 14px; background: #f0fdf4; border: 1px solid #bbf7d0; font-size: 10px; font-weight: 800; color: #166534;">
+              <span style="width: 6px; height: 6px; border-radius: 50%; background: #16a34a; display: inline-block;"></span>
+              LIVE TELEMETRY
+            </span>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+            <button onclick="switchNavView('live_map')"
+              style="display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: 8px; background: #12355B; color: white; font-size: 11px; font-weight: 800; cursor: pointer; border: none; transition: all 0.2s;">
+              <i class="fa-solid fa-map-location-dot" style="color: #FF9933;"></i> GIS Map
+            </button>
+            <button onclick="simulateKavachBrakeTest()"
+              style="display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: 8px; background: white; border: 1.5px solid #ea580c; color: #c2410c; font-size: 11px; font-weight: 800; cursor: pointer; transition: all 0.2s;">
+              <i class="fa-solid fa-shield-halved" style="color: #ea580c;"></i> ATP Test
+            </button>
+            <button onclick="refreshTrainTelemetry()"
+              style="display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: 8px; background: white; border: 1.5px solid #d6e3ec; color: #12355B; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s;">
+              <i class="fa-solid fa-rotate" style="color: #2563eb;"></i> Sync
+            </button>
+            <button onclick="exportTrainTelemetryPdf('${t.number}')"
+              style="display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: 8px; background: white; border: 1.5px solid #d6e3ec; color: #12355B; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s;">
+              <i class="fa-solid fa-file-pdf" style="color: #dc2626;"></i> PDF
+            </button>
+          </div>
+        </div>
+
+        <!-- HERO BANNER: CRISP, NORMAL COLORS, HIGH CONTRAST -->
+        <div class="glass-card" style="padding: 16px 20px; background: white !important; border: 1.5px solid #dbeafe !important; border-left: 6px solid ${data.theme.accentColor} !important; border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.04);">
+          
+          <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px;">
+            <div style="display: flex; flex-direction: column; gap: 3px;">
+              <!-- Train Type Badge -->
+              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                <span style="display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 12px; background: ${data.theme.badgeBg}; border: 1px solid ${data.theme.badgeBorder}; font-size: 10px; font-weight: 800; color: ${data.theme.badgeColor}; letter-spacing: 0.5px; text-transform: uppercase;">
+                  <i class="fa-solid ${data.theme.icon}"></i> ${data.theme.categoryBadge}
+                </span>
+                <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 700; color: #166534; background: #dcfce7; padding: 2px 8px; border-radius: 8px;">
+                  <span style="width: 5px; height: 5px; border-radius: 50%; background: #16a34a; display: inline-block;"></span> Kavach 4.0 Armed
+                </span>
+              </div>
+
+              <!-- Train Number & Name (Clean, high-contrast, fully visible) -->
+              <div style="display: flex; align-items: baseline; gap: 10px; margin-top: 2px;">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 26px; font-weight: 900; color: ${data.theme.accentColor} !important; letter-spacing: -0.5px;">
+                  ${t.number}
+                </span>
+                <span style="font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 900; color: #12355B !important; letter-spacing: 0.3px;">
+                  ${t.name}
+                </span>
+              </div>
+
+              <!-- Sub-description -->
+              <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; color: #64748b; font-weight: 600; flex-wrap: wrap;">
+                <span><i class="fa-solid fa-train-subway" style="color: ${data.theme.accentColor}; margin-right: 4px;"></i>${data.theme.rakeName}</span>
+                <span>•</span>
+                <span><i class="fa-solid fa-bolt" style="color: #f59e0b; margin-right: 4px;"></i>${data.theme.traction}</span>
+              </div>
+            </div>
+
+            <!-- Right Live Status Pill -->
+            <div style="text-align: right; background: #f8fafc; padding: 8px 14px; border-radius: 10px; border: 1px solid #e2e8f0; min-width: 140px;">
+              <p style="font-size: 9px; font-weight: 800; color: #64748b; margin: 0; text-transform: uppercase;">Current Status</p>
+              <p style="font-size: 16px; font-weight: 900; color: ${delayColor}; margin: 2px 0 0 0; font-family: 'Outfit', sans-serif;">
+                ${t.delayText}
+              </p>
+              <p style="font-size: 10px; color: #16a34a; margin: 2px 0 0 0; font-weight: 700;">
+                <i class="fa-solid fa-satellite-dish" style="margin-right: 3px;"></i> GPS ±0.5m Locked
+              </p>
+            </div>
+          </div>
+
+          <!-- Integrated Route Progress Bar -->
+          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; font-size: 11px;">
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span style="color: #12355B; font-weight: 800;">${t.from}</span>
+                <span style="color: #64748b; font-weight: 600;">(${t.depart})</span>
+              </div>
+              <div>
+                <span style="color: ${data.theme.accentColor}; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 800;">
+                  Covered ${data.distCompletedKm} / ${data.totalDistKm} km (${data.progressPct}%)
+                </span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span style="color: #64748b; font-weight: 600;">(${t.arrive})</span>
+                <span style="color: #12355B; font-weight: 800;">${t.to}</span>
+              </div>
+            </div>
+
+            <div style="height: 8px; width: 100%; background: #e2e8f0; border-radius: 4px; position: relative; overflow: visible;">
+              <div style="height: 100%; width: ${data.progressPct}%; background: linear-gradient(90deg, #2563eb, ${data.theme.accentColor}); border-radius: 4px;"></div>
+              <div style="position: absolute; left: calc(${data.progressPct}% - 10px); top: -6px; width: 20px; height: 20px; border-radius: 50%; background: #12355B; color: white; display: flex; align-items: center; justify-content: center; font-size: 9px; box-shadow: 0 2px 6px rgba(0,0,0,0.25); border: 2px solid white;">
+                <i class="fa-solid fa-train"></i>
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; margin-top: 6px; font-size: 10px; color: #64748b; font-weight: 600;">
+              <span>Origin: <strong style="color: #12355B;">${t.stations[0] ? t.stations[0].name : t.from}</strong></span>
+              <span style="color: #166534; font-weight: 700;">Cruising: <strong style="color: #166534;">${data.currentStn.name} → ${data.nextStn.name}</strong></span>
+              <span>Destination: <strong style="color: #12355B;">${t.stations[t.stations.length - 1] ? t.stations[t.stations.length - 1].name : t.to}</strong></span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 6 COMPACT TELEMETRY & DIAGNOSTIC METRIC CARDS -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px;">
+
+          <!-- Card 1: Speed -->
+          <div class="glass-card" style="padding: 12px 14px; background: white !important; border: 1px solid #e2e8f0 !important; border-top: 3.5px solid #2563eb !important; border-radius: 12px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+              <span style="font-size: 10px; font-weight: 800; color: #2563eb; text-transform: uppercase;">
+                <i class="fa-solid fa-gauge-high" style="margin-right: 3px;"></i> Speed & Throttle
+              </span>
+              <span style="font-size: 9px; font-weight: 800; color: #166534; background: #dcfce7; padding: 1px 6px; border-radius: 4px;">
+                ACTIVE
+              </span>
+            </div>
+
+            <div style="display: flex; align-items: center; justify-content: center; margin: 2px 0;">
+              <svg viewBox="0 0 140 75" style="width: 110px; height: 62px;">
+                <path d="M 15 68 A 55 55 0 0 1 125 68" fill="none" stroke="#e2e8f0" stroke-width="10" stroke-linecap="round" />
+                <path d="M 15 68 A 55 55 0 0 1 125 68" fill="none" stroke="url(#speedMeterGrad2)" stroke-width="10" stroke-linecap="round" stroke-dasharray="172.8" stroke-dashoffset="${dashOffset}" style="transition: stroke-dashoffset 1s ease;" />
+                <defs>
+                  <linearGradient id="speedMeterGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#10b981" />
+                    <stop offset="60%" stop-color="#3b82f6" />
+                    <stop offset="100%" stop-color="#f59e0b" />
+                  </linearGradient>
+                </defs>
+                <text x="70" y="58" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="24" font-weight="900" fill="#12355B">${data.curSpeed}</text>
+                <text x="70" y="70" text-anchor="middle" font-family="'Outfit', sans-serif" font-size="8" font-weight="800" fill="#64748b">KM / H</text>
+              </svg>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; padding-top: 6px; border-top: 1px solid #f1f5f9; font-size: 10px;">
+              <span style="color: #64748b;">MPS: <strong style="color: #0f172a;">${data.theme.mps} km/h</strong></span>
+              <span style="color: #64748b;">OHE: <strong style="color: #0f172a;">${data.oheVoltage} kV</strong></span>
+            </div>
+          </div>
+
+          <!-- Card 2: GPS Section -->
+          <div class="glass-card" style="padding: 12px 14px; background: white !important; border: 1px solid #e2e8f0 !important; border-top: 3.5px solid #0891b2 !important; border-radius: 12px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+              <span style="font-size: 10px; font-weight: 800; color: #0891b2; text-transform: uppercase;">
+                <i class="fa-solid fa-location-crosshairs" style="margin-right: 3px;"></i> GPS & Section
+              </span>
+              <span style="font-size: 9px; font-weight: 800; color: #0e7490; background: #cffafe; padding: 1px 6px; border-radius: 4px;">
+                ±0.5m
+              </span>
+            </div>
+
+            <p style="font-size: 10px; color: #64748b; margin: 0; font-weight: 600;">Active Section</p>
+            <div style="font-size: 13px; font-weight: 800; color: #12355B; margin: 2px 0 4px 0; font-family: 'Outfit', sans-serif;">
+              ${data.currentStn.name} → ${data.nextStn.name}
+            </div>
+
+            <div style="background: #f8fafc; padding: 6px 8px; border-radius: 6px; border: 1px solid #e2e8f0; margin-bottom: 6px; font-family: 'JetBrains Mono', monospace; font-size: 10px;">
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: #64748b;">Coords:</span>
+                <span style="font-weight: 700; color: #0f172a;">${data.gpsLat}°N, ${data.gpsLng}°E</span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: #64748b;">Post:</span>
+                <span style="font-weight: 800; color: #2563eb;">${data.trackKm}</span>
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; font-size: 10px; color: #166534; font-weight: 700;">
+              <span><i class="fa-solid fa-shield-halved"></i> Block: CLEAR</span>
+              <span>88 Axles</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Punctuality -->
+          <div class="glass-card" style="padding: 12px 14px; background: white !important; border: 1px solid #e2e8f0 !important; border-top: 3.5px solid ${delayColor} !important; border-radius: 12px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+              <span style="font-size: 10px; font-weight: 800; color: ${delayColor}; text-transform: uppercase;">
+                <i class="fa-solid fa-clock-rotate-left" style="margin-right: 3px;"></i> Delay & Recovery
+              </span>
+              <span style="font-size: 9px; font-weight: 800; background: ${delayBg}; color: ${delayColor}; padding: 1px 6px; border-radius: 4px;">
+                ${t.delayText}
+              </span>
+            </div>
+
+            <div style="display: flex; align-items: baseline; gap: 6px; margin: 4px 0;">
+              <span style="font-size: 22px; font-weight: 900; color: #0f172a; font-family: 'JetBrains Mono', monospace;">
+                ${t.delay === 0 ? '0' : '+' + t.delay}
+              </span>
+              <span style="font-size: 11px; font-weight: 700; color: #64748b;">min delay</span>
+            </div>
+
+            <div style="background: #f8fafc; padding: 6px 8px; border-radius: 6px; border: 1px solid #e2e8f0; font-size: 10px; margin-bottom: 6px;">
+              <p style="margin: 0; color: #0f172a; font-weight: 600;">
+                ${t.delay === 0 ? 'Coasting profile engaged; on-time arrival guaranteed.' : 'Cruising profile; predicted to recover 4 min.'}
+              </p>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; font-size: 10px; color: #64748b; font-weight: 600;">
+              <span>Historical:</span>
+              <span style="color: #16a34a; font-weight: 800;">97.8% On-Time</span>
+            </div>
+          </div>
+
+          <!-- Card 4: Locomotive -->
+          <div class="glass-card" style="padding: 12px 14px; background: white !important; border: 1px solid #e2e8f0 !important; border-top: 3.5px solid #7c3aed !important; border-radius: 12px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+              <span style="font-size: 10px; font-weight: 800; color: #7c3aed; text-transform: uppercase;">
+                <i class="fa-solid fa-train-subway" style="margin-right: 3px;"></i> Locomotive & Power
+              </span>
+              <span style="font-size: 9px; font-weight: 800; color: #6d28d9; background: #ede9fe; padding: 1px 6px; border-radius: 4px;">
+                HEALTHY
+              </span>
+            </div>
+
+            <p style="font-size: 10px; color: #64748b; margin: 0; font-weight: 600;">Traction Unit</p>
+            <div style="font-size: 12px; font-weight: 800; color: #12355B; margin: 2px 0 6px 0; font-family: 'Outfit', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+              ${data.theme.locoModel}
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px; font-size: 10px; background: #f8fafc; padding: 6px 8px; border-radius: 6px; border: 1px solid #e2e8f0; margin-bottom: 6px;">
+              <div>TM: <strong>${data.tractionMotorTemp}°C</strong></div>
+              <div style="text-align: right;">Oil: <strong>${data.transformerTemp}°C</strong></div>
+              <div>BP: <strong>5.0 kg</strong></div>
+              <div style="text-align: right;">FP: <strong>6.0 kg</strong></div>
+            </div>
+
+            <p style="font-size: 10px; color: #64748b; margin: 0; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+              Shed: <strong>${data.theme.locoShed}</strong>
+            </p>
+          </div>
+
+          <!-- Card 5: Next Station -->
+          <div class="glass-card" style="padding: 12px 14px; background: white !important; border: 1px solid #e2e8f0 !important; border-top: 3.5px solid #ea580c !important; border-radius: 12px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+              <span style="font-size: 10px; font-weight: 800; color: #ea580c; text-transform: uppercase;">
+                <i class="fa-solid fa-building-columns" style="margin-right: 3px;"></i> Next Station
+              </span>
+              <span style="font-size: 9px; font-weight: 800; color: #c2410c; background: #ffedd5; padding: 1px 6px; border-radius: 4px;">
+                PF #${data.nextStn.pf}
+              </span>
+            </div>
+
+            <p style="font-size: 10px; color: #64748b; margin: 0; font-weight: 600;">Approaching</p>
+            <div style="font-size: 13px; font-weight: 800; color: #12355B; margin: 2px 0 6px 0; font-family: 'Outfit', sans-serif;">
+              ${data.nextStn.name} <span style="color: #64748b; font-size: 11px;">(${data.nextStn.code})</span>
+            </div>
+
+            <div style="display: flex; align-items: baseline; justify-content: space-between; background: #f8fafc; padding: 6px 8px; border-radius: 6px; border: 1px solid #e2e8f0; margin-bottom: 6px;">
+              <div>
+                <p style="margin: 0; font-size: 9px; color: #64748b;">ARR TIME</p>
+                <p style="margin: 0; font-size: 13px; font-weight: 900; color: #0f172a; font-family: 'JetBrains Mono', monospace;">
+                  ${data.nextStn.arr !== '--' ? data.nextStn.arr : data.nextStn.dep}
+                </p>
+              </div>
+              <div style="text-align: right;">
+                <p style="margin: 0; font-size: 9px; color: #64748b;">REMAINING</p>
+                <p style="margin: 0; font-size: 13px; font-weight: 900; color: #2563eb; font-family: 'JetBrains Mono', monospace;">
+                  ${(data.seed * 11) % 25 + 8} km
+                </p>
+              </div>
+            </div>
+
+            <div style="font-size: 10px; color: #64748b; font-weight: 600;">
+              Allocated: <strong style="color: #12355B;">Platform ${data.nextStn.pf}</strong>
+            </div>
+          </div>
+
+          <!-- Card 6: Crew -->
+          <div class="glass-card" style="padding: 12px 14px; background: white !important; border: 1px solid #e2e8f0 !important; border-top: 3.5px solid #16a34a !important; border-radius: 12px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+              <span style="font-size: 10px; font-weight: 800; color: #16a34a; text-transform: uppercase;">
+                <i class="fa-solid fa-user-shield" style="margin-right: 3px;"></i> Crew & Vigilance
+              </span>
+              <span style="font-size: 9px; font-weight: 800; color: #15803d; background: #dcfce7; padding: 1px 6px; border-radius: 4px;">
+                VCD ARMED
+              </span>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 8px; margin: 4px 0;">
+              <div style="width: 28px; height: 28px; border-radius: 50%; background: #eaf3f8; border: 1.5px solid #12355B; display: flex; align-items: center; justify-content: center; color: #12355B; font-weight: 800; font-size: 11px;">
+                LP
+              </div>
+              <div>
+                <div style="margin: 0; font-size: 12px; font-weight: 800; color: #12355B; font-family: 'Outfit', sans-serif;">R. K. Sharma</div>
+                <p style="margin: 0; font-size: 10px; color: #64748b;">Sr. Loco Pilot (HQ: Jodhpur)</p>
+              </div>
+            </div>
+
+            <div style="background: #f8fafc; padding: 6px 8px; border-radius: 6px; border: 1px solid #e2e8f0; font-size: 10px; margin-bottom: 6px;">
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: #64748b;">ALP:</span>
+                <span style="font-weight: 700; color: #0f172a;">A. Verma (0.0‰ BAC)</span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: #64748b;">Guard:</span>
+                <span style="font-weight: 700; color: #0f172a;">M. S. Rathore (OK)</span>
+              </div>
+            </div>
+
+            <p style="font-size: 10px; color: #166534; font-weight: 700; margin: 0;">
+              <i class="fa-solid fa-circle-check"></i> Vigilance Cycle Acknowledged
+            </p>
+          </div>
+
+        </div>
+
+        <!-- COACH COMPOSITION & RAKE DIAGRAM (CLEAN LIGHT CARD) -->
+        <div class="glass-card" style="background: white !important; padding: 16px 18px; border-radius: 14px; border: 1.5px solid #d6e3ec !important; box-shadow: 0 4px 16px rgba(0,0,0,0.04);">
+          <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div style="width: 30px; height: 30px; border-radius: 8px; background: #eaf3f8; border: 1px solid #12355B; display: flex; align-items: center; justify-content: center;">
+                <i class="fa-solid fa-train-subway" style="color: #12355B; font-size: 13px;"></i>
+              </div>
+              <div>
+                <div style="font-size: 14px; font-weight: 800; color: #12355B; font-family: 'Outfit', sans-serif;">
+                  Live Coach Rake Composition & Health Monitor
+                </div>
+                <p style="margin: 0; font-size: 10px; color: #64748b; font-weight: 500;">
+                  Click any coach to inspect real-time axle temperatures, passenger occupancy & air-conditioning telemetry
+                </p>
+              </div>
+            </div>
+            <div>
+              <span style="font-size: 10px; font-weight: 800; background: #eff6ff; color: #1d4ed8; padding: 3px 8px; border-radius: 6px; border: 1px solid #bfdbfe;">
+                ${data.coaches.length} COACHES
+              </span>
+            </div>
+          </div>
+
+          <!-- Coach Class Color Legend -->
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; font-size: 10px; font-weight: 700;">
+            <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="width: 8px; height: 8px; border-radius: 2px; background: #475569;"></span> Engine</span>
+            <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="width: 8px; height: 8px; border-radius: 2px; background: #991B1B;"></span> 1st AC (1A)</span>
+            <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="width: 8px; height: 8px; border-radius: 2px; background: #6B21A8;"></span> 2-Tier (2A)</span>
+            <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="width: 8px; height: 8px; border-radius: 2px; background: #1D4ED8;"></span> 3-Tier (3A)</span>
+            <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="width: 8px; height: 8px; border-radius: 2px; background: #0284C7;"></span> Chair Car (CC)</span>
+            <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="width: 8px; height: 8px; border-radius: 2px; background: #D97706;"></span> Exec (EC)</span>
+            <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="width: 8px; height: 8px; border-radius: 2px; background: #047857;"></span> Sleeper (SL)</span>
+            <span style="display: inline-flex; align-items: center; gap: 4px;"><span style="width: 8px; height: 8px; border-radius: 2px; background: #EA580C;"></span> Pantry (PC)</span>
+          </div>
+
+          <!-- Horizontally Scrollable Rake Track -->
+          <div style="overflow-x: auto; padding: 6px 2px 10px 2px; display: flex; align-items: flex-end; gap: 6px; scrollbar-width: thin;" class="coach-rake-container">
+            ${data.coaches.map((c, idx) => {
+              const classBadgeColors = {
+                "ENG": { bg: "#475569", text: "#f8fafc" },
+                "1A": { bg: "#991B1B", text: "#fef2f2" },
+                "2A": { bg: "#6B21A8", text: "#faf5ff" },
+                "3A": { bg: "#1D4ED8", text: "#eff6ff" },
+                "CC": { bg: "#0284C7", text: "#f0f9ff" },
+                "EC": { bg: "#D97706", text: "#fffbeb" },
+                "SL": { bg: "#047857", text: "#ecfdf5" },
+                "PC": { bg: "#EA580C", text: "#fff7ed" },
+                "SLR": { bg: "#64748B", text: "#f8fafc" }
+              };
+              const col = classBadgeColors[c.classKey] || { bg: "#2563eb", text: "white" };
+              const isSelected = idx === activeCoachInspectorIndex;
+              const occPct = c.cap > 0 ? Math.round((c.booked / c.cap) * 100) : 100;
+
+              return `
+                <div onclick="inspectCoach(${idx})"
+                  class="coach-rake-box"
+                  style="flex-shrink: 0; width: 52px; background: ${isSelected ? '#eff6ff' : '#f8fafc'}; border: 1.5px solid ${isSelected ? '#2563eb' : '#cbd5e1'}; border-radius: 8px; padding: 5px 2px; text-align: center; cursor: pointer; transition: all 0.2s; transform: ${isSelected ? 'translateY(-4px)' : 'translateY(0)'}; box-shadow: ${isSelected ? '0 4px 12px rgba(37,99,235,0.25)' : 'none'};">
+                  <p style="font-size: 8px; color: #64748b; margin: 0 0 2px 0; font-family: 'JetBrains Mono', monospace; font-weight: 700;">#${idx + 1}</p>
+                  <div style="background: ${col.bg}; height: 4px; border-radius: 2px; margin-bottom: 4px;"></div>
+                  <p style="font-size: 11px; font-weight: 900; color: #0f172a; margin: 0; font-family: 'JetBrains Mono', monospace;">${c.code}</p>
+                  <span style="display: inline-block; font-size: 8px; font-weight: 800; color: ${occPct >= 95 ? '#b91c1c' : '#15803d'}; background: ${occPct >= 95 ? '#fef2f2' : '#f0fdf4'}; border: 1px solid ${occPct >= 95 ? '#fecaca' : '#bbf7d0'}; padding: 1px 3px; border-radius: 3px; margin-top: 2px;">
+                    ${occPct}%
+                  </span>
+                </div>
+              `;
+            }).join("")}
+          </div>
+
+          <!-- Railway Tracks representation -->
+          <div style="height: 5px; background: repeating-linear-gradient(90deg, #94a3b8 0px, #94a3b8 6px, #cbd5e1 6px, #cbd5e1 18px); border-radius: 3px; margin-bottom: 12px;"></div>
+
+          <!-- Selected Coach Inspector Details Card -->
+          <div id="coachDetailInspectorCard" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px;">
+            ${renderCoachInspectorHtml(initialCoach, activeCoachInspectorIndex)}
+          </div>
+        </div>
+
+        <!-- TWO COLUMNS: ROUTE PROGRESSION TIMELINE & SPEED CHART -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+
+          <!-- Left Column: Route Station Schedule -->
+          <div class="glass-card" style="padding: 16px 18px; background: white !important; border: 1px solid #e2e8f0 !important; border-radius: 14px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+              <div style="font-size: 14px; font-weight: 800; color: #12355B; font-family: 'Outfit', sans-serif;">
+                <i class="fa-solid fa-route" style="color: #2563eb; margin-right: 6px;"></i> Route Timeline & Station Stops
+              </div>
+              <span style="font-size: 10px; font-weight: 700; color: #64748b;">
+                ${t.stations.length} Scheduled Stops
+              </span>
+            </div>
+
+            <div style="position: relative; padding-left: 6px;">
+              ${t.stations.map((st, idx) => {
+                const isPassed = idx <= data.currentStnIdx;
+                const isCurrentNext = idx === data.currentStnIdx + 1;
+                const isLast = idx === t.stations.length - 1;
+                const stDelayCol = st.delay === 0 ? '#138808' : st.delay <= 15 ? '#d97706' : '#dc2626';
+                const stDelayBg = st.delay === 0 ? '#f0fdf4' : st.delay <= 15 ? '#fffbeb' : '#fef2f2';
+
+                return `
+                  <div style="position: relative; padding-left: 32px; padding-bottom: ${isLast ? '0' : '12px'};">
+                    ${!isLast ? `
+                      <div style="position: absolute; left: 11px; top: 18px; bottom: 0; width: 2px; background: ${isPassed ? '#10b981' : '#e2e8f0'};"></div>
+                    ` : ''}
+
+                    <div style="position: absolute; left: 0; top: 0; width: 24px; height: 24px; border-radius: 50%; background: ${isPassed ? '#10b981' : isCurrentNext ? '#2563eb' : '#94a3b8'}; color: white; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; box-shadow: ${isCurrentNext ? '0 0 0 3px rgba(37,99,235,0.2)' : 'none'};">
+                      ${isPassed ? '<i class="fa-solid fa-check" style="font-size: 9px;"></i>' : idx + 1}
+                    </div>
+
+                    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px;">
+                      <div>
+                        <div style="display: flex; align-items: center; gap: 5px;">
+                          <div style="font-size: 13px; font-weight: 800; color: #12355B; font-family: 'Outfit', sans-serif;">${st.name}</div>
+                          <span style="font-size: 9px; font-weight: 700; color: #64748b; font-family: 'JetBrains Mono', monospace; background: #f1f5f9; padding: 1px 5px; border-radius: 4px;">${st.code}</span>
+                          ${isPassed ? '<span style="font-size: 8px; font-weight: 800; color: #166534; background: #dcfce7; padding: 1px 5px; border-radius: 4px;">DEPARTED</span>' : ''}
+                          ${isCurrentNext ? '<span style="font-size: 8px; font-weight: 800; color: #1e40af; background: #dbeafe; padding: 1px 5px; border-radius: 4px;">NEXT STOP</span>' : ''}
+                        </div>
+                        <p style="margin: 1px 0 0 0; font-size: 10px; color: #64748b; font-weight: 600;">
+                          PF #${st.pf} &nbsp;•&nbsp; Arr: <span style="color: #0f172a; font-family: 'JetBrains Mono', monospace; font-weight: 700;">${st.arr}</span> &nbsp;•&nbsp; Dep: <span style="color: #0f172a; font-family: 'JetBrains Mono', monospace; font-weight: 700;">${st.dep}</span>
+                        </p>
+                      </div>
+
+                      <div>
+                        <span style="padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 800; background: ${stDelayBg}; color: ${stDelayCol}; border: 1px solid ${stDelayCol}30;">
+                          ${st.delay === 0 ? '✓ ON TIME' : '+' + st.delay + ' MIN'}
+                        </span>
+                      </div>
+                    </div>
+
+                    ${idx === data.currentStnIdx && !isLast ? `
+                      <div style="margin: 8px 0 4px 0; background: #eff6ff; border: 1.5px dashed #2563eb; padding: 6px 10px; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; font-size: 10px;">
+                        <span style="color: #1e40af; font-weight: 800; display: flex; align-items: center; gap: 5px;">
+                          <i class="fa-solid fa-train" style="color: #2563eb;"></i>
+                          TRAIN HERE • ${data.curSpeed} km/h
+                        </span>
+                        <span style="color: #2563eb; font-weight: 700; font-family: 'JetBrains Mono', monospace;">
+                          ${(data.seed * 11) % 25 + 8} km to ${data.nextStn.code}
+                        </span>
+                      </div>
+                    ` : ''}
+                  </div>
+                `;
+              }).join("")}
+            </div>
+          </div>
+
+          <!-- Right Column: Speed Chart + Energy -->
+          <div class="space-y-3">
+            
+            <div class="glass-card" style="padding: 16px 18px; background: white !important; border: 1px solid #e2e8f0 !important; border-radius: 14px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                <div style="font-size: 14px; font-weight: 800; color: #12355B; font-family: 'Outfit', sans-serif;">
+                  <i class="fa-solid fa-chart-area" style="color: #2563eb; margin-right: 6px;"></i> Route Speed Profile & MPS
+                </div>
+                <div style="display: flex; gap: 8px; font-size: 10px; font-weight: 700;">
+                  <span style="color: #ef4444;"><span style="width: 6px; height: 2px; background: #ef4444; display: inline-block;"></span> MPS (${data.theme.mps})</span>
+                  <span style="color: #2563eb;"><span style="width: 6px; height: 6px; background: #2563eb; border-radius: 50%; display: inline-block;"></span> Actual</span>
+                </div>
+              </div>
+
+              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 8px 6px 8px;">
+                <svg viewBox="0 0 400 110" style="width: 100%; height: auto;">
+                  <line x1="36" y1="16" x2="390" y2="16" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3" />
+                  <text x="30" y="20" font-size="8" fill="#94a3b8" text-anchor="end" font-family="'JetBrains Mono', monospace">160</text>
+                  
+                  <line x1="36" y1="46" x2="390" y2="46" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3" />
+                  <text x="30" y="50" font-size="8" fill="#94a3b8" text-anchor="end" font-family="'JetBrains Mono', monospace">100</text>
+
+                  <line x1="36" y1="76" x2="390" y2="76" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3" />
+                  <text x="30" y="80" font-size="8" fill="#94a3b8" text-anchor="end" font-family="'JetBrains Mono', monospace">50</text>
+
+                  <line x1="36" y1="94" x2="390" y2="94" stroke="#cbd5e1" stroke-width="1" />
+                  <text x="30" y="97" font-size="8" fill="#94a3b8" text-anchor="end" font-family="'JetBrains Mono', monospace">0</text>
+
+                  <line x1="36" y1="${94 - (data.theme.mps / 160) * 78}" x2="390" y2="${94 - (data.theme.mps / 160) * 78}" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4,4" />
+
+                  <defs>
+                    <linearGradient id="areaSpeedGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stop-color="#2563eb" stop-opacity="0.3" />
+                      <stop offset="100%" stop-color="#2563eb" stop-opacity="0.02" />
+                    </linearGradient>
+                  </defs>
+
+                  <polygon points="46,94 46,90 120,38 190,34 260,30 330,42 380,90 380,94" fill="url(#areaSpeedGrad2)" />
+                  <polyline points="46,90 120,38 190,34 260,30 330,42 380,90" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+
+                  <circle cx="46" cy="90" r="3" fill="white" stroke="#2563eb" stroke-width="1.5" />
+                  <circle cx="120" cy="38" r="3" fill="white" stroke="#2563eb" stroke-width="1.5" />
+                  <circle cx="190" cy="34" r="3" fill="white" stroke="#2563eb" stroke-width="1.5" />
+                  <circle cx="260" cy="30" r="4" fill="#10b981" stroke="white" stroke-width="2" />
+                  <circle cx="330" cy="42" r="3" fill="white" stroke="#2563eb" stroke-width="1.5" />
+                  <circle cx="380" cy="90" r="3" fill="white" stroke="#2563eb" stroke-width="1.5" />
+
+                  <text x="46" y="106" font-size="8" fill="#64748b" text-anchor="middle" font-weight="700">${t.stations[0] ? t.stations[0].code : 'ORG'}</text>
+                  <text x="190" y="106" font-size="8" fill="#64748b" text-anchor="middle" font-weight="700">${data.currentStn.code}</text>
+                  <text x="260" y="106" font-size="8" fill="#10b981" text-anchor="middle" font-weight="800">HERE</text>
+                  <text x="380" y="106" font-size="8" fill="#64748b" text-anchor="middle" font-weight="700">${t.stations[t.stations.length - 1] ? t.stations[t.stations.length - 1].code : 'DST'}</text>
+                </svg>
+              </div>
+            </div>
+
+            <div class="glass-card" style="padding: 14px 18px; background: white !important; border: 1px solid #e2e8f0 !important; border-left: 4px solid #10b981 !important; border-radius: 12px;">
+              <div style="font-size: 13px; font-weight: 800; color: #12355B; margin-bottom: 8px; font-family: 'Outfit', sans-serif;">
+                <i class="fa-solid fa-leaf" style="color: #10b981; margin-right: 5px;"></i> Regenerative Energy & Efficiency
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 11px;">
+                <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 8px 10px; border-radius: 8px;">
+                  <p style="margin: 0; color: #166534; font-size: 9px; font-weight: 700; text-transform: uppercase;">Energy Regenerated</p>
+                  <p style="margin: 2px 0 0 0; font-size: 14px; font-weight: 900; color: #15803d; font-family: 'JetBrains Mono', monospace;">
+                    +${data.energyRegenerated} kWh
+                  </p>
+                  <p style="margin: 1px 0 0 0; font-size: 9px; color: #166534;">Returned to 25kV OHE</p>
+                </div>
+
+                <div style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 8px 10px; border-radius: 8px;">
+                  <p style="margin: 0; color: #1e40af; font-size: 9px; font-weight: 700; text-transform: uppercase;">Specific Energy (SEC)</p>
+                  <p style="margin: 2px 0 0 0; font-size: 14px; font-weight: 900; color: #1d4ed8; font-family: 'JetBrains Mono', monospace;">
+                    18.2 kWh
+                  </p>
+                  <p style="margin: 1px 0 0 0; font-size: 9px; color: #1e40af;">Per 1000 GTKM (Grade A)</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- TRACK SAFETY & KAVACH 4.0 SUBSYSTEM (TWO COLUMNS COMPACT) -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+
+          <!-- Kavach 4.0 Panel -->
+          <div class="glass-card" style="padding: 16px 18px; background: white !important; border: 1px solid #e2e8f0 !important; border-top: 3.5px solid #FF9933 !important; border-radius: 14px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <div style="width: 26px; height: 26px; border-radius: 6px; background: #fff7ed; border: 1px solid #ea580c; display: flex; align-items: center; justify-content: center;">
+                  <i class="fa-solid fa-shield-halved" style="color: #ea580c; font-size: 12px;"></i>
+                </div>
+                <div>
+                  <div style="font-size: 13px; font-weight: 800; color: #12355B; font-family: 'Outfit', sans-serif;">
+                    Kavach 4.0 Subsystem Telemetry
+                  </div>
+                  <p style="margin: 0; font-size: 9px; color: #64748b;">RDSO Certified Automatic Protection</p>
+                </div>
+              </div>
+              <span style="font-size: 10px; font-weight: 800; color: #138808; background: #f0fdf4; padding: 2px 8px; border-radius: 5px; border: 1px solid #bbf7d0;">
+                SIL-4 ACTIVE
+              </span>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 11px;">
+              <div style="background: #f8fafc; padding: 8px 10px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <p style="margin: 0; font-size: 9px; color: #64748b; font-weight: 700;">UHF RADIO DIRECT</p>
+                <p style="margin: 2px 0 0 0; font-size: 12px; font-weight: 800; color: #0f172a; font-family: 'JetBrains Mono', monospace;">
+                  ${data.rfSignalDbm} dBm (400 MHz)
+                </p>
+                <p style="margin: 1px 0 0 0; font-size: 9px; color: #16a34a; font-weight: 700;">100% Integrity</p>
+              </div>
+
+              <div style="background: #f8fafc; padding: 8px 10px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <p style="margin: 0; font-size: 9px; color: #64748b; font-weight: 700;">RFID BALISE READER</p>
+                <p style="margin: 2px 0 0 0; font-size: 12px; font-weight: 800; color: #0f172a; font-family: 'JetBrains Mono', monospace;">
+                  ${data.rfidTagId}
+                </p>
+                <p style="margin: 1px 0 0 0; font-size: 9px; color: #2563eb; font-weight: 700;">Tag Match Verified</p>
+              </div>
+
+              <div style="background: #f8fafc; padding: 8px 10px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <p style="margin: 0; font-size: 9px; color: #64748b; font-weight: 700;">CAB SIGNAL ASPECT</p>
+                <p style="margin: 2px 0 0 0; font-size: 11px; font-weight: 800; color: #0f172a;">
+                  ${data.signalAspect}
+                </p>
+                <p style="margin: 1px 0 0 0; font-size: 9px; color: #64748b;">Dist: ${data.signalDistance}m ahead</p>
+              </div>
+
+              <div style="background: #f8fafc; padding: 8px 10px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <p style="margin: 0; font-size: 9px; color: #64748b; font-weight: 700;">MOVEMENT AUTHORITY</p>
+                <p style="margin: 2px 0 0 0; font-size: 12px; font-weight: 800; color: #16a34a; font-family: 'JetBrains Mono', monospace;">
+                  ${data.movementAuthorityM} Meters
+                </p>
+                <p style="margin: 1px 0 0 0; font-size: 9px; color: #166534;">Full Supervision (FS)</p>
+              </div>
+            </div>
+
+            <div style="margin-top: 8px; padding: 8px 10px; border-radius: 6px; background: #fffbeb; border: 1px solid #fef3c7; font-size: 10px; color: #92400e; display: flex; align-items: center; justify-content: space-between;">
+              <span><i class="fa-solid fa-triangle-exclamation" style="margin-right: 4px; color: #f59e0b;"></i> Safe Braking Distance: <strong>${data.brakingEnvelopeM}m</strong></span>
+              <span style="font-weight: 800; color: #166534;">ANTI-SPAD ARMED</span>
+            </div>
+          </div>
+
+          <!-- Track Security Panel -->
+          <div class="glass-card" style="padding: 16px 18px; background: white !important; border: 1px solid #e2e8f0 !important; border-top: 3.5px solid #12355B !important; border-radius: 14px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <div style="width: 26px; height: 26px; border-radius: 6px; background: #eaf3f8; border: 1px solid #12355B; display: flex; align-items: center; justify-content: center;">
+                  <i class="fa-solid fa-wrench" style="color: #12355B; font-size: 12px;"></i>
+                </div>
+                <div>
+                  <div style="font-size: 13px; font-weight: 800; color: #12355B; font-family: 'Outfit', sans-serif;">
+                    Track Security & Maintenance Health
+                  </div>
+                  <p style="margin: 0; font-size: 9px; color: #64748b;">Permanent Way (P-Way) Safety</p>
+                </div>
+              </div>
+              <span style="font-size: 10px; font-weight: 800; color: #2563eb; background: #eff6ff; padding: 2px 8px; border-radius: 5px; border: 1px solid #bfdbfe;">
+                TRACK GROUP A
+              </span>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 11px;">
+              <div style="background: #f8fafc; padding: 8px 10px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <p style="margin: 0; font-size: 9px; color: #64748b; font-weight: 700;">RAIL STANDARD</p>
+                <p style="margin: 2px 0 0 0; font-size: 11px; font-weight: 800; color: #0f172a;">
+                  60 kg/m UIC UTS 90
+                </p>
+                <p style="margin: 1px 0 0 0; font-size: 9px; color: #64748b;">1660 PSC Sleepers/km</p>
+              </div>
+
+              <div style="background: #f8fafc; padding: 8px 10px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <p style="margin: 0; font-size: 9px; color: #64748b; font-weight: 700;">CWR RAIL TEMP</p>
+                <p style="margin: 2px 0 0 0; font-size: 12px; font-weight: 800; color: #0f172a; font-family: 'JetBrains Mono', monospace;">
+                  ${data.railTempC}°C
+                </p>
+                <p style="margin: 1px 0 0 0; font-size: 9px; color: #16a34a; font-weight: 700;">Safe Stress Zone</p>
+              </div>
+
+              <div style="background: #f8fafc; padding: 8px 10px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <p style="margin: 0; font-size: 9px; color: #64748b; font-weight: 700;">USFD FLAW TESTING</p>
+                <p style="margin: 2px 0 0 0; font-size: 11px; font-weight: 800; color: #16a34a;">
+                  0 Flaws Detected
+                </p>
+                <p style="margin: 1px 0 0 0; font-size: 9px; color: #64748b;">Tested 4 Days Ago</p>
+              </div>
+
+              <div style="background: #f8fafc; padding: 8px 10px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <p style="margin: 0; font-size: 9px; color: #64748b; font-weight: 700;">TRACK RQI</p>
+                <p style="margin: 2px 0 0 0; font-size: 12px; font-weight: 800; color: #0f172a; font-family: 'JetBrains Mono', monospace;">
+                  ${data.trackVibrationG} g (Index 2.1)
+                </p>
+                <p style="margin: 1px 0 0 0; font-size: 9px; color: #16a34a; font-weight: 700;">Very Good Ride</p>
+              </div>
+            </div>
+
+            <div style="margin-top: 8px; padding: 8px 10px; border-radius: 6px; background: #eff6ff; border: 1px solid #dbeafe; font-size: 10px;">
+              <p style="margin: 0; font-weight: 700; color: #1e40af;">
+                <i class="fa-solid fa-triangle-exclamation" style="margin-right: 4px; color: #2563eb;"></i> Active TSR Caution:
+              </p>
+              <p style="margin: 2px 0 0 0; color: #334155; font-size: 10px;">${data.tsrLocation}</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    `;
+  }
   // VIEW 3: AI ANTI-SPAD & COLLISION RISK CENTER (conflict_alerts)
   function renderConflictAlertsSection(container) {
     container.innerHTML = `
@@ -6416,7 +7345,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const rawHash = window.location.hash
       ? window.location.hash.replace("#", "")
       : "";
-    const initialView = rawHash || "overview";
+    const initialView = (rawHash === "overview" || !rawHash) ? "train_list" : rawHash;
     switchNavView(initialView);
   }
 
@@ -6424,7 +7353,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const rawHash = window.location.hash
       ? window.location.hash.replace("#", "")
       : "";
-    switchNavView(rawHash || "overview");
+    switchNavView((rawHash === "overview" || !rawHash) ? "train_list" : rawHash);
   });
 
   initRoute();
