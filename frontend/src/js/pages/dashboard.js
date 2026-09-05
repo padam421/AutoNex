@@ -10,6 +10,16 @@ document.addEventListener("DOMContentLoaded", () => {
   let selectedModalDept = "maintenance_engineer";
   let selectedPTrack = "p-track-1";
 
+  // Real Indian Railways State & Live Ingestion Cache (Hoisted to top of scope)
+  let irSchedulesIndex = {};
+  let irTracksGeoJSON = null;
+  let irCrossingsGeoJSON = null;
+  let irSignalsGeoJSON = null;
+  let irEarthquakesGeoJSON = null;
+  let irDelayModel = null;
+  let irMaintenanceDataset = [];
+  let isRealDatasetsLoaded = false;
+
   // =========================================================================
   // LIVE GPS GEOLOCATION & REAL-TIME WEATHER SERVICE (Open-Meteo API)
   // =========================================================================
@@ -2588,15 +2598,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let trainDetailSelected = null;
   let trainRecentSearches = [];
 
-  // Real Indian Railways State & Live Ingestion Cache
-  let irSchedulesIndex = {};
-  let irTracksGeoJSON = null;
-  let irCrossingsGeoJSON = null;
-  let irSignalsGeoJSON = null;
-  let irEarthquakesGeoJSON = null;
-  let irDelayModel = null;
-  let irMaintenanceDataset = [];
-  let isRealDatasetsLoaded = false;
+  // (Real Indian Railways Cache variables declared at top of scope)
 
   // Comprehensive Indian Railway Station Database (8,990 Stations Dynamically Upgraded)
   let irStations = [
@@ -3063,15 +3065,27 @@ document.addEventListener("DOMContentLoaded", () => {
       trainSearchDate = today;
     }
 
-    // Alias mapping for major hub codes (e.g. MMCT/BCT, NDLS/DLI/NZM)
-    const fromAliases = [trainSearchFrom];
-    const toAliases = [trainSearchTo];
-    if (trainSearchFrom === 'MMCT' || trainSearchFrom === 'BCT') { fromAliases.push('MMCT', 'BCT', 'BDTS'); }
-    if (trainSearchTo === 'MMCT' || trainSearchTo === 'BCT') { toAliases.push('MMCT', 'BCT', 'BDTS'); }
-    if (trainSearchFrom === 'NDLS') { fromAliases.push('DLI', 'NZM', 'DEE'); }
-    if (trainSearchTo === 'NDLS') { toAliases.push('DLI', 'NZM', 'DEE'); }
-    if (trainSearchFrom === 'HWH') { fromAliases.push('SDAH', 'KOAA'); }
-    if (trainSearchTo === 'HWH') { toAliases.push('SDAH', 'KOAA'); }
+    // Alias mapping for major hub codes (e.g. MMCT/BCT/BDTS, NDLS/DLI/NZM/ANVT)
+    const getHubAliases = (code) => {
+      const c = (code || "").trim().toUpperCase();
+      const clusters = [
+        ['NDLS', 'DLI', 'NZM', 'DEE', 'ANVT'],
+        ['MMCT', 'BCT', 'BDTS', 'CSMT', 'LTT', 'DR'],
+        ['HWH', 'SDAH', 'KOAA', 'SHM'],
+        ['MAS', 'MS', 'PER', 'TBM'],
+        ['SBC', 'YPR', 'SMVB', 'BNC'],
+        ['ADI', 'SBT', 'GER'],
+        ['SC', 'HYB', 'KCG'],
+        ['PNBE', 'RJPB', 'DNR'],
+        ['LKO', 'LJN', 'BNZ']
+      ];
+      for (const cl of clusters) {
+        if (cl.includes(c)) return cl;
+      }
+      return [c];
+    };
+    const fromAliases = getHubAliases(trainSearchFrom);
+    const toAliases = getHubAliases(trainSearchTo);
 
     // Find matching trains from irTrainDatabase (all 5,208 real trains!)
     trainSearchResults = irTrainDatabase.filter(t => {

@@ -171,9 +171,28 @@ app.get('/api/v1/trains/search', (req, res) => {
   const trains = getTrainsLight();
   const schedules = getSchedules();
 
-  // Handle aliases e.g. MMCT/BCT
-  const fromAliases = from === 'MMCT' ? ['MMCT', 'BCT'] : from === 'BCT' ? ['MMCT', 'BCT'] : [from];
-  const toAliases = to === 'NDLS' ? ['NDLS', 'DLI', 'NZM'] : [to];
+  // Handle multi-station hub aliases (e.g. MMCT/BCT/BDTS, NDLS/DLI/NZM/ANVT)
+  const getHubAliases = (code) => {
+    const c = (code || "").trim().toUpperCase();
+    const clusters = [
+      ['NDLS', 'DLI', 'NZM', 'DEE', 'ANVT'],
+      ['MMCT', 'BCT', 'BDTS', 'CSMT', 'LTT', 'DR'],
+      ['HWH', 'SDAH', 'KOAA', 'SHM'],
+      ['MAS', 'MS', 'PER', 'TBM'],
+      ['SBC', 'YPR', 'SMVB', 'BNC'],
+      ['ADI', 'SBT', 'GER'],
+      ['SC', 'HYB', 'KCG'],
+      ['PNBE', 'RJPB', 'DNR'],
+      ['LKO', 'LJN', 'BNZ']
+    ];
+    for (const cl of clusters) {
+      if (cl.includes(c)) return cl;
+    }
+    return [c];
+  };
+
+  const fromAliases = getHubAliases(from);
+  const toAliases = getHubAliases(to);
 
   const results = trains.filter(t => {
     // 1. Direct from -> to
