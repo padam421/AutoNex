@@ -706,6 +706,288 @@
         speedProfile,
         delayCauses: status.delayCauses
       };
+    },
+
+    /**
+     * Autocomplete search for stations by code or name
+     */
+    findStationsByQuery: function (query) {
+      if (!query || typeof query !== "string") return [];
+      const q = query.trim().toLowerCase();
+      if (q.length < 1) return [];
+
+      const results = [];
+      const seenCodes = new Set();
+
+      if (Array.isArray(this.stations)) {
+        for (const st of this.stations) {
+          if (!st || !st.code) continue;
+          const code = st.code.toLowerCase();
+          const name = (st.name || "").toLowerCase();
+
+          // Exact code match gets highest priority
+          if (code === q) {
+            results.unshift({ code: st.code, name: st.name || st.code, state: st.state || "", zone: st.zone || "" });
+            seenCodes.add(st.code);
+          } else if (code.startsWith(q) || name.includes(q)) {
+            if (!seenCodes.has(st.code)) {
+              results.push({ code: st.code, name: st.name || st.code, state: st.state || "", zone: st.zone || "" });
+              seenCodes.add(st.code);
+            }
+          } else if (st.aliases && Array.isArray(st.aliases) && st.aliases.some(a => a.toLowerCase().includes(q))) {
+            if (!seenCodes.has(st.code)) {
+              results.push({ code: st.code, name: st.name || st.code, state: st.state || "", zone: st.zone || "" });
+              seenCodes.add(st.code);
+            }
+          }
+          if (results.length >= 10) break;
+        }
+      }
+
+      // Fallback: If few results found, search endpoints in trains
+      if (results.length < 5 && Array.isArray(this.trains)) {
+        for (const tr of this.trains) {
+          const from = tr.from || "";
+          const to = tr.to || "";
+          const fromName = tr.fromName || from;
+          const toName = tr.toName || to;
+
+          if (!seenCodes.has(from) && (from.toLowerCase().includes(q) || fromName.toLowerCase().includes(q))) {
+            results.push({ code: from, name: fromName, state: "", zone: "" });
+            seenCodes.add(from);
+          }
+          if (!seenCodes.has(to) && (to.toLowerCase().includes(q) || toName.toLowerCase().includes(q))) {
+            results.push({ code: to, name: toName, state: "", zone: "" });
+            seenCodes.add(to);
+          }
+          if (results.length >= 10) break;
+        }
+      }
+
+      return results.slice(0, 10);
+    },
+
+    /**
+     * Resolves station code from either a station code or name
+     */
+    resolveStationCode: function (input) {
+      if (!input || typeof input !== "string") return "";
+      const trimmed = input.trim();
+      const upper = trimmed.toUpperCase();
+
+      if (Array.isArray(this.stations)) {
+        const exactCode = this.stations.find(s => s && s.code && s.code.toUpperCase() === upper);
+        if (exactCode) return exactCode.code;
+
+        // Check aliases (e.g. MMCT -> BCT)
+        const aliasMatch = this.stations.find(s => s && s.aliases && Array.isArray(s.aliases) && s.aliases.some(a => a.toUpperCase() === upper));
+        if (aliasMatch) return aliasMatch.code;
+
+        const exactName = this.stations.find(s => s && s.name && s.name.toUpperCase() === upper);
+        if (exactName) return exactName.code;
+
+        const partial = this.stations.find(s => s && ((s.name && s.name.toLowerCase().includes(trimmed.toLowerCase())) || (s.code && s.code.toLowerCase().includes(trimmed.toLowerCase()))));
+        if (partial) return partial.code;
+      }
+
+      // Hardcoded common IR aliases
+      const commonAliases = {
+        "MMCT": "BCT",
+        "MUMBAI": "BCT",
+        "DELHI": "NDLS",
+        "NEW DELHI": "NDLS",
+        "KOLKATA": "HWH",
+        "HOWRAH": "HWH",
+        "CHENNAI": "MAS"
+      };
+      if (commonAliases[upper]) return commonAliases[upper];
+
+      return upper;
+    },
+
+    /**
+     * Searches ALL live trains between two stations (running, delayed, on-time, scheduled)
+     */
+    searchTrainsBetweenStations: function (fromQueryOrCode, toQueryOrCode) {
+      if (!fromQueryOrCode || !toQueryOrCode) return [];
+      const fromCode = this.resolveStationCode(fromQueryOrCode).toUpperCase();
+      const toCode = this.resolveStationCode(toQueryOrCode).toUpperCase();
+
+      const matchingTrains = [];
+      const nowIST = this.getISTTime();
+
+      for (const tr of this.trains) {
+        const schedule = this.schedules[tr.number] || this.schedules[String(parseInt(tr.number, 10))];
+        let hasDirectConnection = false;
+
+        if (schedule && Array.isArray(schedule)) {
+          const fromIdx = schedule.findIndex(s => s.code && s.code.toUpperCase() === fromCode);
+          const toIdx = schedule.findIndex(s => s.code && s.code.toUpperCase() === toCode);
+          if (fromIdx !== -1 && toIdx !== -1 && fromIdx < toIdx) {
+            hasDirectConnection = true;
+          }
+        } else if (tr.stopCodes && Array.isArray(tr.stopCodes)) {
+          const fromIdx = tr.stopCodes.indexOf(fromCode);
+          const toIdx = tr.stopCodes.indexOf(toCode);
+          if (fromIdx !== -1 && toIdx !== -1 && fromIdx < toIdx) {
+            hasDirectConnection = true;
+          }
+        } else if (tr.from === fromCode && tr.to === toCode) {
+          hasDirectConnection = true;
+        }
+
+        if (hasDirectConnection) {
+          const status = this.getTrainStatus(tr.number, nowIST);
+          if (status) {
+            matchingTrains.push({
+              number: tr.number,
+              name: tr.name,
+              type: tr.type,
+              from: tr.from,
+              to: tr.to,
+              fromName: tr.fromName || tr.from,
+              toName: tr.toName || tr.to,
+              delayMinutes: status.delayMinutes,
+              delayText: status.delayText,
+              state: status.state,
+              speed: status.currentSpeed,
+              departureAMPM: status.departureTimeAMPM,
+              arrivalAMPM: status.arrivalTimeAMPM,
+              currentStation: status.currentStation ? status.currentStation.name : "--",
+              nextStation: status.nextStation ? status.nextStation.name : "--",
+              liveStatusText: status.liveStatusText,
+              progressPct: status.progressPct,
+              isDelayed: status.delayMinutes > 0,
+              kavachActive: true
+            });
+          }
+        }
+      }
+
+      // Sort: RUNNING trains first, then by delayMinutes descending, then scheduled
+      matchingTrains.sort((a, b) => {
+        const statePriority = { "RUNNING": 3, "HALTED": 2, "SCHEDULED": 1, "COMPLETED": 0 };
+        const pA = statePriority[a.state] || 0;
+        const pB = statePriority[b.state] || 0;
+        if (pA !== pB) return pB - pA;
+        return b.delayMinutes - a.delayMinutes;
+      });
+
+      return matchingTrains;
+    },
+
+    /**
+     * Get all unique states available in the railway network
+     */
+    getAllStates: function () {
+      const stateSet = new Set();
+      if (Array.isArray(this.stations)) {
+        for (const st of this.stations) {
+          if (st && st.state && typeof st.state === "string" && st.state.trim().length > 0) {
+            stateSet.add(st.state.trim());
+          }
+        }
+      }
+
+      // Standard Indian States guarantee
+      const standardStates = [
+        "Andhra Pradesh", "Assam", "Bihar", "Chhattisgarh", "Delhi", "Gujarat", 
+        "Haryana", "Himachal Pradesh", "Jammu & Kashmir", "Jharkhand", "Karnataka", 
+        "Kerala", "Madhya Pradesh", "Maharashtra", "Odisha", "Punjab", "Rajasthan", 
+        "Tamil Nadu", "Telangana", "Uttar Pradesh", "Uttarakhand", "West Bengal"
+      ];
+
+      for (const s of standardStates) {
+        stateSet.add(s);
+      }
+
+      return Array.from(stateSet).sort();
+    },
+
+    /**
+     * Get station codes belonging to a specific state
+     */
+    getStationsByState: function (stateName) {
+      if (!stateName) return [];
+      const target = stateName.trim().toLowerCase();
+      const stationCodes = [];
+      if (Array.isArray(this.stations)) {
+        for (const st of this.stations) {
+          if (st && st.state && st.state.toLowerCase() === target) {
+            stationCodes.push(st.code.toUpperCase());
+          }
+        }
+      }
+      return stationCodes;
+    },
+
+    /**
+     * Get trains that pass through or stop at stations in a state
+     */
+    getTrainsByState: function (stateName, options) {
+      options = options || {};
+      if (!stateName || stateName === "all" || stateName === "All States" || stateName === "All States (Pan-India)") {
+        return this.getDelayedTrainsGrid(options);
+      }
+
+      const stateStationCodes = new Set(this.getStationsByState(stateName));
+      const matchingTrains = [];
+      const nowIST = this.getISTTime();
+
+      for (const tr of this.trains) {
+        const schedule = this.schedules[tr.number] || this.schedules[String(parseInt(tr.number, 10))];
+        let touchesState = false;
+
+        if (schedule && Array.isArray(schedule)) {
+          for (const st of schedule) {
+            if (stateStationCodes.has((st.code || "").toUpperCase())) {
+              touchesState = true;
+              break;
+            }
+          }
+        } else if (tr.stopCodes && Array.isArray(tr.stopCodes)) {
+          for (const code of tr.stopCodes) {
+            if (stateStationCodes.has(code.toUpperCase())) {
+              touchesState = true;
+              break;
+            }
+          }
+        }
+
+        if (touchesState) {
+          const status = this.getTrainStatus(tr.number, nowIST);
+          if (status) {
+            const minDelay = options.minDelay !== undefined ? options.minDelay : 0;
+            if (status.delayMinutes >= minDelay) {
+              matchingTrains.push({
+                number: tr.number,
+                name: tr.name,
+                type: tr.type,
+                from: tr.from,
+                to: tr.to,
+                fromName: tr.fromName || tr.from,
+                toName: tr.toName || tr.to,
+                delayMinutes: status.delayMinutes,
+                delayText: status.delayText,
+                state: status.state,
+                speed: status.currentSpeed,
+                departureAMPM: status.departureTimeAMPM,
+                arrivalAMPM: status.arrivalTimeAMPM,
+                currentStation: status.currentStation ? status.currentStation.name : "--",
+                nextStation: status.nextStation ? status.nextStation.name : "--",
+                liveStatusText: status.liveStatusText,
+                progressPct: status.progressPct
+              });
+            }
+          }
+        }
+      }
+
+      matchingTrains.sort((a, b) => b.delayMinutes - a.delayMinutes);
+      if (options.limit && !options.all) {
+        return matchingTrains.slice(0, options.limit);
+      }
+      return matchingTrains;
     }
   };
 

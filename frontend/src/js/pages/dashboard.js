@@ -3004,18 +3004,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
       isRealDatasetsLoaded = true;
 
-      // Initialize Live Cyclic Train Simulation Engine
+      // Initialize Live Cyclic Train Simulation Engine & Analytics Modules
       if (window.LiveTrainEngine) {
         window.LiveTrainEngine.init(irTrainDatabase, irSchedulesIndex, irStations, irDelayModel);
       }
+      if (window.ReschedulingEngine) {
+        window.ReschedulingEngine.init(window.LiveTrainEngine);
+      }
+      if (window.AnalyticsEngine) {
+        window.AnalyticsEngine.init(window.LiveTrainEngine);
+      }
 
-      // Re-render current active screen to reflect real data if currently viewing train list or delay analytics
+      // Re-render current active screen to reflect real data
       const container = document.getElementById("activeSubTabContainer");
       if (container) {
         if (activeNavView === "train_list" || activeNavView === "overview") {
           renderTrainListSection(container);
         } else if (activeNavView === "delay_analytics") {
           renderDelayAnalyticsSection(container);
+        } else if (activeNavView === "rescheduling") {
+          renderReschedulingSection(container);
+        } else if (activeNavView === "analytics") {
+          renderAnalyticsSection(container);
         }
       }
     } catch (err) {
@@ -4813,59 +4823,739 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
   }
 
+  // =========================================================================
   // VIEW 4: AI DYNAMIC RESCHEDULING & TIMETABLE OPTIMIZER (rescheduling)
-  function renderReschedulingSection(container) {
-    container.innerHTML = `
-      <div class="glass-card p-5 space-y-5 border-l-4 border-purple-500">
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
+  // =========================================================================
+  let reschedulingStateFilter = "all";
+  let reschedulingSearchQuery = "";
+  let reschedulingSeverityFilter = "all";
+  let selectedRescheduleTrainNumber = null;
+  let reschedulingChartInstances = {};
+  let reschedulingAutoRefreshTimer = null;
+
+  window.setRescheduleStateFilter = function (st) {
+    reschedulingStateFilter = st;
+    renderReschedulingLeftList();
+  };
+
+  window.filterRescheduleList = function (query) {
+    reschedulingSearchQuery = (query || "").trim().toLowerCase();
+    renderReschedulingLeftList();
+  };
+
+  window.setRescheduleSeverityFilter = function (sev) {
+    reschedulingSeverityFilter = sev;
+    renderReschedulingLeftList();
+  };
+
+  window.selectRescheduleTrain = function (trainNumber) {
+    selectedRescheduleTrainNumber = trainNumber;
+    renderReschedulingLeftList();
+    renderReschedulingDetailPanel(trainNumber);
+  };
+
+  window.applyRescheduleDirective = function (trainNumber, solutionId, timeSaved) {
+    if (!window.ReschedulingEngine) return;
+    window.ReschedulingEngine.applySolution(trainNumber, solutionId, timeSaved);
+    showToast(`🚀 AI Directive Applied! Dispatched to Section Controller via Kavach RF (${timeSaved}m delay recovered)`, "success");
+    renderReschedulingDetailPanel(trainNumber);
+    renderReschedulingLeftList();
+    updateReschedulingStatusBar();
+  };
+
+  function updateReschedulingStatusBar() {
+    const barEl = document.getElementById("reschedulingNetworkStatusBar");
+    if (!barEl || !window.ReschedulingEngine) return;
+    const stats = window.ReschedulingEngine.getReschedulingNetworkStats();
+    barEl.innerHTML = `
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+          </div>
           <div>
-            <span class="px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 text-xs font-bold border border-purple-500/40 uppercase">AI Timetable Optimization</span>
-            <h3 class="text-xl font-black text-white font-['Outfit'] mt-1 flex items-center gap-2">
-              ⏱️ AI Dynamic Train Rescheduling & Delay Mitigation Engine
-            </h3>
-            <p class="text-xs text-slate-400 font-mono">Precedence Optimizer, Loop Line Overtake Matrix & Platform Allocation</p>
+            <p class="text-[10px] text-slate-400 font-bold uppercase">AI Directives Enforced</p>
+            <p class="text-base font-black text-white font-mono">${stats.appliedCount} Active</p>
           </div>
-          <button onclick="showToast('AI Rescheduling Engine Re-evaluated 128 Train Paths in 0.4s', 'success')" class="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs shadow-lg transition-all cursor-pointer">
-            <i class="fa-solid fa-wand-magic-sparkles"></i> Run AI Schedule Optimizer
-          </button>
         </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-          <div class="p-4 rounded-xl bg-slate-900/90 border border-purple-500/30 space-y-3">
-            <h4 class="font-bold text-white flex items-center gap-2">
-              <i class="fa-solid fa-route text-purple-400"></i> Overtake Recommendation #1
-            </h4>
-            <p class="text-slate-300">Grant precedence to <strong>12012 Vande Bharat Express</strong> over Freight Special #31088 at Palwal Station Loop Line 2.</p>
-            <div class="p-2.5 rounded-xl bg-emerald-950/60 border border-emerald-500/30 text-emerald-300 font-mono text-[11px]">
-              Impact: Saves 18 minutes overall division cumulative delay.
-            </div>
-            <button onclick="showToast('Accepted Overtake Recommendation #1! Dispatched to Section Controller.', 'success')" class="w-full py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold cursor-pointer">
-              Accept & Execute Overtake
-            </button>
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+            <i class="fa-solid fa-clock-rotate-left"></i>
           </div>
-
-          <div class="p-4 rounded-xl bg-slate-900/90 border border-purple-500/30 space-y-3">
-            <h4 class="font-bold text-white flex items-center gap-2">
-              <i class="fa-solid fa-building-flag text-purple-400"></i> Platform Re-Allotment Recommendation #2
-            </h4>
-            <p class="text-slate-300">Re-route <strong>12626 Kerala Express</strong> from Platform 3 to Platform 5 at Mathura Junction due to incoming Freight Rake.</p>
-            <div class="p-2.5 rounded-xl bg-emerald-950/60 border border-emerald-500/30 text-emerald-300 font-mono text-[11px]">
-              Impact: Eliminates 12 minutes platform waiting halt.
-            </div>
-            <button onclick="showToast('Accepted Platform Re-Allotment Recommendation #2!', 'success')" class="w-full py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold cursor-pointer">
-              Accept & Re-route Platform
-            </button>
+          <div>
+            <p class="text-[10px] text-slate-400 font-bold uppercase">Cumulative Delay Saved</p>
+            <p class="text-base font-black text-emerald-400 font-mono">${stats.totalMinutesSaved} Minutes</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold">
+            <i class="fa-solid fa-train-subway"></i>
+          </div>
+          <div>
+            <p class="text-[10px] text-slate-400 font-bold uppercase">Stabilized Rakes</p>
+            <p class="text-base font-black text-cyan-300 font-mono">${stats.stabilizedTrains} Trains</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">
+            <i class="fa-solid fa-chart-pie"></i>
+          </div>
+          <div>
+            <p class="text-[10px] text-slate-400 font-bold uppercase">Network Health Index</p>
+            <p class="text-base font-black text-amber-300 font-mono">${stats.networkEfficiencyScore}%</p>
           </div>
         </div>
       </div>
     `;
   }
 
+  function renderReschedulingLeftList() {
+    const listEl = document.getElementById("reschedulingTrainsListContainer");
+    if (!listEl) return;
+
+    if (!window.LiveTrainEngine) {
+      listEl.innerHTML = `<div class="p-6 text-center text-xs text-slate-500">Initializing simulation engine...</div>`;
+      return;
+    }
+
+    let trains = [];
+    if (reschedulingStateFilter && reschedulingStateFilter !== "all") {
+      trains = window.LiveTrainEngine.getTrainsByState(reschedulingStateFilter, { minDelay: 1, limit: 100, all: true });
+    } else {
+      trains = window.LiveTrainEngine.getDelayedTrainsGrid({ minDelay: 1, limit: 100, all: true });
+    }
+
+    // Apply search query
+    if (reschedulingSearchQuery) {
+      trains = trains.filter(t =>
+        t.number.toLowerCase().includes(reschedulingSearchQuery) ||
+        t.name.toLowerCase().includes(reschedulingSearchQuery) ||
+        (t.from && t.from.toLowerCase().includes(reschedulingSearchQuery)) ||
+        (t.to && t.to.toLowerCase().includes(reschedulingSearchQuery))
+      );
+    }
+
+    // Apply severity filter
+    if (reschedulingSeverityFilter === "major") {
+      trains = trains.filter(t => t.delayMinutes > 30);
+    } else if (reschedulingSeverityFilter === "moderate") {
+      trains = trains.filter(t => t.delayMinutes >= 15 && t.delayMinutes <= 30);
+    } else if (reschedulingSeverityFilter === "minor") {
+      trains = trains.filter(t => t.delayMinutes < 15);
+    }
+
+    if (trains.length === 0) {
+      listEl.innerHTML = `
+        <div class="p-6 text-center bg-slate-900/60 rounded-2xl border border-white/5 space-y-2">
+          <i class="fa-solid fa-train text-2xl text-emerald-400"></i>
+          <p class="text-xs font-bold text-white">No Delayed Trains Found</p>
+          <p class="text-[11px] text-slate-400">Selected filter criteria has 100% on-time performance.</p>
+        </div>
+      `;
+      return;
+    }
+
+    // Auto-select first train if none selected or selected not in list
+    if (!selectedRescheduleTrainNumber || !trains.some(t => t.number === selectedRescheduleTrainNumber)) {
+      selectedRescheduleTrainNumber = trains[0].number;
+      setTimeout(() => renderReschedulingDetailPanel(selectedRescheduleTrainNumber), 50);
+    }
+
+    listEl.innerHTML = trains.map(tr => {
+      const isSelected = tr.number === selectedRescheduleTrainNumber;
+      const delayColor = tr.delayMinutes > 30 ? "#dc2626" : tr.delayMinutes > 15 ? "#ea580c" : "#d97706";
+      const delayBg = tr.delayMinutes > 30 ? "#fef2f2" : tr.delayMinutes > 15 ? "#fff7ed" : "#fffbeb";
+      const isApplied = window.ReschedulingEngine && !!window.ReschedulingEngine.appliedSolutions[tr.number];
+
+      return `
+        <div onclick="selectRescheduleTrain('${tr.number}')"
+          class="p-3.5 rounded-xl transition-all cursor-pointer space-y-2 border-l-4 ${isSelected ? 'bg-blue-50/90 border-blue-500 shadow-md ring-2 ring-blue-400/30' : 'bg-white hover:bg-slate-50 border-slate-200'}"
+          style="border-left-color: ${isSelected ? '#2563eb' : delayColor} !important;">
+
+          <div class="flex items-start justify-between gap-2">
+            <div>
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="text-xs font-black font-mono ${isSelected ? 'text-blue-700' : 'text-slate-800'}">${tr.number}</span>
+                <span class="px-2 py-0.5 rounded text-[9px] font-extrabold uppercase bg-slate-100 text-slate-700">${tr.type || 'Express'}</span>
+                ${isApplied ? '<span class="px-1.5 py-0.5 rounded text-[9px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300">AI OPTIMIZED</span>' : ''}
+              </div>
+              <h5 class="text-xs font-black text-[#12355B] font-['Outfit'] mt-0.5 line-clamp-1">${tr.name}</h5>
+            </div>
+            <span class="px-2 py-0.5 rounded-lg text-[10px] font-black shrink-0 border"
+              style="background-color: ${delayBg}; color: ${delayColor}; border-color: ${delayColor}40;">
+              +${tr.delayMinutes} MIN
+            </span>
+          </div>
+
+          <div class="flex items-center justify-between text-[10px] text-slate-500 font-mono">
+            <span>${tr.from} ➔ ${tr.to}</span>
+            <span>Speed: <strong class="text-slate-700">${tr.speed} km/h</strong></span>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function renderReschedulingDetailPanel(trainNumber) {
+    const panelEl = document.getElementById("reschedulingDetailPanelContainer");
+    if (!panelEl) return;
+
+    if (!window.LiveTrainEngine || !window.ReschedulingEngine) {
+      panelEl.innerHTML = `<div class="p-8 text-center text-slate-500">Initializing rescheduling engine...</div>`;
+      return;
+    }
+
+    const trainStatus = window.LiveTrainEngine.getTrainStatus(trainNumber);
+    if (!trainStatus) {
+      panelEl.innerHTML = `<div class="p-8 text-center text-slate-500">Train #${trainNumber} telemetry unavailable.</div>`;
+      return;
+    }
+
+    const reasons = window.ReschedulingEngine.generateDelayReasons(trainStatus);
+    const solutions = window.ReschedulingEngine.generateProposedSolutions(trainStatus, reasons);
+    const cascade = window.ReschedulingEngine.getDependencyCascade(trainStatus);
+    const isApplied = !!window.ReschedulingEngine.appliedSolutions[trainNumber];
+    const appliedData = isApplied ? window.ReschedulingEngine.appliedSolutions[trainNumber] : null;
+
+    const delayColor = trainStatus.delayMinutes > 30 ? "#dc2626" : trainStatus.delayMinutes > 15 ? "#ea580c" : trainStatus.delayMinutes > 0 ? "#d97706" : "#16a34a";
+    const delayBg = trainStatus.delayMinutes > 30 ? "#fef2f2" : trainStatus.delayMinutes > 15 ? "#fff7ed" : trainStatus.delayMinutes > 0 ? "#fffbeb" : "#f0fdf4";
+
+    panelEl.innerHTML = `
+      <div class="space-y-6">
+
+        <!-- Train Header Identity Card -->
+        <div class="glass-card p-5 border-l-4 space-y-4" style="border-left-color: ${delayColor} !important; border-radius: 20px !important;">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="px-3 py-0.5 rounded-full text-xs font-black bg-[#12355B] text-white font-mono">${trainStatus.trainNumber}</span>
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold uppercase bg-slate-100 text-slate-800">${trainStatus.trainType}</span>
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  <i class="fa-solid fa-shield-halved mr-1"></i>KAVACH 4.0 SIL-4 PROTECTED
+                </span>
+                ${isApplied ? '<span class="px-2.5 py-0.5 rounded-full text-xs font-black bg-purple-100 text-purple-800 border border-purple-300 animate-pulse"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i>DIRECTIVE ACTIVE</span>' : ''}
+              </div>
+              <h3 class="text-xl font-black text-[#12355B] font-['Outfit'] mt-1">${trainStatus.trainName}</h3>
+              <p class="text-xs text-slate-500 font-semibold flex items-center gap-2">
+                <i class="fa-solid fa-route text-blue-600"></i>
+                <span>${trainStatus.origin} (${trainStatus.originCode}) ➔ ${trainStatus.destination} (${trainStatus.destinationCode})</span>
+                <span class="text-slate-300">•</span>
+                <span>${trainStatus.totalDistanceKm} KM</span>
+                <span class="text-slate-300">•</span>
+                <span>Cruise: ${trainStatus.currentSpeed} km/h</span>
+              </p>
+            </div>
+
+            <!-- Current Delay Pill -->
+            <div class="text-right p-3 rounded-2xl border shrink-0" style="background: ${delayBg}; border-color: ${delayColor}40;">
+              <p class="text-[10px] font-black uppercase text-slate-500">Live Calculated Delay</p>
+              <p class="text-xl font-black font-mono" style="color: ${delayColor};">${trainStatus.delayText}</p>
+              <p class="text-[10px] font-mono text-slate-500">${trainStatus.liveStatusText}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 1. ROOT-CAUSE DELAY BREAKDOWN TABLE -->
+        <div class="glass-card p-5 space-y-3" style="border-radius: 20px !important;">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+            <h4 class="text-xs font-black text-[#12355B] font-['Outfit'] uppercase tracking-wider flex items-center gap-2">
+              <i class="fa-solid fa-magnifying-glass-chart text-blue-600"></i> Root-Cause Delay Categorization & Bottleneck Analysis
+            </h4>
+            <span class="text-[10px] font-mono text-slate-400">IR Algorithmic Diagnostics</span>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200 text-[10px] uppercase">
+                  <th class="py-2 px-3">Classification</th>
+                  <th class="py-2 px-3">Diagnostic Description</th>
+                  <th class="py-2 px-3">Corridor Location</th>
+                  <th class="py-2 px-3 text-right">Time Impact</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                ${reasons.map(r => `
+                  <tr class="hover:bg-slate-50/80 transition-colors">
+                    <td class="py-2.5 px-3">
+                      <span class="px-2 py-0.5 rounded-md text-[10px] font-black inline-flex items-center gap-1.5"
+                        style="background-color: ${r.bg}; color: ${r.color}; border: 1px solid ${r.border};">
+                        <i class="${r.icon}"></i> ${r.category}
+                      </span>
+                    </td>
+                    <td class="py-2.5 px-3 text-slate-700 font-medium">${r.description}</td>
+                    <td class="py-2.5 px-3 font-mono text-[11px] text-slate-600">${r.location}</td>
+                    <td class="py-2.5 px-3 text-right font-mono font-black" style="color: ${r.color};">${r.timeImpact}</td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 2. ACTIONABLE AI RECOVERY DIRECTIVES (PROPOSED SOLUTIONS) -->
+        <div class="glass-card p-5 space-y-4" style="border-radius: 20px !important;">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+            <div>
+              <h4 class="text-xs font-black text-[#12355B] font-['Outfit'] uppercase tracking-wider flex items-center gap-2">
+                <i class="fa-solid fa-wand-magic-sparkles text-purple-600"></i> Actionable AI Rescheduling Directives & Recovery Solutions
+              </h4>
+              <p class="text-[11px] text-slate-500">Autonomous precedence solutions with predicted time recovery & SIL-4 safety compliance</p>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-700 text-[10px] font-black border border-purple-200 uppercase">
+              ${solutions.length} Directives Ready
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+            ${solutions.map((sol, idx) => {
+              const solApplied = isApplied && appliedData.solutionId === sol.id;
+              return `
+                <div class="p-4 rounded-xl border flex flex-col justify-between space-y-3 transition-all ${solApplied ? 'bg-purple-50/70 border-purple-400 ring-2 ring-purple-300 shadow-md' : 'bg-slate-50/60 border-slate-200 hover:border-slate-300'}">
+                  <div class="space-y-2">
+                    <div class="flex items-center justify-between gap-1">
+                      <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase"
+                        style="background-color: ${sol.riskBadgeBg || '#dcfce7'}; color: ${sol.riskBadgeText || '#15803d'};">
+                        ${sol.risk} RISK
+                      </span>
+                      <span class="px-2 py-0.5 rounded text-[10px] font-mono font-black bg-emerald-100 text-emerald-800">
+                        +${sol.timeSaved} MIN RECOVERY
+                      </span>
+                    </div>
+                    <h5 class="text-xs font-black text-[#12355B] font-['Outfit'] leading-snug">${sol.title}</h5>
+                    <p class="text-[11px] text-slate-600 leading-relaxed">${sol.action}</p>
+                    <p class="text-[10px] text-emerald-700 font-bold"><i class="fa-solid fa-circle-check mr-1"></i>${sol.impactSummary}</p>
+                  </div>
+
+                  <div>
+                    ${solApplied ? `
+                      <button disabled class="w-full py-2 rounded-xl bg-emerald-600 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow cursor-default">
+                        <i class="fa-solid fa-check-double"></i> Directive Applied & Active
+                      </button>
+                    ` : `
+                      <button onclick="applyRescheduleDirective('${trainStatus.trainNumber}', '${sol.id}', ${sol.timeSaved})"
+                        class="w-full py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow hover:shadow-md cursor-pointer transition-all">
+                        <i class="fa-solid fa-bolt text-amber-300"></i> Apply Directive
+                      </button>
+                    `}
+                  </div>
+                </div>
+              `;
+            }).join("")}
+          </div>
+        </div>
+
+        <!-- 3. INTERACTIVE VISUALIZATIONS (2x2 GRID) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+          <!-- Chart 1: Delay vs Recovery Timeline -->
+          <div class="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
+            <div class="flex items-center justify-between">
+              <h5 class="text-xs font-black text-[#12355B] font-['Outfit'] flex items-center gap-1.5">
+                <i class="fa-solid fa-chart-line text-blue-600"></i> Delay vs Projected Recovery Trajectory
+              </h5>
+              <span class="text-[10px] font-mono text-slate-400">Current vs AI Optimized</span>
+            </div>
+            <div class="h-48 w-full">
+              <canvas id="rescheduleRecoveryChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Chart 2: Speed Optimization Profile -->
+          <div class="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
+            <div class="flex items-center justify-between">
+              <h5 class="text-xs font-black text-[#12355B] font-['Outfit'] flex items-center gap-1.5">
+                <i class="fa-solid fa-gauge-high text-emerald-600"></i> Sectional Speed Profile & Clear Wave
+              </h5>
+              <span class="text-[10px] font-mono text-slate-400">Current vs Recommended (km/h)</span>
+            </div>
+            <div class="h-48 w-full">
+              <canvas id="rescheduleSpeedChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Chart 3: Multi-Train Impact Cascade -->
+          <div class="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
+            <div class="flex items-center justify-between">
+              <h5 class="text-xs font-black text-[#12355B] font-['Outfit'] flex items-center gap-1.5">
+                <i class="fa-solid fa-diagram-project text-purple-600"></i> Multi-Train Dependency Cascade Benefit
+              </h5>
+              <span class="text-[10px] font-mono text-slate-400">Minutes Saved for Trailing Rakes</span>
+            </div>
+            <div class="h-48 w-full">
+              <canvas id="rescheduleCascadeChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Chart 4: Solution Comparison -->
+          <div class="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
+            <div class="flex items-center justify-between">
+              <h5 class="text-xs font-black text-[#12355B] font-['Outfit'] flex items-center gap-1.5">
+                <i class="fa-solid fa-chart-simple text-amber-600"></i> Directive Delay Recovery Comparison
+              </h5>
+              <span class="text-[10px] font-mono text-slate-400">Time Recovered (Minutes)</span>
+            </div>
+            <div class="h-48 w-full">
+              <canvas id="rescheduleSolutionComparisonChart"></canvas>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 4. MULTI-TRAIN CORRIDOR DEPENDENCY CASCADE TABLE -->
+        <div class="glass-card p-5 space-y-3" style="border-radius: 20px !important;">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+            <div>
+              <h4 class="text-xs font-black text-[#12355B] font-['Outfit'] uppercase tracking-wider flex items-center gap-2">
+                <i class="fa-solid fa-link text-cyan-600"></i> Shared Corridor Dependency Matrix & Cascading Impact
+              </h4>
+              <p class="text-[11px] text-slate-500">Shows trailing and crossing trains that directly benefit from resolving this train's delay</p>
+            </div>
+            <span class="text-[10px] font-mono text-emerald-700 font-bold bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+              Positive Ripple Clearance
+            </span>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200 text-[10px] uppercase">
+                  <th class="py-2 px-3">Downstream Rake</th>
+                  <th class="py-2 px-3">Shared Block Segment</th>
+                  <th class="py-2 px-3">Initial Delay</th>
+                  <th class="py-2 px-3">Cascade Recovery</th>
+                  <th class="py-2 px-3">Post-Action Delay</th>
+                  <th class="py-2 px-3 text-right">Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                ${cascade.map(c => `
+                  <tr class="hover:bg-slate-50/80 transition-colors">
+                    <td class="py-2.5 px-3">
+                      <span class="font-mono font-bold text-blue-700">#${c.number}</span>
+                      <span class="font-bold text-slate-800 ml-1.5">${c.name}</span>
+                    </td>
+                    <td class="py-2.5 px-3 text-slate-600 font-mono text-[11px]">${c.segment}</td>
+                    <td class="py-2.5 px-3 font-mono font-bold text-red-600">+${c.initialDelay}m</td>
+                    <td class="py-2.5 px-3 font-mono font-black text-emerald-600">-${c.cascadeReduction}m</td>
+                    <td class="py-2.5 px-3 font-mono font-bold ${c.finalDelay === 0 ? 'text-emerald-700' : 'text-amber-600'}">
+                      +${c.finalDelay}m
+                    </td>
+                    <td class="py-2.5 px-3 text-right">
+                      <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase ${c.finalDelay === 0 ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'bg-blue-100 text-blue-800 border border-blue-300'}">
+                        ${c.status}
+                      </span>
+                    </td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    `;
+
+    // Render the 4 Chart.js charts
+    setTimeout(() => {
+      const chartData = window.ReschedulingEngine.generateReschedulingChartsData(trainStatus);
+      initReschedulingCharts(chartData);
+    }, 100);
+  }
+
+  function initReschedulingCharts(chartData) {
+    if (!window.Chart || !chartData) return;
+
+    // Destroy existing instances to avoid duplicates
+    Object.keys(reschedulingChartInstances).forEach(k => {
+      if (reschedulingChartInstances[k]) {
+        try { reschedulingChartInstances[k].destroy(); } catch (e) {}
+      }
+    });
+    reschedulingChartInstances = {};
+
+    // 1. Recovery Chart (Line)
+    const ctxRec = document.getElementById("rescheduleRecoveryChart");
+    if (ctxRec) {
+      reschedulingChartInstances.recovery = new Chart(ctxRec, {
+        type: "line",
+        data: {
+          labels: chartData.labels,
+          datasets: [
+            {
+              label: "Current Delay (min)",
+              data: chartData.currentDelayPoints,
+              borderColor: "#dc2626",
+              backgroundColor: "rgba(220, 38, 38, 0.08)",
+              borderWidth: 2,
+              pointRadius: 2,
+              tension: 0.3
+            },
+            {
+              label: "Post-Directive Recovery",
+              data: chartData.recoveredDelayPoints,
+              borderColor: "#10b981",
+              backgroundColor: "rgba(16, 185, 129, 0.12)",
+              borderWidth: 2.5,
+              borderDash: [4, 4],
+              pointRadius: 3,
+              fill: true,
+              tension: 0.3
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: "top", labels: { boxWidth: 10, font: { size: 9, family: "'Plus Jakarta Sans'" } } }
+          },
+          scales: {
+            y: { beginAtZero: true, grid: { color: "#f1f5f9" }, ticks: { font: { size: 9, family: "'JetBrains Mono'" } } },
+            x: { grid: { display: false }, ticks: { font: { size: 9, family: "'JetBrains Mono'" } } }
+          }
+        }
+      });
+    }
+
+    // 2. Speed Chart (Line / Area)
+    const ctxSpd = document.getElementById("rescheduleSpeedChart");
+    if (ctxSpd) {
+      reschedulingChartInstances.speed = new Chart(ctxSpd, {
+        type: "line",
+        data: {
+          labels: chartData.labels,
+          datasets: [
+            {
+              label: "Current Speed",
+              data: chartData.currentSpeedProfile,
+              borderColor: "#64748b",
+              backgroundColor: "transparent",
+              borderWidth: 1.5,
+              tension: 0.25
+            },
+            {
+              label: "Optimized Speed",
+              data: chartData.optimizedSpeedProfile,
+              borderColor: "#2563eb",
+              backgroundColor: "rgba(37, 99, 235, 0.12)",
+              borderWidth: 2.5,
+              fill: true,
+              tension: 0.25
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: "top", labels: { boxWidth: 10, font: { size: 9, family: "'Plus Jakarta Sans'" } } }
+          },
+          scales: {
+            y: { beginAtZero: true, grid: { color: "#f1f5f9" }, ticks: { font: { size: 9, family: "'JetBrains Mono'" } } },
+            x: { grid: { display: false }, ticks: { font: { size: 9, family: "'JetBrains Mono'" } } }
+          }
+        }
+      });
+    }
+
+    // 3. Cascade Impact Bar
+    const ctxCas = document.getElementById("rescheduleCascadeChart");
+    if (ctxCas) {
+      reschedulingChartInstances.cascade = new Chart(ctxCas, {
+        type: "bar",
+        data: {
+          labels: chartData.cascadeLabels,
+          datasets: [{
+            label: "Minutes Recovered",
+            data: chartData.cascadeReductions,
+            backgroundColor: ["#3b82f6", "#8b5cf6", "#10b981", "#06b6d4"],
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true, grid: { color: "#f1f5f9" }, ticks: { font: { size: 9, family: "'JetBrains Mono'" } } },
+            x: { grid: { display: false }, ticks: { font: { size: 9, family: "'Plus Jakarta Sans'" } } }
+          }
+        }
+      });
+    }
+
+    // 4. Solution Comparison Horizontal Bar
+    const ctxSol = document.getElementById("rescheduleSolutionComparisonChart");
+    if (ctxSol) {
+      reschedulingChartInstances.solution = new Chart(ctxSol, {
+        type: "bar",
+        data: {
+          labels: chartData.solLabels,
+          datasets: [{
+            label: "Time Saved (Min)",
+            data: chartData.solSavings,
+            backgroundColor: ["#8b5cf6", "#10b981", "#3b82f6"],
+            borderRadius: 6
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { beginAtZero: true, grid: { color: "#f1f5f9" }, ticks: { font: { size: 9, family: "'JetBrains Mono'" } } },
+            y: { grid: { display: false }, ticks: { font: { size: 9, family: "'Plus Jakarta Sans'" } } }
+          }
+        }
+      });
+    }
+  }
+
+  function renderReschedulingSection(container) {
+    if (window.LiveTrainEngine && isRealDatasetsLoaded) {
+      window.LiveTrainEngine.init(irTrainDatabase, irSchedulesIndex, irStations, irDelayModel);
+    }
+    if (window.ReschedulingEngine) {
+      window.ReschedulingEngine.init(window.LiveTrainEngine);
+    }
+
+    const states = window.LiveTrainEngine ? window.LiveTrainEngine.getAllStates() : [];
+    const nowIST = window.LiveTrainEngine ? window.LiveTrainEngine.getISTTime() : new Date();
+    const timeAMPM = window.LiveTrainEngine ? window.LiveTrainEngine.formatAMPM(nowIST) : "--";
+
+    container.innerHTML = `
+      <div class="space-y-5">
+
+        <!-- Top Header Banner -->
+        <div class="results-header-banner p-6 text-white space-y-3" style="background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%) !important; border-radius: 24px !important;">
+          <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="px-2.5 py-0.5 rounded-md bg-[#FF9933] text-slate-950 text-[10px] font-black uppercase tracking-wider">
+                  GOVERNMENT OF INDIA • MINISTRY OF RAILWAYS
+                </span>
+                <span class="px-2.5 py-0.5 rounded-md bg-purple-500/30 text-purple-200 border border-purple-400/40 text-[10px] font-black uppercase">
+                  <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> AI RESCHEDULING COMMAND
+                </span>
+              </div>
+              <h2 class="text-2xl font-black font-['Outfit'] text-white">
+                ⏱️ AI Dynamic Train Rescheduling & Timetable Mitigation Engine
+              </h2>
+              <p class="text-xs text-slate-200 max-w-3xl font-medium">
+                Autonomous precedence resolution, loop line overtakes, dynamic platform reassignments, and multi-train downstream delay cascade mitigation.
+              </p>
+            </div>
+
+            <div class="flex items-center gap-3 shrink-0">
+              <div class="p-3 rounded-2xl bg-white/10 backdrop-blur border border-white/20 text-right">
+                <p class="text-[10px] font-bold text-slate-300 uppercase">Live IST Time</p>
+                <p class="text-lg font-black font-mono text-amber-300">${timeAMPM}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter Toolbar -->
+        <div class="glass-card p-4 space-y-3" style="border-radius: 20px !important;">
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
+
+            <!-- State Filter Dropdown -->
+            <div class="sm:col-span-4">
+              <label class="block text-[10px] font-black text-slate-500 uppercase mb-1">
+                <i class="fa-solid fa-map-location-dot text-purple-600 mr-1"></i> Railway State / Territory
+              </label>
+              <select id="rescheduleStateFilterSelect" onchange="setRescheduleStateFilter(this.value)"
+                class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 focus:outline-none focus:border-purple-500">
+                <option value="all">All States (Pan-India Network)</option>
+                ${states.map(st => `<option value="${st}">${st}</option>`).join("")}
+              </select>
+            </div>
+
+            <!-- Search Input -->
+            <div class="sm:col-span-5">
+              <label class="block text-[10px] font-black text-slate-500 uppercase mb-1">
+                <i class="fa-solid fa-magnifying-glass text-blue-600 mr-1"></i> Search Delayed Train
+              </label>
+              <input
+                type="text"
+                id="rescheduleSearchInput"
+                placeholder="Search train #, name, or station..."
+                oninput="filterRescheduleList(this.value)"
+                class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-900 focus:outline-none focus:border-purple-500"
+              />
+            </div>
+
+            <!-- Severity Filter Buttons -->
+            <div class="sm:col-span-3">
+              <label class="block text-[10px] font-black text-slate-500 uppercase mb-1">Delay Severity</label>
+              <div class="flex items-center gap-1 text-xs font-bold">
+                <button onclick="setRescheduleSeverityFilter('all')" class="px-2.5 py-1.5 rounded-lg bg-purple-600 text-white shadow-sm hover:bg-purple-700 cursor-pointer">All</button>
+                <button onclick="setRescheduleSeverityFilter('major')" class="px-2 py-1.5 rounded-lg bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 cursor-pointer">&gt;30m</button>
+                <button onclick="setRescheduleSeverityFilter('moderate')" class="px-2 py-1.5 rounded-lg bg-amber-50 text-amber-600 border border-amber-200 hover:bg-amber-100 cursor-pointer">15-30m</button>
+                <button onclick="setRescheduleSeverityFilter('minor')" class="px-2 py-1.5 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-200 hover:bg-emerald-100 cursor-pointer">&lt;15m</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 2-Column Responsive Workspace -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+
+          <!-- LEFT COLUMN: Scrollable Delayed Trains List (4 cols) -->
+          <div class="lg:col-span-4 space-y-3">
+            <div class="flex items-center justify-between px-1 text-xs font-bold text-slate-600">
+              <span>Delayed Trains Requiring Rescheduling</span>
+              <span class="text-purple-600 font-mono text-[10px]">Select to Optimize</span>
+            </div>
+            <div id="reschedulingTrainsListContainer" class="space-y-2.5 max-h-[820px] overflow-y-auto pr-1">
+              <!-- Rendered via renderReschedulingLeftList() -->
+            </div>
+          </div>
+
+          <!-- RIGHT COLUMN: Selected Train Rescheduling Command Center (8 cols) -->
+          <div class="lg:col-span-8">
+            <div id="reschedulingDetailPanelContainer">
+              <!-- Rendered via renderReschedulingDetailPanel() -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Bottom Global Network Status Bar -->
+        <div id="reschedulingNetworkStatusBar" class="p-4 rounded-2xl bg-slate-900 border border-slate-800 text-white shadow-lg">
+          <!-- Rendered via updateReschedulingStatusBar() -->
+        </div>
+
+      </div>
+    `;
+
+    renderReschedulingLeftList();
+    updateReschedulingStatusBar();
+
+    // Setup 10-second auto-refresh interval for rescheduling
+    if (reschedulingAutoRefreshTimer) clearInterval(reschedulingAutoRefreshTimer);
+    reschedulingAutoRefreshTimer = setInterval(() => {
+      if (activeNavView !== "rescheduling") {
+        clearInterval(reschedulingAutoRefreshTimer);
+        return;
+      }
+      if (selectedRescheduleTrainNumber) {
+        renderReschedulingDetailPanel(selectedRescheduleTrainNumber);
+      }
+      updateReschedulingStatusBar();
+    }, 10000);
+  }
+
+  // =========================================================================
   // =========================================================================
   // VIEW: AI DELAY MANAGEMENT & REAL-TIME PREDICTIVE ANALYTICS (delay_analytics)
   // =========================================================================
   let delayGridSearchQuery = "";
   let delayGridSeverityFilter = "all";
+  let delayGridStateFilter = "all";
   let stationDelaySearchFrom = "NDLS";
   let stationDelaySearchTo = "MMCT";
   let activeDelayModalTrain = null;
@@ -4873,6 +5563,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   window.setDelaySeverityFilter = function (sev) {
     delayGridSeverityFilter = sev;
+    renderDelayedTrainsGrid();
+  };
+
+  window.setDelayStateFilter = function (stateName) {
+    delayGridStateFilter = stateName;
     renderDelayedTrainsGrid();
   };
 
@@ -4892,11 +5587,76 @@ document.addEventListener("DOMContentLoaded", () => {
     executeStationDelaySearch();
   };
 
+  // Autocomplete search handlers
+  window.handleStationAutocomplete = function (type, query) {
+    const dropdownEl = document.getElementById(type === "from" ? "stationDelayFromDropdown" : "stationDelayToDropdown");
+    if (!dropdownEl || !window.LiveTrainEngine) return;
+
+    const trimmed = (query || "").trim();
+    if (trimmed.length < 1) {
+      dropdownEl.classList.add("hidden");
+      dropdownEl.innerHTML = "";
+      return;
+    }
+
+    const matches = window.LiveTrainEngine.findStationsByQuery(trimmed);
+    if (matches.length === 0) {
+      dropdownEl.innerHTML = `<div class="p-2.5 text-slate-400 text-xs text-center font-medium">No matching station found</div>`;
+      dropdownEl.classList.remove("hidden");
+      return;
+    }
+
+    dropdownEl.innerHTML = matches.map(st => `
+      <div onclick="selectStationAutocomplete('${type}', '${st.code}', '${st.name ? st.name.replace(/'/g, "\\'") : st.code}')"
+        class="p-2.5 hover:bg-blue-50 cursor-pointer flex items-center justify-between border-b border-slate-100 last:border-0 transition-colors">
+        <div class="truncate mr-2">
+          <p class="text-xs font-bold text-slate-800 truncate">${st.name}</p>
+          <p class="text-[10px] text-slate-400 font-mono">${st.state || st.zone || 'Indian Railways'}</p>
+        </div>
+        <span class="px-2 py-0.5 rounded font-mono font-black text-[10px] bg-blue-100 text-blue-800 shrink-0">${st.code}</span>
+      </div>
+    `).join("");
+
+    dropdownEl.classList.remove("hidden");
+  };
+
+  window.selectStationAutocomplete = function (type, code, name) {
+    if (type === "from") {
+      stationDelaySearchFrom = code;
+      const input = document.getElementById("stationDelayFromInput");
+      if (input) input.value = `${name} (${code})`;
+      const dd = document.getElementById("stationDelayFromDropdown");
+      if (dd) dd.classList.add("hidden");
+    } else {
+      stationDelaySearchTo = code;
+      const input = document.getElementById("stationDelayToInput");
+      if (input) input.value = `${name} (${code})`;
+      const dd = document.getElementById("stationDelayToDropdown");
+      if (dd) dd.classList.add("hidden");
+    }
+  };
+
+  // Close station dropdowns on outside click
+  document.addEventListener("click", function (e) {
+    if (!e.target.closest("#stationDelayFromGroup")) {
+      const dd = document.getElementById("stationDelayFromDropdown");
+      if (dd) dd.classList.add("hidden");
+    }
+    if (!e.target.closest("#stationDelayToGroup")) {
+      const dd = document.getElementById("stationDelayToDropdown");
+      if (dd) dd.classList.add("hidden");
+    }
+  });
+
   window.executeStationDelaySearch = function () {
     const fromEl = document.getElementById("stationDelayFromInput");
     const toEl = document.getElementById("stationDelayToInput");
-    if (fromEl) stationDelaySearchFrom = fromEl.value.trim().toUpperCase();
-    if (toEl) stationDelaySearchTo = toEl.value.trim().toUpperCase();
+    if (fromEl && fromEl.value.trim()) {
+      stationDelaySearchFrom = fromEl.value.trim();
+    }
+    if (toEl && toEl.value.trim()) {
+      stationDelaySearchTo = toEl.value.trim();
+    }
 
     const resultsContainer = document.getElementById("stationDelaySearchResultsContainer");
     if (!resultsContainer) return;
@@ -4906,53 +5666,81 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const matches = window.LiveTrainEngine.searchDelayedTrainsBetween(stationDelaySearchFrom, stationDelaySearchTo);
+    // Resolves both station codes or station names to find ALL live trains
+    const matches = window.LiveTrainEngine.searchTrainsBetweenStations(stationDelaySearchFrom, stationDelaySearchTo);
+
+    const fromCodeResolved = window.LiveTrainEngine.resolveStationCode(stationDelaySearchFrom);
+    const toCodeResolved = window.LiveTrainEngine.resolveStationCode(stationDelaySearchTo);
 
     if (matches.length === 0) {
       resultsContainer.innerHTML = `
-        <div class="p-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-center space-y-2">
-          <div class="w-10 h-10 mx-auto rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-lg">
-            <i class="fa-solid fa-circle-check"></i>
+        <div class="p-5 rounded-2xl bg-amber-50 border border-amber-200 text-center space-y-2">
+          <div class="w-10 h-10 mx-auto rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-lg">
+            <i class="fa-solid fa-route"></i>
           </div>
-          <h5 class="text-sm font-black text-emerald-800 font-['Outfit']">Corridor Clear & Punctual</h5>
-          <p class="text-xs text-emerald-700 font-medium">
-            All active trains between <strong>${stationDelaySearchFrom}</strong> and <strong>${stationDelaySearchTo}</strong> are operating ON TIME with 0 reported delays.
+          <h5 class="text-sm font-black text-amber-800 font-['Outfit']">No Direct Connecting Trains</h5>
+          <p class="text-xs text-amber-700 font-medium">
+            No active schedules found between <strong>${fromCodeResolved}</strong> and <strong>${toCodeResolved}</strong>. Check station names or route connections.
           </p>
         </div>
       `;
       return;
     }
 
+    const delayedCount = matches.filter(t => t.delayMinutes > 0).length;
+    const runningCount = matches.filter(t => t.state === "RUNNING").length;
+
     resultsContainer.innerHTML = `
       <div class="space-y-3">
         <div class="flex items-center justify-between text-xs font-bold text-slate-600 px-1">
-          <span>Found ${matches.length} Delayed Trains on Corridor</span>
-          <span class="text-red-600">${stationDelaySearchFrom} ➔ ${stationDelaySearchTo}</span>
+          <span>Found ${matches.length} Live Trains on Corridor (${runningCount} Running, ${delayedCount} Delayed)</span>
+          <span class="text-blue-700 font-mono">${fromCodeResolved} ➔ ${toCodeResolved}</span>
         </div>
-        ${matches.map(tr => `
-          <div onclick="openTrainDelayModal('${tr.number}')"
-            class="p-3.5 rounded-xl bg-white border border-red-200 hover:border-red-400 shadow-sm hover:shadow-md transition-all cursor-pointer space-y-2 border-l-4 border-l-red-500">
-            <div class="flex items-center justify-between">
-              <div>
-                <span class="text-[10px] font-extrabold font-mono text-blue-600">${tr.number}</span>
-                <h5 class="text-xs font-black text-[#12355B] font-['Outfit']">${tr.name}</h5>
+        <div class="space-y-2.5 max-h-[600px] overflow-y-auto pr-1">
+          ${matches.map(tr => {
+            const isDelayed = tr.delayMinutes > 0;
+            const delayColor = tr.delayMinutes > 30 ? "#dc2626" : tr.delayMinutes > 15 ? "#ea580c" : tr.delayMinutes > 0 ? "#d97706" : "#16a34a";
+            const delayBg = tr.delayMinutes > 30 ? "#fef2f2" : tr.delayMinutes > 15 ? "#fff7ed" : tr.delayMinutes > 0 ? "#fffbeb" : "#f0fdf4";
+            const isRunning = tr.state === "RUNNING";
+
+            return `
+              <div onclick="openTrainDelayModal('${tr.number}')"
+                class="p-3.5 rounded-xl bg-white border hover:border-blue-400 shadow-sm hover:shadow-md transition-all cursor-pointer space-y-2 border-l-4 group"
+                style="border-left-color: ${delayColor} !important;">
+
+                <div class="flex items-start justify-between gap-2">
+                  <div>
+                    <div class="flex items-center gap-1.5 flex-wrap">
+                      <span class="text-xs font-extrabold font-mono text-blue-600">${tr.number}</span>
+                      <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-slate-100 text-slate-700">${tr.type || 'Express'}</span>
+                      <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase ${isRunning ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-600'}">
+                        ${isRunning ? '<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-ping mr-1"></span>RUNNING' : tr.state}
+                      </span>
+                    </div>
+                    <h5 class="text-xs font-black text-[#12355B] font-['Outfit'] mt-0.5 group-hover:text-blue-600 transition-colors">${tr.name}</h5>
+                  </div>
+                  <span class="px-2.5 py-1 rounded-lg text-[10px] font-black shrink-0 border"
+                    style="background-color: ${delayBg}; color: ${delayColor}; border-color: ${delayColor}40;">
+                    ${isDelayed ? `+${tr.delayMinutes} MIN DELAY` : 'ON TIME'}
+                  </span>
+                </div>
+
+                <div class="flex items-center justify-between text-[11px] text-slate-600 border-y border-slate-100 py-1">
+                  <span>Dep: <strong class="text-slate-800 font-mono">${tr.departureAMPM}</strong></span>
+                  <span class="text-slate-300">•</span>
+                  <span>Speed: <strong class="text-slate-800 font-mono">${tr.speed} km/h</strong></span>
+                  <span class="text-slate-300">•</span>
+                  <span>Arr: <strong class="${isDelayed ? 'text-red-600' : 'text-emerald-700'} font-mono">${tr.arrivalAMPM}</strong></span>
+                </div>
+
+                <div class="p-2 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-between text-[10px] font-mono">
+                  <span class="text-slate-500 truncate"><i class="fa-solid fa-location-dot text-blue-600 mr-1"></i>${tr.liveStatusText}</span>
+                  <span class="text-blue-600 font-bold ml-2 shrink-0 group-hover:translate-x-1 transition-transform">Inspect Delay Terminal →</span>
+                </div>
               </div>
-              <span class="px-2 py-0.5 rounded-lg text-[10px] font-black bg-red-50 text-red-600 border border-red-200">
-                +${tr.delayMinutes} MIN DELAY
-              </span>
-            </div>
-
-            <div class="flex items-center justify-between text-[11px] text-slate-600">
-              <span>Dep: <strong>${tr.departureAMPM}</strong></span>
-              <span>Arr: <strong class="text-red-600">${tr.arrivalAMPM}</strong></span>
-            </div>
-
-            <div class="p-2 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-between text-[10px] font-mono">
-              <span class="text-slate-500 truncate"><i class="fa-solid fa-location-dot text-red-500 mr-1"></i>${tr.liveStatusText}</span>
-              <span class="text-blue-600 font-bold ml-2">Inspect →</span>
-            </div>
-          </div>
-        `).join("")}
+            `;
+          }).join("")}
+        </div>
       </div>
     `;
   };
@@ -4966,7 +5754,12 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    let delayedTrains = window.LiveTrainEngine.getDelayedTrainsGrid({ minDelay: 1, limit: 120 });
+    let delayedTrains = [];
+    if (delayGridStateFilter && delayGridStateFilter !== "all") {
+      delayedTrains = window.LiveTrainEngine.getTrainsByState(delayGridStateFilter, { minDelay: 1, limit: 120, all: true });
+    } else {
+      delayedTrains = window.LiveTrainEngine.getDelayedTrainsGrid({ minDelay: 1, limit: 120 });
+    }
 
     // Apply search query
     if (delayGridSearchQuery) {
@@ -4988,12 +5781,23 @@ document.addEventListener("DOMContentLoaded", () => {
       delayedTrains = delayedTrains.filter(t => t.delayMinutes < 15);
     }
 
+    // Update state badge
+    const stateBadgeEl = document.getElementById("activeStateFilterCountBadge");
+    if (stateBadgeEl) {
+      if (delayGridStateFilter && delayGridStateFilter !== "all") {
+        stateBadgeEl.textContent = `${delayedTrains.length} in ${delayGridStateFilter}`;
+        stateBadgeEl.classList.remove("hidden");
+      } else {
+        stateBadgeEl.classList.add("hidden");
+      }
+    }
+
     if (delayedTrains.length === 0) {
       gridEl.innerHTML = `
         <div class="col-span-full p-8 text-center bg-white rounded-2xl border border-slate-200">
           <i class="fa-solid fa-train text-3xl text-emerald-500 mb-2"></i>
-          <h5 class="text-sm font-bold text-slate-800">No Trains Found</h5>
-          <p class="text-xs text-slate-500 mt-1">No delayed trains matching the selected filter criteria.</p>
+          <h5 class="text-sm font-bold text-slate-800">No Delayed Trains Found</h5>
+          <p class="text-xs text-slate-500 mt-1">No trains matching the selected state and severity filters.</p>
         </div>
       `;
       return;
@@ -5083,6 +5887,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const maxDelay = delayedCount > 0 ? Math.max(...allDelayed.map(t => t.delayMinutes)) : 0;
     const nowIST = window.LiveTrainEngine ? window.LiveTrainEngine.getISTTime() : new Date();
     const timeAMPM = window.LiveTrainEngine ? window.LiveTrainEngine.formatAMPM(nowIST) : "";
+    const states = window.LiveTrainEngine ? window.LiveTrainEngine.getAllStates() : [];
 
     container.innerHTML = `
       <div class="space-y-5">
@@ -5149,35 +5954,58 @@ document.addEventListener("DOMContentLoaded", () => {
           <!-- LEFT COLUMN (7 Cols): Grid of All Delayed Trains -->
           <div class="lg:col-span-7 space-y-4">
 
-            <!-- Filter & Search Toolbar -->
+            <!-- Filter & Search Toolbar (With State Dropdown) -->
             <div class="glass-card p-4 space-y-3" style="border-radius: 20px !important;">
-              <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-                <div class="relative flex-1">
-                  <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-xs"></i>
+              <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
+
+                <!-- State Filter Dropdown -->
+                <div class="sm:col-span-4">
+                  <label class="block text-[10px] font-black text-slate-500 uppercase mb-1">
+                    <i class="fa-solid fa-map-location-dot text-blue-600 mr-1"></i> State / UT Filter
+                  </label>
+                  <select id="delayStateFilterSelect" onchange="setDelayStateFilter(this.value)"
+                    class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 focus:outline-none focus:border-blue-500">
+                    <option value="all">All States (Pan-India)</option>
+                    ${states.map(st => `<option value="${st}" ${st === delayGridStateFilter ? 'selected' : ''}>${st}</option>`).join("")}
+                  </select>
+                </div>
+
+                <!-- Train Search Input -->
+                <div class="sm:col-span-4">
+                  <label class="block text-[10px] font-black text-slate-500 uppercase mb-1">
+                    <i class="fa-solid fa-magnifying-glass text-blue-600 mr-1"></i> Search Train
+                  </label>
                   <input
                     type="text"
                     id="delayedTrainSearchInput"
-                    placeholder="Search train #, name, or station (e.g. 12952, Rajdhani, NDLS)..."
+                    placeholder="Train #, name, station..."
                     oninput="filterDelayedGrid(this.value)"
-                    class="w-full pl-9 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-900 focus:outline-none focus:border-blue-500"
                   />
                 </div>
 
                 <!-- Severity Filter Buttons -->
-                <div class="flex items-center gap-1.5 shrink-0 text-xs font-bold">
-                  <button onclick="setDelaySeverityFilter('all')" class="px-3 py-2 rounded-xl bg-blue-600 text-white shadow-sm hover:bg-blue-700 cursor-pointer">
-                    All (${delayedCount})
-                  </button>
-                  <button onclick="setDelaySeverityFilter('major')" class="px-3 py-2 rounded-xl bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 cursor-pointer">
-                    &gt;30m
-                  </button>
-                  <button onclick="setDelaySeverityFilter('moderate')" class="px-3 py-2 rounded-xl bg-amber-50 text-amber-600 border border-amber-200 hover:bg-amber-100 cursor-pointer">
-                    15-30m
-                  </button>
-                  <button onclick="setDelaySeverityFilter('minor')" class="px-3 py-2 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-200 hover:bg-emerald-100 cursor-pointer">
-                    &lt;15m
-                  </button>
+                <div class="sm:col-span-4">
+                  <div class="flex items-center justify-between mb-1">
+                    <label class="text-[10px] font-black text-slate-500 uppercase">Severity</label>
+                    <span id="activeStateFilterCountBadge" class="hidden text-[10px] font-bold text-blue-600 font-mono"></span>
+                  </div>
+                  <div class="flex items-center gap-1 text-xs font-bold">
+                    <button onclick="setDelaySeverityFilter('all')" class="px-2.5 py-1.5 rounded-lg bg-blue-600 text-white shadow-sm hover:bg-blue-700 cursor-pointer">
+                      All
+                    </button>
+                    <button onclick="setDelaySeverityFilter('major')" class="px-2 py-1.5 rounded-lg bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 cursor-pointer">
+                      &gt;30m
+                    </button>
+                    <button onclick="setDelaySeverityFilter('moderate')" class="px-2 py-1.5 rounded-lg bg-amber-50 text-amber-600 border border-amber-200 hover:bg-amber-100 cursor-pointer">
+                      15-30m
+                    </button>
+                    <button onclick="setDelaySeverityFilter('minor')" class="px-2 py-1.5 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-200 hover:bg-emerald-100 cursor-pointer">
+                      &lt;15m
+                    </button>
+                  </div>
                 </div>
+
               </div>
             </div>
 
@@ -5188,7 +6016,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
           </div>
 
-          <!-- RIGHT COLUMN (5 Cols): Station-to-Station Corridor Search -->
+          <!-- RIGHT COLUMN (5 Cols): Station-to-Station Corridor Search (WITH AUTOCOMPLETE) -->
           <div class="lg:col-span-5 space-y-4">
 
             <div class="glass-card p-5 space-y-4" style="border-radius: 22px !important; border-top: 5px solid #FF9933 !important;">
@@ -5198,28 +6026,35 @@ document.addEventListener("DOMContentLoaded", () => {
                     <i class="fa-solid fa-route"></i>
                   </div>
                   <div>
-                    <h4 class="text-sm font-black text-[#12355B] font-['Outfit']">Corridor Delay Search</h4>
-                    <p class="text-[11px] text-slate-500 font-medium">Station-to-station delay detection</p>
+                    <h4 class="text-sm font-black text-[#12355B] font-['Outfit']">Corridor Live Train Search</h4>
+                    <p class="text-[11px] text-slate-500 font-medium">Shows ALL live running trains between stations</p>
                   </div>
                 </div>
-                <span class="px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 text-[10px] font-extrabold uppercase border border-blue-200">
-                  Exact Match
+                <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-extrabold uppercase border border-emerald-200">
+                  Live Corridor
                 </span>
               </div>
 
-              <!-- Form: From & To -->
+              <!-- Form: From & To with Autocomplete Suggestions -->
               <div class="space-y-3">
-                <div>
+
+                <!-- From Station Group -->
+                <div id="stationDelayFromGroup" class="relative">
                   <label class="block text-xs font-bold text-slate-700 mb-1">
-                    <i class="fa-solid fa-location-dot text-blue-600 mr-1"></i> Origin / From Station
+                    <i class="fa-solid fa-location-dot text-blue-600 mr-1"></i> Origin / From Station (Name or Code)
                   </label>
                   <input
                     type="text"
                     id="stationDelayFromInput"
                     value="${stationDelaySearchFrom}"
-                    placeholder="Enter station code (e.g. NDLS, MMCT, HWH)"
-                    class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold font-mono text-slate-900 focus:outline-none focus:border-blue-500"
+                    autocomplete="off"
+                    placeholder="Type station name or code (e.g. New Delhi, NDLS)..."
+                    oninput="handleStationAutocomplete('from', this.value)"
+                    class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-900 focus:outline-none focus:border-blue-500"
                   />
+                  <!-- Autocomplete Dropdown -->
+                  <div id="stationDelayFromDropdown" class="hidden absolute top-full left-0 right-0 z-30 mt-1 max-h-52 overflow-y-auto bg-white border border-slate-200 rounded-xl shadow-xl">
+                  </div>
                 </div>
 
                 <!-- Swap Button -->
@@ -5230,23 +6065,29 @@ document.addEventListener("DOMContentLoaded", () => {
                   </button>
                 </div>
 
-                <div>
+                <!-- To Station Group -->
+                <div id="stationDelayToGroup" class="relative">
                   <label class="block text-xs font-bold text-slate-700 mb-1">
-                    <i class="fa-solid fa-location-arrow text-red-600 mr-1"></i> Destination / To Station
+                    <i class="fa-solid fa-location-arrow text-red-600 mr-1"></i> Destination / To Station (Name or Code)
                   </label>
                   <input
                     type="text"
                     id="stationDelayToInput"
                     value="${stationDelaySearchTo}"
-                    placeholder="Enter station code (e.g. MMCT, NDLS, PUNE)"
-                    class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold font-mono text-slate-900 focus:outline-none focus:border-blue-500"
+                    autocomplete="off"
+                    placeholder="Type destination name or code (e.g. Mumbai, MMCT, BCT)..."
+                    oninput="handleStationAutocomplete('to', this.value)"
+                    class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-900 focus:outline-none focus:border-blue-500"
                   />
+                  <!-- Autocomplete Dropdown -->
+                  <div id="stationDelayToDropdown" class="hidden absolute top-full left-0 right-0 z-30 mt-1 max-h-52 overflow-y-auto bg-white border border-slate-200 rounded-xl shadow-xl">
+                  </div>
                 </div>
 
                 <button onclick="executeStationDelaySearch()"
                   class="w-full py-2.5 rounded-xl bg-[#12355B] hover:bg-[#1E4877] text-white font-extrabold text-xs flex items-center justify-center gap-2 shadow-md cursor-pointer transition-all">
                   <i class="fa-solid fa-magnifying-glass text-[#FF9933]"></i>
-                  Find Delayed Trains on Route
+                  Find Live Trains on Route
                 </button>
               </div>
 
@@ -5282,9 +6123,19 @@ document.addEventListener("DOMContentLoaded", () => {
   // =========================================================================
   // DEDICATED TRAIN DELAY DASHBOARD MODAL WITH CHART.JS & CYCLIC SCHEDULES
   // =========================================================================
+  // DEDICATED TRAIN DELAY DASHBOARD MODAL WITH CHART.JS & CYCLIC SCHEDULES
+  // =========================================================================
+  let delayModalAutoRefreshTimer = null;
+
   window.closeTrainDelayModal = function () {
     const modal = document.getElementById("trainDelayDetailModal");
     if (modal) modal.classList.add("hidden");
+
+    if (delayModalAutoRefreshTimer) {
+      clearInterval(delayModalAutoRefreshTimer);
+      delayModalAutoRefreshTimer = null;
+    }
+    activeDelayModalTrain = null;
 
     // Clean up chart instances to avoid memory leaks
     Object.keys(delayModalChartInstances).forEach(k => {
@@ -5294,6 +6145,75 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     delayModalChartInstances = {};
   };
+
+  function refreshActiveDelayModalData() {
+    if (!activeDelayModalTrain || !window.LiveTrainEngine) return;
+    const modal = document.getElementById("trainDelayDetailModal");
+    if (!modal || modal.classList.contains("hidden")) {
+      if (delayModalAutoRefreshTimer) clearInterval(delayModalAutoRefreshTimer);
+      return;
+    }
+
+    const analytics = window.LiveTrainEngine.getTrainDelayAnalytics(activeDelayModalTrain);
+    if (!analytics) return;
+    const st = analytics.status;
+
+    const delayCol = st.delayMinutes > 30 ? '#dc2626' : st.delayMinutes > 15 ? '#ea580c' : st.delayMinutes > 0 ? '#d97706' : '#166534';
+    const delayBg = st.delayMinutes > 30 ? '#fef2f2' : st.delayMinutes > 15 ? '#fff7ed' : st.delayMinutes > 0 ? '#fffbeb' : '#f0fdf4';
+
+    // Update DOM indicators smoothly
+    const pillEl = document.getElementById("modalLiveDelayPill");
+    if (pillEl) {
+      pillEl.style.backgroundColor = delayBg;
+      pillEl.style.borderColor = delayCol + "40";
+      pillEl.innerHTML = `
+        <p class="text-[10px] font-black uppercase text-slate-500">Live Calculated Delay</p>
+        <p class="text-2xl font-black font-['Outfit']" style="color: ${delayCol};">${st.delayText}</p>
+        <p class="text-[10px] font-mono text-slate-500">${st.liveStatusText}</p>
+      `;
+    }
+
+    const curDelayEl = document.getElementById("modalLiveCurrentDelayMetric");
+    if (curDelayEl) {
+      curDelayEl.textContent = `+${st.delayMinutes} min`;
+      curDelayEl.style.color = delayCol;
+    }
+
+    const avgDelayEl = document.getElementById("modalLiveAvgDelayMetric");
+    if (avgDelayEl) avgDelayEl.textContent = `${analytics.avgDelay} min`;
+
+    const punctEl = document.getElementById("modalLivePunctualityMetric");
+    if (punctEl) punctEl.textContent = `${analytics.punctualityIndex}%`;
+
+    const arrEl = document.getElementById("modalLiveArrivalMetric");
+    if (arrEl) arrEl.textContent = st.arrivalTimeAMPM;
+
+    // Update Chart.js instances dynamically without full destroy
+    if (delayModalChartInstances.line && delayModalChartInstances.line.data.datasets[0]) {
+      delayModalChartInstances.line.data.labels = analytics.labels;
+      delayModalChartInstances.line.data.datasets[0].data = analytics.delayPoints;
+      delayModalChartInstances.line.update('none');
+    }
+
+    if (delayModalChartInstances.speed && delayModalChartInstances.speed.data.datasets[0]) {
+      delayModalChartInstances.speed.data.labels = analytics.labels;
+      delayModalChartInstances.speed.data.datasets[0].data = analytics.speedProfile;
+      delayModalChartInstances.speed.update('none');
+    }
+
+    if (delayModalChartInstances.bar && delayModalChartInstances.bar.data.datasets[0]) {
+      delayModalChartInstances.bar.data.labels = analytics.labels;
+      delayModalChartInstances.bar.data.datasets[0].data = analytics.delayPoints;
+      delayModalChartInstances.bar.data.datasets[0].backgroundColor = analytics.delayPoints.map(d => d > 25 ? "#dc2626" : d > 10 ? "#f59e0b" : "#10b981");
+      delayModalChartInstances.bar.update('none');
+    }
+
+    if (delayModalChartInstances.pie && delayModalChartInstances.pie.data.datasets[0]) {
+      delayModalChartInstances.pie.data.labels = analytics.delayCauses.map(c => c.label);
+      delayModalChartInstances.pie.data.datasets[0].data = analytics.delayCauses.map(c => c.pct);
+      delayModalChartInstances.pie.update('none');
+    }
+  }
 
   window.openTrainDelayModal = function (trainNumber) {
     if (!window.LiveTrainEngine) {
@@ -5306,6 +6226,8 @@ document.addEventListener("DOMContentLoaded", () => {
       showToast(`Train #${trainNumber} schedule data unavailable.`, "warning");
       return;
     }
+
+    activeDelayModalTrain = trainNumber;
 
     let modal = document.getElementById("trainDelayDetailModal");
     if (!modal) {
@@ -5339,6 +6261,9 @@ document.addEventListener("DOMContentLoaded", () => {
               <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">
                 <i class="fa-solid fa-shield-halved mr-1"></i>KAVACH 4.0 SIL-4
               </span>
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> LIVE 10s STREAM
+              </span>
             </div>
             <h3 class="text-2xl font-black text-[#12355B] font-['Outfit'] mt-1">${st.trainName}</h3>
             <p class="text-xs text-slate-500 font-semibold">
@@ -5348,7 +6273,7 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
 
           <!-- Current Live Delay Pill -->
-          <div class="text-right p-3 rounded-2xl border" style="background: ${delayBg}; border-color: ${delayCol}40;">
+          <div id="modalLiveDelayPill" class="text-right p-3 rounded-2xl border transition-all" style="background: ${delayBg}; border-color: ${delayCol}40;">
             <p class="text-[10px] font-black uppercase text-slate-500">Live Calculated Delay</p>
             <p class="text-2xl font-black font-['Outfit']" style="color: ${delayCol};">${st.delayText}</p>
             <p class="text-[10px] font-mono text-slate-500">${st.liveStatusText}</p>
@@ -5359,7 +6284,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="grid grid-cols-2 md:grid-cols-5 gap-3 text-xs">
           <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
             <p class="text-[10px] font-bold text-slate-500 uppercase">Current Delay</p>
-            <p class="text-xl font-black font-mono" style="color: ${delayCol};">+${st.delayMinutes} min</p>
+            <p id="modalLiveCurrentDelayMetric" class="text-xl font-black font-mono transition-colors" style="color: ${delayCol};">+${st.delayMinutes} min</p>
             <p class="text-[10px] text-slate-400">At active block</p>
           </div>
 
@@ -5371,19 +6296,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
           <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
             <p class="text-[10px] font-bold text-slate-500 uppercase">Average Delay</p>
-            <p class="text-xl font-black font-mono text-amber-600">${analytics.avgDelay} min</p>
+            <p id="modalLiveAvgDelayMetric" class="text-xl font-black font-mono text-amber-600 transition-colors">${analytics.avgDelay} min</p>
             <p class="text-[10px] text-slate-400">Per commercial stop</p>
           </div>
 
           <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
             <p class="text-[10px] font-bold text-slate-500 uppercase">Punctuality Score</p>
-            <p class="text-xl font-black font-mono text-emerald-600">${analytics.punctualityIndex}%</p>
+            <p id="modalLivePunctualityMetric" class="text-xl font-black font-mono text-emerald-600 transition-colors">${analytics.punctualityIndex}%</p>
             <p class="text-[10px] text-emerald-700 font-semibold">Reliability Index</p>
           </div>
 
           <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1 col-span-2 md:col-span-1">
             <p class="text-[10px] font-bold text-slate-500 uppercase">Predicted Arrival</p>
-            <p class="text-sm font-black text-[#12355B] font-mono">${st.arrivalTimeAMPM}</p>
+            <p id="modalLiveArrivalMetric" class="text-sm font-black text-[#12355B] font-mono transition-colors">${st.arrivalTimeAMPM}</p>
             <p class="text-[10px] text-slate-500">Orig: ${st.scheduledArrivalAMPM}</p>
           </div>
         </div>
@@ -5397,7 +6322,9 @@ document.addEventListener("DOMContentLoaded", () => {
               <h5 class="text-xs font-black text-[#12355B] font-['Outfit'] flex items-center gap-1.5">
                 <i class="fa-solid fa-chart-line text-blue-600"></i> Station Delay Accumulation Curve
               </h5>
-              <span class="text-[10px] font-mono text-slate-400">Delay (Min) vs Station</span>
+              <span class="text-[10px] font-mono text-slate-400 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-ping"></span> Live 10s
+              </span>
             </div>
             <div class="h-48 w-full">
               <canvas id="modalDelayLineChart"></canvas>
@@ -5410,7 +6337,9 @@ document.addEventListener("DOMContentLoaded", () => {
               <h5 class="text-xs font-black text-[#12355B] font-['Outfit'] flex items-center gap-1.5">
                 <i class="fa-solid fa-gauge-high text-emerald-600"></i> Route Speed Profile & Approach Physics
               </h5>
-              <span class="text-[10px] font-mono text-slate-400">MPS vs Approach (~15 km/h)</span>
+              <span class="text-[10px] font-mono text-slate-400 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-ping"></span> Live 10s
+              </span>
             </div>
             <div class="h-48 w-full">
               <canvas id="modalSpeedProfileChart"></canvas>
@@ -5423,7 +6352,9 @@ document.addEventListener("DOMContentLoaded", () => {
               <h5 class="text-xs font-black text-[#12355B] font-['Outfit'] flex items-center gap-1.5">
                 <i class="fa-solid fa-chart-column text-amber-600"></i> Station-wise Delay Breakdown
               </h5>
-              <span class="text-[10px] font-mono text-slate-400">Exact Stop Delays</span>
+              <span class="text-[10px] font-mono text-slate-400 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-ping"></span> Live 10s
+              </span>
             </div>
             <div class="h-48 w-full">
               <canvas id="modalStationBarChart"></canvas>
@@ -5436,7 +6367,9 @@ document.addEventListener("DOMContentLoaded", () => {
               <h5 class="text-xs font-black text-[#12355B] font-['Outfit'] flex items-center gap-1.5">
                 <i class="fa-solid fa-chart-pie text-purple-600"></i> Delay Root-Cause Attribution
               </h5>
-              <span class="text-[10px] font-mono text-slate-400">Algorithmic Factors</span>
+              <span class="text-[10px] font-mono text-slate-400 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-ping"></span> Live 10s
+              </span>
             </div>
             <div class="h-48 w-full">
               <canvas id="modalCausePieChart"></canvas>
@@ -5568,6 +6501,12 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
       initModalCharts(analytics);
     }, 150);
+
+    // Setup 10-second auto-refresh timer for modal charts & telemetry
+    if (delayModalAutoRefreshTimer) clearInterval(delayModalAutoRefreshTimer);
+    delayModalAutoRefreshTimer = setInterval(() => {
+      refreshActiveDelayModalData();
+    }, 10000);
   };
 
   function initModalCharts(analytics) {
@@ -5762,39 +6701,587 @@ document.addEventListener("DOMContentLoaded", () => {
   setInterval(updateLiveTicker, 4500);
   setTimeout(updateLiveTicker, 1500);
 
+  // =========================================================================
   // VIEW 5: OPERATIONAL ANALYTICS HUB (analytics)
-  function renderAnalyticsSection(container) {
+  // =========================================================================
+  let activeAnalyticsTab = "network"; // "network" | "zone" | "train"
+  let selectedAnalyticsZone = "NR";
+  let selectedAnalyticsTrain = "12952";
+  let analyticsChartInstances = {};
+  let analyticsAutoRefreshTimer = null;
+
+  window.switchAnalyticsTab = function (tab) {
+    activeAnalyticsTab = tab;
+    const container = document.getElementById("activeSubTabContainer");
+    if (container) renderAnalyticsSection(container);
+  };
+
+  window.changeAnalyticsZone = function (zoneCode) {
+    selectedAnalyticsZone = zoneCode;
+    const zoneContentEl = document.getElementById("analyticsZoneContentContainer");
+    if (zoneContentEl) renderAnalyticsZoneTab(zoneContentEl);
+  };
+
+  window.changeAnalyticsTrain = function (trainNum) {
+    selectedAnalyticsTrain = trainNum;
+    const trainContentEl = document.getElementById("analyticsTrainContentContainer");
+    if (trainContentEl) renderAnalyticsTrainTab(trainContentEl);
+  };
+
+  function renderAnalyticsNetworkTab(container) {
+    if (!window.AnalyticsEngine) return;
+    const metrics = window.AnalyticsEngine.getNetworkOverviewMetrics();
+    if (!metrics) return;
+
     container.innerHTML = `
-      <div class="glass-card p-5 space-y-5 border-l-4 border-cyan-500">
-        <div class="flex items-center justify-between border-b border-white/10 pb-3">
-          <div>
-            <span class="px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 text-xs font-bold border border-cyan-500/40 uppercase">Executive Reports</span>
-            <h3 class="text-xl font-black text-white font-['Outfit'] mt-1 flex items-center gap-2">
-              📈 Safety Analytics & Division Punctuality Index
-            </h3>
-            <p class="text-xs text-slate-400 font-mono">Braking Curve Compliance, Section Throughput & Delay Root-Cause Analysis</p>
+      <!-- 5 Executive KPI Cards -->
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-3.5">
+        <div class="p-4 rounded-2xl bg-slate-900 border border-white/10 space-y-1">
+          <p class="text-[10px] text-slate-400 font-bold uppercase">Total Tracked Trains</p>
+          <p class="text-2xl font-black text-white font-mono">${metrics.totalTrains.toLocaleString()}</p>
+          <p class="text-[10px] text-emerald-400 font-semibold">100% Pan-India Active</p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-900 border border-white/10 space-y-1">
+          <p class="text-[10px] text-slate-400 font-bold uppercase">Pan-India On-Time Punctuality</p>
+          <p class="text-2xl font-black text-emerald-400 font-mono">${metrics.onTimePct}%</p>
+          <p class="text-[10px] text-emerald-300 font-semibold">&gt;90.0% Ministry SLA Passed</p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-900 border border-white/10 space-y-1">
+          <p class="text-[10px] text-slate-400 font-bold uppercase">Delayed Trains</p>
+          <p class="text-2xl font-black text-red-400 font-mono">${metrics.delayedCount}</p>
+          <p class="text-[10px] text-slate-400 font-semibold">Requiring AI Intervention</p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-900 border border-white/10 space-y-1">
+          <p class="text-[10px] text-slate-400 font-bold uppercase">Average Network Delay</p>
+          <p class="text-2xl font-black text-amber-400 font-mono">+${metrics.avgDelay}m</p>
+          <p class="text-[10px] text-slate-400 font-semibold">Peak: +${metrics.maxDelay}m</p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-900 border border-white/10 space-y-1 col-span-2 md:col-span-1">
+          <p class="text-[10px] text-slate-400 font-bold uppercase">Kavach SIL-4 Adherence</p>
+          <p class="text-2xl font-black text-cyan-300 font-mono">${metrics.safetyComplianceScore}</p>
+          <p class="text-[10px] text-cyan-400 font-semibold">Zero SPAD Incidents</p>
+        </div>
+      </div>
+
+      <!-- 4 High-Fidelity Charts (2x2 Grid) -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+        <!-- Chart 1: Delay Distribution Histogram -->
+        <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
+          <div class="flex items-center justify-between">
+            <h5 class="text-xs font-black text-[#12355B] font-['Outfit'] flex items-center gap-1.5">
+              <i class="fa-solid fa-chart-column text-blue-600"></i> Pan-India Train Delay Distribution Histogram
+            </h5>
+            <span class="text-[10px] font-mono text-slate-400">Frequency vs Delay Duration</span>
+          </div>
+          <div class="h-56 w-full">
+            <canvas id="analyticsDelayHistogramChart"></canvas>
           </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-          <div class="p-4 rounded-xl bg-slate-900/90 border border-white/10 space-y-2">
-            <p class="text-slate-400 font-bold uppercase text-[10px]">Auto-Brake Intervention Accuracy</p>
-            <p class="text-3xl font-black text-emerald-400 font-mono">99.98%</p>
-            <p class="text-slate-400 text-[11px]">0 False Emergency Braking Interventions</p>
+        <!-- Chart 2: 18 Zones Punctuality Ranking (Horizontal Bar) -->
+        <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
+          <div class="flex items-center justify-between">
+            <h5 class="text-xs font-black text-[#12355B] font-['Outfit'] flex items-center gap-1.5">
+              <i class="fa-solid fa-ranking-star text-amber-600"></i> 18 Railway Zones Punctuality Ranking (% On-Time)
+            </h5>
+            <span class="text-[10px] font-mono text-slate-400">Top Performing Zones</span>
           </div>
-          <div class="p-4 rounded-xl bg-slate-900/90 border border-white/10 space-y-2">
-            <p class="text-slate-400 font-bold uppercase text-[10px]">Division On-Time Punctuality</p>
-            <p class="text-3xl font-black text-blue-400 font-mono">94.2%</p>
-            <p class="text-slate-400 text-[11px]">Target: &gt;90.0% (Passed)</p>
-          </div>
-          <div class="p-4 rounded-xl bg-slate-900/90 border border-white/10 space-y-2">
-            <p class="text-slate-400 font-bold uppercase text-[10px]">Section Line Capacity Throughput</p>
-            <p class="text-3xl font-black text-cyan-300 font-mono">142 Rakes/Day</p>
-            <p class="text-slate-400 text-[11px]">Optimal Track Utilization</p>
+          <div class="h-56 w-full">
+            <canvas id="analyticsZoneRankingChart"></canvas>
           </div>
         </div>
+
+        <!-- Chart 3: Train Type Multi-Metric Performance (Radar) -->
+        <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
+          <div class="flex items-center justify-between">
+            <h5 class="text-xs font-black text-[#12355B] font-['Outfit'] flex items-center gap-1.5">
+              <i class="fa-solid fa-chart-pie text-purple-600"></i> Train Category Multi-Metric Performance Index
+            </h5>
+            <span class="text-[10px] font-mono text-slate-400">Vande Bharat vs Rajdhani vs Express</span>
+          </div>
+          <div class="h-56 w-full">
+            <canvas id="analyticsTypeRadarChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 4: 24-Hour Congestion Pattern -->
+        <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
+          <div class="flex items-center justify-between">
+            <h5 class="text-xs font-black text-[#12355B] font-['Outfit'] flex items-center gap-1.5">
+              <i class="fa-solid fa-clock-rotate-left text-cyan-600"></i> 24-Hour Diurnal Delay & Congestion Heatmap
+            </h5>
+            <span class="text-[10px] font-mono text-slate-400">Incident Peaks by Hour (IST)</span>
+          </div>
+          <div class="h-56 w-full">
+            <canvas id="analyticsHourlyCongestionChart"></canvas>
+          </div>
+        </div>
+
       </div>
     `;
+
+    setTimeout(() => {
+      initAnalyticsNetworkCharts();
+    }, 100);
+  }
+
+  function initAnalyticsNetworkCharts() {
+    if (!window.Chart || !window.AnalyticsEngine) return;
+
+    // Clean up old charts
+    Object.keys(analyticsChartInstances).forEach(k => {
+      if (analyticsChartInstances[k]) {
+        try { analyticsChartInstances[k].destroy(); } catch (e) {}
+      }
+    });
+    analyticsChartInstances = {};
+
+    // 1. Histogram
+    const distData = window.AnalyticsEngine.getDelayDistribution();
+    const ctxHist = document.getElementById("analyticsDelayHistogramChart");
+    if (ctxHist && distData) {
+      analyticsChartInstances.hist = new Chart(ctxHist, {
+        type: "bar",
+        data: {
+          labels: distData.labels,
+          datasets: [{
+            label: "Trains Count",
+            data: distData.data,
+            backgroundColor: distData.colors,
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true, grid: { color: "#f1f5f9" }, ticks: { font: { size: 9, family: "'JetBrains Mono'" } } },
+            x: { grid: { display: false }, ticks: { font: { size: 9, family: "'Plus Jakarta Sans'" } } }
+          }
+        }
+      });
+    }
+
+    // 2. Zone Ranking (Horizontal Bar)
+    const zoneData = window.AnalyticsEngine.getZonePunctualityRanking();
+    const ctxZone = document.getElementById("analyticsZoneRankingChart");
+    if (ctxZone && zoneData) {
+      analyticsChartInstances.zone = new Chart(ctxZone, {
+        type: "bar",
+        data: {
+          labels: zoneData.labels.slice(0, 10),
+          datasets: [{
+            label: "On-Time %",
+            data: zoneData.data.slice(0, 10),
+            backgroundColor: zoneData.data.slice(0, 10).map(p => p >= 94 ? "#10b981" : p >= 90 ? "#3b82f6" : "#f59e0b"),
+            borderRadius: 5
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { min: 80, max: 100, grid: { color: "#f1f5f9" }, ticks: { font: { size: 9, family: "'JetBrains Mono'" } } },
+            y: { grid: { display: false }, ticks: { font: { size: 9, family: "'JetBrains Mono'" } } }
+          }
+        }
+      });
+    }
+
+    // 3. Radar Chart
+    const typeData = window.AnalyticsEngine.getTrainTypePerformance();
+    const ctxRadar = document.getElementById("analyticsTypeRadarChart");
+    if (ctxRadar && typeData) {
+      analyticsChartInstances.radar = new Chart(ctxRadar, {
+        type: "radar",
+        data: typeData,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: "top", labels: { boxWidth: 10, font: { size: 9, family: "'Plus Jakarta Sans'" } } }
+          },
+          scales: {
+            r: {
+              min: 60,
+              max: 100,
+              ticks: { display: false },
+              grid: { color: "#f1f5f9" },
+              pointLabels: { font: { size: 9, family: "'Plus Jakarta Sans'" } }
+            }
+          }
+        }
+      });
+    }
+
+    // 4. Hourly Delay Pattern
+    const hourlyData = window.AnalyticsEngine.getHourlyDelayPattern();
+    const ctxHour = document.getElementById("analyticsHourlyCongestionChart");
+    if (ctxHour && hourlyData) {
+      analyticsChartInstances.hour = new Chart(ctxHour, {
+        type: "bar",
+        data: {
+          labels: hourlyData.labels,
+          datasets: [{
+            label: "Reported Delays",
+            data: hourlyData.data,
+            backgroundColor: hourlyData.data.map(v => v > 70 ? "#dc2626" : v > 40 ? "#f59e0b" : "#3b82f6"),
+            borderRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true, grid: { color: "#f1f5f9" }, ticks: { font: { size: 9, family: "'JetBrains Mono'" } } },
+            x: { grid: { display: false }, ticks: { font: { size: 8, family: "'JetBrains Mono'" } } }
+          }
+        }
+      });
+    }
+  }
+
+  function renderAnalyticsZoneTab(container) {
+    if (!window.AnalyticsEngine) return;
+    const ranking = window.AnalyticsEngine.getZonePunctualityRanking();
+    const zoneMetrics = window.AnalyticsEngine.getZoneMetrics(selectedAnalyticsZone);
+    const z = zoneMetrics.zone;
+
+    container.innerHTML = `
+      <div class="space-y-5">
+
+        <!-- Zone Selector Toolbar -->
+        <div class="glass-card p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3" style="border-radius: 20px !important;">
+          <div class="flex items-center gap-2.5">
+            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-base font-bold">
+              <i class="fa-solid fa-map-location-dot"></i>
+            </div>
+            <div>
+              <h4 class="text-sm font-black text-[#12355B] font-['Outfit']">${z.name} (${z.code})</h4>
+              <p class="text-[11px] text-slate-500">Divisional Telemetry & Real-Time Performance</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <label class="text-xs font-bold text-slate-600">Select Zone:</label>
+            <select onchange="changeAnalyticsZone(this.value)"
+              class="px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 focus:outline-none focus:border-blue-500">
+              ${ranking.zones.map(zn => `<option value="${zn.code}" ${zn.code === selectedAnalyticsZone ? 'selected' : ''}>${zn.code} — ${zn.name}</option>`).join("")}
+            </select>
+          </div>
+        </div>
+
+        <!-- 4 Zone KPIs -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3.5">
+          <div class="p-4 rounded-2xl bg-white border border-slate-200 space-y-1">
+            <p class="text-[10px] text-slate-500 font-bold uppercase">Active Scheduled Rakes</p>
+            <p class="text-2xl font-black text-[#12355B] font-mono">${z.trains}</p>
+            <p class="text-[10px] text-blue-600 font-semibold">Under Zone Supervision</p>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-white border border-slate-200 space-y-1">
+            <p class="text-[10px] text-slate-500 font-bold uppercase">Zone Punctuality Index</p>
+            <p class="text-2xl font-black text-emerald-600 font-mono">${z.onTimePct}%</p>
+            <p class="text-[10px] text-emerald-700 font-semibold">Network Target: 90%</p>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-white border border-slate-200 space-y-1">
+            <p class="text-[10px] text-slate-500 font-bold uppercase">Average Delay in Zone</p>
+            <p class="text-2xl font-black text-amber-600 font-mono">+${z.avgDelay}m</p>
+            <p class="text-[10px] text-slate-400 font-semibold">Per Delayed Rake</p>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-white border border-slate-200 space-y-1">
+            <p class="text-[10px] text-slate-500 font-bold uppercase">Priority Reschedule Queue</p>
+            <p class="text-2xl font-black text-red-600 font-mono">${zoneMetrics.topDelayedTrains.length}</p>
+            <p class="text-[10px] text-red-700 font-semibold">Requiring Controller Action</p>
+          </div>
+        </div>
+
+        <!-- Top Delayed Trains in this Zone -->
+        <div class="glass-card p-5 space-y-3" style="border-radius: 20px !important;">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+            <h4 class="text-xs font-black text-[#12355B] font-['Outfit'] uppercase tracking-wider flex items-center gap-2">
+              <i class="fa-solid fa-triangle-exclamation text-red-600"></i> Top Delayed Trains Operating in ${z.code}
+            </h4>
+            <span class="text-[10px] font-mono text-slate-400">Click any train to open Dedicated Delay Terminal</span>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200 text-[10px] uppercase">
+                  <th class="py-2 px-3">Train #</th>
+                  <th class="py-2 px-3">Train Name</th>
+                  <th class="py-2 px-3">Route Segment</th>
+                  <th class="py-2 px-3">Live Status & Speed</th>
+                  <th class="py-2 px-3">Recorded Delay</th>
+                  <th class="py-2 px-3 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                ${zoneMetrics.topDelayedTrains.map(tr => `
+                  <tr class="hover:bg-slate-50/80 transition-colors cursor-pointer" onclick="openTrainDelayModal('${tr.number}')">
+                    <td class="py-2.5 px-3 font-mono font-black text-blue-700">${tr.number}</td>
+                    <td class="py-2.5 px-3 font-bold text-[#12355B]">${tr.name}</td>
+                    <td class="py-2.5 px-3 font-mono text-slate-600 text-[11px]">${tr.from} ➔ ${tr.to}</td>
+                    <td class="py-2.5 px-3 font-mono text-slate-700 text-[11px]">${tr.speed} km/h • ${tr.state}</td>
+                    <td class="py-2.5 px-3 font-mono font-black text-red-600">+${tr.delayMinutes}m</td>
+                    <td class="py-2.5 px-3 text-right">
+                      <span class="text-blue-600 font-bold text-xs hover:underline">Inspect →</span>
+                    </td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    `;
+  }
+
+  function renderAnalyticsTrainTab(container) {
+    if (!window.LiveTrainEngine) return;
+    const analytics = window.LiveTrainEngine.getTrainDelayAnalytics(selectedAnalyticsTrain);
+
+    container.innerHTML = `
+      <div class="space-y-5">
+
+        <!-- Train Search / Selection Bar -->
+        <div class="glass-card p-4 space-y-3" style="border-radius: 20px !important;">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div>
+              <h4 class="text-xs font-black text-[#12355B] font-['Outfit'] uppercase tracking-wider">
+                <i class="fa-solid fa-train-subway text-blue-600 mr-1"></i> Individual Train Performance & Telemetry Deep Dive
+              </h4>
+              <p class="text-[11px] text-slate-500">Analyze route delay accumulation profile, cyclic punctuality, and deceleration physics</p>
+            </div>
+
+            <div class="flex items-center gap-2 w-full sm:w-auto">
+              <input
+                type="text"
+                id="analyticsTrainSearchInput"
+                value="${selectedAnalyticsTrain}"
+                placeholder="Enter train number (e.g. 12952, 12002)..."
+                onkeydown="if(event.key==='Enter') changeAnalyticsTrain(this.value.trim())"
+                class="px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-mono font-bold text-slate-900 focus:outline-none focus:border-blue-500 w-full sm:w-48"
+              />
+              <button onclick="const val = document.getElementById('analyticsTrainSearchInput').value; changeAnalyticsTrain(val.trim());"
+                class="px-4 py-2 rounded-xl bg-[#12355B] hover:bg-[#1E4877] text-white font-bold text-xs cursor-pointer shrink-0">
+                Load Rake
+              </button>
+            </div>
+          </div>
+        </div>
+
+        ${analytics ? `
+          <!-- Train Identity Header -->
+          <div class="glass-card p-5 border-l-4 space-y-3" style="border-left-color: ${analytics.totalDelay > 15 ? '#dc2626' : '#10b981'} !important; border-radius: 20px !important;">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div>
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="px-3 py-0.5 rounded-full text-xs font-black bg-[#12355B] text-white font-mono">${analytics.trainNumber}</span>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold uppercase bg-slate-100 text-slate-800">${analytics.trainType}</span>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    <i class="fa-solid fa-shield-halved mr-1"></i>SIL-4 SUPERVISED
+                  </span>
+                </div>
+                <h3 class="text-xl font-black text-[#12355B] font-['Outfit'] mt-1">${analytics.trainName}</h3>
+                <p class="text-xs text-slate-500 font-semibold">
+                  ${analytics.status.origin} (${analytics.status.originCode}) ➔ ${analytics.status.destination} (${analytics.status.destinationCode}) &nbsp;•&nbsp; ${analytics.status.totalDistanceKm} KM
+                </p>
+              </div>
+
+              <button onclick="openTrainDelayModal('${analytics.trainNumber}')"
+                class="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center gap-1.5 shadow cursor-pointer transition-all">
+                <i class="fa-solid fa-expand"></i> Open Full Delay Terminal
+              </button>
+            </div>
+
+            <!-- 4 Train KPIs -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2">
+              <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                <p class="text-[10px] text-slate-500 font-bold uppercase">Current Delay</p>
+                <p class="text-xl font-black font-mono ${analytics.totalDelay > 0 ? 'text-red-600' : 'text-emerald-600'}">+${analytics.totalDelay} min</p>
+              </div>
+              <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                <p class="text-[10px] text-slate-500 font-bold uppercase">Punctuality Score</p>
+                <p class="text-xl font-black font-mono text-emerald-600">${analytics.punctualityIndex}%</p>
+              </div>
+              <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                <p class="text-[10px] text-slate-500 font-bold uppercase">Peak Delay Station</p>
+                <p class="text-sm font-black text-[#12355B] truncate">${analytics.maxDelayStation}</p>
+                <p class="text-[10px] text-red-600 font-mono">+${analytics.maxDelay}m peak</p>
+              </div>
+              <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                <p class="text-[10px] text-slate-500 font-bold uppercase">Average Delay / Stop</p>
+                <p class="text-xl font-black font-mono text-amber-600">${analytics.avgDelay} min</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Train Delay Accumulation Chart -->
+          <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
+            <div class="flex items-center justify-between">
+              <h5 class="text-xs font-black text-[#12355B] font-['Outfit'] flex items-center gap-1.5">
+                <i class="fa-solid fa-chart-line text-blue-600"></i> Station-by-Station Delay Curve
+              </h5>
+              <span class="text-[10px] font-mono text-slate-400">Delay Progression</span>
+            </div>
+            <div class="h-56 w-full">
+              <canvas id="analyticsSingleTrainChart"></canvas>
+            </div>
+          </div>
+        ` : `
+          <div class="p-8 text-center bg-white rounded-2xl border border-slate-200">
+            <i class="fa-solid fa-circle-question text-3xl text-amber-500 mb-2"></i>
+            <h5 class="text-sm font-bold text-slate-800">Train Data Not Found</h5>
+            <p class="text-xs text-slate-500 mt-1">Please enter a valid Indian Railways train number (e.g. 12952, 12002, 12419).</p>
+          </div>
+        `}
+
+      </div>
+    `;
+
+    if (analytics) {
+      setTimeout(() => {
+        const ctxTrain = document.getElementById("analyticsSingleTrainChart");
+        if (ctxTrain && window.Chart) {
+          if (analyticsChartInstances.train) {
+            try { analyticsChartInstances.train.destroy(); } catch (e) {}
+          }
+          analyticsChartInstances.train = new Chart(ctxTrain, {
+            type: "line",
+            data: {
+              labels: analytics.labels,
+              datasets: [{
+                label: "Delay (Minutes)",
+                data: analytics.delayPoints,
+                borderColor: "#dc2626",
+                backgroundColor: "rgba(220, 38, 38, 0.08)",
+                fill: true,
+                borderWidth: 2.5,
+                tension: 0.3
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: { legend: { display: false } },
+              scales: {
+                y: { beginAtZero: true, grid: { color: "#f1f5f9" }, ticks: { font: { size: 9, family: "'JetBrains Mono'" } } },
+                x: { grid: { display: false }, ticks: { font: { size: 9, family: "'JetBrains Mono'" } } }
+              }
+            }
+          });
+        }
+      }, 100);
+    }
+  }
+
+  function renderAnalyticsSection(container) {
+    if (window.LiveTrainEngine && isRealDatasetsLoaded) {
+      window.LiveTrainEngine.init(irTrainDatabase, irSchedulesIndex, irStations, irDelayModel);
+    }
+    if (window.AnalyticsEngine) {
+      window.AnalyticsEngine.init(window.LiveTrainEngine);
+    }
+
+    const nowIST = window.LiveTrainEngine ? window.LiveTrainEngine.getISTTime() : new Date();
+    const timeAMPM = window.LiveTrainEngine ? window.LiveTrainEngine.formatAMPM(nowIST) : "";
+
+    container.innerHTML = `
+      <div class="space-y-5">
+
+        <!-- Top Header Banner -->
+        <div class="results-header-banner p-6 text-white space-y-3" style="background: linear-gradient(135deg, #0f172a 0%, #0e7490 100%) !important; border-radius: 24px !important;">
+          <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="px-2.5 py-0.5 rounded-md bg-[#FF9933] text-slate-950 text-[10px] font-black uppercase tracking-wider">
+                  GOVERNMENT OF INDIA • MINISTRY OF RAILWAYS
+                </span>
+                <span class="px-2.5 py-0.5 rounded-md bg-cyan-500/30 text-cyan-200 border border-cyan-400/40 text-[10px] font-black uppercase">
+                  <i class="fa-solid fa-chart-line mr-1"></i> PAN-INDIA INTELLIGENCE HUB
+                </span>
+              </div>
+              <h2 class="text-2xl font-black font-['Outfit'] text-white">
+                📈 Unified Rail Analytics & Network Intelligence Command
+              </h2>
+              <p class="text-xs text-slate-200 max-w-3xl font-medium">
+                Comprehensive data analytics covering 18 railway zones, deceleration physics adherence, headway compliance & rolling timetable health.
+              </p>
+            </div>
+
+            <div class="flex items-center gap-3 shrink-0">
+              <div class="p-3 rounded-2xl bg-white/10 backdrop-blur border border-white/20 text-right">
+                <p class="text-[10px] font-bold text-slate-300 uppercase">Live IST Time</p>
+                <p class="text-lg font-black font-mono text-amber-300">${timeAMPM}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Navigation Bar -->
+        <div class="flex items-center gap-2 p-1.5 rounded-2xl bg-slate-200/80 border border-slate-300/80">
+          <button onclick="switchAnalyticsTab('network')"
+            class="flex-1 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer ${activeAnalyticsTab === 'network' ? 'bg-white text-[#12355B] shadow-md' : 'text-slate-600 hover:text-slate-900'}">
+            <i class="fa-solid fa-network-wired"></i> Pan-India Network Intelligence
+          </button>
+          <button onclick="switchAnalyticsTab('zone')"
+            class="flex-1 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer ${activeAnalyticsTab === 'zone' ? 'bg-white text-[#12355B] shadow-md' : 'text-slate-600 hover:text-slate-900'}">
+            <i class="fa-solid fa-map-location-dot"></i> Zone-Wise Deep Dive
+          </button>
+          <button onclick="switchAnalyticsTab('train')"
+            class="flex-1 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer ${activeAnalyticsTab === 'train' ? 'bg-white text-[#12355B] shadow-md' : 'text-slate-600 hover:text-slate-900'}">
+            <i class="fa-solid fa-train-subway"></i> Train-Wise Performance Index
+          </button>
+        </div>
+
+        <!-- Active Tab Container -->
+        <div id="analyticsActiveTabBody" class="space-y-5">
+          ${activeAnalyticsTab === 'network' ? '<div id="analyticsNetworkContentContainer"></div>' : ''}
+          ${activeAnalyticsTab === 'zone' ? '<div id="analyticsZoneContentContainer"></div>' : ''}
+          ${activeAnalyticsTab === 'train' ? '<div id="analyticsTrainContentContainer"></div>' : ''}
+        </div>
+
+      </div>
+    `;
+
+    // Render active tab content
+    if (activeAnalyticsTab === "network") {
+      const el = document.getElementById("analyticsNetworkContentContainer");
+      if (el) renderAnalyticsNetworkTab(el);
+    } else if (activeAnalyticsTab === "zone") {
+      const el = document.getElementById("analyticsZoneContentContainer");
+      if (el) renderAnalyticsZoneTab(el);
+    } else if (activeAnalyticsTab === "train") {
+      const el = document.getElementById("analyticsTrainContentContainer");
+      if (el) renderAnalyticsTrainTab(el);
+    }
+
+    // Auto-refresh interval (every 15s)
+    if (analyticsAutoRefreshTimer) clearInterval(analyticsAutoRefreshTimer);
+    analyticsAutoRefreshTimer = setInterval(() => {
+      if (activeNavView !== "analytics") {
+        clearInterval(analyticsAutoRefreshTimer);
+        return;
+      }
+      if (activeAnalyticsTab === "network") {
+        const el = document.getElementById("analyticsNetworkContentContainer");
+        if (el) renderAnalyticsNetworkTab(el);
+      }
+    }, 15000);
   }
 
   // VIEW 6: WEATHER RADAR (weather)
