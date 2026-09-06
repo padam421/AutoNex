@@ -567,20 +567,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 3500);
   };
 
-  // Live IST Clock
+  // Live IST Clock (Always in 12-Hour AM/PM format)
   function updateClock() {
     const el = document.getElementById("dashClock");
+    const tickerEl = document.getElementById("tickerClock");
+    const now = new Date();
+    const options = {
+      timeZone: "Asia/Kolkata",
+      hour12: true,
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    };
+    const timeStr = now.toLocaleTimeString("en-IN", options).toUpperCase();
     if (el) {
-      const now = new Date();
-      const options = {
-        timeZone: "Asia/Kolkata",
-        hour12: false,
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-      };
-      const timeStr = now.toLocaleTimeString("en-IN", options);
       el.textContent = `${timeStr} IST`;
+    }
+    if (tickerEl) {
+      tickerEl.textContent = `${timeStr} IST`;
     }
   }
   setInterval(updateClock, 1000);
@@ -775,6 +779,8 @@ document.addEventListener("DOMContentLoaded", () => {
       renderTrainListSection(container);
     } else if (activeNavView === "conflict_alerts") {
       renderConflictAlertsSection(container);
+    } else if (activeNavView === "delay_analytics") {
+      renderDelayAnalyticsSection(container);
     } else if (activeNavView === "rescheduling") {
       renderReschedulingSection(container);
     } else if (activeNavView === "analytics") {
@@ -2998,10 +3004,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
       isRealDatasetsLoaded = true;
 
-      // Re-render current active screen to reflect real data if currently viewing train list or search
+      // Initialize Live Cyclic Train Simulation Engine
+      if (window.LiveTrainEngine) {
+        window.LiveTrainEngine.init(irTrainDatabase, irSchedulesIndex, irStations, irDelayModel);
+      }
+
+      // Re-render current active screen to reflect real data if currently viewing train list or delay analytics
       const container = document.getElementById("activeSubTabContainer");
-      if (container && (activeNavView === "train_list" || activeNavView === "overview")) {
-        renderTrainListSection(container);
+      if (container) {
+        if (activeNavView === "train_list" || activeNavView === "overview") {
+          renderTrainListSection(container);
+        } else if (activeNavView === "delay_analytics") {
+          renderDelayAnalyticsSection(container);
+        }
       }
     } catch (err) {
       console.warn("Error loading real railway datasets:", err);
@@ -3455,8 +3470,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
             ${irTrainDatabase.slice(0, 6).map(tr => {
-              const dCol = tr.delay === 0 ? '#138808' : tr.delay <= 15 ? '#f59e0b' : '#dc2626';
-              const dBg = tr.delay === 0 ? '#f0fdf4' : tr.delay <= 15 ? '#fffbeb' : '#fef2f2';
+              const liveSt = window.LiveTrainEngine ? window.LiveTrainEngine.getTrainStatus(tr.number) : null;
+              const liveDelay = liveSt ? liveSt.delayMinutes : (tr.delay || 0);
+              const dCol = liveDelay === 0 ? '#138808' : liveDelay <= 15 ? '#f59e0b' : '#dc2626';
+              const dBg = liveDelay === 0 ? '#f0fdf4' : liveDelay <= 15 ? '#fffbeb' : '#fef2f2';
+              const delayText = liveDelay === 0 ? '✓ ON TIME' : `+${liveDelay} MIN DELAY`;
               const typeColor = tr.type === 'Vande Bharat' ? '#ea580c' : tr.type === 'Rajdhani' ? '#991b1b' : tr.type === 'Shatabdi' ? '#0284c7' : '#2563eb';
               return `
                 <div onclick="viewTrainDetail('${tr.number}')"
@@ -3466,7 +3484,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
                     <span style="font-size: 11px; font-weight: 800; color: ${typeColor}; font-family: 'JetBrains Mono', monospace;">${tr.number}</span>
                     <span style="padding: 2px 8px; border-radius: 8px; font-size: 9px; font-weight: 800; background: ${dBg}; color: ${dCol}; border: 1px solid ${dCol}30;">
-                      ${tr.delayText}
+                      ${delayText}
                     </span>
                   </div>
                   <h5 style="margin: 0; font-size: 13px; font-weight: 800; color: #12355B; font-family: 'Outfit', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${tr.name}</h5>
@@ -3588,14 +3606,19 @@ document.addEventListener("DOMContentLoaded", () => {
           const toStIdx = stList.findIndex(s => toAliases.includes(s.code));
           const depTime = fromStIdx !== -1 && stList[fromStIdx].dep !== "--" ? stList[fromStIdx].dep : train.depart;
           const arrTime = toStIdx !== -1 && stList[toStIdx].arr !== "--" ? stList[toStIdx].arr : train.arrive;
+          const depTimeAMPM = window.LiveTrainEngine ? window.LiveTrainEngine.formatAMPM(depTime) : depTime;
+          const arrTimeAMPM = window.LiveTrainEngine ? window.LiveTrainEngine.formatAMPM(arrTime) : arrTime;
           const fromStName = fromStIdx !== -1 ? stList[fromStIdx].name : (train.fromName || train.from);
           const toStName = toStIdx !== -1 ? stList[toStIdx].name : (train.toName || train.to);
 
-          const delayColor = train.delay === 0 ? '#138808' : train.delay <= 15 ? '#f59e0b' : '#dc2626';
-          const delayBg = train.delay === 0 ? '#f0fdf4' : train.delay <= 15 ? '#fffbeb' : '#fef2f2';
+          const liveSt = window.LiveTrainEngine ? window.LiveTrainEngine.getTrainStatus(train.number) : null;
+          const liveDelay = liveSt ? liveSt.delayMinutes : (train.delay || 0);
+          const delayColor = liveDelay === 0 ? '#138808' : liveDelay <= 15 ? '#f59e0b' : '#dc2626';
+          const delayBg = liveDelay === 0 ? '#f0fdf4' : liveDelay <= 15 ? '#fffbeb' : '#fef2f2';
+          const delayText = liveDelay === 0 ? '✓ ON TIME' : `+${liveDelay} MIN DELAY`;
 
           return `
-            <div class="glass-card" onclick="viewTrainDetail('${train.number}')" style="padding: 20px 22px; border-radius: 20px !important; cursor: pointer; transition: all 0.2s; border-left: 5px solid ${train.delay === 0 ? '#138808' : train.delay <= 15 ? '#f59e0b' : '#dc2626'} !important; box-shadow: 0 4px 18px rgba(18,53,91,0.06);"
+            <div class="glass-card" onclick="viewTrainDetail('${train.number}')" style="padding: 20px 22px; border-radius: 20px !important; cursor: pointer; transition: all 0.2s; border-left: 5px solid ${delayColor} !important; box-shadow: 0 4px 18px rgba(18,53,91,0.06);"
               onmouseover="this.style.boxShadow='0 8px 30px rgba(18,53,91,0.14)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.boxShadow='0 4px 18px rgba(18,53,91,0.06)'; this.style.transform='translateY(0)'">
 
               <!-- Top: Train Number & Name -->
@@ -3605,15 +3628,15 @@ document.addEventListener("DOMContentLoaded", () => {
                   <h4 style="font-size: 15px; font-weight: 800; color: #12355B; margin: 2px 0 0 0; font-family: 'Outfit', sans-serif;">${train.name}</h4>
                 </div>
                 <div style="display: flex; gap: 6px;">
-                  <span style="padding: 4px 10px; border-radius: 10px; font-size: 10px; font-weight: 800; background: ${delayBg}; color: ${delayColor}; border: 1px solid ${delayColor}30;">${train.delayText}</span>
+                  <span style="padding: 4px 10px; border-radius: 10px; font-size: 10px; font-weight: 800; background: ${delayBg}; color: ${delayColor}; border: 1px solid ${delayColor}30;">${delayText}</span>
                 </div>
               </div>
 
-              <!-- Middle: Timing Row -->
+              <!-- Middle: Timing Row (Always in 12-Hour AM/PM Format) -->
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
                 <!-- Departure -->
                 <div style="text-align: left;">
-                  <p style="font-size: 22px; font-weight: 900; color: #0f172a; margin: 0; font-family: 'Outfit', sans-serif;">${depTime}</p>
+                  <p style="font-size: 20px; font-weight: 900; color: #0f172a; margin: 0; font-family: 'Outfit', sans-serif;">${depTimeAMPM}</p>
                   <p style="font-size: 10px; color: #64748b; font-weight: 600; margin: 2px 0 0 0;">${fromStName.toUpperCase()}</p>
                 </div>
 
@@ -3629,7 +3652,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 <!-- Arrival -->
                 <div style="text-align: right;">
-                  <p style="font-size: 22px; font-weight: 900; color: ${delayColor}; margin: 0; font-family: 'Outfit', sans-serif;">${arrTime}</p>
+                  <p style="font-size: 20px; font-weight: 900; color: ${delayColor}; margin: 0; font-family: 'Outfit', sans-serif;">${arrTimeAMPM}</p>
                   <p style="font-size: 10px; color: #64748b; font-weight: 600; margin: 2px 0 0 0;">${toStName.toUpperCase()}</p>
                 </div>
               </div>
@@ -3645,18 +3668,25 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
               </div>
 
-              <!-- Bottom: Classes & Action -->
-              <div style="display: flex; align-items: center; justify-content: space-between;">
+              <!-- Bottom: Classes & Actions (Delay Analytics + View Details) -->
+              <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
                 <div style="display: flex; gap: 6px;">
                   ${train.classes.map(cls => `
                     <span style="padding: 4px 10px; border-radius: 10px; font-size: 11px; font-weight: 700; color: #12355B; background: #eaf3f8; border: 1px solid #d6e3ec;">${cls}</span>
                   `).join("")}
                 </div>
-                <button onclick="event.stopPropagation(); viewTrainDetail('${train.number}')"
-                  style="padding: 9px 20px; border-radius: 14px; background: white; border: 2px solid #2563eb; color: #2563eb; font-size: 12px; font-weight: 800; cursor: pointer; transition: all 0.2s; font-family: 'Outfit', sans-serif;"
-                  onmouseover="this.style.background='#2563eb'; this.style.color='white'" onmouseout="this.style.background='white'; this.style.color='#2563eb'">
-                  VIEW DETAILS <i class="fa-solid fa-chevron-right" style="margin-left: 4px; font-size: 10px;"></i>
-                </button>
+                <div style="display: flex; gap: 8px;">
+                  <button onclick="event.stopPropagation(); openTrainDelayModal('${train.number}')"
+                    style="padding: 8px 14px; border-radius: 14px; background: #fff7ed; border: 1.5px solid #ea580c; color: #c2410c; font-size: 11px; font-weight: 800; cursor: pointer; transition: all 0.2s; font-family: 'Outfit', sans-serif; display: inline-flex; align-items: center; gap: 5px;"
+                    onmouseover="this.style.background='#ffedd5'" onmouseout="this.style.background='#fff7ed'">
+                    <i class="fa-solid fa-chart-line" style="color: #ea580c;"></i> DELAY ANALYTICS
+                  </button>
+                  <button onclick="event.stopPropagation(); viewTrainDetail('${train.number}')"
+                    style="padding: 8px 18px; border-radius: 14px; background: white; border: 2px solid #2563eb; color: #2563eb; font-size: 12px; font-weight: 800; cursor: pointer; transition: all 0.2s; font-family: 'Outfit', sans-serif;"
+                    onmouseover="this.style.background='#2563eb'; this.style.color='white'" onmouseout="this.style.background='white'; this.style.color='#2563eb'">
+                    VIEW DETAILS <i class="fa-solid fa-chevron-right" style="margin-left: 4px; font-size: 10px;"></i>
+                  </button>
+                </div>
               </div>
             </div>
           `;
@@ -4061,6 +4091,11 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
 
           <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+            <button onclick="openTrainDelayModal('${t.number}')"
+              style="display: inline-flex; align-items: center; gap: 5px; padding: 8px 14px; border-radius: 14px; background: #fff7ed; border: 1.5px solid #ea580c; color: #c2410c; font-size: 11px; font-weight: 800; cursor: pointer; transition: all 0.2s;"
+              onmouseover="this.style.background='#ffedd5'" onmouseout="this.style.background='#fff7ed'">
+              <i class="fa-solid fa-chart-line" style="color: #ea580c;"></i> Delay Analytics
+            </button>
             <button onclick="switchNavView('live_map')"
               style="display: inline-flex; align-items: center; gap: 5px; padding: 8px 14px; border-radius: 14px; background: #12355B; color: white; font-size: 11px; font-weight: 800; cursor: pointer; border: none; transition: all 0.2s;">
               <i class="fa-solid fa-map-location-dot" style="color: #FF9933;"></i> GIS Map
@@ -4480,7 +4515,7 @@ document.addEventListener("DOMContentLoaded", () => {
                           ${isCurrentNext ? '<span style="font-size: 8px; font-weight: 800; color: #1e40af; background: #dbeafe; padding: 2px 6px; border-radius: 8px;">NEXT STOP</span>' : ''}
                         </div>
                         <p style="margin: 1px 0 0 0; font-size: 10px; color: #64748b; font-weight: 600;">
-                          PF #${st.pf || (idx + 1)} &nbsp;•&nbsp; Arr: <span style="color: #0f172a; font-family: 'JetBrains Mono', monospace; font-weight: 700;">${st.arr}</span> &nbsp;•&nbsp; Dep: <span style="color: #0f172a; font-family: 'JetBrains Mono', monospace; font-weight: 700;">${st.dep}</span>
+                          PF #${st.pf || (idx + 1)} &nbsp;•&nbsp; Arr: <span style="color: #0f172a; font-family: 'JetBrains Mono', monospace; font-weight: 700;">${window.LiveTrainEngine ? window.LiveTrainEngine.formatAMPM(st.arr) : st.arr}</span> &nbsp;•&nbsp; Dep: <span style="color: #0f172a; font-family: 'JetBrains Mono', monospace; font-weight: 700;">${window.LiveTrainEngine ? window.LiveTrainEngine.formatAMPM(st.dep) : st.dep}</span>
                         </p>
                       </div>
 
@@ -4825,6 +4860,907 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
   }
+
+  // =========================================================================
+  // VIEW: AI DELAY MANAGEMENT & REAL-TIME PREDICTIVE ANALYTICS (delay_analytics)
+  // =========================================================================
+  let delayGridSearchQuery = "";
+  let delayGridSeverityFilter = "all";
+  let stationDelaySearchFrom = "NDLS";
+  let stationDelaySearchTo = "MMCT";
+  let activeDelayModalTrain = null;
+  let delayModalChartInstances = {};
+
+  window.setDelaySeverityFilter = function (sev) {
+    delayGridSeverityFilter = sev;
+    renderDelayedTrainsGrid();
+  };
+
+  window.filterDelayedGrid = function (query) {
+    delayGridSearchQuery = (query || "").trim().toLowerCase();
+    renderDelayedTrainsGrid();
+  };
+
+  window.swapDelaySearchStations = function () {
+    const tmp = stationDelaySearchFrom;
+    stationDelaySearchFrom = stationDelaySearchTo;
+    stationDelaySearchTo = tmp;
+    const fromEl = document.getElementById("stationDelayFromInput");
+    const toEl = document.getElementById("stationDelayToInput");
+    if (fromEl) fromEl.value = stationDelaySearchFrom;
+    if (toEl) toEl.value = stationDelaySearchTo;
+    executeStationDelaySearch();
+  };
+
+  window.executeStationDelaySearch = function () {
+    const fromEl = document.getElementById("stationDelayFromInput");
+    const toEl = document.getElementById("stationDelayToInput");
+    if (fromEl) stationDelaySearchFrom = fromEl.value.trim().toUpperCase();
+    if (toEl) stationDelaySearchTo = toEl.value.trim().toUpperCase();
+
+    const resultsContainer = document.getElementById("stationDelaySearchResultsContainer");
+    if (!resultsContainer) return;
+
+    if (!window.LiveTrainEngine) {
+      resultsContainer.innerHTML = `<p class="text-xs text-slate-500">Initializing simulation engine...</p>`;
+      return;
+    }
+
+    const matches = window.LiveTrainEngine.searchDelayedTrainsBetween(stationDelaySearchFrom, stationDelaySearchTo);
+
+    if (matches.length === 0) {
+      resultsContainer.innerHTML = `
+        <div class="p-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-center space-y-2">
+          <div class="w-10 h-10 mx-auto rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-lg">
+            <i class="fa-solid fa-circle-check"></i>
+          </div>
+          <h5 class="text-sm font-black text-emerald-800 font-['Outfit']">Corridor Clear & Punctual</h5>
+          <p class="text-xs text-emerald-700 font-medium">
+            All active trains between <strong>${stationDelaySearchFrom}</strong> and <strong>${stationDelaySearchTo}</strong> are operating ON TIME with 0 reported delays.
+          </p>
+        </div>
+      `;
+      return;
+    }
+
+    resultsContainer.innerHTML = `
+      <div class="space-y-3">
+        <div class="flex items-center justify-between text-xs font-bold text-slate-600 px-1">
+          <span>Found ${matches.length} Delayed Trains on Corridor</span>
+          <span class="text-red-600">${stationDelaySearchFrom} ➔ ${stationDelaySearchTo}</span>
+        </div>
+        ${matches.map(tr => `
+          <div onclick="openTrainDelayModal('${tr.number}')"
+            class="p-3.5 rounded-xl bg-white border border-red-200 hover:border-red-400 shadow-sm hover:shadow-md transition-all cursor-pointer space-y-2 border-l-4 border-l-red-500">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="text-[10px] font-extrabold font-mono text-blue-600">${tr.number}</span>
+                <h5 class="text-xs font-black text-[#12355B] font-['Outfit']">${tr.name}</h5>
+              </div>
+              <span class="px-2 py-0.5 rounded-lg text-[10px] font-black bg-red-50 text-red-600 border border-red-200">
+                +${tr.delayMinutes} MIN DELAY
+              </span>
+            </div>
+
+            <div class="flex items-center justify-between text-[11px] text-slate-600">
+              <span>Dep: <strong>${tr.departureAMPM}</strong></span>
+              <span>Arr: <strong class="text-red-600">${tr.arrivalAMPM}</strong></span>
+            </div>
+
+            <div class="p-2 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-between text-[10px] font-mono">
+              <span class="text-slate-500 truncate"><i class="fa-solid fa-location-dot text-red-500 mr-1"></i>${tr.liveStatusText}</span>
+              <span class="text-blue-600 font-bold ml-2">Inspect →</span>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    `;
+  };
+
+  function renderDelayedTrainsGrid() {
+    const gridEl = document.getElementById("delayedTrainsGridContainer");
+    if (!gridEl) return;
+
+    if (!window.LiveTrainEngine) {
+      gridEl.innerHTML = `<div class="p-8 text-center text-slate-400">Loading live train engine...</div>`;
+      return;
+    }
+
+    let delayedTrains = window.LiveTrainEngine.getDelayedTrainsGrid({ minDelay: 1, limit: 120 });
+
+    // Apply search query
+    if (delayGridSearchQuery) {
+      delayedTrains = delayedTrains.filter(t =>
+        t.number.toLowerCase().includes(delayGridSearchQuery) ||
+        t.name.toLowerCase().includes(delayGridSearchQuery) ||
+        (t.from && t.from.toLowerCase().includes(delayGridSearchQuery)) ||
+        (t.to && t.to.toLowerCase().includes(delayGridSearchQuery)) ||
+        (t.currentStation && t.currentStation.toLowerCase().includes(delayGridSearchQuery))
+      );
+    }
+
+    // Apply severity filter
+    if (delayGridSeverityFilter === "major") {
+      delayedTrains = delayedTrains.filter(t => t.delayMinutes > 30);
+    } else if (delayGridSeverityFilter === "moderate") {
+      delayedTrains = delayedTrains.filter(t => t.delayMinutes >= 15 && t.delayMinutes <= 30);
+    } else if (delayGridSeverityFilter === "minor") {
+      delayedTrains = delayedTrains.filter(t => t.delayMinutes < 15);
+    }
+
+    if (delayedTrains.length === 0) {
+      gridEl.innerHTML = `
+        <div class="col-span-full p-8 text-center bg-white rounded-2xl border border-slate-200">
+          <i class="fa-solid fa-train text-3xl text-emerald-500 mb-2"></i>
+          <h5 class="text-sm font-bold text-slate-800">No Trains Found</h5>
+          <p class="text-xs text-slate-500 mt-1">No delayed trains matching the selected filter criteria.</p>
+        </div>
+      `;
+      return;
+    }
+
+    gridEl.innerHTML = delayedTrains.map(tr => {
+      const typeColor = tr.type === 'Vande Bharat' ? '#ea580c' : tr.type === 'Rajdhani' ? '#dc2626' : tr.type === 'Shatabdi' ? '#0284c7' : '#2563eb';
+      const delayBadgeCol = tr.delayMinutes > 30 ? '#dc2626' : tr.delayMinutes > 15 ? '#ea580c' : '#d97706';
+      const delayBadgeBg = tr.delayMinutes > 30 ? '#fef2f2' : tr.delayMinutes > 15 ? '#fff7ed' : '#fffbeb';
+      const speedStatusText = tr.speed === 0 ? 'Halted at Station' : tr.speed <= 20 ? 'Approach Decel (~15 km/h)' : `Cruising (${tr.speed} km/h)`;
+      const speedStatusColor = tr.speed === 0 ? '#64748b' : tr.speed <= 20 ? '#d97706' : '#16a34a';
+
+      return `
+        <div onclick="openTrainDelayModal('${tr.number}')"
+          class="glass-card hover:shadow-xl transition-all duration-200 cursor-pointer p-4 space-y-3 relative group border-l-4"
+          style="border-left-color: ${delayBadgeCol} !important; border-radius: 18px !important;">
+
+          <!-- Top Row: Train Number & Name -->
+          <div class="flex items-start justify-between gap-2">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-black font-mono" style="color: ${typeColor};">${tr.number}</span>
+                <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-slate-100 text-slate-700">${tr.type || 'Express'}</span>
+              </div>
+              <h5 class="text-sm font-black text-[#12355B] font-['Outfit'] mt-0.5 line-clamp-1 group-hover:text-blue-600 transition-colors">${tr.name}</h5>
+            </div>
+
+            <!-- Delay Pill -->
+            <span class="px-2.5 py-1 rounded-xl text-xs font-black shrink-0 border"
+              style="background-color: ${delayBadgeBg}; color: ${delayBadgeCol}; border-color: ${delayBadgeCol}40;">
+              +${tr.delayMinutes} MIN
+            </span>
+          </div>
+
+          <!-- Route & Timings in 12-Hour AM/PM Format -->
+          <div class="flex items-center justify-between text-xs py-1 border-y border-slate-100">
+            <div>
+              <p class="text-[10px] text-slate-600 font-semibold uppercase">${tr.from || 'Origin'}</p>
+              <p class="font-extrabold text-[#12355B] font-['Outfit']">${tr.departureAMPM}</p>
+            </div>
+            <div class="text-center px-2">
+              <i class="fa-solid fa-arrow-right text-slate-300 text-xs"></i>
+            </div>
+            <div class="text-right">
+              <p class="text-[10px] text-slate-600 font-semibold uppercase">${tr.to || 'Dest'}</p>
+              <p class="font-extrabold text-red-600 font-['Outfit']">${tr.arrivalAMPM}</p>
+            </div>
+          </div>
+
+          <!-- Live Physics Status & Next Station -->
+          <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 space-y-1.5 text-[11px]">
+            <div class="flex items-center justify-between">
+              <span class="text-slate-500 font-medium">Live Telemetry:</span>
+              <span class="font-bold flex items-center gap-1" style="color: ${speedStatusColor};">
+                <i class="fa-solid ${tr.speed === 0 ? 'fa-pause' : 'fa-gauge-high'} text-[10px]"></i>
+                ${speedStatusText}
+              </span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-slate-500 font-medium">Next Stop:</span>
+              <span class="font-bold text-[#12355B]">${tr.nextStation || tr.to}</span>
+            </div>
+          </div>
+
+          <!-- Action Footer -->
+          <div class="flex items-center justify-between pt-1">
+            <span class="text-[10px] text-emerald-700 font-extrabold flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span> KAVACH ARMED
+            </span>
+            <span class="text-xs font-extrabold text-blue-600 group-hover:translate-x-1 transition-transform flex items-center gap-1">
+              Inspect Analytics <i class="fa-solid fa-chevron-right text-[9px]"></i>
+            </span>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function renderDelayAnalyticsSection(container) {
+    if (window.LiveTrainEngine && isRealDatasetsLoaded) {
+      window.LiveTrainEngine.init(irTrainDatabase, irSchedulesIndex, irStations, irDelayModel);
+    }
+
+    const allDelayed = window.LiveTrainEngine ? window.LiveTrainEngine.getDelayedTrainsGrid({ minDelay: 1, limit: 500, all: true }) : [];
+    const delayedCount = allDelayed.length;
+    const avgDelay = delayedCount > 0 ? (allDelayed.reduce((acc, cur) => acc + cur.delayMinutes, 0) / delayedCount).toFixed(1) : "0.0";
+    const maxDelay = delayedCount > 0 ? Math.max(...allDelayed.map(t => t.delayMinutes)) : 0;
+    const nowIST = window.LiveTrainEngine ? window.LiveTrainEngine.getISTTime() : new Date();
+    const timeAMPM = window.LiveTrainEngine ? window.LiveTrainEngine.formatAMPM(nowIST) : "";
+
+    container.innerHTML = `
+      <div class="space-y-5">
+
+        <!-- Top Ministry Banner & Network Telemetry Status -->
+        <div class="results-header-banner p-6 text-white space-y-3" style="background: linear-gradient(135deg, #12355B 0%, #1E4877 100%) !important; border-radius: 24px !important;">
+          <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="px-2.5 py-0.5 rounded-md bg-[#FF9933] text-slate-950 text-[10px] font-black uppercase tracking-wider">
+                  GOVERNMENT OF INDIA • MINISTRY OF RAILWAYS
+                </span>
+                <span class="px-2.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[10px] font-black uppercase">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-ping mr-1"></span> LIVE IST SIMULATION
+                </span>
+              </div>
+              <h2 class="text-2xl font-black font-['Outfit'] text-white">
+                🚂 Network Delay Management & Predictive Analytics Command
+              </h2>
+              <p class="text-xs text-slate-200 max-w-3xl font-medium">
+                Autonomous real-time tracking of train punctuality across all 18 railway zones. Deceleration physics, station approach profiling & algorithmic delay recovery models.
+              </p>
+            </div>
+
+            <div class="flex items-center gap-3 shrink-0">
+              <div class="p-3 rounded-2xl bg-white/10 backdrop-blur border border-white/20 text-right">
+                <p class="text-[10px] font-bold text-slate-300 uppercase">Live IST Time</p>
+                <p class="text-lg font-black font-mono text-amber-300">${timeAMPM}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4 Executive KPI Cards -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2">
+            <div class="p-3.5 rounded-xl bg-white/10 backdrop-blur border border-white/15">
+              <p class="text-[10px] font-bold text-slate-300 uppercase">Total Schedules Active</p>
+              <p class="text-2xl font-black font-mono text-white mt-0.5">2,878</p>
+              <p class="text-[10px] text-emerald-300 font-semibold mt-1">100% Pan-India Database</p>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-white/10 backdrop-blur border border-white/15">
+              <p class="text-[10px] font-bold text-slate-300 uppercase">Currently Delayed Trains</p>
+              <p class="text-2xl font-black font-mono text-red-300 mt-0.5">${delayedCount}</p>
+              <p class="text-[10px] text-slate-200 font-semibold mt-1">Requiring AI Intervention</p>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-white/10 backdrop-blur border border-white/15">
+              <p class="text-[10px] font-bold text-slate-300 uppercase">Average Network Delay</p>
+              <p class="text-2xl font-black font-mono text-amber-300 mt-0.5">+${avgDelay} <span class="text-xs font-bold text-slate-300">min</span></p>
+              <p class="text-[10px] text-slate-200 font-semibold mt-1">Max Delay: +${maxDelay}m</p>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-white/10 backdrop-blur border border-white/15">
+              <p class="text-[10px] font-bold text-slate-300 uppercase">Network Punctuality Index</p>
+              <p class="text-2xl font-black font-mono text-emerald-400 mt-0.5">91.8%</p>
+              <p class="text-[10px] text-emerald-200 font-semibold mt-1">Above Ministry 90% SLA</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main 2-Column Responsive Workspace -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+
+          <!-- LEFT COLUMN (7 Cols): Grid of All Delayed Trains -->
+          <div class="lg:col-span-7 space-y-4">
+
+            <!-- Filter & Search Toolbar -->
+            <div class="glass-card p-4 space-y-3" style="border-radius: 20px !important;">
+              <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+                <div class="relative flex-1">
+                  <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-xs"></i>
+                  <input
+                    type="text"
+                    id="delayedTrainSearchInput"
+                    placeholder="Search train #, name, or station (e.g. 12952, Rajdhani, NDLS)..."
+                    oninput="filterDelayedGrid(this.value)"
+                    class="w-full pl-9 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  />
+                </div>
+
+                <!-- Severity Filter Buttons -->
+                <div class="flex items-center gap-1.5 shrink-0 text-xs font-bold">
+                  <button onclick="setDelaySeverityFilter('all')" class="px-3 py-2 rounded-xl bg-blue-600 text-white shadow-sm hover:bg-blue-700 cursor-pointer">
+                    All (${delayedCount})
+                  </button>
+                  <button onclick="setDelaySeverityFilter('major')" class="px-3 py-2 rounded-xl bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 cursor-pointer">
+                    &gt;30m
+                  </button>
+                  <button onclick="setDelaySeverityFilter('moderate')" class="px-3 py-2 rounded-xl bg-amber-50 text-amber-600 border border-amber-200 hover:bg-amber-100 cursor-pointer">
+                    15-30m
+                  </button>
+                  <button onclick="setDelaySeverityFilter('minor')" class="px-3 py-2 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-200 hover:bg-emerald-100 cursor-pointer">
+                    &lt;15m
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Delayed Trains Cards Grid Container -->
+            <div id="delayedTrainsGridContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3.5 max-h-[750px] overflow-y-auto pr-1">
+              <!-- Rendered via renderDelayedTrainsGrid() -->
+            </div>
+
+          </div>
+
+          <!-- RIGHT COLUMN (5 Cols): Station-to-Station Corridor Search -->
+          <div class="lg:col-span-5 space-y-4">
+
+            <div class="glass-card p-5 space-y-4" style="border-radius: 22px !important; border-top: 5px solid #FF9933 !important;">
+              <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-9 h-9 rounded-xl bg-orange-50 text-[#FF9933] border border-orange-200 flex items-center justify-center text-sm font-bold">
+                    <i class="fa-solid fa-route"></i>
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-black text-[#12355B] font-['Outfit']">Corridor Delay Search</h4>
+                    <p class="text-[11px] text-slate-500 font-medium">Station-to-station delay detection</p>
+                  </div>
+                </div>
+                <span class="px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 text-[10px] font-extrabold uppercase border border-blue-200">
+                  Exact Match
+                </span>
+              </div>
+
+              <!-- Form: From & To -->
+              <div class="space-y-3">
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">
+                    <i class="fa-solid fa-location-dot text-blue-600 mr-1"></i> Origin / From Station
+                  </label>
+                  <input
+                    type="text"
+                    id="stationDelayFromInput"
+                    value="${stationDelaySearchFrom}"
+                    placeholder="Enter station code (e.g. NDLS, MMCT, HWH)"
+                    class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold font-mono text-slate-900 focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+
+                <!-- Swap Button -->
+                <div class="flex justify-center -my-1">
+                  <button onclick="swapDelaySearchStations()"
+                    class="w-8 h-8 rounded-full bg-white border border-slate-300 text-slate-600 hover:text-blue-600 hover:border-blue-500 shadow-sm flex items-center justify-center text-xs transition-all cursor-pointer">
+                    <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                  </button>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">
+                    <i class="fa-solid fa-location-arrow text-red-600 mr-1"></i> Destination / To Station
+                  </label>
+                  <input
+                    type="text"
+                    id="stationDelayToInput"
+                    value="${stationDelaySearchTo}"
+                    placeholder="Enter station code (e.g. MMCT, NDLS, PUNE)"
+                    class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold font-mono text-slate-900 focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+
+                <button onclick="executeStationDelaySearch()"
+                  class="w-full py-2.5 rounded-xl bg-[#12355B] hover:bg-[#1E4877] text-white font-extrabold text-xs flex items-center justify-center gap-2 shadow-md cursor-pointer transition-all">
+                  <i class="fa-solid fa-magnifying-glass text-[#FF9933]"></i>
+                  Find Delayed Trains on Route
+                </button>
+              </div>
+
+              <!-- Corridor Results Container -->
+              <div id="stationDelaySearchResultsContainer" class="pt-2">
+                <!-- Initial auto-search triggered below -->
+              </div>
+            </div>
+
+            <!-- Quick Help / Information Card -->
+            <div class="glass-card p-4 space-y-2 bg-gradient-to-br from-blue-50/50 to-indigo-50/50" style="border-radius: 20px !important;">
+              <h5 class="text-xs font-black text-[#12355B] font-['Outfit'] flex items-center gap-1.5">
+                <i class="fa-solid fa-shield-halved text-blue-600"></i> Indian Railways Dynamic Delay Engine
+              </h5>
+              <p class="text-[11px] text-slate-600 leading-relaxed">
+                Click any train in either list to view its <strong>Dedicated Delay Dashboard</strong> with full Chart.js visualizations, approach deceleration profiling (~15 km/h near platforms), and 30-day cyclic schedule history.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    `;
+
+    // Render left delayed grid
+    renderDelayedTrainsGrid();
+    // Run initial search for NDLS -> MMCT
+    executeStationDelaySearch();
+  }
+
+  // =========================================================================
+  // DEDICATED TRAIN DELAY DASHBOARD MODAL WITH CHART.JS & CYCLIC SCHEDULES
+  // =========================================================================
+  window.closeTrainDelayModal = function () {
+    const modal = document.getElementById("trainDelayDetailModal");
+    if (modal) modal.classList.add("hidden");
+
+    // Clean up chart instances to avoid memory leaks
+    Object.keys(delayModalChartInstances).forEach(k => {
+      if (delayModalChartInstances[k]) {
+        try { delayModalChartInstances[k].destroy(); } catch (e) {}
+      }
+    });
+    delayModalChartInstances = {};
+  };
+
+  window.openTrainDelayModal = function (trainNumber) {
+    if (!window.LiveTrainEngine) {
+      showToast("Simulation engine initializing...", "info");
+      return;
+    }
+
+    const analytics = window.LiveTrainEngine.getTrainDelayAnalytics(trainNumber);
+    if (!analytics) {
+      showToast(`Train #${trainNumber} schedule data unavailable.`, "warning");
+      return;
+    }
+
+    let modal = document.getElementById("trainDelayDetailModal");
+    if (!modal) {
+      modal = document.createElement("div");
+      modal.id = "trainDelayDetailModal";
+      modal.className = "fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-3 sm:p-5 overflow-y-auto";
+      document.body.appendChild(modal);
+    }
+
+    const st = analytics.status;
+    const cyclicRuns = window.LiveTrainEngine.getCyclicRollingSchedule(trainNumber, 15);
+    const delayCol = st.delayMinutes > 30 ? '#dc2626' : st.delayMinutes > 15 ? '#ea580c' : st.delayMinutes > 0 ? '#d97706' : '#166534';
+    const delayBg = st.delayMinutes > 30 ? '#fef2f2' : st.delayMinutes > 15 ? '#fff7ed' : st.delayMinutes > 0 ? '#fffbeb' : '#f0fdf4';
+
+    modal.innerHTML = `
+      <div class="glass-card max-w-5xl w-full max-h-[92vh] overflow-y-auto p-5 sm:p-7 space-y-6 shadow-2xl relative border-t-8"
+        style="border-top-color: ${delayCol} !important; border-radius: 24px !important; background: #ffffff !important;">
+
+        <!-- Close Button -->
+        <button onclick="closeTrainDelayModal()"
+          class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center text-sm transition-all cursor-pointer">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <!-- Top Header & Train Identity -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
+          <div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="px-3 py-0.5 rounded-full text-xs font-black bg-[#12355B] text-white font-mono">${st.trainNumber}</span>
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold uppercase bg-slate-100 text-slate-800">${st.trainType}</span>
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                <i class="fa-solid fa-shield-halved mr-1"></i>KAVACH 4.0 SIL-4
+              </span>
+            </div>
+            <h3 class="text-2xl font-black text-[#12355B] font-['Outfit'] mt-1">${st.trainName}</h3>
+            <p class="text-xs text-slate-500 font-semibold">
+              <i class="fa-solid fa-route text-blue-600 mr-1"></i>
+              ${st.origin} (${st.originCode}) ➔ ${st.destination} (${st.destinationCode}) &nbsp;•&nbsp; ${st.totalDistanceKm} KM Corridor
+            </p>
+          </div>
+
+          <!-- Current Live Delay Pill -->
+          <div class="text-right p-3 rounded-2xl border" style="background: ${delayBg}; border-color: ${delayCol}40;">
+            <p class="text-[10px] font-black uppercase text-slate-500">Live Calculated Delay</p>
+            <p class="text-2xl font-black font-['Outfit']" style="color: ${delayCol};">${st.delayText}</p>
+            <p class="text-[10px] font-mono text-slate-500">${st.liveStatusText}</p>
+          </div>
+        </div>
+
+        <!-- 5 Key Delay Telemetry Metric Cards -->
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3 text-xs">
+          <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+            <p class="text-[10px] font-bold text-slate-500 uppercase">Current Delay</p>
+            <p class="text-xl font-black font-mono" style="color: ${delayCol};">+${st.delayMinutes} min</p>
+            <p class="text-[10px] text-slate-400">At active block</p>
+          </div>
+
+          <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+            <p class="text-[10px] font-bold text-slate-500 uppercase">Max Delay Station</p>
+            <p class="text-sm font-black text-[#12355B] font-['Outfit'] truncate">${analytics.maxDelayStation}</p>
+            <p class="text-[10px] text-red-600 font-mono font-bold">+${analytics.maxDelay} min peak</p>
+          </div>
+
+          <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+            <p class="text-[10px] font-bold text-slate-500 uppercase">Average Delay</p>
+            <p class="text-xl font-black font-mono text-amber-600">${analytics.avgDelay} min</p>
+            <p class="text-[10px] text-slate-400">Per commercial stop</p>
+          </div>
+
+          <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+            <p class="text-[10px] font-bold text-slate-500 uppercase">Punctuality Score</p>
+            <p class="text-xl font-black font-mono text-emerald-600">${analytics.punctualityIndex}%</p>
+            <p class="text-[10px] text-emerald-700 font-semibold">Reliability Index</p>
+          </div>
+
+          <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1 col-span-2 md:col-span-1">
+            <p class="text-[10px] font-bold text-slate-500 uppercase">Predicted Arrival</p>
+            <p class="text-sm font-black text-[#12355B] font-mono">${st.arrivalTimeAMPM}</p>
+            <p class="text-[10px] text-slate-500">Orig: ${st.scheduledArrivalAMPM}</p>
+          </div>
+        </div>
+
+        <!-- 4 GRAPHICAL CHARTS (GRID 2x2) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+          <!-- Chart 1: Delay Accumulation Curve (Line Chart) -->
+          <div class="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
+            <div class="flex items-center justify-between">
+              <h5 class="text-xs font-black text-[#12355B] font-['Outfit'] flex items-center gap-1.5">
+                <i class="fa-solid fa-chart-line text-blue-600"></i> Station Delay Accumulation Curve
+              </h5>
+              <span class="text-[10px] font-mono text-slate-400">Delay (Min) vs Station</span>
+            </div>
+            <div class="h-48 w-full">
+              <canvas id="modalDelayLineChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Chart 2: Route Speed Profile (Area Chart) -->
+          <div class="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
+            <div class="flex items-center justify-between">
+              <h5 class="text-xs font-black text-[#12355B] font-['Outfit'] flex items-center gap-1.5">
+                <i class="fa-solid fa-gauge-high text-emerald-600"></i> Route Speed Profile & Approach Physics
+              </h5>
+              <span class="text-[10px] font-mono text-slate-400">MPS vs Approach (~15 km/h)</span>
+            </div>
+            <div class="h-48 w-full">
+              <canvas id="modalSpeedProfileChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Chart 3: Station Delay Breakdown (Bar Chart) -->
+          <div class="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
+            <div class="flex items-center justify-between">
+              <h5 class="text-xs font-black text-[#12355B] font-['Outfit'] flex items-center gap-1.5">
+                <i class="fa-solid fa-chart-column text-amber-600"></i> Station-wise Delay Breakdown
+              </h5>
+              <span class="text-[10px] font-mono text-slate-400">Exact Stop Delays</span>
+            </div>
+            <div class="h-48 w-full">
+              <canvas id="modalStationBarChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Chart 4: Root Cause Breakdown (Doughnut Chart) -->
+          <div class="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
+            <div class="flex items-center justify-between">
+              <h5 class="text-xs font-black text-[#12355B] font-['Outfit'] flex items-center gap-1.5">
+                <i class="fa-solid fa-chart-pie text-purple-600"></i> Delay Root-Cause Attribution
+              </h5>
+              <span class="text-[10px] font-mono text-slate-400">Algorithmic Factors</span>
+            </div>
+            <div class="h-48 w-full">
+              <canvas id="modalCausePieChart"></canvas>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 30-DAY CYCLIC ROLLING SCHEDULE TABLE -->
+        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <h5 class="text-xs font-black text-[#12355B] font-['Outfit'] flex items-center gap-1.5">
+                <i class="fa-solid fa-arrows-spin text-blue-600"></i> 30-Day Rolling Cyclic Operational Schedule
+              </h5>
+              <p class="text-[10px] text-slate-500">Past completed runs, today's active live run & future scheduled departures</p>
+            </div>
+            <span class="px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 text-[10px] font-bold">
+              Cyclic Repeat Active
+            </span>
+          </div>
+
+          <div class="overflow-x-auto max-h-48 border border-slate-200 rounded-xl bg-white">
+            <table class="w-full text-[11px] text-left">
+              <thead class="bg-slate-100 text-slate-700 font-bold sticky top-0 border-b border-slate-200">
+                <tr>
+                  <th class="p-2.5">Date & Day</th>
+                  <th class="p-2.5">Run Status</th>
+                  <th class="p-2.5">Scheduled Dep</th>
+                  <th class="p-2.5">Scheduled Arr</th>
+                  <th class="p-2.5">Recorded Delay</th>
+                  <th class="p-2.5">Position / Status Note</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                ${cyclicRuns.map(run => `
+                  <tr class="${run.isToday ? 'bg-blue-50/70 font-bold' : 'hover:bg-slate-50'}">
+                    <td class="p-2.5 font-mono ${run.isToday ? 'text-blue-700 font-black' : 'text-slate-700'}">
+                      ${run.dateFormatted} ${run.isToday ? '★ TODAY' : ''}
+                    </td>
+                    <td class="p-2.5">
+                      <span class="px-2 py-0.5 rounded-md text-[9px] font-black uppercase"
+                        style="background: ${run.liveStatusBg}; color: ${run.liveStatusColor};">
+                        ${run.status}
+                      </span>
+                    </td>
+                    <td class="p-2.5 font-mono">${run.departureAMPM}</td>
+                    <td class="p-2.5 font-mono">${run.arrivalAMPM}</td>
+                    <td class="p-2.5 font-mono font-bold ${run.delayMinutes > 0 ? 'text-red-600' : 'text-emerald-600'}">
+                      ${run.delayText}
+                    </td>
+                    <td class="p-2.5 text-[10px] text-slate-500">${run.liveStatusText}</td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- FULL STATION-BY-STATION TIMETABLE WITH AM/PM FORMAT -->
+        <div class="p-4 rounded-2xl bg-white border border-slate-200 space-y-3 shadow-sm">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+            <h5 class="text-xs font-black text-[#12355B] font-['Outfit'] flex items-center gap-1.5">
+              <i class="fa-solid fa-list-ol text-blue-600"></i> Route Timetable & Exact Delays per Station (12-Hour AM/PM)
+            </h5>
+            <span class="text-[10px] text-slate-400 font-mono">${st.stations.length} Scheduled Commercial Halts</span>
+          </div>
+
+          <div class="overflow-x-auto max-h-64 border border-slate-200 rounded-xl">
+            <table class="w-full text-xs text-left">
+              <thead class="bg-slate-100 text-slate-700 font-extrabold sticky top-0 border-b border-slate-200">
+                <tr>
+                  <th class="p-2.5 text-center w-10">#</th>
+                  <th class="p-2.5">Station</th>
+                  <th class="p-2.5 text-center">PF</th>
+                  <th class="p-2.5">Distance</th>
+                  <th class="p-2.5">Scheduled Arr</th>
+                  <th class="p-2.5">Scheduled Dep</th>
+                  <th class="p-2.5">Actual / Est. Arr</th>
+                  <th class="p-2.5">Actual / Est. Dep</th>
+                  <th class="p-2.5 text-right">Station Delay</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 font-mono text-[11px]">
+                ${st.stations.map((s, idx) => {
+                  const sDelayCol = s.delayMinutes === 0 ? '#166534' : s.delayMinutes <= 15 ? '#d97706' : '#dc2626';
+                  const isCurrent = idx === st.currentStationIndex;
+                  return `
+                    <tr class="${isCurrent ? 'bg-blue-50/80 font-bold' : 'hover:bg-slate-50'}">
+                      <td class="p-2 text-center text-slate-400 font-sans">${idx + 1}</td>
+                      <td class="p-2 font-sans font-bold text-[#12355B]">
+                        ${s.name} <span class="text-[10px] text-slate-400 font-mono">(${s.code})</span>
+                        ${isCurrent ? '<span class="ml-1.5 px-1.5 py-0.5 rounded bg-blue-600 text-white text-[9px] font-sans">ACTIVE HERE</span>' : ''}
+                      </td>
+                      <td class="p-2 text-center text-slate-600">#${s.pf}</td>
+                      <td class="p-2 text-slate-500">${s.dist} km</td>
+                      <td class="p-2 text-slate-700">${s.arrAMPM}</td>
+                      <td class="p-2 text-slate-700">${s.depAMPM}</td>
+                      <td class="p-2 font-bold" style="color: ${sDelayCol};">${s.actualArrAMPM}</td>
+                      <td class="p-2 font-bold" style="color: ${sDelayCol};">${s.actualDepAMPM}</td>
+                      <td class="p-2 text-right">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold"
+                          style="background: ${s.delayMinutes === 0 ? '#f0fdf4' : '#fef2f2'}; color: ${sDelayCol};">
+                          ${s.delayMinutes === 0 ? '✓ ON TIME' : `+${s.delayMinutes}m`}
+                        </span>
+                      </td>
+                    </tr>
+                  `;
+                }).join("")}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Footer Action -->
+        <div class="flex justify-end pt-2">
+          <button onclick="closeTrainDelayModal()"
+            class="px-6 py-2.5 rounded-xl bg-[#12355B] hover:bg-[#1E4877] text-white font-bold text-xs shadow cursor-pointer transition-all">
+            Close Delay Terminal
+          </button>
+        </div>
+
+      </div>
+    `;
+
+    modal.classList.remove("hidden");
+
+    // Initialize the 4 Chart.js charts
+    setTimeout(() => {
+      initModalCharts(analytics);
+    }, 150);
+  };
+
+  function initModalCharts(analytics) {
+    if (!window.Chart) return;
+
+    // 1. Delay Accumulation Curve (Line Chart)
+    const ctxLine = document.getElementById("modalDelayLineChart");
+    if (ctxLine) {
+      delayModalChartInstances.line = new Chart(ctxLine, {
+        type: "line",
+        data: {
+          labels: analytics.labels,
+          datasets: [{
+            label: "Delay (Minutes)",
+            data: analytics.delayPoints,
+            borderColor: "#dc2626",
+            backgroundColor: "rgba(220, 38, 38, 0.08)",
+            fill: true,
+            tension: 0.35,
+            pointBackgroundColor: "#dc2626",
+            pointRadius: 3,
+            borderWidth: 2.5
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (c) => `Delay: +${c.raw} min`
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: { color: "#f1f5f9" },
+              ticks: { font: { size: 9, family: "'JetBrains Mono'" } }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { font: { size: 9, family: "'JetBrains Mono'" } }
+            }
+          }
+        }
+      });
+    }
+
+    // 2. Speed Profile Chart (Area Chart)
+    const ctxSpeed = document.getElementById("modalSpeedProfileChart");
+    if (ctxSpeed) {
+      delayModalChartInstances.speed = new Chart(ctxSpeed, {
+        type: "line",
+        data: {
+          labels: analytics.labels,
+          datasets: [{
+            label: "Speed (km/h)",
+            data: analytics.speedProfile,
+            borderColor: "#2563eb",
+            backgroundColor: "rgba(37, 99, 235, 0.12)",
+            fill: true,
+            tension: 0.25,
+            borderWidth: 2.5,
+            pointRadius: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (c) => `Speed: ${c.raw} km/h`
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: { color: "#f1f5f9" },
+              ticks: { font: { size: 9, family: "'JetBrains Mono'" } }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { font: { size: 9, family: "'JetBrains Mono'" } }
+            }
+          }
+        }
+      });
+    }
+
+    // 3. Station Delay Bar Chart
+    const ctxBar = document.getElementById("modalStationBarChart");
+    if (ctxBar) {
+      delayModalChartInstances.bar = new Chart(ctxBar, {
+        type: "bar",
+        data: {
+          labels: analytics.labels,
+          datasets: [{
+            label: "Delay Minutes",
+            data: analytics.delayPoints,
+            backgroundColor: analytics.delayPoints.map(d => d > 25 ? "#dc2626" : d > 10 ? "#f59e0b" : "#10b981"),
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: { color: "#f1f5f9" },
+              ticks: { font: { size: 9, family: "'JetBrains Mono'" } }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { font: { size: 9, family: "'JetBrains Mono'" } }
+            }
+          }
+        }
+      });
+    }
+
+    // 4. Root Causes Doughnut Chart
+    const ctxPie = document.getElementById("modalCausePieChart");
+    if (ctxPie) {
+      delayModalChartInstances.pie = new Chart(ctxPie, {
+        type: "doughnut",
+        data: {
+          labels: analytics.delayCauses.map(c => c.label),
+          datasets: [{
+            data: analytics.delayCauses.map(c => c.pct),
+            backgroundColor: analytics.delayCauses.map(c => c.color),
+            borderWidth: 0,
+            hoverOffset: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: "68%",
+          plugins: {
+            legend: {
+              position: "bottom",
+              labels: { boxWidth: 10, font: { size: 9, family: "'Plus Jakarta Sans'" } }
+            }
+          }
+        }
+      });
+    }
+  }
+
+  // =========================================================================
+  // LIVE TELEMETRY TICKER UPDATER (BOTTOM WEBSITE BAR)
+  // =========================================================================
+  let tickerIndex = 0;
+  function updateLiveTicker() {
+    if (!window.LiveTrainEngine) return;
+    const delayedList = window.LiveTrainEngine.getDelayedTrainsGrid({ minDelay: 0, limit: 30 });
+    if (!delayedList || delayedList.length === 0) return;
+
+    const tr = delayedList[tickerIndex % delayedList.length];
+    tickerIndex++;
+
+    const titleEl = document.getElementById("tickerTrainTitle");
+    const speedEl = document.getElementById("tickerSpeedBadge");
+    const etaEl = document.getElementById("tickerEtaBadge");
+    const delayEl = document.getElementById("tickerDelayBadge");
+
+    if (titleEl) {
+      titleEl.innerHTML = `<strong>${tr.number}</strong> ${tr.name} &nbsp;•&nbsp; <span class="text-cyan-300 font-mono">${tr.from} ➔ ${tr.to}</span>`;
+    }
+    if (speedEl) {
+      const stateText = tr.speed === 0 ? 'Halted' : tr.speed <= 20 ? 'Approach Decel' : 'Cruising';
+      speedEl.innerHTML = `<i class="fa-solid fa-gauge-high mr-1"></i>${tr.speed} km/h <span class="opacity-75">(${stateText})</span>`;
+    }
+    if (etaEl) {
+      etaEl.innerHTML = `<i class="fa-solid fa-location-arrow mr-1"></i>Next: <strong>${tr.nextStationCode || tr.nextStation}</strong>`;
+    }
+    if (delayEl) {
+      delayEl.innerHTML = `<i class="fa-solid fa-clock-rotate-left mr-1"></i>${tr.delayText}`;
+      delayEl.className = tr.delayMinutes > 0
+        ? "px-2 py-0.5 rounded bg-red-500/20 text-red-300 border border-red-500/30 font-bold"
+        : "px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold";
+    }
+  }
+
+  setInterval(updateLiveTicker, 4500);
+  setTimeout(updateLiveTicker, 1500);
 
   // VIEW 5: OPERATIONAL ANALYTICS HUB (analytics)
   function renderAnalyticsSection(container) {

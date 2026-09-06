@@ -280,6 +280,18 @@
             <a
               href="#"
               onclick="
+                switchNavView('delay_analytics');
+                return false;
+              "
+              id="nav_delay_analytics"
+              class="sidebar-link text-slate-400 hover:text-slate-200 flex items-center gap-3 px-3.5 py-2.5 rounded-xl"
+            >
+              <i class="fa-solid fa-hourglass-half text-sm w-4"></i> Delay
+              Analytics
+            </a>
+            <a
+              href="#"
+              onclick="
                 switchNavView('rescheduling');
                 return false;
               "
@@ -557,6 +569,57 @@
       </div>
     </div>
 
+    <!-- =========================================================================
+       LIVE TELEMETRY TICKER (REAL-TIME SPEED, NEXT STATION ETA & DELAYS)
+       ========================================================================= -->
+    <div
+      id="liveTrainTelemetryTicker"
+      class="fixed bottom-0 left-0 right-0 z-40 bg-[#0c1f36]/95 backdrop-blur-md border-t border-cyan-500/30 text-white px-4 py-2.5 shadow-2xl transition-all"
+    >
+      <div class="max-w-[1750px] mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2 px-2.5 py-1 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 font-extrabold text-[11px]">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            <span>LIVE IST SIMULATION</span>
+          </div>
+          <div class="hidden sm:flex items-center gap-1.5 font-mono text-[11px] text-slate-300">
+            <i class="fa-regular fa-clock text-[#FF9933]"></i>
+            <span id="tickerClock">--:-- --</span>
+          </div>
+        </div>
+
+        <div id="tickerTrainInfo" class="flex items-center gap-4 overflow-hidden flex-1 justify-center max-w-3xl">
+          <div class="flex items-center gap-2 font-['Outfit']">
+            <i class="fa-solid fa-train-subway text-cyan-400"></i>
+            <span id="tickerTrainTitle" class="font-bold text-white truncate">Syncing Railway Telemetry...</span>
+          </div>
+          <div class="hidden md:flex items-center gap-3 font-mono text-[11px]">
+            <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30" id="tickerSpeedBadge">
+              <i class="fa-solid fa-gauge-high mr-1"></i>0 km/h
+            </span>
+            <span class="px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30" id="tickerEtaBadge">
+              <i class="fa-solid fa-location-arrow mr-1"></i>Next: Calculating...
+            </span>
+            <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" id="tickerDelayBadge">
+              <i class="fa-solid fa-clock-rotate-left mr-1"></i>ON TIME
+            </span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <span class="hidden lg:inline text-[10px] text-slate-400 font-mono">KAVACH 4.0 SIL-4 PROTECTED</span>
+          <button
+            onclick="switchNavView('delay_analytics')"
+            class="px-3 py-1 rounded-lg bg-[#FF9933] hover:bg-amber-600 text-slate-950 font-bold text-[11px] flex items-center gap-1.5 shadow cursor-pointer transition-all"
+          >
+            <i class="fa-solid fa-chart-line"></i> Delay Analytics
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Core Simulation Engine -->
+    <script src="../js/core/liveTrainEngine.js"></script>
     <!-- JavaScript Entry Point -->
     <script src="../js/pages/dashboard.js"></script>
   </body>
