@@ -1877,7 +1877,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return milestones;
   }
 
-  // Generator: Ultra-Realistic Multi-Coach Train Rake SVG with Always-Visible Live Badge
+  // Generator: Ultra-Realistic Multi-Coach Train Rake SVG with Smart De-Cluttered Badges
   function generateRealisticTrainSVG(train, isSelected) {
     const isVB = train.type === "vande_bharat";
     const isRaj = train.type === "rajdhani";
@@ -1890,15 +1890,23 @@ document.addEventListener("DOMContentLoaded", () => {
     let badgeColor = isVB ? "#0284C7" : isRaj ? "#DC2626" : isFreight ? "#EAB308" : "#2563EB";
 
     return `
-      <div style="position: relative; display: flex; flex-direction: column; align-items: center;">
-        <!-- Always Visible High-Tech Live Status Badge -->
-        <div class="train-live-status-badge" style="position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 8px; z-index: 1000; pointer-events: none; white-space: nowrap;">
-          <div style="background: rgba(10, 25, 47, 0.94); color: #FFFFFF; border: 1.5px solid ${badgeColor}; border-radius: 8px; padding: 3px 8px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 10px; font-weight: 800; box-shadow: 0 4px 14px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 5px; backdrop-filter: blur(6px);">
-            <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background-color: #10B981; box-shadow: 0 0 8px #10B981;"></span>
+      <div class="train-marker-wrapper ${isSelected ? 'train-marker-selected' : ''}" style="position: relative; display: flex; flex-direction: column; align-items: center;">
+        
+        <!-- Compact De-Cluttered Mini Pill (Visible at a glance without clutter) -->
+        <div class="train-mini-pill" style="background: rgba(15, 23, 42, 0.92); color: #FFFFFF; border: 1.2px solid ${badgeColor}; border-radius: 9999px; padding: 2px 7px; font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 800; box-shadow: 0 3px 10px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 5px; backdrop-filter: blur(4px);">
+          <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background-color: #10B981; box-shadow: 0 0 6px #10B981;"></span>
+          <span style="color: #FF9933; font-weight: 900;">${train.number}</span>
+          <span style="color: #38BDF8; font-weight: 700;">${train.speed}k</span>
+        </div>
+
+        <!-- Full Detailed High-Tech Status Badge (Expanded on Hover or when Selected) -->
+        <div class="train-full-hover-badge">
+          <div style="background: rgba(10, 25, 47, 0.96); color: #FFFFFF; border: 1.5px solid ${badgeColor}; border-radius: 8px; padding: 4px 10px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 10px; font-weight: 800; box-shadow: 0 6px 18px rgba(0,0,0,0.6); display: flex; align-items: center; gap: 6px; backdrop-filter: blur(8px);">
+            <span style="display: inline-block; width: 7px; height: 7px; border-radius: 50%; background-color: #10B981; box-shadow: 0 0 8px #10B981;"></span>
             <span style="color: #FF9933; font-weight: 900; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.05em;">${train.number}</span>
             <span style="color: #FFFFFF; font-weight: 800; text-transform: uppercase;">${train.shortName || train.name}</span>
-            <span style="color: #38BDF8; font-family: 'JetBrains Mono', monospace; font-weight: 800; background: rgba(56, 189, 248, 0.15); padding: 1px 4px; border-radius: 4px;">${train.speed} km/h</span>
-            <span style="color: #34D399; font-weight: 800; font-size: 9px; background: rgba(16, 185, 129, 0.2); padding: 1px 5px; border-radius: 4px; border: 1px solid rgba(16, 185, 129, 0.4);">
+            <span style="color: #38BDF8; font-family: 'JetBrains Mono', monospace; font-weight: 800; background: rgba(56, 189, 248, 0.18); padding: 1.5px 5px; border-radius: 4px;">${train.speed} km/h</span>
+            <span style="color: #34D399; font-weight: 800; font-size: 9px; background: rgba(16, 185, 129, 0.22); padding: 1.5px 6px; border-radius: 4px; border: 1px solid rgba(16, 185, 129, 0.4);">
               ETA ${train.etaNextStation}
             </span>
           </div>
@@ -1906,7 +1914,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         <div class="realistic-train-rake" title="${train.number} - ${train.name}">
           <!-- Kavach 160.225 MHz Radar Aura Bubble -->
-          <div class="kavach-radar-beacon ${train.kavachStatus.includes('TSR') ? 'caution' : ''}"></div>
+          <div class="kavach-radar-beacon ${train.kavachStatus && train.kavachStatus.includes('TSR') ? 'caution' : ''}"></div>
           
           <!-- Forward Headlight Beam Cone -->
           <div class="train-headlight-cone"></div>
@@ -2015,18 +2023,63 @@ document.addEventListener("DOMContentLoaded", () => {
 
             <!-- Map View Switchers & Controls -->
             <div class="flex flex-wrap items-center gap-2">
-              <button onclick="switchLiveMapTileLayer('iri')" id="btnLayerIRI" class="px-3 py-1.5 rounded-xl border border-[#FF9933] text-xs font-black transition-all cursor-pointer bg-[#FF9933] text-white shadow flex items-center gap-1.5">
-                <i class="fa-solid fa-route text-white"></i> 🛤️ IndiaRailInfo Atlas View
+              <button onclick="switchLiveMapTileLayer('satellite')" id="btnLayerSat" class="px-3 py-1.5 rounded-xl border border-[#FF9933] text-xs font-black transition-all cursor-pointer bg-[#FF9933] text-white shadow flex items-center gap-1.5">
+                <i class="fa-solid fa-satellite"></i> 🛰️ Photorealistic Satellite (Esri HD)
               </button>
-              <button onclick="switchLiveMapTileLayer('voyager')" id="btnLayerVoyager" class="px-3 py-1.5 rounded-xl border border-slate-300 text-slate-700 bg-white hover:bg-slate-100 text-xs font-bold transition-all cursor-pointer">
-                <i class="fa-solid fa-map"></i> Official Railway Map
+              <button onclick="switchLiveMapTileLayer('osm_rail')" id="btnLayerOSM" class="px-3 py-1.5 rounded-xl border border-slate-300 text-slate-700 bg-white hover:bg-slate-100 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5">
+                <i class="fa-solid fa-route"></i> 🛤️ Railway Atlas (OSM)
               </button>
-              <button onclick="switchLiveMapTileLayer('dark')" id="btnLayerDark" class="px-3 py-1.5 rounded-xl border border-slate-300 text-slate-700 bg-white hover:bg-slate-100 text-xs font-bold transition-all cursor-pointer">
-                <i class="fa-solid fa-moon"></i> Night Radar Mode
+              <button onclick="switchLiveMapTileLayer('dark')" id="btnLayerDark" class="px-3 py-1.5 rounded-xl border border-slate-300 text-slate-700 bg-white hover:bg-slate-100 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5">
+                <i class="fa-solid fa-moon"></i> 🌙 Night Radar Mode
               </button>
               <button onclick="resetPanIndiaMapView()" class="px-3.5 py-1.5 rounded-xl bg-[#138808] hover:bg-emerald-700 text-white font-extrabold text-xs shadow transition-all cursor-pointer flex items-center gap-1.5">
                 <i class="fa-solid fa-earth-asia"></i> Reset Pan-India View
               </button>
+            </div>
+          </div>
+
+          <!-- State & Region Selector & Station-to-Station Corridor Tracking -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-slate-200">
+            <!-- State / Region Fly-To Selector -->
+            <div class="flex items-center gap-2 bg-slate-50 p-2 rounded-xl border border-slate-200">
+              <label for="liveMapStateSelector" class="text-[11px] font-black text-[#12355B] font-mono whitespace-nowrap flex items-center gap-1">
+                <i class="fa-solid fa-location-dot text-[#FF9933]"></i> Region Focus:
+              </label>
+              <select 
+                id="liveMapStateSelector" 
+                onchange="zoomToState(this.value)" 
+                class="w-full px-2.5 py-1.5 rounded-lg bg-white border border-[#12355B]/40 text-xs font-extrabold text-[#12355B] focus:ring-2 focus:ring-[#FF9933] cursor-pointer shadow-sm">
+                <option value="all">🌐 All India (Full 68,000 km Network)</option>
+                <option value="rajasthan">🏰 Rajasthan (Jaipur, Ajmer, Kota, Jodhpur, Marwar)</option>
+                <option value="delhi">🏛️ Delhi NCR (New Delhi, Anand Vihar, Ghaziabad)</option>
+                <option value="up">🕌 Uttar Pradesh (Kanpur, Prayagraj, Varanasi, Lucknow)</option>
+                <option value="maharashtra">🌊 Maharashtra (Mumbai Central, Pune, Nagpur)</option>
+                <option value="gujarat">⚡ Gujarat (Ahmedabad, Vadodara, Surat)</option>
+                <option value="bengal">🚋 West Bengal & East (Howrah, Asansol, Kolkata)</option>
+                <option value="south">🌴 Southern Zone (Chennai, Bengaluru, Secunderabad)</option>
+                <option value="jk">🏔️ Northern High Altitude (Jammu Tawi, Udhampur)</option>
+                <option value="central">🛡️ Madhya Pradesh & Central (Bhopal, Itarsi, Jabalpur)</option>
+              </select>
+            </div>
+
+            <!-- Station-to-Station Corridor Tracker -->
+            <div class="flex items-center gap-2 bg-slate-50 p-2 rounded-xl border border-slate-200">
+              <label for="liveMapCorridorSelector" class="text-[11px] font-black text-[#0284c7] font-mono whitespace-nowrap flex items-center gap-1">
+                <i class="fa-solid fa-arrows-split-up-and-left text-[#0284c7]"></i> Corridor Tracking:
+              </label>
+              <select 
+                id="liveMapCorridorSelector" 
+                onchange="trackCorridorRoute(this.value)" 
+                class="w-full px-2.5 py-1.5 rounded-lg bg-white border border-[#0284c7]/50 text-xs font-extrabold text-[#0284c7] focus:ring-2 focus:ring-[#FF9933] cursor-pointer shadow-sm">
+                <option value="all">🛤️ All Active Corridors (8 Trains Running)</option>
+                <option value="NDLS-AII">📍 NDLS ➔ JP ➔ AII (Rajasthan Ajmer Shatabdi #12015)</option>
+                <option value="NDLS-BSB">📍 NDLS ➔ CNB ➔ BSB (Kashi Vande Bharat #22436)</option>
+                <option value="MMCT-NDLS">📍 MMCT ➔ BRC ➔ RTM ➔ KOTA ➔ NDLS (Tejas Rajdhani #12951)</option>
+                <option value="NDLS-HWH">📍 NDLS ➔ CNB ➔ PRYJ ➔ HWH (Howrah Rajdhani #12302)</option>
+                <option value="NDLS-MAS">📍 NDLS ➔ AGC ➔ BPL ➔ MAS (Grand Trunk #12622)</option>
+                <option value="NDLS-ADI">📍 NDLS ➔ JP ➔ AII ➔ ADI (Swarna Jayanti Rajdhani #12958)</option>
+                <option value="NDLS-KOTA">📍 NDLS ➔ MTJ ➔ AGC ➔ KOTA (Jan Shatabdi #12059)</option>
+              </select>
             </div>
           </div>
 
@@ -2039,7 +2092,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 id="liveMapTrainSearchInput" 
                 oninput="handleLiveMapTrainSearch(this.value)" 
                 onfocus="handleLiveMapTrainSearch(this.value)"
-                placeholder="Search any train by number, name or station (e.g. 12012, 12951, Vande Bharat, Rajdhani, Mumbai, Kota, Amritsar)..." 
+                placeholder="Search any train by number, name or station (e.g. 12015, 22436, 12951, Vande Bharat, Ajmer, Jaipur, Mumbai)..." 
                 class="w-full pl-11 pr-28 py-3 rounded-xl bg-white border-2 border-[#12355B] text-slate-900 font-bold text-sm focus:outline-none focus:ring-2 focus:ring-[#FF9933] shadow-sm transition-all"
               />
               <span class="absolute right-3 px-2 py-1 rounded bg-[#EAF3F8] text-[#12355B] text-[10px] font-mono font-extrabold border border-blue-200">
@@ -2056,11 +2109,14 @@ document.addEventListener("DOMContentLoaded", () => {
           <!-- Quick Corridor Filter Chips -->
           <div class="flex flex-wrap items-center gap-2 pt-1 border-t border-slate-200">
             <span class="text-[11px] font-extrabold text-slate-500 uppercase font-mono">Select Flagship Train:</span>
+            <button onclick="selectAndFocusTrain('12015')" class="px-3.5 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 border-2 border-amber-400 text-amber-950 text-xs font-black transition-all cursor-pointer shadow-sm">
+              🏰 12015 Ajmer Shatabdi (Delhi ➔ Jaipur ➔ Ajmer)
+            </button>
             <button onclick="selectAndFocusTrain('22436')" class="px-3.5 py-1.5 rounded-xl bg-sky-50 hover:bg-sky-100 border-2 border-sky-400 text-sky-950 text-xs font-black transition-all cursor-pointer shadow-sm">
-              🚅 22436 Kashi Vande Bharat Express (New Delhi ➔ Varanasi)
+              🚅 22436 Kashi Vande Bharat (New Delhi ➔ Varanasi)
             </button>
             <button onclick="selectAndFocusTrain('12951')" class="px-3.5 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 border-2 border-rose-400 text-rose-950 text-xs font-black transition-all cursor-pointer shadow-sm">
-              ⭐ 12951 Tejas Rajdhani Express (Mumbai ➔ New Delhi)
+              ⭐ 12951 Tejas Rajdhani (Mumbai ➔ New Delhi)
             </button>
           </div>
 
@@ -2083,9 +2139,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 ⚡ 25 kV AC Electrified
               </button>
             </div>
-            <span class="text-[11px] font-mono text-slate-500 font-bold hidden sm:inline">
-              🇮🇳 Exclusive India Boundary Mask Active
+            <span class="text-[11px] font-mono text-emerald-700 font-extrabold hidden sm:inline flex items-center gap-1">
+              <i class="fa-solid fa-satellite-dish text-emerald-600"></i> Esri Photorealistic Satellite GIS Active
             </span>
+          </div>
           </div>
         </div>
 
@@ -2348,15 +2405,10 @@ document.addEventListener("DOMContentLoaded", () => {
     mapGeoLabelsGroup = L.layerGroup().addTo(panIndiaMap);
     mapTrainMarkers = {};
 
-    // Initialize default tile layer to Clean Command-Center Dark View (No patchy colors or label clutter)
-    switchLiveMapTileLayer('dark');
+    // Initialize default tile layer to Photorealistic Esri Satellite HD View
+    switchLiveMapTileLayer('satellite');
 
-    // Exclusive India Boundary Spotlight Mask:
-    // Inverted polygon that covers the world outside India in dark command-center navy,
-    // making only India and its railway track system illuminated with a golden Saffron border!
-    const worldOuterBounds = [
-      [90, -180], [90, 180], [-90, 180], [-90, -180], [90, -180]
-    ];
+    // Indian Railways Golden Strategic Territorial Outline (Crisp non-blocking boundary)
     const indiaBorderCutout = [
       [35.67, 74.84], [34.70, 77.03], [32.90, 78.96], [30.41, 80.89],
       [28.78, 81.33], [27.70, 88.13], [28.21, 97.40], [27.20, 96.80],
@@ -2365,12 +2417,10 @@ document.addEventListener("DOMContentLoaded", () => {
       [18.90, 72.80], [22.80, 69.10], [23.80, 68.20], [24.70, 71.00],
       [27.50, 70.30], [31.50, 74.40], [35.67, 74.84]
     ];
-    L.polygon([worldOuterBounds, indiaBorderCutout], {
-      fillColor: '#050D1A',
-      fillOpacity: 0.90,
-      stroke: true,
+    L.polyline(indiaBorderCutout, {
       color: '#FF9933',
-      weight: 2.5,
+      weight: 2.2,
+      opacity: 0.75,
       interactive: false
     }).addTo(panIndiaMap);
 
@@ -2394,68 +2444,143 @@ document.addEventListener("DOMContentLoaded", () => {
     startTrainAnimationLoop();
   }
 
+  // State & Regional Centers Database (for Smooth Animated Fly-To)
+  const panIndiaStates = {
+    all: { name: "All India (Full Network)", coords: [22.8, 78.9], zoom: 5 },
+    rajasthan: { name: "Rajasthan (NWR / WCR)", coords: [26.58, 73.85], zoom: 7 },
+    delhi: { name: "Delhi NCR (Northern Zone)", coords: [28.6139, 77.2090], zoom: 10 },
+    up: { name: "Uttar Pradesh (NCR / NER)", coords: [26.85, 80.95], zoom: 7 },
+    maharashtra: { name: "Maharashtra (CR / WR)", coords: [19.25, 75.25], zoom: 7 },
+    gujarat: { name: "Gujarat (Western Zone)", coords: [22.40, 71.80], zoom: 7 },
+    bengal: { name: "West Bengal & East (ER)", coords: [23.15, 87.85], zoom: 7 },
+    south: { name: "Southern Zone (SR / SCR / SWR)", coords: [13.08, 78.50], zoom: 7 },
+    jk: { name: "Northern High Altitude (NR)", coords: [32.73, 75.50], zoom: 7 },
+    central: { name: "Madhya Pradesh & Central (WCR)", coords: [23.47, 77.94], zoom: 7 }
+  };
+
+  // State Fly-To Camera Control
+  window.zoomToState = function(stateKey) {
+    const target = panIndiaStates[stateKey];
+    if (!target || !panIndiaMap) return;
+    panIndiaMap.flyTo(target.coords, target.zoom, {
+      duration: 1.6,
+      easeLinearity: 0.25
+    });
+    showToast(`🗺️ Camera Flying to ${target.name}`, "info");
+  };
+
+  // Station-to-Station Corridor Tracker
+  window.trackCorridorRoute = function(corridorKey) {
+    if (corridorKey === "all") {
+      resetPanIndiaMapView();
+      return;
+    }
+    const corridorTrainMap = {
+      "NDLS-AII": "12015", // Ajmer Shatabdi
+      "NDLS-BSB": "22436", // Kashi Vande Bharat
+      "MMCT-NDLS": "12951", // Mumbai Tejas Rajdhani
+      "NDLS-HWH": "12302", // Howrah Rajdhani
+      "NDLS-MAS": "12622", // Tamil Nadu Express
+      "NDLS-ADI": "12958", // ADI Rajdhani
+      "NDLS-KOTA": "12059"  // Kota Jan Shatabdi
+    };
+    const trainId = corridorTrainMap[corridorKey];
+    if (trainId) {
+      selectAndFocusTrain(trainId);
+      showToast(`🛤️ Tracking Corridor: ${corridorKey}`, "success");
+    }
+  };
+
+  let mapSatelliteLabelsLayer = null;
   let mapIRIRailOverlayLayer = null;
 
-  // Switch between Tile Layers (IRI Atlas vs Voyager vs Dark Night Radar)
+  // Switch between Tile Layers (100% Watermark-Free: Esri HD Satellite vs OSM Atlas vs Esri Dark Canvas)
   window.switchLiveMapTileLayer = function(layerType) {
     if (!panIndiaMap) return;
 
     if (mapCurrentTileLayer) {
       panIndiaMap.removeLayer(mapCurrentTileLayer);
+      mapCurrentTileLayer = null;
+    }
+    if (mapSatelliteLabelsLayer) {
+      panIndiaMap.removeLayer(mapSatelliteLabelsLayer);
+      mapSatelliteLabelsLayer = null;
     }
     if (mapIRIRailOverlayLayer) {
       panIndiaMap.removeLayer(mapIRIRailOverlayLayer);
       mapIRIRailOverlayLayer = null;
     }
 
-    const btnIri = document.getElementById("btnLayerIRI");
-    const btnVoyager = document.getElementById("btnLayerVoyager");
+    const btnSat = document.getElementById("btnLayerSat");
+    const btnOSM = document.getElementById("btnLayerOSM");
     const btnDark = document.getElementById("btnLayerDark");
 
-    const defaultBtn = "px-3 py-1.5 rounded-xl border border-slate-300 text-slate-700 bg-white hover:bg-slate-100 text-xs font-bold transition-all cursor-pointer";
-    const activeBtn = "px-3 py-1.5 rounded-xl border text-xs font-bold transition-all cursor-pointer bg-[#12355B] text-white shadow";
-    const activeIriBtn = "px-3 py-1.5 rounded-xl border border-[#FF9933] text-xs font-black transition-all cursor-pointer bg-[#FF9933] text-white shadow flex items-center gap-1.5";
+    const defaultBtn = "px-3 py-1.5 rounded-xl border border-slate-300 text-slate-700 bg-white hover:bg-slate-100 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5";
+    const activeSatBtn = "px-3 py-1.5 rounded-xl border border-[#FF9933] text-xs font-black transition-all cursor-pointer bg-[#FF9933] text-white shadow flex items-center gap-1.5";
+    const activeBtn = "px-3 py-1.5 rounded-xl border text-xs font-bold transition-all cursor-pointer bg-[#12355B] text-white shadow flex items-center gap-1.5";
 
-    if (layerType === "iri") {
-      // 1. Base Layer (Carto Voyager)
-      mapCurrentTileLayer = L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
-        attribution: '&copy; CARTO &copy; OpenStreetMap',
-        subdomains: "abcd",
-        maxZoom: 19
+    if (layerType === "satellite" || layerType === "iri") {
+      // 1. High-Resolution Photorealistic Satellite Imagery (Esri World Imagery - 100% Keyless, Zero Watermarks)
+      mapCurrentTileLayer = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+        maxZoom: 19,
+        maxNativeZoom: 18
       }).addTo(panIndiaMap);
 
-      // 2. OpenRailwayMap Standard Track Tile Layer (1:1 Match with IndiaRailInfo Atlas)
+      // 2. Clear Reference Labels Overlay (Crisp Cities, States, Boundaries)
+      mapSatelliteLabelsLayer = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}", {
+        maxZoom: 19,
+        opacity: 0.92
+      }).addTo(panIndiaMap);
+
+      // 3. OpenRailwayMap Standard Track Tile Layer
       mapIRIRailOverlayLayer = L.tileLayer("https://{s}.tile.openrailwaymap.org/standard/{z}/{x}/{y}.png", {
-        attribution: '&copy; OpenRailwayMap &copy; OpenStreetMap contributors',
+        attribution: '&copy; OpenRailwayMap contributors',
         subdomains: "abc",
         maxZoom: 19,
-        opacity: 0.95
+        opacity: 0.88
       }).addTo(panIndiaMap);
 
-      if (btnIri) btnIri.className = activeIriBtn;
-      if (btnVoyager) btnVoyager.className = defaultBtn;
+      if (btnSat) btnSat.className = activeSatBtn;
+      if (btnOSM) btnOSM.className = defaultBtn;
       if (btnDark) btnDark.className = defaultBtn;
-      showToast("Activated IndiaRailInfo Atlas GIS Railway Track Overlay", "success");
+      showToast("🛰️ Activated Photorealistic Satellite Imagery (Esri HD)", "success");
     } else if (layerType === "dark") {
-      mapCurrentTileLayer = L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-        attribution: '&copy; CARTO &copy; OpenStreetMap',
-        subdomains: "abcd",
-        maxZoom: 19
+      // Clean Command Center Dark Canvas (Esri Dark Gray Base - 100% Keyless, Zero Watermarks)
+      mapCurrentTileLayer = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
+        attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
+        maxZoom: 16
+      }).addTo(panIndiaMap);
+
+      mapIRIRailOverlayLayer = L.tileLayer("https://{s}.tile.openrailwaymap.org/standard/{z}/{x}/{y}.png", {
+        attribution: '&copy; OpenRailwayMap',
+        subdomains: "abc",
+        maxZoom: 19,
+        opacity: 0.65
       }).addTo(panIndiaMap);
 
       if (btnDark) btnDark.className = activeBtn;
-      if (btnIri) btnIri.className = defaultBtn;
-      if (btnVoyager) btnVoyager.className = defaultBtn;
+      if (btnSat) btnSat.className = defaultBtn;
+      if (btnOSM) btnOSM.className = defaultBtn;
+      showToast("🌙 Activated Dark Radar Mode (Clean Canvas)", "info");
     } else {
-      mapCurrentTileLayer = L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
-        attribution: '&copy; CARTO &copy; OpenStreetMap',
-        subdomains: "abcd",
+      // OpenStreetMap Standard Track Atlas (100% Keyless, Zero Watermarks)
+      mapCurrentTileLayer = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '&copy; OpenStreetMap contributors',
         maxZoom: 19
       }).addTo(panIndiaMap);
 
-      if (btnVoyager) btnVoyager.className = activeBtn;
-      if (btnIri) btnIri.className = defaultBtn;
+      mapIRIRailOverlayLayer = L.tileLayer("https://{s}.tile.openrailwaymap.org/standard/{z}/{x}/{y}.png", {
+        attribution: '&copy; OpenRailwayMap',
+        subdomains: "abc",
+        maxZoom: 19,
+        opacity: 0.85
+      }).addTo(panIndiaMap);
+
+      if (btnOSM) btnOSM.className = activeBtn;
+      if (btnSat) btnSat.className = defaultBtn;
       if (btnDark) btnDark.className = defaultBtn;
+      showToast("🛤️ Activated OpenStreetMap Railway Atlas", "info");
     }
   };
 
@@ -2933,6 +3058,13 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         </div>
 
+        <!-- Live Satellite Weather & Track Stress Telemetry (Connected to WeatherEngine) -->
+        <div id="hudWeatherTelemetry">
+          <div class="p-3 rounded-xl bg-slate-900 border border-cyan-500/30 text-white flex items-center justify-between text-xs animate-pulse">
+            <span class="flex items-center gap-2"><i class="fa-solid fa-satellite-dish text-cyan-400"></i> Syncing Live Satellite Weather...</span>
+          </div>
+        </div>
+
       </div>
 
       <!-- Action Buttons -->
@@ -2945,6 +3077,98 @@ document.addEventListener("DOMContentLoaded", () => {
         </button>
       </div>
     `;
+
+    // Asynchronously fetch and render real-time satellite atmospheric data for next waypoint
+    fetchAndRenderHudWeather(train);
+  }
+
+  // Fetch and Render Live Satellite Weather & Track Stress in HUD
+  function fetchAndRenderHudWeather(train) {
+    if (!train) return;
+    const container = document.getElementById("hudWeatherTelemetry");
+    if (!container) return;
+
+    let targetStation = "NDLS";
+    if (train.stations && train.stations.length > 0) {
+      const remaining = train.stations.find(s => !s.isPassed);
+      targetStation = (remaining ? remaining.code : train.stations[0].code);
+    }
+
+    if (window.WeatherEngine && typeof window.WeatherEngine.getStationWeather === "function") {
+      window.WeatherEngine.getStationWeather(targetStation).then((wx) => {
+        const el = document.getElementById("hudWeatherTelemetry");
+        if (!el || !wx) return;
+
+        const temp = wx.temp !== undefined ? wx.temp : (wx.tempC !== undefined ? wx.tempC : 32);
+        const visKm = wx.visibilityKm !== undefined ? parseFloat(wx.visibilityKm).toFixed(1) : (wx.safety && wx.safety.visKm ? parseFloat(wx.safety.visKm).toFixed(1) : "8.0");
+        const railTemp = (wx.safety && wx.safety.railTemp !== undefined) ? wx.safety.railTemp : (wx.tRailC !== undefined ? wx.tRailC : 46);
+        const railStatus = (wx.safety && wx.safety.railStatus) ? wx.safety.railStatus : (wx.railStressStatus || "NORMAL");
+        const fogTsrSpeed = (wx.safety && wx.safety.fogTsrSpeed) ? wx.safety.fogTsrSpeed : (wx.fogTsrKmh ? `${wx.fogTsrKmh} km/h` : "Full Track MPS (130)");
+        const isFoggy = parseFloat(visKm) < 1.0;
+        const isThermalWarning = railTemp > 52;
+        const iconClass = wx.icon ? (wx.icon.startsWith("fa-") ? wx.icon : `fa-${wx.icon}`) : "fa-sun text-amber-500";
+
+        el.innerHTML = `
+          <div class="p-3 rounded-xl bg-gradient-to-br from-[#0A192F] via-[#0F172A] to-[#1E293B] border-2 border-cyan-500/40 text-white shadow-xl space-y-2">
+            <div class="flex items-center justify-between border-b border-white/10 pb-1.5">
+              <div class="flex items-center gap-2">
+                <i class="fa-solid fa-satellite-dish text-cyan-400 text-xs animate-pulse"></i>
+                <div>
+                  <h4 class="text-xs font-black text-white font-['Outfit'] flex items-center gap-1.5">
+                    🛰️ Satellite Weather Telemetry
+                  </h4>
+                  <p class="text-[9px] text-cyan-300 font-mono">NEXT HALT: ${wx.stationName} (${wx.stationCode})</p>
+                </div>
+              </div>
+              <span class="px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-[9px] font-mono font-black">
+                ● LIVE SAT
+              </span>
+            </div>
+
+            <!-- Weather Grid Metrics -->
+            <div class="grid grid-cols-3 gap-1.5 text-center">
+              <div class="p-1.5 rounded-lg bg-white/5 border border-white/10">
+                <span class="text-[9px] text-slate-400 font-mono block">Ambient</span>
+                <div class="text-xs font-black text-amber-300 mt-0.5 flex items-center justify-center gap-1">
+                  <i class="fa-solid ${iconClass}"></i> ${temp}°C
+                </div>
+                <div class="text-[9px] text-slate-300 truncate mt-0.5">${wx.condition || "Clear Sky"}</div>
+              </div>
+
+              <div class="p-1.5 rounded-lg bg-white/5 border border-white/10">
+                <span class="text-[9px] text-slate-400 font-mono block">Optical Vis.</span>
+                <div class="text-xs font-black ${isFoggy ? 'text-amber-400' : 'text-emerald-400'} mt-0.5">
+                  ${visKm} km
+                </div>
+                <div class="text-[9px] ${isFoggy ? 'text-amber-300 font-bold' : 'text-slate-300'} truncate mt-0.5">
+                  ${isFoggy ? 'Fog Caution' : 'Clear Sight'}
+                </div>
+              </div>
+
+              <div class="p-1.5 rounded-lg bg-white/5 border border-white/10">
+                <span class="text-[9px] text-slate-400 font-mono block">Rail Temp</span>
+                <div class="text-xs font-black ${isThermalWarning ? 'text-rose-400' : 'text-sky-300'} mt-0.5">
+                  ${railTemp}°C
+                </div>
+                <div class="text-[9px] ${isThermalWarning ? 'text-rose-300 font-bold' : 'text-emerald-400 font-bold'} truncate mt-0.5">
+                  ${railStatus}
+                </div>
+              </div>
+            </div>
+
+            <!-- Kavach Speed Advisory for Weather -->
+            <div class="flex items-center justify-between text-[10px] bg-black/40 px-2.5 py-1 rounded border border-white/10 font-mono">
+              <span class="text-slate-300 font-semibold">Kavach Fog TSR Advisory:</span>
+              <span class="font-black ${isFoggy ? 'text-amber-300' : 'text-emerald-400'}">
+                ${fogTsrSpeed}
+              </span>
+            </div>
+          </div>
+        `;
+      }).catch(err => {
+        console.warn("HUD weather fetch failed:", err);
+      });
+    }
   }
 
   // =========================================================================
@@ -3498,11 +3722,13 @@ document.addEventListener("DOMContentLoaded", () => {
       } else if (stData && stData.stations) {
         irStations = stData.stations;
       }
+      window.irStations = irStations;
 
       // 2. Trains (5,208 real trains)
       const trData = await fetchJson('trains_light.json', '/data/processed/trains_light.json');
       if (trData && Array.isArray(trData)) {
         irTrainDatabase = trData;
+        window.irTrainDatabase = irTrainDatabase;
         console.log(`✓ Loaded ${irTrainDatabase.length} Real Indian Railway Trains`);
       }
 
@@ -3510,6 +3736,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const schData = await fetchJson('train_schedules_index.json', '/data/processed/train_schedules_index.json');
       if (schData && typeof schData === 'object') {
         irSchedulesIndex = schData;
+        window.irSchedulesIndex = irSchedulesIndex;
         console.log(`✓ Loaded Real Train Timetable Schedules Index`);
       }
 
@@ -3517,18 +3744,21 @@ document.addEventListener("DOMContentLoaded", () => {
       const delayData = await fetchJson('delay_model.json', '/api/v1/delays/model');
       if (delayData) {
         irDelayModel = delayData;
+        window.irDelayModel = irDelayModel;
       }
 
       // 5. Maintenance Telemetry (100k real records)
       const maintData = await fetchJson('maintenance_telemetry.json', '/api/v1/maintenance/telemetry');
       if (maintData && maintData.records) {
         irMaintenanceDataset = maintData.records;
+        window.irMaintenanceDataset = irMaintenanceDataset;
       }
 
       // 6. Tracks GeoJSON (3,474 tracks)
       const trackData = await fetchJson('tracks_geojson.json', '/api/v1/gis/tracks');
       if (trackData && trackData.features) {
         irTracksGeoJSON = trackData;
+        window.irTracksGeoJSON = irTracksGeoJSON;
         if (panIndiaMap && activeNavView === 'live_map') {
           renderPanIndiaRailwayTracks();
         }
@@ -3538,18 +3768,21 @@ document.addEventListener("DOMContentLoaded", () => {
       const crData = await fetchJson('crossings_geojson.json', '/api/v1/gis/crossings');
       if (crData && crData.features) {
         irCrossingsGeoJSON = crData;
+        window.irCrossingsGeoJSON = irCrossingsGeoJSON;
       }
 
       // 8. Signals GeoJSON
       const sigData = await fetchJson('signals_geojson.json', '/api/v1/gis/signals');
       if (sigData && sigData.features) {
         irSignalsGeoJSON = sigData;
+        window.irSignalsGeoJSON = irSignalsGeoJSON;
       }
 
       // 9. Earthquakes GeoJSON
       const eqData = await fetchJson('earthquakes_geojson.json', '/api/v1/gis/earthquakes');
       if (eqData && eqData.features) {
         irEarthquakesGeoJSON = eqData;
+        window.irEarthquakesGeoJSON = irEarthquakesGeoJSON;
       }
 
       isRealDatasetsLoaded = true;
@@ -4115,6 +4348,8 @@ document.addEventListener("DOMContentLoaded", () => {
               <span style="color: #FFFFFF !important; font-size: 12px; font-weight: 800;">Trains</span>
             </div>
           </div>
+          <!-- Live Weather Badges for Origin and Destination -->
+          <div id="resultsScreenWeatherPills" style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.15);"></div>
         </div>
 
         <!-- Date Tabs (Horizontal Scroll) -->
@@ -4254,6 +4489,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
       </div>
     `;
+
+    // Asynchronously fetch and populate live weather for Departure and Arrival stations
+    setTimeout(async () => {
+      const pillsContainer = document.getElementById("resultsScreenWeatherPills");
+      if (pillsContainer && window.WeatherEngine) {
+        try {
+          const [wFrom, wTo] = await Promise.all([
+            window.WeatherEngine.getStationWeather(trainSearchFrom),
+            window.WeatherEngine.getStationWeather(trainSearchTo),
+          ]);
+          pillsContainer.innerHTML = `
+            <div style="background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.3); border-radius: 12px; padding: 5px 12px; font-size: 11px; display: inline-flex; align-items: center; gap: 7px; color: #FFFFFF !important;">
+              <i class="fa-solid ${wFrom.icon}" style="font-size: 13px;"></i>
+              <span><strong>${wFrom.stationCode} (${wFrom.stationName})</strong>: ${wFrom.temp}°C, ${wFrom.condition} • Wind ${wFrom.windSpeed} km/h • Vis ${wFrom.visibilityKm}km</span>
+            </div>
+            <div style="background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.3); border-radius: 12px; padding: 5px 12px; font-size: 11px; display: inline-flex; align-items: center; gap: 7px; color: #FFFFFF !important;">
+              <i class="fa-solid ${wTo.icon}" style="font-size: 13px;"></i>
+              <span><strong>${wTo.stationCode} (${wTo.stationName})</strong>: ${wTo.temp}°C, ${wTo.condition} • Wind ${wTo.windSpeed} km/h • Vis ${wTo.visibilityKm}km</span>
+            </div>
+          `;
+        } catch (e) {
+          console.warn("Could not load search results weather pills:", e);
+        }
+      }
+    }, 20);
   }
 
   // =========================================================================
@@ -4755,6 +5015,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         </div>
 
+        <!-- LIVE ROUTE SATELLITE WEATHER & ENVIRONMENTAL CONDITIONS BANNER -->
+        <div id="trainDetailRouteWeatherContainer"></div>
+
         <!-- 6 COMPACT TELEMETRY & DIAGNOSTIC METRIC CARDS -->
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;">
 
@@ -5080,7 +5343,13 @@ document.addEventListener("DOMContentLoaded", () => {
                         </p>
                       </div>
 
-                      <div>
+                      <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                        <div id="stnWeatherBadge_${st.code}_${idx}">
+                          <span style="display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px; border-radius: 8px; font-size: 10px; font-weight: 700; background: #f8fafc; border: 1px solid #e2e8f0; color: #64748b;">
+                            <i class="fa-solid fa-cloud-sun" style="color: #f59e0b;"></i>
+                            <span>--°C</span>
+                          </span>
+                        </div>
                         <span style="padding: 3px 10px; border-radius: 8px; font-size: 10px; font-weight: 800; background: ${stDelayBg}; color: ${stDelayCol}; border: 1px solid ${stDelayCol}30;">
                           ${delayVal === 0 ? '✓ ON TIME' : '+' + delayVal + ' MIN'}
                         </span>
@@ -5309,10 +5578,33 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
           </div>
 
-        </div>
-
       </div>
     `;
+
+    // 1. Render Route Weather Banner (Origin, Cruising, Destination)
+    if (window.WeatherEngine && typeof window.WeatherEngine.renderTrainRouteWeatherBanner === "function") {
+      const weatherContainer = document.getElementById("trainDetailRouteWeatherContainer");
+      if (weatherContainer) {
+        window.WeatherEngine.renderTrainRouteWeatherBanner(t, weatherContainer);
+      }
+    }
+
+    // 2. Populate Station Stops Weather Badges along the journey
+    if (window.WeatherEngine && Array.isArray(t.stations)) {
+      t.stations.forEach((st, idx) => {
+        setTimeout(async () => {
+          const badgeEl = document.getElementById(`stnWeatherBadge_${st.code}_${idx}`);
+          if (badgeEl) {
+            try {
+              const stWeather = await window.WeatherEngine.getStationWeather(st.code);
+              badgeEl.innerHTML = window.WeatherEngine.getStationWeatherBadgeHtml(stWeather);
+            } catch (err) {
+              console.warn(`Could not load weather for stop ${st.code}:`, err);
+            }
+          }
+        }, idx * 60); // Subtle stagger for smooth visual load
+      });
+    }
   }
   // VIEW 3: AI ANTI-SPAD & COLLISION RISK CENTER (conflict_alerts)
   function renderConflictAlertsSection(container) {
@@ -7837,65 +8129,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // VIEW 6: WEATHER RADAR (weather)
   function renderWeatherSection(container) {
-    const state = window.liveWeatherState || {};
-    container.innerHTML = `
-      <div class="glass-card p-5 border-l-4 border-yellow-500 space-y-5">
-        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 border-b border-white/10 pb-4">
-          <div>
-            <div class="flex items-center gap-2">
-              <span class="px-2.5 py-0.5 rounded-full bg-yellow-500/20 text-yellow-300 text-xs font-bold border border-yellow-500/40 uppercase">Environmental Risk Command</span>
-              <span class="px-2.5 py-0.5 rounded-full ${state.isLive && !state.permissionDenied ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40" : "bg-amber-500/20 text-amber-300 border-amber-500/40"} text-xs font-bold border uppercase flex items-center gap-1">
-                <span class="w-2 h-2 rounded-full ${state.isLive && !state.permissionDenied ? "bg-emerald-400 animate-pulse" : "bg-amber-400"}"></span>
-                ${state.isLive && !state.permissionDenied ? "GPS Live Location Active" : "Manual / Area Location"}
-              </span>
-            </div>
-            <h3 class="text-2xl font-black text-white font-['Outfit'] mt-1">Fog Visibility Index & Thermal Track Expansion Radar</h3>
-            <p class="text-xs text-slate-400 mt-1 flex items-center gap-2">
-              <i class="fa-solid fa-location-dot text-red-400"></i>
-              <span>Live Region: <strong id="weatherSectionLocationName" class="text-white font-bold">${state.locationName || "Detecting..."}</strong></span>
-              <span class="text-slate-500">|</span>
-              <span>Updated: <span id="weatherSectionUpdated" class="text-slate-300 font-mono">${state.lastUpdated || "Just now"}</span></span>
-            </p>
-          </div>
-
-          <div class="flex items-center gap-2 flex-wrap">
-            <div class="relative">
-              <input type="text" id="weatherCitySearchInput" placeholder="Enter city (e.g. Delhi, Mumbai)..." 
-                onkeydown="if(event.key==='Enter') searchWeatherByCity(this.value)"
-                class="px-3.5 py-2 pl-9 rounded-xl bg-slate-900 border border-white/15 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-yellow-400 w-48 sm:w-60 shadow-inner" />
-              <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-xs text-slate-400"></i>
-            </div>
-            <button onclick="const val = document.getElementById('weatherCitySearchInput').value; searchWeatherByCity(val);" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 border border-white/10 transition-all cursor-pointer">
-              Search
-            </button>
-            <button onclick="requestUserLiveLocation(true)" class="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-lg transition-all flex items-center gap-1.5 cursor-pointer">
-              <i class="fa-solid fa-location-crosshairs ${state.loading ? "animate-spin" : ""}"></i> Detect Live Location
-            </button>
-            <button onclick="showToast('Weather hazard auto-TSR dispatch enabled.', 'success')" class="px-3.5 py-2 rounded-xl bg-yellow-600 hover:bg-yellow-500 text-white font-bold text-xs shadow-lg transition-all cursor-pointer">
-              <i class="fa-solid fa-smog"></i> Fog Mode TSR Auto
-            </button>
-          </div>
+    if (window.WeatherEngine && typeof window.WeatherEngine.renderWeatherHub === "function") {
+      window.WeatherEngine.renderWeatherHub(container);
+    } else {
+      const state = window.liveWeatherState || {};
+      container.innerHTML = `
+        <div class="glass-card p-5 border-l-4 border-yellow-500 space-y-5">
+          <h3 class="text-2xl font-black text-slate-800 font-['Outfit']">Fog Visibility Index & Thermal Track Expansion Radar</h3>
+          <p class="text-xs text-slate-500">Loading All-India Satellite Weather Engine...</p>
         </div>
-
-        <div class="flex items-center gap-2 flex-wrap text-xs pt-0.5">
-          <span class="text-slate-400 font-medium flex items-center gap-1"><i class="fa-solid fa-city text-blue-400"></i> Quick Select:</span>
-          <button onclick="searchWeatherByCity('New Delhi')" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 border border-white/10 text-slate-300 hover:text-white font-semibold transition-all">New Delhi</button>
-          <button onclick="searchWeatherByCity('Bhopal')" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 border border-white/10 text-slate-300 hover:text-white font-semibold transition-all">Bhopal</button>
-          <button onclick="searchWeatherByCity('Mumbai')" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 border border-white/10 text-slate-300 hover:text-white font-semibold transition-all">Mumbai</button>
-          <button onclick="searchWeatherByCity('Kolkata')" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 border border-white/10 text-slate-300 hover:text-white font-semibold transition-all">Kolkata</button>
-          <button onclick="searchWeatherByCity('Chennai')" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 border border-white/10 text-slate-300 hover:text-white font-semibold transition-all">Chennai</button>
-          <button onclick="searchWeatherByCity('Lucknow')" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 border border-white/10 text-slate-300 hover:text-white font-semibold transition-all">Lucknow</button>
-          <button onclick="searchWeatherByCity('Jaipur')" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 border border-white/10 text-slate-300 hover:text-white font-semibold transition-all">Jaipur</button>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="weatherSectionStatCards">
-          <!-- Populated dynamically by updateWeatherUIElements() -->
-        </div>
-      </div>
-    `;
-    setTimeout(() => {
-      updateWeatherUIElements();
-    }, 10);
+      `;
+    }
   }
 
   // VIEW 7: NOTIFICATIONS & TELEMETRY LOG (notifications)
@@ -8484,1058 +8728,30 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =========================================================================
-  // DEDICATED SEPARATE DEPARTMENT WORKSPACES
+  // DEDICATED SEPARATE DEPARTMENT WORKSPACES (DELEGATED TO MODULAR ENGINES)
   // =========================================================================
-  let activeSmSubTab = "sm_platforms";
-
-  window.switchSmSubTab = function (tab) {
-    activeSmSubTab = tab || "sm_platforms";
-    const container = document.getElementById("activeSubTabContainer");
-    if (container) renderStationMasterWorkspace(container);
-  };
-
   function renderStationMasterWorkspace(container) {
-    let subTabHtml = "";
-
-    if (activeSmSubTab === "sm_platforms") {
-      subTabHtml = `
-        <!-- SUB-TAB 1: PLATFORM LINE ALLOTMENT & INTERLOCKING -->
-        <div class="glass-card p-5 space-y-4 border border-cyan-500/30">
-          <div class="flex items-center justify-between border-b border-white/10 pb-3">
-            <h3 class="text-sm font-extrabold text-white uppercase tracking-wider flex items-center gap-2">
-              <i class="fa-solid fa-list-ol text-cyan-400"></i> Platform Line Allotment & Interlocking Status (NDLS Station)
-            </h3>
-            <span class="text-xs font-mono text-cyan-300 font-bold">16 Active Lines</span>
-          </div>
-
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs">
-              <thead class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider bg-slate-900/60 border-b border-white/10">
-                <tr>
-                  <th class="py-3 px-3">Platform Line</th>
-                  <th class="py-3 px-3">Assigned Locomotive / Train</th>
-                  <th class="py-3 px-3">Line Status</th>
-                  <th class="py-3 px-3">Kavach Signal Aspect</th>
-                  <th class="py-3 px-3">Interlocking Lock</th>
-                  <th class="py-3 px-3 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-white/5 font-medium text-slate-200">
-                <tr class="hover:bg-white/5">
-                  <td class="py-3 px-3 font-mono font-bold text-white">Platform 1 (Main Up)</td>
-                  <td class="py-3 px-3 font-bold text-blue-300">12951 Mumbai Rajdhani Express</td>
-                  <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-500/30 text-[10px]">OCCUPIED (BOARDING)</span></td>
-                  <td class="py-3 px-3 text-emerald-400 font-bold flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span> GREEN (CLEAR)</td>
-                  <td class="py-3 px-3 text-slate-300"><i class="fa-solid fa-lock text-emerald-400"></i> Route Locked</td>
-                  <td class="py-3 px-3 text-right">
-                    <button onclick="showToast('Toggled Signal Aspect for PF 1', 'info')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-300 text-[10px]">Change Signal</button>
-                  </td>
-                </tr>
-                <tr class="hover:bg-white/5">
-                  <td class="py-3 px-3 font-mono font-bold text-white">Platform 2 (Main Dn)</td>
-                  <td class="py-3 px-3 font-bold text-blue-300">12012 Vande Bharat Express</td>
-                  <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-500/30 text-[10px]">OCCUPIED (ARRIVED)</span></td>
-                  <td class="py-3 px-3 text-amber-400 font-bold flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span> YELLOW (CAUTION)</td>
-                  <td class="py-3 px-3 text-slate-300"><i class="fa-solid fa-lock text-emerald-400"></i> Route Locked</td>
-                  <td class="py-3 px-3 text-right">
-                    <button onclick="showToast('Toggled Signal Aspect for PF 2', 'info')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-300 text-[10px]">Change Signal</button>
-                  </td>
-                </tr>
-                <tr class="hover:bg-white/5">
-                  <td class="py-3 px-3 font-mono font-bold text-white">Platform 3 (Loop Up)</td>
-                  <td class="py-3 px-3 font-bold text-slate-400">12059 Kota Jan Shatabdi</td>
-                  <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-500/30 text-[10px]">RESERVED (+15m)</span></td>
-                  <td class="py-3 px-3 text-red-400 font-bold flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-red-500"></span> RED (STOP)</td>
-                  <td class="py-3 px-3 text-slate-400"><i class="fa-solid fa-lock-open text-amber-400"></i> Unlocked</td>
-                  <td class="py-3 px-3 text-right">
-                    <button onclick="showToast('Granted Route Lock for PF 3', 'success')" class="px-2.5 py-1 rounded bg-blue-600 hover:bg-blue-500 text-white text-[10px]">Lock Route</button>
-                  </td>
-                </tr>
-                <tr class="hover:bg-white/5">
-                  <td class="py-3 px-3 font-mono font-bold text-white">Platform 4 (Yard Line)</td>
-                  <td class="py-3 px-3 font-bold text-slate-400">Freight WAG9 #31088</td>
-                  <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-[10px]">SHUNTCAR MOVEMENT</span></td>
-                  <td class="py-3 px-3 text-yellow-400 font-bold flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-yellow-400"></span> SHUNTING PERMIT</td>
-                  <td class="py-3 px-3 text-slate-300"><i class="fa-solid fa-lock text-emerald-400"></i> Yard Locked</td>
-                  <td class="py-3 px-3 text-right">
-                    <button onclick="showToast('Issued Yard Shunting Permit', 'info')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-300 text-[10px]">Shunt Permit</button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      `;
-    } else if (activeSmSubTab === "sm_trb") {
-      subTabHtml = `
-        <!-- SUB-TAB 2: ELECTRONIC TRAIN REGISTER BOOK (T/1425 TRB) -->
-        <div class="glass-card p-5 space-y-4 border border-cyan-500/30">
-          <div class="flex items-center justify-between border-b border-white/10 pb-3">
-            <h3 class="text-sm font-extrabold text-white uppercase tracking-wider flex items-center gap-2">
-              <i class="fa-solid fa-book-open text-cyan-400"></i> Electronic Train Register Book (T/1425 TRB Live Register)
-            </h3>
-            <span class="px-2.5 py-1 rounded-full bg-emerald-950 text-emerald-400 text-xs font-bold font-mono">AUTOMATIC KAVACH LOG</span>
-          </div>
-
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs font-mono">
-              <thead class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider bg-slate-900/60 border-b border-white/10">
-                <tr>
-                  <th class="py-3 px-3">Entry ID</th>
-                  <th class="py-3 px-3">Train No. & Name</th>
-                  <th class="py-3 px-3">Loco ID</th>
-                  <th class="py-3 px-3">Line Clear Time</th>
-                  <th class="py-3 px-3">Arrival Time</th>
-                  <th class="py-3 px-3">Departure Time</th>
-                  <th class="py-3 px-3">Block Token Status</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-white/5 text-slate-200">
-                <tr class="hover:bg-white/5">
-                  <td class="py-3 px-3 font-bold text-white">TRB-8821</td>
-                  <td class="py-3 px-3 text-cyan-300 font-sans font-bold">12951 Mumbai Rajdhani</td>
-                  <td class="py-3 px-3 text-slate-400">WAP7 #30211</td>
-                  <td class="py-3 px-3 text-slate-400">10:14:00 AM</td>
-                  <td class="py-3 px-3 text-emerald-400 font-bold">10:20:15 AM</td>
-                  <td class="py-3 px-3 text-amber-400 font-bold">10:25:00 AM (Est)</td>
-                  <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[10px]">VERIFIED (TOKEN ISSUED)</span></td>
-                </tr>
-                <tr class="hover:bg-white/5">
-                  <td class="py-3 px-3 font-bold text-white">TRB-8820</td>
-                  <td class="py-3 px-3 text-cyan-300 font-sans font-bold">12012 Vande Bharat Express</td>
-                  <td class="py-3 px-3 text-slate-400">Trainset #08</td>
-                  <td class="py-3 px-3 text-slate-400">09:45:00 AM</td>
-                  <td class="py-3 px-3 text-emerald-400 font-bold">09:50:30 AM</td>
-                  <td class="py-3 px-3 text-emerald-400 font-bold">09:55:00 AM</td>
-                  <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[10px]">CLOSED (LINE CLEAR)</span></td>
-                </tr>
-                <tr class="hover:bg-white/5">
-                  <td class="py-3 px-3 font-bold text-white">TRB-8819</td>
-                  <td class="py-3 px-3 text-cyan-300 font-sans font-bold">12059 Kota Jan Shatabdi</td>
-                  <td class="py-3 px-3 text-slate-400">WAP5 #30004</td>
-                  <td class="py-3 px-3 text-slate-400">09:15:00 AM</td>
-                  <td class="py-3 px-3 text-slate-400">09:22:10 AM</td>
-                  <td class="py-3 px-3 text-slate-400">09:27:00 AM</td>
-                  <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[10px]">CLOSED (LINE CLEAR)</span></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      `;
-    } else if (activeSmSubTab === "sm_caution") {
-      subTabHtml = `
-        <!-- SUB-TAB 3: CAUTION ORDERS & SHUNTING PERMITS -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="glass-card p-4 space-y-3 border border-cyan-500/30">
-            <h3 class="text-sm font-bold text-white flex items-center gap-2">
-              <i class="fa-solid fa-file-signature text-cyan-400"></i> Station Caution Order (T/409) & Permit Generator
-            </h3>
-            
-            <form onsubmit="event.preventDefault(); showToast('Transmitted Caution Order T/409 via Kavach RF link', 'success');" class="space-y-2.5 text-xs">
-              <div>
-                <label class="block font-bold text-slate-300 mb-1">Loco Number / Train ID</label>
-                <input type="text" placeholder="e.g. Loco WAP7 #30211 / Train 12951" required class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-white/10 text-white" />
-              </div>
-              <div>
-                <label class="block font-bold text-slate-300 mb-1">Permit / Order Type</label>
-                <select class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-white/10 text-white">
-                  <option>T/409 — Caution Order (Temporary Speed Restriction)</option>
-                  <option>T/369(3b) — Signal Passing Authority</option>
-                  <option>T/806 — Shunting Order Authority</option>
-                </select>
-              </div>
-              <div>
-                <label class="block font-bold text-slate-300 mb-1">Enforced Caution Speed & Location</label>
-                <input type="text" placeholder="e.g. 30 km/h at Km 14/2 due to Track Work" required class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-white/10 text-white" />
-              </div>
-              <button type="submit" class="w-full py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs shadow-lg transition-all cursor-pointer">
-                Transmit Caution Order via Kavach RF
-              </button>
-            </form>
-          </div>
-
-          <div class="glass-card p-4 space-y-3 border border-cyan-500/30">
-            <h3 class="text-sm font-bold text-white flex items-center gap-2">
-              <i class="fa-solid fa-clock-rotate-left text-cyan-400"></i> Issued Caution Orders Log (Today)
-            </h3>
-
-            <div class="space-y-2 text-xs font-mono">
-              <div class="p-2.5 rounded-xl bg-slate-900/90 border border-white/10 flex items-center justify-between">
-                <div>
-                  <p class="font-bold text-amber-400">T/409 CAUTION ORDER ISSUED</p>
-                  <p class="text-[10px] text-slate-400">Train 12951 • 30 km/h at Km 14/2</p>
-                </div>
-                <span class="text-[10px] text-slate-400">10:24 AM</span>
-              </div>
-              <div class="p-2.5 rounded-xl bg-slate-900/90 border border-white/10 flex items-center justify-between">
-                <div>
-                  <p class="font-bold text-emerald-400">T/806 SHUNTING PERMIT</p>
-                  <p class="text-[10px] text-slate-400">WAG9 Freight #31088 • Yard Line 4</p>
-                </div>
-                <span class="text-[10px] text-slate-400">10:11 AM</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-    } else if (activeSmSubTab === "sm_pa") {
-      subTabHtml = `
-        <!-- SUB-TAB 4: PA SYSTEM & PASSENGER DISPLAY GUIDANCE -->
-        <div class="glass-card p-5 space-y-4 border border-cyan-500/30">
-          <div class="flex items-center justify-between border-b border-white/10 pb-3">
-            <h3 class="text-sm font-extrabold text-white uppercase tracking-wider flex items-center gap-2">
-              <i class="fa-solid fa-bullhorn text-cyan-400"></i> Station PA System & Passenger Display Guidance Terminal
-            </h3>
-            <span class="px-2.5 py-1 rounded-full bg-emerald-950 text-emerald-400 text-xs font-bold font-mono">AUDIO ENGINE ONLINE</span>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-            <div class="p-4 rounded-xl bg-slate-900/90 border border-white/10 space-y-3">
-              <h4 class="font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-volume-high text-cyan-400"></i> Trigger Public Announcement
-              </h4>
-              <div>
-                <label class="block font-bold text-slate-300 mb-1">Select Train & Platform</label>
-                <select class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-white/10 text-white">
-                  <option>12951 Mumbai Rajdhani — Arriving Platform 1</option>
-                  <option>12012 Vande Bharat — Departing Platform 2</option>
-                </select>
-              </div>
-              <div class="flex items-center gap-2">
-                <button type="button" onclick="showToast('Broadcast Announcement in Hindi & English', 'success')" class="flex-1 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold">
-                  Broadcast Announcement
-                </button>
-              </div>
-            </div>
-
-            <div class="p-4 rounded-xl bg-slate-900/90 border border-white/10 space-y-3">
-              <h4 class="font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-tv text-cyan-400"></i> Coach Guidance Display Sync
-              </h4>
-              <p class="text-slate-400 text-[11px]">Platform 1 LED Boards: Syncing coach composition H1-A1-A2-B1-B2-PC-S1 to S10.</p>
-              <button type="button" onclick="showToast('Synced Coach Guidance Displays for PF 1', 'info')" class="w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold">
-                Force Display Sync
-              </button>
-            </div>
-          </div>
-        </div>
-      `;
+    if (window.renderStationMasterWorkspace) {
+      window.renderStationMasterWorkspace(container);
     }
-
-    container.innerHTML = `
-      <div class="space-y-5">
-        <!-- Top Action Bar -->
-        <div class="glass-card p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-l-4 border-cyan-500">
-          <div>
-            <span class="px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 text-xs font-bold uppercase tracking-wider">Station Master Operations Console</span>
-            <h2 class="text-xl font-black text-white font-['Outfit'] mt-1 flex items-center gap-2">
-              🚉 New Delhi (NDLS) Station Command Terminal
-            </h2>
-            <p class="text-xs text-slate-400">Platform allotment, Train Register Book (T/1425), Caution Orders (T/409) & PA system control</p>
-          </div>
-          
-          <div class="flex items-center gap-2 text-xs">
-            <button onclick="showToast('Issued Station Line Clear for Train 12951 Mumbai Rajdhani', 'success')" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold flex items-center gap-1.5 shadow-lg">
-              <i class="fa-solid fa-circle-check"></i> Grant Line Clear
-            </button>
-            <button onclick="showToast('STATION EMERGENCY BLOCK ACTIVATED: Red Signal applied to PF 1-4', 'error')" class="px-3.5 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold flex items-center gap-1.5 shadow-lg">
-              <i class="fa-solid fa-triangle-exclamation"></i> Station Emergency Block
-            </button>
-          </div>
-        </div>
-
-        <!-- Station Master Sub-Tabs -->
-        <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
-          <button type="button" onclick="switchSmSubTab('sm_platforms')" class="px-3.5 py-2 rounded-xl border transition-all ${activeSmSubTab === "sm_platforms" ? "bg-cyan-600/30 border-cyan-400 text-cyan-200 font-bold shadow-lg shadow-cyan-500/20" : "bg-slate-900/80 border-white/10 text-slate-400 hover:text-white"}">
-            <i class="fa-solid fa-list-ol text-cyan-400"></i> Platform Lines & Interlocking
-          </button>
-          <button type="button" onclick="switchSmSubTab('sm_trb')" class="px-3.5 py-2 rounded-xl border transition-all ${activeSmSubTab === "sm_trb" ? "bg-cyan-600/30 border-cyan-400 text-cyan-200 font-bold shadow-lg shadow-cyan-500/20" : "bg-slate-900/80 border-white/10 text-slate-400 hover:text-white"}">
-            <i class="fa-solid fa-book-open text-cyan-400"></i> Train Register Book (T/1425)
-          </button>
-          <button type="button" onclick="switchSmSubTab('sm_caution')" class="px-3.5 py-2 rounded-xl border transition-all ${activeSmSubTab === "sm_caution" ? "bg-cyan-600/30 border-cyan-400 text-cyan-200 font-bold shadow-lg shadow-cyan-500/20" : "bg-slate-900/80 border-white/10 text-slate-400 hover:text-white"}">
-            <i class="fa-solid fa-file-signature text-cyan-400"></i> Caution Orders (T/409) & Permits
-          </button>
-          <button type="button" onclick="switchSmSubTab('sm_pa')" class="px-3.5 py-2 rounded-xl border transition-all ${activeSmSubTab === "sm_pa" ? "bg-cyan-600/30 border-cyan-400 text-cyan-200 font-bold shadow-lg shadow-cyan-500/20" : "bg-slate-900/80 border-white/10 text-slate-400 hover:text-white"}">
-            <i class="fa-solid fa-bullhorn text-cyan-400"></i> PA System & Passenger Displays
-          </button>
-        </div>
-
-        ${subTabHtml}
-      </div>
-    `;
   }
-
-  let activeMaintSubTab = "pway";
-
-  window.switchMaintSubTab = function (subTab) {
-    activeMaintSubTab = subTab || "pway";
-    const container = document.getElementById("activeSubTabContainer");
-    if (container) renderMaintenanceEngineerWorkspace(container);
-  };
 
   function renderMaintenanceEngineerWorkspace(container) {
-    const currentTrack = pTrackData[selectedPTrack] || pTrackData["p-track-1"];
-
-    let subTabContentHtml = "";
-
-    if (activeMaintSubTab === "pway") {
-      subTabContentHtml = `
-        <!-- SUB-TAB 1: P-WAY TRACK & GEOMETRY (P-Track Selector + USFD Spectrum + Stress) -->
-        <div class="space-y-4">
-          <!-- P-TRACK INTERACTIVE SELECTOR BAR -->
-          <div class="glass-card p-4 space-y-3 border border-amber-500/30">
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-              <div class="flex items-center gap-2">
-                <i class="fa-solid fa-route text-amber-400 text-base"></i>
-                <span class="text-xs font-bold text-slate-200 uppercase tracking-wider">Select P-Way Track Section (P-Track):</span>
-              </div>
-              <span class="px-3 py-1 rounded-full text-xs font-mono font-bold ${currentTrack.statusClass}">
-                Status: ${currentTrack.status} (${currentTrack.speedLimit})
-              </span>
-            </div>
-
-            <!-- Interactive P-Track Buttons -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
-              ${Object.keys(pTrackData)
-                .map((tId) => {
-                  const trk = pTrackData[tId];
-                  const isSel = tId === selectedPTrack;
-                  return `
-                  <button type="button" onclick="selectPTrack('${tId}')" class="p-3 rounded-xl text-left transition-all cursor-pointer border ${isSel ? "bg-amber-600/30 border-amber-400 shadow-lg shadow-amber-500/20 ring-2 ring-amber-500/50" : "bg-slate-900/80 border-white/10 hover:border-slate-600 hover:bg-slate-800/60"}">
-                    <div class="flex items-center justify-between">
-                      <span class="text-xs font-black ${isSel ? "text-amber-300" : "text-white"}">${trk.name.split(":")[0]}</span>
-                      ${isSel ? '<i class="fa-solid fa-circle-check text-amber-400 text-xs"></i>' : '<i class="fa-solid fa-circle-notch text-slate-600 text-xs"></i>'}
-                    </div>
-                    <p class="text-[11px] text-slate-300 mt-1 truncate">${trk.name.split(":")[1] || trk.name}</p>
-                    <div class="flex items-center justify-between text-[10px] font-mono text-slate-400 mt-1.5 pt-1.5 border-t border-white/5">
-                      <span>Health: <strong class="${isSel ? "text-emerald-300" : "text-emerald-400"}">${trk.health}</strong></span>
-                      <span>Speed: ${trk.speedLimit}</span>
-                    </div>
-                  </button>
-                `;
-                })
-                .join("")}
-            </div>
-          </div>
-
-          <!-- USFD Acoustic Spectrum Canvas & Stress Grid -->
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
-            <!-- USFD Spectrum Canvas (7 cols) -->
-            <div class="lg:col-span-7 glass-card p-4 space-y-3">
-              <div class="flex items-center justify-between border-b border-white/10 pb-2">
-                <h3 class="text-sm font-bold text-white flex items-center gap-2">
-                  <i class="fa-solid fa-wave-square text-amber-400"></i> USFD Real-Time Ultrasonic Acoustic Probe Spectrum
-                </h3>
-                <span class="text-[10px] font-mono text-emerald-400">2.25 MHz Transducer Active</span>
-              </div>
-              <div class="h-32 w-full bg-slate-950 rounded-xl border border-amber-500/30 p-2 relative">
-                <canvas id="usfdSpectrumChart" class="w-full h-full block"></canvas>
-              </div>
-              <div class="flex items-center justify-between text-[11px] text-slate-400 pt-1">
-                <span>Active Track: <strong class="text-amber-300">${currentTrack.name}</strong></span>
-                <span>CSM/3X Tamping Roster: <strong class="text-blue-300">Scheduled 02:00 IST</strong></span>
-              </div>
-            </div>
-
-            <!-- Rail Stress & Temperature Gauge (5 cols) -->
-            <div class="lg:col-span-5 glass-card p-4 space-y-3 flex flex-col justify-between">
-              <h3 class="text-sm font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-temperature-full text-red-400"></i> Rail Thermal Stress & Ballast Cushion
-              </h3>
-
-              <div class="grid grid-cols-2 gap-3 text-xs">
-                <div class="p-3 rounded-xl bg-slate-900 border border-white/10">
-                  <p class="text-[10px] text-slate-400 uppercase font-bold">Rail Temp (td)</p>
-                  <p class="text-2xl font-black text-amber-400 font-mono">48°C</p>
-                  <p class="text-[10px] text-slate-400 mt-1">td + 20°C Limit</p>
-                </div>
-                <div class="p-3 rounded-xl bg-slate-900 border border-white/10">
-                  <p class="text-[10px] text-slate-400 uppercase font-bold">Ballast Cushion</p>
-                  <p class="text-2xl font-black text-emerald-400 font-mono">350 mm</p>
-                  <p class="text-[10px] text-slate-400 mt-1">Clean Ballast</p>
-                </div>
-              </div>
-
-              <div class="p-2 rounded-xl bg-emerald-950/50 border border-emerald-500/30 text-[11px] text-emerald-300 flex items-center gap-2">
-                <i class="fa-solid fa-circle-check text-emerald-400"></i> No track thermal expansion buckling risk in Delhi division today.
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-    } else if (activeMaintSubTab === "s_and_t") {
-      subTabContentHtml = `
-        <!-- SUB-TAB 2: S&T SIGNAL & TELECOM DIAGNOSTICS -->
-        <div class="glass-card p-5 space-y-4 border border-cyan-500/30">
-          <div class="flex items-center justify-between border-b border-white/10 pb-3">
-            <h3 class="text-sm font-extrabold text-white uppercase tracking-wider flex items-center gap-2">
-              <i class="fa-solid fa-tower-cell text-cyan-400"></i> Signal & Telecommunication (S&T) Diagnostics Terminal
-            </h3>
-            <span class="px-2.5 py-1 rounded-full bg-emerald-950 text-emerald-400 text-xs font-bold font-mono">S&T HEALTH 100%</span>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-            <div class="p-4 rounded-xl bg-slate-900/90 border border-white/10 space-y-2">
-              <div class="flex items-center justify-between">
-                <h4 class="font-bold text-white">Point Machine #102B (NDLS)</h4>
-                <span class="px-2.5 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[10px] font-bold">HEALTHY</span>
-              </div>
-              <p class="text-slate-400 text-[11px]">1:32 Turnout Throw Time: 2.8s • Operating Current: 3.2A</p>
-              <div class="pt-2 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-slate-400">
-                <span>Locking Stroke: 100 mm</span>
-                <span>Frictional Clutch: OK</span>
-              </div>
-            </div>
-
-            <div class="p-4 rounded-xl bg-slate-900/90 border border-white/10 space-y-2">
-              <div class="flex items-center justify-between">
-                <h4 class="font-bold text-white">Axle Counter Track Circuit #4B</h4>
-                <span class="px-2.5 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[10px] font-bold">HEALTHY</span>
-              </div>
-              <p class="text-slate-400 text-[11px]">Sensor Voltage: 1.45V AC • High Frequency Phase Shift Verified</p>
-              <div class="pt-2 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-slate-400">
-                <span>Wheel In/Out Count: 0</span>
-                <span>Section Status: CLEAR</span>
-              </div>
-            </div>
-
-            <div class="p-4 rounded-xl bg-slate-900/90 border border-white/10 space-y-2">
-              <div class="flex items-center justify-between">
-                <h4 class="font-bold text-white">Kavach RFID Tag Programmer</h4>
-                <span class="px-2.5 py-0.5 rounded bg-cyan-950 text-cyan-300 text-[10px] font-bold">PROGRAMMED</span>
-              </div>
-              <p class="text-slate-400 text-[11px]">Track RFID Tags Verified: 142/142 • Distance Offset Matrix Matched</p>
-              <div class="pt-2 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-slate-400">
-                <span>RF Signal Attenuation: -2 dB</span>
-                <span>OBC Transceiver: SYNCED</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-    } else if (activeMaintSubTab === "loco_shed") {
-      subTabContentHtml = `
-        <!-- SUB-TAB 3: LOCO SHED & ROLLING STOCK MAINTENANCE -->
-        <div class="glass-card p-5 space-y-4 border border-blue-500/30">
-          <div class="flex items-center justify-between border-b border-white/10 pb-3">
-            <h3 class="text-sm font-extrabold text-white uppercase tracking-wider flex items-center gap-2">
-              <i class="fa-solid fa-train text-blue-400"></i> Rolling Stock & Electric Loco Shed Terminal (Loco Shed NDLS)
-            </h3>
-            <span class="px-2.5 py-1 rounded-full bg-blue-950 text-blue-300 text-xs font-bold font-mono">14 LOCOS INSPECTED TODAY</span>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-            <div class="p-4 rounded-xl bg-slate-900/90 border border-white/10 space-y-2">
-              <div class="flex items-center justify-between">
-                <h4 class="font-bold text-white">Loco WAP7 #30211 Wheel Profile</h4>
-                <span class="px-2.5 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[10px] font-bold">PASSED</span>
-              </div>
-              <p class="text-slate-400 text-[11px]">Flange Thickness: 29.4 mm (Min Limit 22.0 mm) • Tread Diameter 1092 mm</p>
-            </div>
-
-            <div class="p-4 rounded-xl bg-slate-900/90 border border-white/10 space-y-2">
-              <div class="flex items-center justify-between">
-                <h4 class="font-bold text-white">Composite Brake Block Wear</h4>
-                <span class="px-2.5 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[10px] font-bold">PASSED</span>
-              </div>
-              <p class="text-slate-400 text-[11px]">Block Thickness: 38 mm (Rejection Limit 10 mm) • K-Type Composite</p>
-            </div>
-
-            <div class="p-4 rounded-xl bg-slate-900/90 border border-white/10 space-y-2">
-              <div class="flex items-center justify-between">
-                <h4 class="font-bold text-white">Pantograph Carbon Strip Wear</h4>
-                <span class="px-2.5 py-0.5 rounded bg-amber-950 text-amber-400 text-[10px] font-bold">INSPECT AT 500KM</span>
-              </div>
-              <p class="text-slate-400 text-[11px]">Strip Wear: 18 mm (Max Allowable Wear 24 mm) • Auto Pressure Drop OK</p>
-            </div>
-          </div>
-        </div>
-      `;
-    } else if (activeMaintSubTab === "ohe") {
-      subTabContentHtml = `
-        <!-- SUB-TAB 4: OHE OVERHEAD ELECTRICAL SYSTEMS -->
-        <div class="glass-card p-5 space-y-4 border border-yellow-500/30">
-          <div class="flex items-center justify-between border-b border-white/10 pb-3">
-            <h3 class="text-sm font-extrabold text-white uppercase tracking-wider flex items-center gap-2">
-              <i class="fa-solid fa-bolt text-yellow-400"></i> OHE Overhead Electrical Equipment Terminal (25kV AC Grid)
-            </h3>
-            <span class="px-2.5 py-1 rounded-full bg-yellow-950 text-yellow-300 text-xs font-bold font-mono">FEEDER 24.8 kV ACTIVE</span>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-            <div class="p-4 rounded-xl bg-slate-900/90 border border-white/10 space-y-2">
-              <div class="flex items-center justify-between">
-                <h4 class="font-bold text-white">Catenary Wire Height & Stagger</h4>
-                <span class="px-2.5 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[10px] font-bold">OPTIMAL</span>
-              </div>
-              <p class="text-slate-400 text-[11px]">Height: 5.55 m • Stagger: +180 mm (Limit ±200 mm)</p>
-            </div>
-
-            <div class="p-4 rounded-xl bg-slate-900/90 border border-white/10 space-y-2">
-              <div class="flex items-center justify-between">
-                <h4 class="font-bold text-white">Neutral Section Insulator</h4>
-                <span class="px-2.5 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[10px] font-bold">CLEAR</span>
-              </div>
-              <p class="text-slate-400 text-[11px]">NDLS-NZM Km 14/2 • Loco Auto Power Cut-out Test Passed</p>
-            </div>
-
-            <div class="p-4 rounded-xl bg-slate-900/90 border border-white/10 space-y-2">
-              <div class="flex items-center justify-between">
-                <h4 class="font-bold text-white">Traction Substation Breaker</h4>
-                <span class="px-2.5 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[10px] font-bold">CLOSED</span>
-              </div>
-              <p class="text-slate-400 text-[11px]">Substation Voltage: 24.8 kV • Active Current Load: 420 Amperes</p>
-            </div>
-          </div>
-        </div>
-      `;
-    } else if (activeMaintSubTab === "work_orders") {
-      subTabContentHtml = `
-        <!-- SUB-TAB 5: P-WAY TRACK REPAIR WORK ORDER DISPATCHER TABLE -->
-        <div class="glass-card p-5 space-y-4 border border-amber-500/30">
-          <div class="flex items-center justify-between border-b border-white/10 pb-3">
-            <h3 class="text-sm font-extrabold text-white uppercase tracking-wider flex items-center gap-2">
-              <i class="fa-solid fa-clipboard-list text-amber-400"></i> P-Way Track Repair Work Order Dispatcher
-            </h3>
-            <span class="text-xs font-mono text-slate-400">${workOrders.length} Total Repair Orders</span>
-          </div>
-
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs">
-              <thead class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider bg-slate-900/60 border-b border-white/10">
-                <tr>
-                  <th class="py-3 px-3">Order ID</th>
-                  <th class="py-3 px-3">Location / Track Section</th>
-                  <th class="py-3 px-3">Defect / Hazard</th>
-                  <th class="py-3 px-3">Priority</th>
-                  <th class="py-3 px-3">Status</th>
-                  <th class="py-3 px-3">Assigned Maintenance Crew</th>
-                  <th class="py-3 px-3 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-white/5 font-medium text-slate-200">
-                ${workOrders
-                  .map(
-                    (wo) => `
-                  <tr class="hover:bg-white/5 transition-colors">
-                    <td class="py-3 px-3 font-mono font-bold text-white">${wo.id}</td>
-                    <td class="py-3 px-3 text-slate-300">${wo.location}</td>
-                    <td class="py-3 px-3">${wo.defect}</td>
-                    <td class="py-3 px-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${wo.priorityClass}">${wo.priority}</span></td>
-                    <td class="py-3 px-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${wo.statusClass}">${wo.status}</span></td>
-                    <td class="py-3 px-3 text-slate-400 text-[11px]">${wo.crew}</td>
-                    <td class="py-3 px-3 text-right">
-                      <button onclick="updateWoStatus('${wo.id}')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-amber-300 text-[10px]">Toggle Status</button>
-                    </td>
-                  </tr>
-                `,
-                  )
-                  .join("")}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      `;
-    }
-
-    container.innerHTML = `
-      <div class="space-y-5">
-        <!-- Top Action Bar & Department Header -->
-        <div class="glass-card p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-l-4 border-amber-500">
-          <div>
-            <span class="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-xs font-bold uppercase tracking-wider">Maintenance Engineering Department Hub</span>
-            <h2 class="text-xl font-black text-white font-['Outfit'] mt-1 flex items-center gap-2">
-              🛠️ Indian Railways Integrated Maintenance Engineering Hub
-            </h2>
-            <p class="text-xs text-slate-400">P-Way track & geometry, S&T signal diagnostics, Rolling stock loco shed, OHE electrical systems & work orders</p>
-          </div>
-          
-          <div class="flex items-center gap-2 text-xs">
-            <button onclick="openNewWorkOrderModal()" class="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold flex items-center gap-1.5 shadow-lg">
-              <i class="fa-solid fa-plus"></i> Dispatch Repair Order
-            </button>
-            <button onclick="runUsfdCalibrationTest()" class="px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold flex items-center gap-1.5 shadow-lg">
-              <i class="fa-solid fa-tower-cell"></i> Calibrate USFD Probes
-            </button>
-          </div>
-        </div>
-
-        <!-- Distinct Sub-Tab Navigation Bar (Indian Railways Modules) -->
-        <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
-          <button type="button" onclick="switchMaintSubTab('pway')" class="px-3.5 py-2 rounded-xl border transition-all ${activeMaintSubTab === "pway" ? "bg-amber-600/30 border-amber-400 text-amber-200 font-bold shadow-lg shadow-amber-500/20" : "bg-slate-900/80 border-white/10 text-slate-400 hover:text-white"}">
-            <i class="fa-solid fa-ruler-combined text-amber-400"></i> P-Way Track & Geometry
-          </button>
-          <button type="button" onclick="switchMaintSubTab('s_and_t')" class="px-3.5 py-2 rounded-xl border transition-all ${activeMaintSubTab === "s_and_t" ? "bg-cyan-600/30 border-cyan-400 text-cyan-200 font-bold shadow-lg shadow-cyan-500/20" : "bg-slate-900/80 border-white/10 text-slate-400 hover:text-white"}">
-            <i class="fa-solid fa-tower-cell text-cyan-400"></i> S&T Signal & Telecom
-          </button>
-          <button type="button" onclick="switchMaintSubTab('loco_shed')" class="px-3.5 py-2 rounded-xl border transition-all ${activeMaintSubTab === "loco_shed" ? "bg-blue-600/30 border-blue-400 text-blue-200 font-bold shadow-lg shadow-blue-500/20" : "bg-slate-900/80 border-white/10 text-slate-400 hover:text-white"}">
-            <i class="fa-solid fa-train text-blue-400"></i> Rolling Stock Loco Shed
-          </button>
-          <button type="button" onclick="switchMaintSubTab('ohe')" class="px-3.5 py-2 rounded-xl border transition-all ${activeMaintSubTab === "ohe" ? "bg-yellow-600/30 border-yellow-400 text-yellow-200 font-bold shadow-lg shadow-yellow-500/20" : "bg-slate-900/80 border-white/10 text-slate-400 hover:text-white"}">
-            <i class="fa-solid fa-bolt text-yellow-400"></i> OHE Overhead Electrical
-          </button>
-          <button type="button" onclick="switchMaintSubTab('work_orders')" class="px-3.5 py-2 rounded-xl border transition-all ${activeMaintSubTab === "work_orders" ? "bg-emerald-600/30 border-emerald-400 text-emerald-200 font-bold shadow-lg shadow-emerald-500/20" : "bg-slate-900/80 border-white/10 text-slate-400 hover:text-white"}">
-            <i class="fa-solid fa-clipboard-list text-emerald-400"></i> P-Way Repair Work Orders
-          </button>
-        </div>
-
-        <!-- Rendered Active Sub-Tab Module Workspace -->
-        <div id="activeSubTabContainer">
-          ${subTabContentHtml}
-        </div>
-      </div>
-    `;
-
-    if (activeMaintSubTab === "pway") {
-      setTimeout(initUsfdSpectrumCanvas, 50);
+    if (window.renderMaintenanceEngineerWorkspace) {
+      window.renderMaintenanceEngineerWorkspace(container);
     }
   }
-
-  let activeCtrlSubTab = "ctrl_tsr";
-
-  window.switchCtrlSubTab = function (tab) {
-    activeCtrlSubTab = tab || "ctrl_tsr";
-    const container = document.getElementById("activeSubTabContainer");
-    if (container) renderControlRoomWorkspace(container);
-  };
 
   function renderControlRoomWorkspace(container) {
-    let subTabHtml = "";
-
-    if (activeCtrlSubTab === "ctrl_tsr") {
-      subTabHtml = `
-        <!-- SUB-TAB 1: TSR & SPEED RESTRICTIONS + AI PRECEDENCE -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
-          <!-- Section TSR Speed Restriction Enforcer (6 cols) -->
-          <div class="lg:col-span-6 glass-card p-5 space-y-4 border border-emerald-500/30">
-            <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
-              <h3 class="text-sm font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-gauge-simple-high text-emerald-400"></i> Temporary Speed Restriction (TSR) Controls
-              </h3>
-              <span class="text-[10px] font-mono text-emerald-400">Kavach RF Auto-Broadcast</span>
-            </div>
-
-            <form onsubmit="event.preventDefault(); showToast('TSR Speed Restriction Applied to Selected Sector!', 'success');" class="space-y-3 text-xs">
-              <div>
-                <label class="block font-bold text-slate-300 mb-1">Target Sector / Track Block</label>
-                <select class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-white/10 text-white">
-                  <option>NDLS – NZM Up Main (Km 12/4 to 15/8)</option>
-                  <option>NZM – FDB Main (Km 22/1 to 28/4)</option>
-                  <option>TKD – MTJ Section (Km 45/0 to 52/2)</option>
-                </select>
-              </div>
-
-              <div>
-                <label class="block font-bold text-slate-300 mb-1">Enforced Max Speed Limit (km/h)</label>
-                <div class="grid grid-cols-4 gap-2">
-                  <button type="button" onclick="showToast('Set TSR Limit to 30 km/h', 'info')" class="py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-red-500/40 text-red-300 font-bold">30 km/h</button>
-                  <button type="button" onclick="showToast('Set TSR Limit to 45 km/h', 'info')" class="py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-amber-500/40 text-amber-300 font-bold">45 km/h</button>
-                  <button type="button" onclick="showToast('Set TSR Limit to 60 km/h', 'info')" class="py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-blue-500/40 text-blue-300 font-bold">60 km/h</button>
-                  <button type="button" onclick="showToast('Revoked TSR Limit (Normal 130 km/h)', 'success')" class="py-2 rounded-xl bg-emerald-950 border border-emerald-500/40 text-emerald-300 font-bold">Normal</button>
-                </div>
-              </div>
-
-              <div>
-                <label class="block font-bold text-slate-300 mb-1">Reason for Restriction</label>
-                <input type="text" placeholder="e.g. Dense Fog / Track Maintenance / Signal Testing" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-white/10 text-white" />
-              </div>
-
-              <button type="submit" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg transition-all cursor-pointer">
-                Broadcast TSR Speed Limit via Kavach RF
-              </button>
-            </form>
-          </div>
-
-          <!-- Train Overtaking & Precedence Controller (6 cols) -->
-          <div class="lg:col-span-6 glass-card p-5 space-y-4 border border-emerald-500/30">
-            <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
-              <h3 class="text-sm font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-code-fork text-blue-400"></i> AI Train Precedence & Overtaking Controller
-              </h3>
-              <span class="text-[10px] font-mono text-blue-300">Division Dispatch</span>
-            </div>
-
-            <div class="space-y-2.5 text-xs">
-              <div class="p-3 rounded-xl bg-slate-900 border border-white/10 space-y-1">
-                <div class="flex items-center justify-between">
-                  <span class="font-bold text-white">12951 Mumbai Rajdhani (Precedence Over Freight)</span>
-                  <span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[10px] font-bold">PRIORITY 1</span>
-                </div>
-                <p class="text-slate-400 text-[11px]">Freight WAG9 #31088 loop-lined at Palwal station to allow Rajdhani 110 km/h pass-through.</p>
-              </div>
-
-              <div class="p-3 rounded-xl bg-slate-900 border border-white/10 space-y-1">
-                <div class="flex items-center justify-between">
-                  <span class="font-bold text-white">12012 Vande Bharat (Platform 2 Hold)</span>
-                  <span class="px-2 py-0.5 rounded bg-blue-950 text-blue-300 text-[10px] font-bold">PRIORITY 2</span>
-                </div>
-                <p class="text-slate-400 text-[11px]">Scheduled 3-min signal hold at Ghaziabad junction for track clearance.</p>
-              </div>
-
-              <button onclick="showToast('Re-evaluated Train Precedence matrix using AI Engine', 'success')" class="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition-all cursor-pointer">
-                Re-calculate AI Precedence Schedule
-              </button>
-            </div>
-          </div>
-        </div>
-      `;
-    } else if (activeCtrlSubTab === "ctrl_string_graph") {
-      subTabHtml = `
-        <!-- SUB-TAB 2: LIVE TIME-DISTANCE TRAIN CHART (STRING GRAPH) -->
-        <div class="glass-card p-5 space-y-4 border border-emerald-500/30">
-          <div class="flex items-center justify-between border-b border-white/10 pb-3">
-            <h3 class="text-sm font-extrabold text-white uppercase tracking-wider flex items-center gap-2">
-              <i class="fa-solid fa-chart-line text-emerald-400"></i> Live Section Time-Distance Train String Chart (NDLS - NZM - FDB - MTJ)
-            </h3>
-            <span class="px-2.5 py-1 rounded-full bg-emerald-950 text-emerald-400 text-xs font-bold font-mono">REAL-TIME TRAIN STRINGS</span>
-          </div>
-
-          <div class="h-44 w-full bg-slate-950 rounded-xl border border-emerald-500/30 p-3 relative flex items-center justify-center">
-            <div class="w-full h-full flex flex-col justify-between text-xs font-mono text-slate-400">
-              <div class="flex justify-between border-b border-white/10 pb-1 text-[10px]">
-                <span>NDLS (0 Km)</span>
-                <span>NZM (14 Km)</span>
-                <span>FDB (28 Km)</span>
-                <span>MTJ (140 Km)</span>
-              </div>
-              <div class="relative flex-1 py-2">
-                <!-- String lines -->
-                <div class="absolute inset-0 flex items-center">
-                  <div class="w-full border-t border-dashed border-emerald-500/30"></div>
-                </div>
-                <div class="p-2 rounded bg-emerald-950/80 border border-emerald-500/40 text-[11px] text-emerald-300 font-bold w-fit">
-                  ⚡ Train 12951 Mumbai Rajdhani • 112 km/h • On Schedule (0 Delay)
-                </div>
-              </div>
-              <div class="flex justify-between text-[10px] text-slate-500 border-t border-white/10 pt-1">
-                <span>08:00 IST</span>
-                <span>09:00 IST</span>
-                <span>10:00 IST</span>
-                <span>11:00 IST</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-    } else if (activeCtrlSubTab === "ctrl_freight") {
-      subTabHtml = `
-        <!-- SUB-TAB 3: FREIGHT RAKE & COAL ROSTER DISPATCHER -->
-        <div class="glass-card p-5 space-y-4 border border-emerald-500/30">
-          <div class="flex items-center justify-between border-b border-white/10 pb-3">
-            <h3 class="text-sm font-extrabold text-white uppercase tracking-wider flex items-center gap-2">
-              <i class="fa-solid fa-boxes-packing text-amber-400"></i> Freight Rake & Goods Shed Priority Dispatcher
-            </h3>
-            <span class="px-2.5 py-1 rounded-full bg-amber-950 text-amber-300 text-xs font-bold font-mono">18 FREIGHT RAKES ACTIVE</span>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-            <div class="p-4 rounded-xl bg-slate-900/90 border border-white/10 space-y-2">
-              <h4 class="font-bold text-white">BOXN Coal Rake #58102</h4>
-              <p class="text-slate-400 text-[11px]">Load: 3,850 Tons Thermal Coal • From NTPC Dadri</p>
-              <span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[10px] font-bold">GREEN CORRIDOR ASSIGNED</span>
-            </div>
-            <div class="p-4 rounded-xl bg-slate-900/90 border border-white/10 space-y-2">
-              <h4 class="font-bold text-white">BTPN Oil Tanker Rake #99201</h4>
-              <p class="text-slate-400 text-[11px]">Load: 2,400 KLD Aviation Turbine Fuel • Mathura Refinery</p>
-              <span class="px-2 py-0.5 rounded bg-blue-950 text-blue-300 text-[10px] font-bold">HAZMAT CLEARANCE OK</span>
-            </div>
-            <div class="p-4 rounded-xl bg-slate-900/90 border border-white/10 space-y-2">
-              <h4 class="font-bold text-white">BCN Covered Grains Rake #20412</h4>
-              <p class="text-slate-400 text-[11px]">Load: 2,600 Tons Wheat (FCI Rake) • Tughlakabad Yard</p>
-              <span class="px-2 py-0.5 rounded bg-amber-950 text-amber-400 text-[10px] font-bold">UNLOADING AT YARD 3</span>
-            </div>
-          </div>
-        </div>
-      `;
-    } else if (activeCtrlSubTab === "ctrl_disaster") {
-      subTabHtml = `
-        <!-- SUB-TAB 4: DISASTER MANAGEMENT ART / ARME DISPATCHER -->
-        <div class="glass-card p-5 space-y-4 border border-red-500/40">
-          <div class="flex items-center justify-between border-b border-white/10 pb-3">
-            <h3 class="text-sm font-extrabold text-white uppercase tracking-wider flex items-center gap-2">
-              <i class="fa-solid fa-truck-medical text-red-400"></i> Disaster Management ART (Accident Relief Train) Dispatcher
-            </h3>
-            <span class="px-2.5 py-1 rounded-full bg-emerald-950 text-emerald-400 text-xs font-bold font-mono">ART/ARME STANDBY</span>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-            <div class="p-4 rounded-xl bg-slate-900/90 border border-white/10 space-y-2">
-              <h4 class="font-bold text-white">Class-A ART Unit (NDLS Yard)</h4>
-              <p class="text-slate-400 text-[11px]">140-Ton Gottwald Crane + Hydraulic Re-railing Equipment</p>
-              <button onclick="showToast('ART Unit Ready in 15 Min Standby', 'info')" class="w-full py-1.5 rounded bg-slate-800 text-slate-300 text-[10px] font-bold">Check Readiness</button>
-            </div>
-            <div class="p-4 rounded-xl bg-slate-900/90 border border-white/10 space-y-2">
-              <h4 class="font-bold text-white">ARME Medical Relief Van (NZM)</h4>
-              <p class="text-slate-400 text-[11px]">2-Coach Self-Propelled Medical Van with Operation Theater</p>
-              <button onclick="showToast('ARME Medical Unit Operational', 'info')" class="w-full py-1.5 rounded bg-slate-800 text-slate-300 text-[10px] font-bold">Check Readiness</button>
-            </div>
-            <div class="p-4 rounded-xl bg-slate-900/90 border border-white/10 space-y-2">
-              <h4 class="font-bold text-white">140T Heavy Crane (TKD Yard)</h4>
-              <p class="text-slate-400 text-[11px]">Heavy Breakdown Crane Team • Standby Crew On Duty</p>
-              <button onclick="showToast('Heavy Crane Unit Ready', 'info')" class="w-full py-1.5 rounded bg-slate-800 text-slate-300 text-[10px] font-bold">Check Readiness</button>
-            </div>
-          </div>
-        </div>
-      `;
+    if (window.renderControlRoomWorkspace) {
+      window.renderControlRoomWorkspace(container);
     }
-
-    container.innerHTML = `
-      <div class="space-y-5">
-        <!-- Top Action Bar -->
-        <div class="glass-card p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-l-4 border-emerald-500">
-          <div>
-            <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold uppercase tracking-wider">Control Room Officer Console</span>
-            <h2 class="text-xl font-black text-white font-['Outfit'] mt-1 flex items-center gap-2">
-              🎛️ Section Train Control & Dispatch Terminal
-            </h2>
-            <p class="text-xs text-slate-400">TSR speed restrictions, live string graph, freight rake dispatcher & disaster management ART</p>
-          </div>
-          
-          <div class="flex items-center gap-2 text-xs">
-            <button onclick="showToast('DIVISION EMERGENCY HALT ACTIVATED: RF SOS broadcast sent to all locomotives in sector!', 'error')" class="px-3.5 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold flex items-center gap-1.5 shadow-lg">
-              <i class="fa-solid fa-power-off"></i> Division Emergency Stop (RF SOS)
-            </button>
-          </div>
-        </div>
-
-        <!-- Control Room Sub-Tabs -->
-        <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
-          <button type="button" onclick="switchCtrlSubTab('ctrl_tsr')" class="px-3.5 py-2 rounded-xl border transition-all ${activeCtrlSubTab === "ctrl_tsr" ? "bg-emerald-600/30 border-emerald-400 text-emerald-200 font-bold shadow-lg shadow-emerald-500/20" : "bg-slate-900/80 border-white/10 text-slate-400 hover:text-white"}">
-            <i class="fa-solid fa-gauge-simple-high text-emerald-400"></i> TSR Speed Restrictions
-          </button>
-          <button type="button" onclick="switchCtrlSubTab('ctrl_string_graph')" class="px-3.5 py-2 rounded-xl border transition-all ${activeCtrlSubTab === "ctrl_string_graph" ? "bg-emerald-600/30 border-emerald-400 text-emerald-200 font-bold shadow-lg shadow-emerald-500/20" : "bg-slate-900/80 border-white/10 text-slate-400 hover:text-white"}">
-            <i class="fa-solid fa-chart-line text-emerald-400"></i> Live String Graph
-          </button>
-          <button type="button" onclick="switchCtrlSubTab('ctrl_freight')" class="px-3.5 py-2 rounded-xl border transition-all ${activeCtrlSubTab === "ctrl_freight" ? "bg-emerald-600/30 border-emerald-400 text-emerald-200 font-bold shadow-lg shadow-emerald-500/20" : "bg-slate-900/80 border-white/10 text-slate-400 hover:text-white"}">
-            <i class="fa-solid fa-boxes-packing text-amber-400"></i> Freight Dispatcher
-          </button>
-          <button type="button" onclick="switchCtrlSubTab('ctrl_disaster')" class="px-3.5 py-2 rounded-xl border transition-all ${activeCtrlSubTab === "ctrl_disaster" ? "bg-emerald-600/30 border-emerald-400 text-emerald-200 font-bold shadow-lg shadow-emerald-500/20" : "bg-slate-900/80 border-white/10 text-slate-400 hover:text-white"}">
-            <i class="fa-solid fa-truck-medical text-red-400"></i> Disaster ART Dispatcher
-          </button>
-        </div>
-
-        ${subTabHtml}
-      </div>
-    `;
   }
 
-  let activeAdminSubTab = "admin_roster";
-
-  window.switchAdminSubTab = function (tab) {
-    activeAdminSubTab = tab || "admin_roster";
-    const container = document.getElementById("activeSubTabContainer");
-    if (container) renderAdminSuperintendentWorkspace(container);
-  };
-
   function renderAdminSuperintendentWorkspace(container) {
-    let subTabHtml = "";
-
-    if (activeAdminSubTab === "admin_roster") {
-      subTabHtml = `
-        <!-- SUB-TAB 1: PERSONNEL ROSTER & AES-256 KEYS -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
-          <div class="lg:col-span-7 glass-card p-5 space-y-4 border border-purple-500/30">
-            <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
-              <h3 class="text-sm font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-users-gear text-purple-400"></i> Authorized Personnel & Access Permissions
-              </h3>
-              <span class="text-[10px] font-mono text-purple-300">4 Active Roles</span>
-            </div>
-
-            <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs">
-                <thead class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider bg-slate-900/60 border-b border-white/10">
-                  <tr>
-                    <th class="py-2 px-2.5">Officer Name / ID</th>
-                    <th class="py-2 px-2.5">Role</th>
-                    <th class="py-2 px-2.5">Access Level</th>
-                    <th class="py-2 px-2.5">Status</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-white/5 font-medium text-slate-200">
-                  <tr class="hover:bg-white/5">
-                    <td class="py-2.5 px-2.5 font-bold text-white">R. K. Sharma<br/><span class="text-[10px] text-slate-400 font-mono">IR_SM_NDLS_01</span></td>
-                    <td class="py-2.5 px-2.5 text-cyan-300">Station Master</td>
-                    <td class="py-2.5 px-2.5 font-mono">Level 3 (Station)</td>
-                    <td class="py-2.5 px-2.5"><span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[10px] font-bold">ONLINE</span></td>
-                  </tr>
-                  <tr class="hover:bg-white/5">
-                    <td class="py-2.5 px-2.5 font-bold text-white">V. K. Yadav<br/><span class="text-[10px] text-slate-400 font-mono">IR_ENG_PWAY_04</span></td>
-                    <td class="py-2.5 px-2.5 text-amber-300">Maintenance Engineer</td>
-                    <td class="py-2.5 px-2.5 font-mono">Level 4 (P-Way/S&T)</td>
-                    <td class="py-2.5 px-2.5"><span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[10px] font-bold">ONLINE</span></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <div class="lg:col-span-5 glass-card p-5 space-y-4 border border-purple-500/30">
-            <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
-              <h3 class="text-sm font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-tower-cell text-purple-400"></i> Kavach RF Towers Telemetry
-              </h3>
-              <span class="text-[10px] font-mono text-emerald-400">ALL TOWERS ONLINE</span>
-            </div>
-
-            <div class="space-y-2 text-xs">
-              <div class="p-2.5 rounded-xl bg-slate-900 border border-white/10 flex items-center justify-between">
-                <div>
-                  <p class="font-bold text-white">Tower 03: Faridabad Optical Mesh</p>
-                  <p class="text-[10px] text-slate-400 font-mono">Frequency: 406.8 MHz • Signal: -55 dBm</p>
-                </div>
-                <span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[10px] font-bold">ACTIVE</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-    } else if (activeAdminSubTab === "admin_safety") {
-      subTabHtml = `
-        <!-- SUB-TAB 2: SAFETY AUDIT & SPAD INVESTIGATION LOG -->
-        <div class="glass-card p-5 space-y-4 border border-purple-500/30">
-          <div class="flex items-center justify-between border-b border-white/10 pb-3">
-            <h3 class="text-sm font-extrabold text-white uppercase tracking-wider flex items-center gap-2">
-              <i class="fa-solid fa-shield-virus text-purple-400"></i> Safety Audit & SPAD (Signal Passing at Danger) Investigation Log
-            </h3>
-            <span class="px-2.5 py-1 rounded-full bg-emerald-950 text-emerald-400 text-xs font-bold font-mono">ZERO SPAD INCIDENTS</span>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-            <div class="p-4 rounded-xl bg-slate-900/90 border border-white/10 space-y-2">
-              <h4 class="font-bold text-white">Kavach Auto-Brake Interventions</h4>
-              <p class="text-slate-400 text-[11px]">3 Automatic Speed Corrections Applied Today • 0 Overspeed Violations</p>
-              <span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[10px] font-bold">100% SAFETY RATING</span>
-            </div>
-            <div class="p-4 rounded-xl bg-slate-900/90 border border-white/10 space-y-2">
-              <h4 class="font-bold text-white">CRS Safety Inspection Audit</h4>
-              <p class="text-slate-400 text-[11px]">Commissioner of Railway Safety Audit Verified for Delhi Division</p>
-              <span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[10px] font-bold">PASSED WITH HONORS</span>
-            </div>
-            <div class="p-4 rounded-xl bg-slate-900/90 border border-white/10 space-y-2">
-              <h4 class="font-bold text-white">Near-Miss Incident Log</h4>
-              <p class="text-slate-400 text-[11px]">0 Near-Miss Events Reported in last 30 Days across All Sectors</p>
-              <span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[10px] font-bold">ZERO INCIDENTS</span>
-            </div>
-          </div>
-        </div>
-      `;
-    } else if (activeAdminSubTab === "admin_sobriety") {
-      subTabHtml = `
-        <!-- SUB-TAB 3: CREW BREATH ANALYZER SOBRIETY LOG -->
-        <div class="glass-card p-5 space-y-4 border border-purple-500/30">
-          <div class="flex items-center justify-between border-b border-white/10 pb-3">
-            <h3 class="text-sm font-extrabold text-white uppercase tracking-wider flex items-center gap-2">
-              <i class="fa-solid fa-heart-pulse text-purple-400"></i> Running Crew Pre-Run Breath Analyzer (BA) Sobriety Log
-            </h3>
-            <span class="px-2.5 py-1 rounded-full bg-emerald-950 text-emerald-400 text-xs font-bold font-mono">100% SOBRIETY VERIFIED</span>
-          </div>
-
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs font-mono">
-              <thead class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider bg-slate-900/60 border-b border-white/10">
-                <tr>
-                  <th class="py-3 px-3">Crew ID</th>
-                  <th class="py-3 px-3">Loco Pilot Name</th>
-                  <th class="py-3 px-3">Assigned Train</th>
-                  <th class="py-3 px-3">Test Time</th>
-                  <th class="py-3 px-3">BA Reading (mg/100ml)</th>
-                  <th class="py-3 px-3">Status</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-white/5 text-slate-200">
-                <tr class="hover:bg-white/5">
-                  <td class="py-3 px-3 font-bold text-white">LP-9012</td>
-                  <td class="py-3 px-3 text-purple-300 font-sans font-bold">Rajesh Kumar</td>
-                  <td class="py-3 px-3 text-slate-400">12951 Rajdhani</td>
-                  <td class="py-3 px-3 text-slate-400">09:45 AM</td>
-                  <td class="py-3 px-3 text-emerald-400 font-bold">0.00 mg/100ml</td>
-                  <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[10px]">CLEARED FOR DUTY</span></td>
-                </tr>
-                <tr class="hover:bg-white/5">
-                  <td class="py-3 px-3 font-bold text-white">ALP-4410</td>
-                  <td class="py-3 px-3 text-purple-300 font-sans font-bold">Amitabh Singh</td>
-                  <td class="py-3 px-3 text-slate-400">12012 Vande Bharat</td>
-                  <td class="py-3 px-3 text-slate-400">09:12 AM</td>
-                  <td class="py-3 px-3 text-emerald-400 font-bold">0.00 mg/100ml</td>
-                  <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[10px]">CLEARED FOR DUTY</span></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      `;
-    } else if (activeAdminSubTab === "admin_telemetry") {
-      subTabHtml = `
-        <!-- SUB-TAB 4: KAVACH SATELLITE & RF FREQUENCY DIAGNOSTIC -->
-        <div class="glass-card p-5 space-y-4 border border-purple-500/30">
-          <div class="flex items-center justify-between border-b border-white/10 pb-3">
-            <h3 class="text-sm font-extrabold text-white uppercase tracking-wider flex items-center gap-2">
-              <i class="fa-solid fa-satellite text-purple-400"></i> Kavach Satellite & 160MHz RF Frequency Channel Diagnostic
-            </h3>
-            <span class="px-2.5 py-1 rounded-full bg-purple-950 text-purple-300 text-xs font-bold font-mono">GPS SUB-METER ACCURACY</span>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-            <div class="p-4 rounded-xl bg-slate-900/90 border border-white/10 space-y-2">
-              <h4 class="font-bold text-white">IRNSS / NavIC Satellite Sync</h4>
-              <p class="text-slate-400 text-[11px]">12 Satellites Locked • Time Sync Accuracy: ±1.2 Nanoseconds</p>
-              <span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[10px] font-bold">HIGH PRECISION</span>
-            </div>
-            <div class="p-4 rounded-xl bg-slate-900/90 border border-white/10 space-y-2">
-              <h4 class="font-bold text-white">160 MHz UHF RF Duplex Channel</h4>
-              <p class="text-slate-400 text-[11px]">TX/RX Frequency: 160.225 MHz • Modulation: TDMA/GMSK</p>
-              <span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[10px] font-bold">ZERO NOISE</span>
-            </div>
-            <div class="p-4 rounded-xl bg-slate-900/90 border border-white/10 space-y-2">
-              <h4 class="font-bold text-white">Cryptographic AES-256 Key Status</h4>
-              <p class="text-slate-400 text-[11px]">Key ID: IR-KAV-2026-KEY-09 • Auto Rotation in 48 Hours</p>
-              <span class="px-2 py-0.5 rounded bg-purple-950 text-purple-300 text-[10px] font-bold">ENCRYPTED</span>
-            </div>
-          </div>
-        </div>
-      `;
+    if (window.renderAdminSuperintendentWorkspace) {
+      window.renderAdminSuperintendentWorkspace(container);
     }
-
-    container.innerHTML = `
-      <div class="space-y-5">
-        <!-- Top Action Bar -->
-        <div class="glass-card p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-l-4 border-purple-500">
-          <div>
-            <span class="px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 text-xs font-bold uppercase tracking-wider">Admin & Superintendent Console</span>
-            <h2 class="text-xl font-black text-white font-['Outfit'] mt-1 flex items-center gap-2">
-              🛡️ Division Access Control & Safety Audit Hub
-            </h2>
-            <p class="text-xs text-slate-400">Personnel authorization, safety audits, crew breath analyzer logs & Kavach satellite diagnostics</p>
-          </div>
-          
-          <div class="flex items-center gap-2 text-xs">
-            <button onclick="showToast('Rotated Division Kavach AES-256 Encryption Keys', 'success')" class="px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold flex items-center gap-1.5 shadow-lg">
-              <i class="fa-solid fa-key"></i> Rotate AES-256 Keys
-            </button>
-          </div>
-        </div>
-
-        <!-- Admin Sub-Tabs -->
-        <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
-          <button type="button" onclick="switchAdminSubTab('admin_roster')" class="px-3.5 py-2 rounded-xl border transition-all ${activeAdminSubTab === "admin_roster" ? "bg-purple-600/30 border-purple-400 text-purple-200 font-bold shadow-lg shadow-purple-500/20" : "bg-slate-900/80 border-white/10 text-slate-400 hover:text-white"}">
-            <i class="fa-solid fa-users-gear text-purple-400"></i> Personnel Access & Keys
-          </button>
-          <button type="button" onclick="switchAdminSubTab('admin_safety')" class="px-3.5 py-2 rounded-xl border transition-all ${activeAdminSubTab === "admin_safety" ? "bg-purple-600/30 border-purple-400 text-purple-200 font-bold shadow-lg shadow-purple-500/20" : "bg-slate-900/80 border-white/10 text-slate-400 hover:text-white"}">
-            <i class="fa-solid fa-shield-virus text-purple-400"></i> Safety Audits & SPAD Log
-          </button>
-          <button type="button" onclick="switchAdminSubTab('admin_sobriety')" class="px-3.5 py-2 rounded-xl border transition-all ${activeAdminSubTab === "admin_sobriety" ? "bg-purple-600/30 border-purple-400 text-purple-200 font-bold shadow-lg shadow-purple-500/20" : "bg-slate-900/80 border-white/10 text-slate-400 hover:text-white"}">
-            <i class="fa-solid fa-heart-pulse text-purple-400"></i> Crew Breath Analyzer Log
-          </button>
-          <button type="button" onclick="switchAdminSubTab('admin_telemetry')" class="px-3.5 py-2 rounded-xl border transition-all ${activeAdminSubTab === "admin_telemetry" ? "bg-purple-600/30 border-purple-400 text-purple-200 font-bold shadow-lg shadow-purple-500/20" : "bg-slate-900/80 border-white/10 text-slate-400 hover:text-white"}">
-            <i class="fa-solid fa-satellite text-purple-400"></i> Satellite & RF Diagnostic
-          </button>
-        </div>
-
-        ${subTabHtml}
-      </div>
-    `;
   }
 
   // Work Orders Full Tab View

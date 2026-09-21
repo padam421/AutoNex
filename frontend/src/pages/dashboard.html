@@ -315,6 +315,17 @@
             <a
               href="#"
               onclick="
+                switchNavView('weather');
+                return false;
+              "
+              id="nav_weather"
+              class="sidebar-link text-slate-400 hover:text-slate-200 flex items-center gap-3 px-3.5 py-2.5 rounded-xl"
+            >
+              <i class="fa-solid fa-cloud-sun text-sm w-4"></i> Weather & Fog Radar
+            </a>
+            <a
+              href="#"
+              onclick="
                 switchNavView('notifications');
                 return false;
               "
@@ -622,6 +633,13 @@
     <script src="../js/core/liveTrainEngine.js"></script>
     <script src="../js/core/reschedulingEngine.js"></script>
     <script src="../js/core/analyticsEngine.js"></script>
+    <!-- Dedicated Department Personnel Consoles -->
+    <script src="../js/pages/departments/stationMaster.js"></script>
+    <script src="../js/pages/departments/maintenanceEngineer.js"></script>
+    <script src="../js/pages/departments/controlRoom.js"></script>
+    <script src="../js/pages/departments/adminSuperintendent.js"></script>
+    <!-- Real-Time Satellite Meteorology Engine -->
+    <script src="../js/core/weatherEngine.js"></script>
     <!-- JavaScript Entry Point -->
     <script src="../js/pages/dashboard.js"></script>
   </body>

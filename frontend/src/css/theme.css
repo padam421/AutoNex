@@ -713,6 +713,63 @@ footer p, footer span, footer a {
 }
 
 /* ==========================================================================
+   DE-CLUTTERED INTELLIGENT TRAIN MARKERS (Compact Pills + Smooth Hover Expansion)
+   ========================================================================== */
+
+.custom-train-leaflet-marker {
+  z-index: 500;
+  transition: z-index 0.15s ease;
+}
+
+.custom-train-leaflet-marker:hover {
+  z-index: 9999 !important;
+}
+
+.train-marker-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.train-mini-pill {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  white-space: nowrap;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 100;
+}
+
+.train-full-hover-badge {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px) scale(0.92);
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1000;
+}
+
+/* On hover or when selected: reveal full card and hide mini pill */
+.custom-train-leaflet-marker:hover .train-full-hover-badge,
+.train-marker-selected .train-full-hover-badge {
+  opacity: 1 !important;
+  transform: translateX(-50%) translateY(0) scale(1) !important;
+  pointer-events: auto !important;
+}
+
+.custom-train-leaflet-marker:hover .train-mini-pill,
+.train-marker-selected .train-mini-pill {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* ==========================================================================
    INTERACTIVE FORWARD ROUTE TIMELINE & TRACK SCRUBBER
    ========================================================================== */
 
