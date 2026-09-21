@@ -725,7 +725,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   window.switchNavView = function (viewName) {
-    activeNavView = (viewName === "overview" || !viewName) ? "train_list" : viewName;
+    activeNavView = (!viewName || viewName === "overview") ? "live_map" : viewName;
 
     // Sync header dropdown to 'overview' if normal view selected
     const selectEl = document.getElementById("headerDepartmentSelect");
@@ -763,8 +763,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const container = document.getElementById("activeSubTabContainer");
     if (!container) return;
 
-    if (activeNavView === "overview" || activeNavView === "train_list") {
-      activeNavView = "train_list";
+    if (activeNavView === "live_map") {
+      renderLiveMapSection(container);
+    } else if (activeNavView === "overview") {
+      renderDashboardOverview(container);
+    } else if (activeNavView === "train_list") {
       renderTrainListSection(container);
     } else if (
       activeNavView === "station_master" ||
@@ -773,10 +776,6 @@ document.addEventListener("DOMContentLoaded", () => {
       activeNavView === "admin_superintendent"
     ) {
       switchDepartmentWorkspace(activeNavView);
-    } else if (activeNavView === "live_map") {
-      renderLiveMapSection(container);
-    } else if (activeNavView === "train_list") {
-      renderTrainListSection(container);
     } else if (activeNavView === "conflict_alerts") {
       renderConflictAlertsSection(container);
     } else if (activeNavView === "delay_analytics") {
@@ -832,8 +831,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Forward Route Track Timeline & Distance/ETA Scrubber.
   // =========================================================================
 
-  // Comprehensive Pan-India Train Corridors Dataset
-  const panIndiaTrainData = [
+  // Comprehensive Pan-India Train Corridors Dataset (Live Cyclic Fleet Across All Zones)
+  let panIndiaTrainData = [
     {
       id: "22436",
       number: "22436",
@@ -856,14 +855,17 @@ document.addEventListener("DOMContentLoaded", () => {
       cabSignal: "PROCEED (GREEN)",
       cabSignalClass: "text-emerald-400",
       routeDescription: "New Delhi (NDLS) ➔ Aligarh ➔ Kanpur Central ➔ Prayagraj ➔ Varanasi",
+      depart: "06:00",
+      arrive: "14:00",
+      durationMins: 480,
       stations: [
-        { name: "New Delhi", code: "NDLS", lat: 28.6139, lng: 77.2090, pf: "PF 16", arr: "Departed 06:00", distKm: 0 },
-        { name: "Aligarh Jn", code: "ALJN", lat: 27.8974, lng: 78.0880, pf: "PF 3", arr: "07:30", distKm: 131 },
-        { name: "Kanpur Central", code: "CNB", lat: 26.4499, lng: 80.3319, pf: "PF 1", arr: "10:08", distKm: 440 },
-        { name: "Prayagraj Jn", code: "PRYJ", lat: 25.4358, lng: 81.8463, pf: "PF 6", arr: "12:08", distKm: 635 },
-        { name: "Varanasi Jn", code: "BSB", lat: 25.3176, lng: 82.9739, pf: "PF 1", arr: "14:00", distKm: 759 }
+        { name: "New Delhi", code: "NDLS", lat: 28.6139, lng: 77.2090, pf: "PF 16", arr: "06:00", dep: "06:00", distKm: 0 },
+        { name: "Aligarh Jn", code: "ALJN", lat: 27.8974, lng: 78.0880, pf: "PF 3", arr: "07:30", dep: "07:32", distKm: 131 },
+        { name: "Kanpur Central", code: "CNB", lat: 26.4499, lng: 80.3319, pf: "PF 1", arr: "10:08", dep: "10:13", distKm: 440 },
+        { name: "Prayagraj Jn", code: "PRYJ", lat: 25.4358, lng: 81.8463, pf: "PF 6", arr: "12:08", dep: "12:13", distKm: 635 },
+        { name: "Varanasi Jn", code: "BSB", lat: 25.3176, lng: 82.9739, pf: "PF 1", arr: "14:00", dep: "14:00", distKm: 759 }
       ],
-      progress: 0.35
+      progress: 0.38
     },
     {
       id: "12951",
@@ -886,17 +888,389 @@ document.addEventListener("DOMContentLoaded", () => {
       brakingMargin: "1,450m (Safe Curve)",
       cabSignal: "PROCEED (GREEN)",
       cabSignalClass: "text-emerald-400",
-      routeDescription: "Mumbai Central (MMCT) ➔ Surat ➔ Vadodara ➔ Ratlam ➔ Kota ➔ New Delhi",
+      routeDescription: "Mumbai Central (MMCT) ➔ Surat ➔ Vadodara ➔ Ratlam ➔ Kota ➔ Mathura ➔ New Delhi",
+      depart: "17:00",
+      arrive: "08:32",
+      durationMins: 932,
       stations: [
-        { name: "Mumbai Central", code: "MMCT", lat: 18.9712, lng: 72.8197, pf: "PF 1", arr: "Departed 17:00", distKm: 0 },
-        { name: "Surat", code: "ST", lat: 21.1702, lng: 72.8311, pf: "PF 1", arr: "19:32", distKm: 263 },
-        { name: "Vadodara Jn", code: "BRC", lat: 22.3072, lng: 73.1812, pf: "PF 2", arr: "21:05", distKm: 392 },
-        { name: "Ratlam Jn", code: "RTM", lat: 23.3315, lng: 75.0367, pf: "PF 4", arr: "00:25", distKm: 653 },
-        { name: "Kota Jn", code: "KOTA", lat: 25.1800, lng: 75.8300, pf: "PF 1", arr: "03:15", distKm: 919 },
-        { name: "Mathura Jn", code: "MTJ", lat: 27.4924, lng: 77.6737, pf: "PF 3", arr: "06:40", distKm: 1243 },
-        { name: "New Delhi", code: "NDLS", lat: 28.6139, lng: 77.2090, pf: "PF 1", arr: "08:32", distKm: 1384 }
+        { name: "Mumbai Central", code: "MMCT", lat: 18.9712, lng: 72.8197, pf: "PF 1", arr: "17:00", dep: "17:00", distKm: 0 },
+        { name: "Surat", code: "ST", lat: 21.1702, lng: 72.8311, pf: "PF 1", arr: "19:32", dep: "19:37", distKm: 263 },
+        { name: "Vadodara Jn", code: "BRC", lat: 22.3072, lng: 73.1812, pf: "PF 2", arr: "21:05", dep: "21:15", distKm: 392 },
+        { name: "Ratlam Jn", code: "RTM", lat: 23.3315, lng: 75.0367, pf: "PF 4", arr: "00:25", dep: "00:30", distKm: 653 },
+        { name: "Kota Jn", code: "KOTA", lat: 25.1800, lng: 75.8300, pf: "PF 1", arr: "03:15", dep: "03:20", distKm: 919 },
+        { name: "Mathura Jn", code: "MTJ", lat: 27.4924, lng: 77.6737, pf: "PF 3", arr: "06:40", dep: "06:42", distKm: 1243 },
+        { name: "New Delhi", code: "NDLS", lat: 28.6139, lng: 77.2090, pf: "PF 1", arr: "08:32", dep: "08:32", distKm: 1384 }
       ],
-      progress: 0.42
+      progress: 0.62
+    },
+    {
+      id: "12302",
+      number: "12302",
+      name: "Howrah Rajdhani Express (via Gaya)",
+      shortName: "Howrah Rajdhani (NDLS - HWH)",
+      type: "rajdhani",
+      color: "#b91c1c",
+      speed: 130,
+      maxSpeed: 130,
+      kavachStatus: "ARMED (SIL-4)",
+      kavachFreq: "160.200 MHz",
+      rssi: "-42 dBm",
+      satellites: 14,
+      locoPilot: "A. K. Banerjee (HQ HWH)",
+      locoModel: "WAP-7 HOG (6,000 HP)",
+      currentSection: "Kanpur - Prayagraj Trunk Route",
+      nextStation: "Prayagraj Jn (PRYJ)",
+      etaNextStation: "38 mins",
+      brakingMargin: "1,550m (Optimal)",
+      cabSignal: "PROCEED (GREEN)",
+      cabSignalClass: "text-emerald-400",
+      routeDescription: "New Delhi (NDLS) ➔ Kanpur ➔ Prayagraj ➔ Patna ➔ Howrah",
+      depart: "16:55",
+      arrive: "10:00",
+      durationMins: 1025,
+      stations: [
+        { name: "New Delhi", code: "NDLS", lat: 28.6139, lng: 77.2090, pf: "PF 16", arr: "16:55", dep: "16:55", distKm: 0 },
+        { name: "Kanpur Central", code: "CNB", lat: 26.4499, lng: 80.3319, pf: "PF 1", arr: "21:38", dep: "21:43", distKm: 440 },
+        { name: "Prayagraj Jn", code: "PRYJ", lat: 25.4358, lng: 81.8463, pf: "PF 4", arr: "00:05", dep: "00:10", distKm: 635 },
+        { name: "Patna Jn", code: "PNBE", lat: 25.6022, lng: 85.1376, pf: "PF 1", arr: "05:45", dep: "05:50", distKm: 998 },
+        { name: "Howrah Jn", code: "HWH", lat: 22.5839, lng: 88.3433, pf: "PF 9", arr: "10:00", dep: "10:00", distKm: 1451 }
+      ],
+      progress: 0.48
+    },
+    {
+      id: "12952",
+      number: "12952",
+      name: "New Delhi - Mumbai Tejas Rajdhani",
+      shortName: "Tejas Rajdhani (NDLS - MMCT)",
+      type: "rajdhani",
+      color: "#dc2626",
+      speed: 130,
+      maxSpeed: 130,
+      kavachStatus: "ARMED (SIL-4)",
+      kavachFreq: "160.225 MHz",
+      rssi: "-44 dBm",
+      satellites: 14,
+      locoPilot: "R. P. Deshmukh (HQ MMCT)",
+      locoModel: "WAP-7 High Adhesion",
+      currentSection: "Mathura - Kota High Speed Corridor",
+      nextStation: "Kota Jn (KOTA)",
+      etaNextStation: "1hr 12m",
+      brakingMargin: "1,600m",
+      cabSignal: "PROCEED (GREEN)",
+      cabSignalClass: "text-emerald-400",
+      routeDescription: "New Delhi (NDLS) ➔ Kota ➔ Vadodara ➔ Mumbai Central",
+      depart: "16:25",
+      arrive: "08:15",
+      durationMins: 950,
+      stations: [
+        { name: "New Delhi", code: "NDLS", lat: 28.6139, lng: 77.2090, pf: "PF 2", arr: "16:25", dep: "16:25", distKm: 0 },
+        { name: "Kota Jn", code: "KOTA", lat: 25.1800, lng: 75.8300, pf: "PF 1", arr: "21:50", dep: "21:55", distKm: 465 },
+        { name: "Vadodara Jn", code: "BRC", lat: 22.3072, lng: 73.1812, pf: "PF 3", arr: "03:05", dep: "03:10", distKm: 992 },
+        { name: "Mumbai Central", code: "MMCT", lat: 18.9712, lng: 72.8197, pf: "PF 1", arr: "08:15", dep: "08:15", distKm: 1384 }
+      ],
+      progress: 0.22
+    },
+    {
+      id: "12059",
+      number: "12059",
+      name: "Kota Jan Shatabdi Express",
+      shortName: "Kota Jan Shatabdi (NDLS - KOTA)",
+      type: "shatabdi",
+      color: "#0369a1",
+      speed: 110,
+      maxSpeed: 110,
+      kavachStatus: "ACTIVE (160.200 MHz)",
+      kavachFreq: "160.200 MHz",
+      rssi: "-48 dBm",
+      satellites: 13,
+      locoPilot: "G. S. Yadav (HQ AGC)",
+      locoModel: "WAP-7 Dual Cab",
+      currentSection: "Mathura - Agra Cantt Line",
+      nextStation: "Agra Cantt (AGC)",
+      etaNextStation: "28 mins",
+      brakingMargin: "1,350m",
+      cabSignal: "PROCEED (GREEN)",
+      cabSignalClass: "text-emerald-400",
+      routeDescription: "New Delhi (NDLS) ➔ Mathura ➔ Agra Cantt ➔ Gwalior ➔ Kota",
+      depart: "17:50",
+      arrive: "23:20",
+      durationMins: 330,
+      stations: [
+        { name: "New Delhi", code: "NDLS", lat: 28.6139, lng: 77.2090, pf: "PF 9", arr: "17:50", dep: "17:50", distKm: 0 },
+        { name: "Mathura Jn", code: "MTJ", lat: 27.4924, lng: 77.6737, pf: "PF 3", arr: "19:45", dep: "19:47", distKm: 141 },
+        { name: "Agra Cantt", code: "AGC", lat: 27.1594, lng: 77.9940, pf: "PF 1", arr: "20:15", dep: "20:18", distKm: 195 },
+        { name: "Gwalior Jn", code: "GWL", lat: 26.2183, lng: 78.1828, pf: "PF 2", arr: "21:32", dep: "21:35", distKm: 313 },
+        { name: "Kota Jn", code: "KOTA", lat: 25.1800, lng: 75.8300, pf: "PF 1", arr: "23:20", dep: "23:20", distKm: 465 }
+      ],
+      progress: 0.55
+    },
+    {
+      id: "12626",
+      number: "12626",
+      name: "Kerala Superfast Express",
+      shortName: "Kerala Express (NDLS - TVC)",
+      type: "superfast",
+      color: "#059669",
+      speed: 110,
+      maxSpeed: 110,
+      kavachStatus: "ARMED",
+      kavachFreq: "160.225 MHz",
+      rssi: "-50 dBm",
+      satellites: 14,
+      locoPilot: "K. R. Nair (HQ TVC)",
+      locoModel: "WAP-7 High Power",
+      currentSection: "Bhopal - Itarsi - Nagpur Section",
+      nextStation: "Nagpur Jn (NGP)",
+      etaNextStation: "1hr 40m",
+      brakingMargin: "1,400m",
+      cabSignal: "PROCEED (GREEN)",
+      cabSignalClass: "text-emerald-400",
+      routeDescription: "New Delhi (NDLS) ➔ Agra ➔ Bhopal ➔ Nagpur ➔ Secunderabad ➔ Trivandrum",
+      depart: "11:25",
+      arrive: "19:05",
+      durationMins: 1900,
+      stations: [
+        { name: "New Delhi", code: "NDLS", lat: 28.6139, lng: 77.2090, pf: "PF 5", arr: "11:25", dep: "11:25", distKm: 0 },
+        { name: "Agra Cantt", code: "AGC", lat: 27.1594, lng: 77.9940, pf: "PF 1", arr: "14:05", dep: "14:10", distKm: 195 },
+        { name: "Bhopal Jn", code: "BPL", lat: 23.2599, lng: 77.4126, pf: "PF 4", arr: "20:10", dep: "20:20", distKm: 701 },
+        { name: "Nagpur Jn", code: "NGP", lat: 21.1528, lng: 79.0882, pf: "PF 3", arr: "02:45", dep: "02:55", distKm: 1091 },
+        { name: "Secunderabad Jn", code: "SC", lat: 17.4399, lng: 78.5017, pf: "PF 1", arr: "10:30", dep: "10:40", distKm: 1673 },
+        { name: "Thiruvananthapuram", code: "TVC", lat: 8.4875, lng: 76.9530, pf: "PF 1", arr: "19:05", dep: "19:05", distKm: 3036 }
+      ],
+      progress: 0.32
+    },
+    {
+      id: "12015",
+      number: "12015",
+      name: "Ajmer Shatabdi Express",
+      shortName: "Ajmer Shatabdi (NDLS - AII)",
+      type: "shatabdi",
+      color: "#0284c7",
+      speed: 130,
+      maxSpeed: 130,
+      kavachStatus: "ARMED (SIL-4)",
+      kavachFreq: "160.200 MHz",
+      rssi: "-40 dBm",
+      satellites: 15,
+      locoPilot: "B. L. Meena (HQ JP)",
+      locoModel: "WAP-7 HOG",
+      currentSection: "Gurgaon - Rewari - Jaipur Trunk",
+      nextStation: "Jaipur Jn (JP)",
+      etaNextStation: "45 mins",
+      brakingMargin: "1,500m",
+      cabSignal: "PROCEED (GREEN)",
+      cabSignalClass: "text-emerald-400",
+      routeDescription: "New Delhi (NDLS) ➔ Jaipur ➔ Ajmer",
+      depart: "06:15",
+      arrive: "12:40",
+      durationMins: 385,
+      stations: [
+        { name: "New Delhi", code: "NDLS", lat: 28.6139, lng: 77.2090, pf: "PF 1", arr: "06:15", dep: "06:15", distKm: 0 },
+        { name: "Jaipur Jn", code: "JP", lat: 26.9200, lng: 75.7878, pf: "PF 1", arr: "10:40", dep: "10:50", distKm: 308 },
+        { name: "Ajmer Jn", code: "AII", lat: 26.4526, lng: 74.6399, pf: "PF 3", arr: "12:40", dep: "12:40", distKm: 443 }
+      ],
+      progress: 0.72
+    },
+    {
+      id: "12958",
+      number: "12958",
+      name: "Swarna Jayanti Rajdhani Express",
+      shortName: "ADI Rajdhani (NDLS - ADI)",
+      type: "rajdhani",
+      color: "#ea580c",
+      speed: 130,
+      maxSpeed: 130,
+      kavachStatus: "ARMED (SIL-4)",
+      kavachFreq: "160.225 MHz",
+      rssi: "-43 dBm",
+      satellites: 14,
+      locoPilot: "K. K. Sharma (HQ ADI)",
+      locoModel: "WAP-7 Aerodynamic",
+      currentSection: "Jaipur - Ajmer - Abu Road Corridor",
+      nextStation: "Ahmedabad Jn (ADI)",
+      etaNextStation: "1hr 55m",
+      brakingMargin: "1,600m",
+      cabSignal: "PROCEED (GREEN)",
+      cabSignalClass: "text-emerald-400",
+      routeDescription: "New Delhi (NDLS) ➔ Jaipur ➔ Ajmer ➔ Ahmedabad",
+      depart: "19:25",
+      arrive: "07:40",
+      durationMins: 735,
+      stations: [
+        { name: "New Delhi", code: "NDLS", lat: 28.6139, lng: 77.2090, pf: "PF 4", arr: "19:25", dep: "19:25", distKm: 0 },
+        { name: "Jaipur Jn", code: "JP", lat: 26.9200, lng: 75.7878, pf: "PF 1", arr: "23:45", dep: "23:55", distKm: 308 },
+        { name: "Ajmer Jn", code: "AII", lat: 26.4526, lng: 74.6399, pf: "PF 1", arr: "01:50", dep: "01:55", distKm: 443 },
+        { name: "Ahmedabad Jn", code: "ADI", lat: 23.0225, lng: 72.5714, pf: "PF 1", arr: "07:40", dep: "07:40", distKm: 934 }
+      ],
+      progress: 0.44
+    },
+    {
+      id: "12622",
+      number: "12622",
+      name: "Tamil Nadu Superfast Express",
+      shortName: "Tamil Nadu Express (NDLS - MAS)",
+      type: "superfast",
+      color: "#16a34a",
+      speed: 110,
+      maxSpeed: 110,
+      kavachStatus: "ARMED",
+      kavachFreq: "160.200 MHz",
+      rssi: "-47 dBm",
+      satellites: 13,
+      locoPilot: "M. Ramanathan (HQ MAS)",
+      locoModel: "WAP-7 Dual Cab",
+      currentSection: "Nagpur - Balharshah - Vijayawada Corridor",
+      nextStation: "Chennai Central (MAS)",
+      etaNextStation: "2hr 15m",
+      brakingMargin: "1,450m",
+      cabSignal: "PROCEED (GREEN)",
+      cabSignalClass: "text-emerald-400",
+      routeDescription: "New Delhi (NDLS) ➔ Agra ➔ Gwalior ➔ Bhopal ➔ Nagpur ➔ Chennai Central",
+      depart: "22:00",
+      arrive: "07:10",
+      durationMins: 1990,
+      stations: [
+        { name: "New Delhi", code: "NDLS", lat: 28.6139, lng: 77.2090, pf: "PF 8", arr: "22:00", dep: "22:00", distKm: 0 },
+        { name: "Agra Cantt", code: "AGC", lat: 27.1594, lng: 77.9940, pf: "PF 1", arr: "00:38", dep: "00:43", distKm: 195 },
+        { name: "Gwalior Jn", code: "GWL", lat: 26.2183, lng: 78.1828, pf: "PF 3", arr: "02:25", dep: "02:30", distKm: 313 },
+        { name: "Bhopal Jn", code: "BPL", lat: 23.2599, lng: 77.4126, pf: "PF 6", arr: "07:10", dep: "07:20", distKm: 701 },
+        { name: "Nagpur Jn", code: "NGP", lat: 21.1528, lng: 79.0882, pf: "PF 4", arr: "14:20", dep: "14:30", distKm: 1091 },
+        { name: "Chennai Central", code: "MAS", lat: 13.0827, lng: 80.2707, pf: "PF 3", arr: "07:10", dep: "07:10", distKm: 2182 }
+      ],
+      progress: 0.65
+    },
+    {
+      id: "12650",
+      number: "12650",
+      name: "Karnataka Sampark Kranti Express",
+      shortName: "KSK Express (NDLS - SBC)",
+      type: "superfast",
+      color: "#d97706",
+      speed: 110,
+      maxSpeed: 110,
+      kavachStatus: "ARMED",
+      kavachFreq: "160.225 MHz",
+      rssi: "-45 dBm",
+      satellites: 14,
+      locoPilot: "R. Venkatesh (HQ SBC)",
+      locoModel: "WAP-7 HOG",
+      currentSection: "Secunderabad - Bengaluru Trunk Line",
+      nextStation: "KSR Bengaluru (SBC)",
+      etaNextStation: "1hr 10m",
+      brakingMargin: "1,500m",
+      cabSignal: "PROCEED (GREEN)",
+      cabSignalClass: "text-emerald-400",
+      routeDescription: "New Delhi (NDLS) ➔ Agra ➔ Bhopal ➔ Secunderabad ➔ KSR Bengaluru",
+      depart: "21:00",
+      arrive: "05:40",
+      durationMins: 1960,
+      stations: [
+        { name: "New Delhi", code: "NDLS", lat: 28.6139, lng: 77.2090, pf: "PF 12", arr: "21:00", dep: "21:00", distKm: 0 },
+        { name: "Agra Cantt", code: "AGC", lat: 27.1594, lng: 77.9940, pf: "PF 1", arr: "00:05", dep: "00:10", distKm: 195 },
+        { name: "Bhopal Jn", code: "BPL", lat: 23.2599, lng: 77.4126, pf: "PF 5", arr: "06:45", dep: "06:55", distKm: 701 },
+        { name: "Secunderabad Jn", code: "SC", lat: 17.4399, lng: 78.5017, pf: "PF 1", arr: "19:15", dep: "19:30", distKm: 1673 },
+        { name: "KSR Bengaluru", code: "SBC", lat: 12.9784, lng: 77.5683, pf: "PF 5", arr: "05:40", dep: "05:40", distKm: 2378 }
+      ],
+      progress: 0.82
+    },
+    {
+      id: "14660",
+      number: "14660",
+      name: "Jaisalmer - Delhi Express",
+      shortName: "JSM DLI Express (BME - NDLS)",
+      type: "express",
+      color: "#9333ea",
+      speed: 85,
+      maxSpeed: 100,
+      kavachStatus: "ACTIVE",
+      kavachFreq: "160.200 MHz",
+      rssi: "-52 dBm",
+      satellites: 12,
+      locoPilot: "D. S. Rathore (HQ JU)",
+      locoModel: "WDG-4D / WAP-7",
+      currentSection: "Balotra - Luni - Jodhpur Line",
+      nextStation: "Jodhpur Jn (JU)",
+      etaNextStation: "32 mins",
+      brakingMargin: "1,200m",
+      cabSignal: "PROCEED (GREEN)",
+      cabSignalClass: "text-emerald-400",
+      routeDescription: "Barmer ➔ Balotra ➔ Luni ➔ Jodhpur ➔ Jaipur ➔ New Delhi",
+      depart: "06:30",
+      arrive: "06:45",
+      durationMins: 1455,
+      stations: [
+        { name: "Barmer", code: "BME", lat: 25.7500, lng: 71.3917, pf: "PF 1", arr: "06:30", dep: "06:30", distKm: 0 },
+        { name: "Balotra Jn", code: "BLT", lat: 25.8333, lng: 72.2333, pf: "PF 2", arr: "08:15", dep: "08:20", distKm: 96 },
+        { name: "Luni Jn", code: "LUNI", lat: 26.0683, lng: 73.0189, pf: "PF 1", arr: "09:55", dep: "10:00", distKm: 177 },
+        { name: "Jodhpur Jn", code: "JU", lat: 26.2867, lng: 73.0238, pf: "PF 3", arr: "11:30", dep: "11:45", distKm: 209 },
+        { name: "Jaipur Jn", code: "JP", lat: 26.9200, lng: 75.7878, pf: "PF 2", arr: "18:00", dep: "18:10", distKm: 519 },
+        { name: "New Delhi", code: "NDLS", lat: 28.6139, lng: 77.2090, pf: "PF 7", arr: "06:45", dep: "06:45", distKm: 827 }
+      ],
+      progress: 0.18
+    },
+    {
+      id: "12462",
+      number: "12462",
+      name: "Mandore Superfast Express",
+      shortName: "Mandore Express (JU - NDLS)",
+      type: "superfast",
+      color: "#0891b2",
+      speed: 110,
+      maxSpeed: 110,
+      kavachStatus: "ARMED",
+      kavachFreq: "160.225 MHz",
+      rssi: "-46 dBm",
+      satellites: 14,
+      locoPilot: "Om Prakash (HQ JU)",
+      locoModel: "WAP-7 Dual Cab",
+      currentSection: "Ajmer - Jaipur - Bandikui Section",
+      nextStation: "Jaipur Jn (JP)",
+      etaNextStation: "40 mins",
+      brakingMargin: "1,450m",
+      cabSignal: "PROCEED (GREEN)",
+      cabSignalClass: "text-emerald-400",
+      routeDescription: "Jodhpur (JU) ➔ Ajmer ➔ Jaipur ➔ New Delhi",
+      depart: "19:45",
+      arrive: "06:10",
+      durationMins: 625,
+      stations: [
+        { name: "Jodhpur Jn", code: "JU", lat: 26.2867, lng: 73.0238, pf: "PF 1", arr: "19:45", dep: "19:45", distKm: 0 },
+        { name: "Ajmer Jn", code: "AII", lat: 26.4526, lng: 74.6399, pf: "PF 3", arr: "23:20", dep: "23:30", distKm: 234 },
+        { name: "Jaipur Jn", code: "JP", lat: 26.9200, lng: 75.7878, pf: "PF 1", arr: "01:40", dep: "01:50", distKm: 369 },
+        { name: "New Delhi", code: "NDLS", lat: 28.6139, lng: 77.2090, pf: "PF 11", arr: "06:10", dep: "06:10", distKm: 677 }
+      ],
+      progress: 0.52
+    },
+    {
+      id: "20488",
+      number: "20488",
+      name: "Malani Superfast Express",
+      shortName: "Malani Express (LUNI - BLT)",
+      type: "express",
+      color: "#c026d3",
+      speed: 80,
+      maxSpeed: 90,
+      kavachStatus: "ARMED",
+      kavachFreq: "160.200 MHz",
+      rssi: "-48 dBm",
+      satellites: 13,
+      locoPilot: "R. K. Bishnoi (HQ JU)",
+      locoModel: "WDP-4D Dual Cab",
+      currentSection: "Luni - Samdari - Balotra Section",
+      nextStation: "Balotra Jn (BLT)",
+      etaNextStation: "22 mins",
+      brakingMargin: "1,100m",
+      cabSignal: "PROCEED (GREEN)",
+      cabSignalClass: "text-emerald-400",
+      routeDescription: "Luni Jn (LUNI) ➔ Balotra Jn (BLT)",
+      depart: "02:35",
+      arrive: "03:53",
+      durationMins: 78,
+      stations: [
+        { name: "Luni Jn", code: "LUNI", lat: 26.0683, lng: 73.0189, pf: "PF 1", arr: "02:35", dep: "02:35", distKm: 0 },
+        { name: "Balotra Jn", code: "BLT", lat: 25.8333, lng: 72.2333, pf: "PF 2", arr: "03:53", dep: "03:53", distKm: 81 }
+      ],
+      progress: 0.60
     }
   ];
 
@@ -1412,25 +1786,47 @@ document.addEventListener("DOMContentLoaded", () => {
     return (brng + 360) % 360;
   }
 
-  // Calculation Helper: Interpolate coordinates along train path
+  // Calculation Helper: Precise distance-based interpolation along train path
   function getTrainPositionAndBearing(train) {
     const stations = train.stations;
     if (!stations || stations.length < 2) {
-      return { lat: 28.6139, lng: 77.2090, bearing: 0, currentSegmentIdx: 0 };
+      return { lat: 28.6139, lng: 77.2090, bearing: 0, currentSegmentIdx: 0, frac: 0 };
     }
-    const totalSegments = stations.length - 1;
-    const scaledProgress = train.progress * totalSegments;
-    const segIdx = Math.min(Math.floor(scaledProgress), totalSegments - 1);
-    const frac = scaledProgress - segIdx;
+    const totalDist = stations[stations.length - 1].distKm;
+    if (!totalDist || totalDist <= 0) {
+      const totalSegments = stations.length - 1;
+      const scaledProgress = train.progress * totalSegments;
+      const segIdx = Math.min(Math.floor(scaledProgress), totalSegments - 1);
+      const frac = scaledProgress - segIdx;
+      const p1 = stations[segIdx];
+      const p2 = stations[segIdx + 1];
+      const lat = p1.lat + (p2.lat - p1.lat) * frac;
+      const lng = p1.lng + (p2.lng - p1.lng) * frac;
+      const bearing = calculateBearingAngle(p1.lat, p1.lng, p2.lat, p2.lng);
+      return { lat, lng, bearing, currentSegmentIdx: segIdx, frac };
+    }
+
+    const clampedProgress = Math.max(0, Math.min(0.999999, train.progress || 0));
+    const currentDist = clampedProgress * totalDist;
+    let segIdx = 0;
+    let frac = 0;
+
+    for (let i = 0; i < stations.length - 1; i++) {
+      if (currentDist >= stations[i].distKm && currentDist <= stations[i + 1].distKm) {
+        segIdx = i;
+        const segLen = stations[i + 1].distKm - stations[i].distKm;
+        frac = segLen > 0 ? (currentDist - stations[i].distKm) / segLen : 0;
+        break;
+      }
+    }
 
     const p1 = stations[segIdx];
     const p2 = stations[segIdx + 1];
-
     const lat = p1.lat + (p2.lat - p1.lat) * frac;
     const lng = p1.lng + (p2.lng - p1.lng) * frac;
     const bearing = calculateBearingAngle(p1.lat, p1.lng, p2.lat, p2.lng);
 
-    return { lat, lng, bearing, currentSegmentIdx: segIdx };
+    return { lat, lng, bearing, currentSegmentIdx: segIdx, frac };
   }
 
   // Calculate Forward Station Milestones, Distances & Remaining ETAs
@@ -2551,20 +2947,161 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
   }
 
+  // =========================================================================
+  // AUTHENTIC INDIAN RAILWAYS CYCLIC KINEMATICS & REAL-TIME FLEET SIMULATION
+  // =========================================================================
+  function updateTrainCyclicKinematics(train, delta) {
+    if (!train.stations || train.stations.length < 2) return;
+    const stations = train.stations;
+    const totalDistKm = stations[stations.length - 1].distKm;
+    const V_max = train.maxSpeed || 130;
+
+    if (typeof train.progress !== "number" || isNaN(train.progress)) {
+      train.progress = 0.05;
+    }
+
+    let progress = train.progress;
+    let currentDist = progress * totalDistKm;
+
+    // Find current station segment
+    let segIdx = 0;
+    for (let i = 0; i < stations.length - 1; i++) {
+      if (currentDist >= stations[i].distKm && currentDist <= stations[i + 1].distKm) {
+        segIdx = i;
+        break;
+      }
+    }
+    const curStn = stations[segIdx];
+    const nextStn = stations[segIdx + 1];
+    const segLen = Math.max(1, nextStn.distKm - curStn.distKm);
+    const segFrac = Math.max(0, Math.min(1, (currentDist - curStn.distKm) / segLen));
+
+    // Authentic Speed Profile & Braking Curve:
+    let currentSpeed = V_max;
+    let status = "CRUISING";
+    let statusBadge = "CRUISING (GREEN)";
+    let cabSignal = "PROCEED (GREEN)";
+    let cabSignalClass = "text-emerald-400";
+    let brakePressure = "5.0 kg/cm²";
+    let brakingMargin = "1,750m (Optimal)";
+
+    if (segFrac < 0.15) {
+      // Station Departure Acceleration Zone: Smoothly climbs from 15 km/h to V_max
+      const accelRatio = segFrac / 0.15;
+      currentSpeed = Math.round(15 + (V_max - 15) * Math.pow(accelRatio, 0.7));
+      status = "ACCELERATING";
+      statusBadge = `ACCEL FROM ${curStn.code}`;
+      cabSignal = "PROCEED (GREEN) • ACCELERATING";
+      cabSignalClass = "text-emerald-400";
+      brakePressure = "5.0 kg/cm² (Released)";
+      brakingMargin = "1,850m (Accelerating Curve)";
+    } else if (segFrac > 0.82) {
+      // Station Approach Deceleration (Kavach SIL-4 Dynamic Braking Curve)
+      const decelRatio = (1.0 - segFrac) / 0.18;
+      if (decelRatio <= 0.05) {
+        // Halted / Crawling onto Platform Stop
+        currentSpeed = Math.round(5 * decelRatio);
+        status = "HALTED";
+        statusBadge = `HALTED AT ${nextStn.code} (PF #${nextStn.pf || 1})`;
+        cabSignal = "STOP (RED) • PLATFORM BERTHED";
+        cabSignalClass = "text-rose-500";
+        brakePressure = "2.5 kg/cm² (Emergency Application)";
+        brakingMargin = "120m (Platform Berthing)";
+      } else {
+        currentSpeed = Math.max(12, Math.round(V_max * Math.pow(decelRatio, 1.15)));
+        status = "BRAKING";
+        statusBadge = `BRAKING FOR ${nextStn.code}`;
+        cabSignal = "CAUTION (YELLOW) • KAVACH BRAKING";
+        cabSignalClass = "text-amber-400";
+        const bp = (5.0 - (1 - decelRatio) * 2.2).toFixed(1);
+        brakePressure = `${bp} kg/cm² (Service Brake)`;
+        brakingMargin = `${Math.round(250 + 1300 * decelRatio)}m (Safe Decel Curve)`;
+      }
+    } else {
+      // Mid-Section Cruising: Maximum Speed with subtle gradient variance
+      const variance = Math.sin(segFrac * 25) * 3;
+      currentSpeed = Math.round(V_max - 2 + variance);
+      status = "CRUISING";
+      statusBadge = "CRUISING (100% KAVACH)";
+      cabSignal = "PROCEED (GREEN)";
+      cabSignalClass = "text-emerald-400";
+      brakePressure = "5.0 kg/cm² (Nominal)";
+      brakingMargin = "1,650m (Optimal Distance)";
+    }
+
+    // Advance progress based on currentSpeed and delta
+    const speedKmPerSec = Math.max(8, currentSpeed) / 3600;
+    const SIM_SPEED_SCALE = 14; // Visible Pan-India movement rate
+    const progressInc = (speedKmPerSec * delta * SIM_SPEED_SCALE) / totalDistKm;
+    progress += progressInc;
+
+    // CYCLIC CONTINUOUS REPETITION: Seamlessly restart at terminus
+    if (progress >= 1.0) {
+      progress = 0.0;
+    }
+
+    train.progress = progress;
+    train.speed = currentSpeed;
+    train.status = status;
+    train.statusBadge = statusBadge;
+    train.cabSignal = cabSignal;
+    train.cabSignalClass = cabSignalClass;
+    train.brakePressure = brakePressure;
+    train.brakingMargin = brakingMargin;
+    train.currentSection = `${curStn.name} (${curStn.code}) ➔ ${nextStn.name} (${nextStn.code})`;
+    train.nextStation = `${nextStn.name} (PF #${nextStn.pf || 1})`;
+    const distRemaining = Math.max(0, nextStn.distKm - (progress * totalDistKm));
+    const minsToNext = currentSpeed > 5 ? Math.round((distRemaining / currentSpeed) * 60) : 1;
+    train.etaNextStation = `${minsToNext} mins (${Math.round(distRemaining)} km)`;
+    train.distCovered = Math.round(progress * totalDistKm);
+    train.distRemaining = Math.max(0, Math.round(totalDistKm - (progress * totalDistKm)));
+  }
+
+  // Update Cockpit HUD Inspector live elements every tick
+  function updateLocomotiveHUDLiveValues(train) {
+    const spdEl = document.getElementById("hudSpeedReading");
+    if (spdEl) {
+      spdEl.innerHTML = `${train.speed} <span class="text-xs font-bold text-slate-600">km/h</span>`;
+    }
+    const statusText = document.getElementById("mapStatusText");
+    if (statusText) {
+      statusText.innerHTML = `LOCKED ON TRAIN ${train.number} (${train.shortName}) • SPEED: ${train.speed} KM/H • ${train.statusBadge || train.status}`;
+    }
+    const container = document.getElementById("locomotiveInspectorHUD");
+    if (container) {
+      const marginEl = container.querySelector(".text-base.font-black.text-\\[\\#138808\\].font-mono");
+      if (marginEl) marginEl.textContent = train.brakingMargin;
+      
+      const aspectEl = container.querySelector(".font-extrabold.flex.items-center.gap-1\\.5");
+      if (aspectEl) {
+        aspectEl.className = `font-extrabold flex items-center gap-1.5 ${train.cabSignalClass}`;
+        aspectEl.innerHTML = `
+          <span class="w-2.5 h-2.5 rounded-full ${train.cabSignalClass.includes('emerald') ? 'bg-emerald-500' : (train.cabSignalClass.includes('rose') ? 'bg-rose-500' : 'bg-amber-500')} animate-pulse"></span>
+          ${train.cabSignal}
+        `;
+      }
+      
+      const sectionVals = container.querySelectorAll(".p-3.rounded-xl.bg-white.border-2.border-slate-200 .flex.items-center.justify-between span:last-child");
+      if (sectionVals.length >= 4) {
+        sectionVals[1].textContent = train.currentSection;
+        sectionVals[2].textContent = train.nextStation;
+        sectionVals[3].textContent = train.etaNextStation;
+      }
+    }
+  }
+
   // Smooth continuous train movement loop
   function startTrainAnimationLoop() {
     let lastTimestamp = performance.now();
 
     function stepAnimation(timestamp) {
-      const delta = (timestamp - lastTimestamp) / 1000;
+      const delta = Math.min((timestamp - lastTimestamp) / 1000, 0.1);
       lastTimestamp = timestamp;
 
       panIndiaTrainData.forEach((train) => {
-        const progressIncrement = (train.speed / 130) * 0.00035 * Math.min(delta, 0.1);
-        train.progress = (train.progress + progressIncrement) % 1;
+        updateTrainCyclicKinematics(train, delta);
 
         const pos = getTrainPositionAndBearing(train);
-
         const marker = mapTrainMarkers[train.id];
         if (marker) {
           marker.setLatLng([pos.lat, pos.lng]);
@@ -2573,8 +3110,20 @@ document.addEventListener("DOMContentLoaded", () => {
           if (rotElement) {
             rotElement.style.transform = `rotate(${pos.bearing}deg)`;
           }
+
+          marker.setTooltipContent(`
+            <div class="font-bold text-xs text-[#12355B]">
+              <span>${train.number} ${train.shortName}</span><br>
+              <span class="text-emerald-700 font-mono">Speed: ${train.speed} km/h • ${train.statusBadge || train.status}</span><br>
+              <span class="text-slate-600 font-mono text-[10px]">Next: ${train.nextStation} (ETA: ${train.etaNextStation})</span>
+            </div>
+          `);
         }
       });
+
+      if (activeSelectedTrain) {
+        updateLocomotiveHUDLiveValues(activeSelectedTrain);
+      }
 
       if (isFollowingTrainCamera && activeSelectedTrain && panIndiaMap) {
         const activePos = getTrainPositionAndBearing(activeSelectedTrain);
@@ -2586,6 +3135,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
+    if (trainAnimationTimer) cancelAnimationFrame(trainAnimationTimer);
     trainAnimationTimer = requestAnimationFrame(stepAnimation);
   }
 
@@ -4017,12 +4567,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const currentStn = (t.stations && t.stations[currentStnIdx]) || { name: t.fromName || t.from, code: t.from, pf: 1, arr: t.depart, dep: t.depart };
     const nextStn = (t.stations && t.stations[currentStnIdx + 1]) || currentStn;
 
-    const totalDistKm = t.distance || ((seed * 67) % 450 + 480);
-    const distCompletedKm = Math.round(totalDistKm * ((currentStnIdx + 0.6) / numStations));
-    const distRemainingKm = Math.max(0, totalDistKm - distCompletedKm);
-    const progressPct = Math.min(100, Math.round((distCompletedKm / totalDistKm) * 100));
-
-    const curSpeed = t.delay > 20 ? Math.round(theme.baseSpeed * 0.88) : theme.baseSpeed;
+    const liveTrain = panIndiaTrainData.find(pt => pt.number === t.number || pt.id === t.number);
+    const totalDistKm = liveTrain ? (liveTrain.stations[liveTrain.stations.length - 1].distKm) : (t.distance || ((seed * 67) % 450 + 480));
+    const distCompletedKm = liveTrain ? liveTrain.distCovered : Math.round(totalDistKm * ((currentStnIdx + 0.6) / numStations));
+    const distRemainingKm = liveTrain ? liveTrain.distRemaining : Math.max(0, totalDistKm - distCompletedKm);
+    const progressPct = liveTrain ? Math.round(liveTrain.progress * 100) : Math.min(100, Math.round((distCompletedKm / totalDistKm) * 100));
+    const curSpeed = liveTrain ? liveTrain.speed : (t.delay > 20 ? Math.round(theme.baseSpeed * 0.88) : theme.baseSpeed);
+    const liveStatus = liveTrain ? liveTrain.status : (t.delay > 0 ? "RUNNING DELAYED" : "ON ROUTE • ON TIME");
 
     return {
       theme,
@@ -10081,7 +10632,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const rawHash = window.location.hash
       ? window.location.hash.replace("#", "")
       : "";
-    const initialView = (rawHash === "overview" || !rawHash) ? "train_list" : rawHash;
+    const initialView = (rawHash === "overview" || !rawHash) ? "live_map" : rawHash;
     switchNavView(initialView);
   }
 
@@ -10089,7 +10640,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const rawHash = window.location.hash
       ? window.location.hash.replace("#", "")
       : "";
-    switchNavView((rawHash === "overview" || !rawHash) ? "train_list" : rawHash);
+    switchNavView((rawHash === "overview" || !rawHash) ? "live_map" : rawHash);
   });
 
   initRoute();
