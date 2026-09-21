@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Login Handler Function (Allows ANY Login ID & Password)
   function handleLogin() {
     const rawInput = usernameInput ? usernameInput.value.trim() : '';
-    const email = rawInput || 'officer.ndls@ir.gov.in';
+    const email = rawInput || 'officer.ndls@autonex.ai';
 
     // Show Loading Spinner State
     if (loginBtn) loginBtn.disabled = true;
@@ -55,15 +55,15 @@ document.addEventListener('DOMContentLoaded', () => {
       const userSession = {
         name: email.split('@')[0].toUpperCase(),
         email: email,
-        role: 'kavach_officer',
-        roleTitle: 'KAVACH SAFETY & OPERATIONS OFFICER',
+        role: 'autonex_officer',
+        roleTitle: 'AUTONEX RAILWAY INTELLIGENCE OFFICER',
         isLoggedIn: true,
         loginTime: new Date().toISOString()
       };
 
       localStorage.setItem('kavach_user_session', JSON.stringify(userSession));
 
-      showAlert(`Authentication Successful! Officer Access Granted. Redirecting to Dashboard...`, 'success');
+      showAlert(`Authentication Successful! AutoNex Officer Access Granted. Redirecting to Dashboard...`, 'success');
 
       setTimeout(() => {
         window.location.href = 'dashboard.html';

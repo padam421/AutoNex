@@ -725,7 +725,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   window.switchNavView = function (viewName) {
-    activeNavView = (!viewName || viewName === "overview") ? "live_map" : viewName;
+    activeNavView =
+      !viewName || viewName === "overview" ? "live_map" : viewName;
 
     // Sync header dropdown to 'overview' if normal view selected
     const selectEl = document.getElementById("headerDepartmentSelect");
@@ -854,18 +855,64 @@ document.addEventListener("DOMContentLoaded", () => {
       brakingMargin: "1,750m (Optimal)",
       cabSignal: "PROCEED (GREEN)",
       cabSignalClass: "text-emerald-400",
-      routeDescription: "New Delhi (NDLS) ➔ Aligarh ➔ Kanpur Central ➔ Prayagraj ➔ Varanasi",
+      routeDescription:
+        "New Delhi (NDLS) ➔ Aligarh ➔ Kanpur Central ➔ Prayagraj ➔ Varanasi",
       depart: "06:00",
       arrive: "14:00",
       durationMins: 480,
       stations: [
-        { name: "New Delhi", code: "NDLS", lat: 28.6139, lng: 77.2090, pf: "PF 16", arr: "06:00", dep: "06:00", distKm: 0 },
-        { name: "Aligarh Jn", code: "ALJN", lat: 27.8974, lng: 78.0880, pf: "PF 3", arr: "07:30", dep: "07:32", distKm: 131 },
-        { name: "Kanpur Central", code: "CNB", lat: 26.4499, lng: 80.3319, pf: "PF 1", arr: "10:08", dep: "10:13", distKm: 440 },
-        { name: "Prayagraj Jn", code: "PRYJ", lat: 25.4358, lng: 81.8463, pf: "PF 6", arr: "12:08", dep: "12:13", distKm: 635 },
-        { name: "Varanasi Jn", code: "BSB", lat: 25.3176, lng: 82.9739, pf: "PF 1", arr: "14:00", dep: "14:00", distKm: 759 }
+        {
+          name: "New Delhi",
+          code: "NDLS",
+          lat: 28.6139,
+          lng: 77.209,
+          pf: "PF 16",
+          arr: "06:00",
+          dep: "06:00",
+          distKm: 0,
+        },
+        {
+          name: "Aligarh Jn",
+          code: "ALJN",
+          lat: 27.8974,
+          lng: 78.088,
+          pf: "PF 3",
+          arr: "07:30",
+          dep: "07:32",
+          distKm: 131,
+        },
+        {
+          name: "Kanpur Central",
+          code: "CNB",
+          lat: 26.4499,
+          lng: 80.3319,
+          pf: "PF 1",
+          arr: "10:08",
+          dep: "10:13",
+          distKm: 440,
+        },
+        {
+          name: "Prayagraj Jn",
+          code: "PRYJ",
+          lat: 25.4358,
+          lng: 81.8463,
+          pf: "PF 6",
+          arr: "12:08",
+          dep: "12:13",
+          distKm: 635,
+        },
+        {
+          name: "Varanasi Jn",
+          code: "BSB",
+          lat: 25.3176,
+          lng: 82.9739,
+          pf: "PF 1",
+          arr: "14:00",
+          dep: "14:00",
+          distKm: 759,
+        },
       ],
-      progress: 0.38
+      progress: 0.38,
     },
     {
       id: "12951",
@@ -888,20 +935,84 @@ document.addEventListener("DOMContentLoaded", () => {
       brakingMargin: "1,450m (Safe Curve)",
       cabSignal: "PROCEED (GREEN)",
       cabSignalClass: "text-emerald-400",
-      routeDescription: "Mumbai Central (MMCT) ➔ Surat ➔ Vadodara ➔ Ratlam ➔ Kota ➔ Mathura ➔ New Delhi",
+      routeDescription:
+        "Mumbai Central (MMCT) ➔ Surat ➔ Vadodara ➔ Ratlam ➔ Kota ➔ Mathura ➔ New Delhi",
       depart: "17:00",
       arrive: "08:32",
       durationMins: 932,
       stations: [
-        { name: "Mumbai Central", code: "MMCT", lat: 18.9712, lng: 72.8197, pf: "PF 1", arr: "17:00", dep: "17:00", distKm: 0 },
-        { name: "Surat", code: "ST", lat: 21.1702, lng: 72.8311, pf: "PF 1", arr: "19:32", dep: "19:37", distKm: 263 },
-        { name: "Vadodara Jn", code: "BRC", lat: 22.3072, lng: 73.1812, pf: "PF 2", arr: "21:05", dep: "21:15", distKm: 392 },
-        { name: "Ratlam Jn", code: "RTM", lat: 23.3315, lng: 75.0367, pf: "PF 4", arr: "00:25", dep: "00:30", distKm: 653 },
-        { name: "Kota Jn", code: "KOTA", lat: 25.1800, lng: 75.8300, pf: "PF 1", arr: "03:15", dep: "03:20", distKm: 919 },
-        { name: "Mathura Jn", code: "MTJ", lat: 27.4924, lng: 77.6737, pf: "PF 3", arr: "06:40", dep: "06:42", distKm: 1243 },
-        { name: "New Delhi", code: "NDLS", lat: 28.6139, lng: 77.2090, pf: "PF 1", arr: "08:32", dep: "08:32", distKm: 1384 }
+        {
+          name: "Mumbai Central",
+          code: "MMCT",
+          lat: 18.9712,
+          lng: 72.8197,
+          pf: "PF 1",
+          arr: "17:00",
+          dep: "17:00",
+          distKm: 0,
+        },
+        {
+          name: "Surat",
+          code: "ST",
+          lat: 21.1702,
+          lng: 72.8311,
+          pf: "PF 1",
+          arr: "19:32",
+          dep: "19:37",
+          distKm: 263,
+        },
+        {
+          name: "Vadodara Jn",
+          code: "BRC",
+          lat: 22.3072,
+          lng: 73.1812,
+          pf: "PF 2",
+          arr: "21:05",
+          dep: "21:15",
+          distKm: 392,
+        },
+        {
+          name: "Ratlam Jn",
+          code: "RTM",
+          lat: 23.3315,
+          lng: 75.0367,
+          pf: "PF 4",
+          arr: "00:25",
+          dep: "00:30",
+          distKm: 653,
+        },
+        {
+          name: "Kota Jn",
+          code: "KOTA",
+          lat: 25.18,
+          lng: 75.83,
+          pf: "PF 1",
+          arr: "03:15",
+          dep: "03:20",
+          distKm: 919,
+        },
+        {
+          name: "Mathura Jn",
+          code: "MTJ",
+          lat: 27.4924,
+          lng: 77.6737,
+          pf: "PF 3",
+          arr: "06:40",
+          dep: "06:42",
+          distKm: 1243,
+        },
+        {
+          name: "New Delhi",
+          code: "NDLS",
+          lat: 28.6139,
+          lng: 77.209,
+          pf: "PF 1",
+          arr: "08:32",
+          dep: "08:32",
+          distKm: 1384,
+        },
       ],
-      progress: 0.62
+      progress: 0.62,
     },
     {
       id: "12302",
@@ -924,18 +1035,64 @@ document.addEventListener("DOMContentLoaded", () => {
       brakingMargin: "1,550m (Optimal)",
       cabSignal: "PROCEED (GREEN)",
       cabSignalClass: "text-emerald-400",
-      routeDescription: "New Delhi (NDLS) ➔ Kanpur ➔ Prayagraj ➔ Patna ➔ Howrah",
+      routeDescription:
+        "New Delhi (NDLS) ➔ Kanpur ➔ Prayagraj ➔ Patna ➔ Howrah",
       depart: "16:55",
       arrive: "10:00",
       durationMins: 1025,
       stations: [
-        { name: "New Delhi", code: "NDLS", lat: 28.6139, lng: 77.2090, pf: "PF 16", arr: "16:55", dep: "16:55", distKm: 0 },
-        { name: "Kanpur Central", code: "CNB", lat: 26.4499, lng: 80.3319, pf: "PF 1", arr: "21:38", dep: "21:43", distKm: 440 },
-        { name: "Prayagraj Jn", code: "PRYJ", lat: 25.4358, lng: 81.8463, pf: "PF 4", arr: "00:05", dep: "00:10", distKm: 635 },
-        { name: "Patna Jn", code: "PNBE", lat: 25.6022, lng: 85.1376, pf: "PF 1", arr: "05:45", dep: "05:50", distKm: 998 },
-        { name: "Howrah Jn", code: "HWH", lat: 22.5839, lng: 88.3433, pf: "PF 9", arr: "10:00", dep: "10:00", distKm: 1451 }
+        {
+          name: "New Delhi",
+          code: "NDLS",
+          lat: 28.6139,
+          lng: 77.209,
+          pf: "PF 16",
+          arr: "16:55",
+          dep: "16:55",
+          distKm: 0,
+        },
+        {
+          name: "Kanpur Central",
+          code: "CNB",
+          lat: 26.4499,
+          lng: 80.3319,
+          pf: "PF 1",
+          arr: "21:38",
+          dep: "21:43",
+          distKm: 440,
+        },
+        {
+          name: "Prayagraj Jn",
+          code: "PRYJ",
+          lat: 25.4358,
+          lng: 81.8463,
+          pf: "PF 4",
+          arr: "00:05",
+          dep: "00:10",
+          distKm: 635,
+        },
+        {
+          name: "Patna Jn",
+          code: "PNBE",
+          lat: 25.6022,
+          lng: 85.1376,
+          pf: "PF 1",
+          arr: "05:45",
+          dep: "05:50",
+          distKm: 998,
+        },
+        {
+          name: "Howrah Jn",
+          code: "HWH",
+          lat: 22.5839,
+          lng: 88.3433,
+          pf: "PF 9",
+          arr: "10:00",
+          dep: "10:00",
+          distKm: 1451,
+        },
       ],
-      progress: 0.48
+      progress: 0.48,
     },
     {
       id: "12952",
@@ -963,12 +1120,48 @@ document.addEventListener("DOMContentLoaded", () => {
       arrive: "08:15",
       durationMins: 950,
       stations: [
-        { name: "New Delhi", code: "NDLS", lat: 28.6139, lng: 77.2090, pf: "PF 2", arr: "16:25", dep: "16:25", distKm: 0 },
-        { name: "Kota Jn", code: "KOTA", lat: 25.1800, lng: 75.8300, pf: "PF 1", arr: "21:50", dep: "21:55", distKm: 465 },
-        { name: "Vadodara Jn", code: "BRC", lat: 22.3072, lng: 73.1812, pf: "PF 3", arr: "03:05", dep: "03:10", distKm: 992 },
-        { name: "Mumbai Central", code: "MMCT", lat: 18.9712, lng: 72.8197, pf: "PF 1", arr: "08:15", dep: "08:15", distKm: 1384 }
+        {
+          name: "New Delhi",
+          code: "NDLS",
+          lat: 28.6139,
+          lng: 77.209,
+          pf: "PF 2",
+          arr: "16:25",
+          dep: "16:25",
+          distKm: 0,
+        },
+        {
+          name: "Kota Jn",
+          code: "KOTA",
+          lat: 25.18,
+          lng: 75.83,
+          pf: "PF 1",
+          arr: "21:50",
+          dep: "21:55",
+          distKm: 465,
+        },
+        {
+          name: "Vadodara Jn",
+          code: "BRC",
+          lat: 22.3072,
+          lng: 73.1812,
+          pf: "PF 3",
+          arr: "03:05",
+          dep: "03:10",
+          distKm: 992,
+        },
+        {
+          name: "Mumbai Central",
+          code: "MMCT",
+          lat: 18.9712,
+          lng: 72.8197,
+          pf: "PF 1",
+          arr: "08:15",
+          dep: "08:15",
+          distKm: 1384,
+        },
       ],
-      progress: 0.22
+      progress: 0.22,
     },
     {
       id: "12059",
@@ -991,18 +1184,64 @@ document.addEventListener("DOMContentLoaded", () => {
       brakingMargin: "1,350m",
       cabSignal: "PROCEED (GREEN)",
       cabSignalClass: "text-emerald-400",
-      routeDescription: "New Delhi (NDLS) ➔ Mathura ➔ Agra Cantt ➔ Gwalior ➔ Kota",
+      routeDescription:
+        "New Delhi (NDLS) ➔ Mathura ➔ Agra Cantt ➔ Gwalior ➔ Kota",
       depart: "17:50",
       arrive: "23:20",
       durationMins: 330,
       stations: [
-        { name: "New Delhi", code: "NDLS", lat: 28.6139, lng: 77.2090, pf: "PF 9", arr: "17:50", dep: "17:50", distKm: 0 },
-        { name: "Mathura Jn", code: "MTJ", lat: 27.4924, lng: 77.6737, pf: "PF 3", arr: "19:45", dep: "19:47", distKm: 141 },
-        { name: "Agra Cantt", code: "AGC", lat: 27.1594, lng: 77.9940, pf: "PF 1", arr: "20:15", dep: "20:18", distKm: 195 },
-        { name: "Gwalior Jn", code: "GWL", lat: 26.2183, lng: 78.1828, pf: "PF 2", arr: "21:32", dep: "21:35", distKm: 313 },
-        { name: "Kota Jn", code: "KOTA", lat: 25.1800, lng: 75.8300, pf: "PF 1", arr: "23:20", dep: "23:20", distKm: 465 }
+        {
+          name: "New Delhi",
+          code: "NDLS",
+          lat: 28.6139,
+          lng: 77.209,
+          pf: "PF 9",
+          arr: "17:50",
+          dep: "17:50",
+          distKm: 0,
+        },
+        {
+          name: "Mathura Jn",
+          code: "MTJ",
+          lat: 27.4924,
+          lng: 77.6737,
+          pf: "PF 3",
+          arr: "19:45",
+          dep: "19:47",
+          distKm: 141,
+        },
+        {
+          name: "Agra Cantt",
+          code: "AGC",
+          lat: 27.1594,
+          lng: 77.994,
+          pf: "PF 1",
+          arr: "20:15",
+          dep: "20:18",
+          distKm: 195,
+        },
+        {
+          name: "Gwalior Jn",
+          code: "GWL",
+          lat: 26.2183,
+          lng: 78.1828,
+          pf: "PF 2",
+          arr: "21:32",
+          dep: "21:35",
+          distKm: 313,
+        },
+        {
+          name: "Kota Jn",
+          code: "KOTA",
+          lat: 25.18,
+          lng: 75.83,
+          pf: "PF 1",
+          arr: "23:20",
+          dep: "23:20",
+          distKm: 465,
+        },
       ],
-      progress: 0.55
+      progress: 0.55,
     },
     {
       id: "12626",
@@ -1025,19 +1264,74 @@ document.addEventListener("DOMContentLoaded", () => {
       brakingMargin: "1,400m",
       cabSignal: "PROCEED (GREEN)",
       cabSignalClass: "text-emerald-400",
-      routeDescription: "New Delhi (NDLS) ➔ Agra ➔ Bhopal ➔ Nagpur ➔ Secunderabad ➔ Trivandrum",
+      routeDescription:
+        "New Delhi (NDLS) ➔ Agra ➔ Bhopal ➔ Nagpur ➔ Secunderabad ➔ Trivandrum",
       depart: "11:25",
       arrive: "19:05",
       durationMins: 1900,
       stations: [
-        { name: "New Delhi", code: "NDLS", lat: 28.6139, lng: 77.2090, pf: "PF 5", arr: "11:25", dep: "11:25", distKm: 0 },
-        { name: "Agra Cantt", code: "AGC", lat: 27.1594, lng: 77.9940, pf: "PF 1", arr: "14:05", dep: "14:10", distKm: 195 },
-        { name: "Bhopal Jn", code: "BPL", lat: 23.2599, lng: 77.4126, pf: "PF 4", arr: "20:10", dep: "20:20", distKm: 701 },
-        { name: "Nagpur Jn", code: "NGP", lat: 21.1528, lng: 79.0882, pf: "PF 3", arr: "02:45", dep: "02:55", distKm: 1091 },
-        { name: "Secunderabad Jn", code: "SC", lat: 17.4399, lng: 78.5017, pf: "PF 1", arr: "10:30", dep: "10:40", distKm: 1673 },
-        { name: "Thiruvananthapuram", code: "TVC", lat: 8.4875, lng: 76.9530, pf: "PF 1", arr: "19:05", dep: "19:05", distKm: 3036 }
+        {
+          name: "New Delhi",
+          code: "NDLS",
+          lat: 28.6139,
+          lng: 77.209,
+          pf: "PF 5",
+          arr: "11:25",
+          dep: "11:25",
+          distKm: 0,
+        },
+        {
+          name: "Agra Cantt",
+          code: "AGC",
+          lat: 27.1594,
+          lng: 77.994,
+          pf: "PF 1",
+          arr: "14:05",
+          dep: "14:10",
+          distKm: 195,
+        },
+        {
+          name: "Bhopal Jn",
+          code: "BPL",
+          lat: 23.2599,
+          lng: 77.4126,
+          pf: "PF 4",
+          arr: "20:10",
+          dep: "20:20",
+          distKm: 701,
+        },
+        {
+          name: "Nagpur Jn",
+          code: "NGP",
+          lat: 21.1528,
+          lng: 79.0882,
+          pf: "PF 3",
+          arr: "02:45",
+          dep: "02:55",
+          distKm: 1091,
+        },
+        {
+          name: "Secunderabad Jn",
+          code: "SC",
+          lat: 17.4399,
+          lng: 78.5017,
+          pf: "PF 1",
+          arr: "10:30",
+          dep: "10:40",
+          distKm: 1673,
+        },
+        {
+          name: "Thiruvananthapuram",
+          code: "TVC",
+          lat: 8.4875,
+          lng: 76.953,
+          pf: "PF 1",
+          arr: "19:05",
+          dep: "19:05",
+          distKm: 3036,
+        },
       ],
-      progress: 0.32
+      progress: 0.32,
     },
     {
       id: "12015",
@@ -1065,11 +1359,38 @@ document.addEventListener("DOMContentLoaded", () => {
       arrive: "12:40",
       durationMins: 385,
       stations: [
-        { name: "New Delhi", code: "NDLS", lat: 28.6139, lng: 77.2090, pf: "PF 1", arr: "06:15", dep: "06:15", distKm: 0 },
-        { name: "Jaipur Jn", code: "JP", lat: 26.9200, lng: 75.7878, pf: "PF 1", arr: "10:40", dep: "10:50", distKm: 308 },
-        { name: "Ajmer Jn", code: "AII", lat: 26.4526, lng: 74.6399, pf: "PF 3", arr: "12:40", dep: "12:40", distKm: 443 }
+        {
+          name: "New Delhi",
+          code: "NDLS",
+          lat: 28.6139,
+          lng: 77.209,
+          pf: "PF 1",
+          arr: "06:15",
+          dep: "06:15",
+          distKm: 0,
+        },
+        {
+          name: "Jaipur Jn",
+          code: "JP",
+          lat: 26.92,
+          lng: 75.7878,
+          pf: "PF 1",
+          arr: "10:40",
+          dep: "10:50",
+          distKm: 308,
+        },
+        {
+          name: "Ajmer Jn",
+          code: "AII",
+          lat: 26.4526,
+          lng: 74.6399,
+          pf: "PF 3",
+          arr: "12:40",
+          dep: "12:40",
+          distKm: 443,
+        },
       ],
-      progress: 0.72
+      progress: 0.72,
     },
     {
       id: "12958",
@@ -1097,12 +1418,48 @@ document.addEventListener("DOMContentLoaded", () => {
       arrive: "07:40",
       durationMins: 735,
       stations: [
-        { name: "New Delhi", code: "NDLS", lat: 28.6139, lng: 77.2090, pf: "PF 4", arr: "19:25", dep: "19:25", distKm: 0 },
-        { name: "Jaipur Jn", code: "JP", lat: 26.9200, lng: 75.7878, pf: "PF 1", arr: "23:45", dep: "23:55", distKm: 308 },
-        { name: "Ajmer Jn", code: "AII", lat: 26.4526, lng: 74.6399, pf: "PF 1", arr: "01:50", dep: "01:55", distKm: 443 },
-        { name: "Ahmedabad Jn", code: "ADI", lat: 23.0225, lng: 72.5714, pf: "PF 1", arr: "07:40", dep: "07:40", distKm: 934 }
+        {
+          name: "New Delhi",
+          code: "NDLS",
+          lat: 28.6139,
+          lng: 77.209,
+          pf: "PF 4",
+          arr: "19:25",
+          dep: "19:25",
+          distKm: 0,
+        },
+        {
+          name: "Jaipur Jn",
+          code: "JP",
+          lat: 26.92,
+          lng: 75.7878,
+          pf: "PF 1",
+          arr: "23:45",
+          dep: "23:55",
+          distKm: 308,
+        },
+        {
+          name: "Ajmer Jn",
+          code: "AII",
+          lat: 26.4526,
+          lng: 74.6399,
+          pf: "PF 1",
+          arr: "01:50",
+          dep: "01:55",
+          distKm: 443,
+        },
+        {
+          name: "Ahmedabad Jn",
+          code: "ADI",
+          lat: 23.0225,
+          lng: 72.5714,
+          pf: "PF 1",
+          arr: "07:40",
+          dep: "07:40",
+          distKm: 934,
+        },
       ],
-      progress: 0.44
+      progress: 0.44,
     },
     {
       id: "12622",
@@ -1125,19 +1482,74 @@ document.addEventListener("DOMContentLoaded", () => {
       brakingMargin: "1,450m",
       cabSignal: "PROCEED (GREEN)",
       cabSignalClass: "text-emerald-400",
-      routeDescription: "New Delhi (NDLS) ➔ Agra ➔ Gwalior ➔ Bhopal ➔ Nagpur ➔ Chennai Central",
+      routeDescription:
+        "New Delhi (NDLS) ➔ Agra ➔ Gwalior ➔ Bhopal ➔ Nagpur ➔ Chennai Central",
       depart: "22:00",
       arrive: "07:10",
       durationMins: 1990,
       stations: [
-        { name: "New Delhi", code: "NDLS", lat: 28.6139, lng: 77.2090, pf: "PF 8", arr: "22:00", dep: "22:00", distKm: 0 },
-        { name: "Agra Cantt", code: "AGC", lat: 27.1594, lng: 77.9940, pf: "PF 1", arr: "00:38", dep: "00:43", distKm: 195 },
-        { name: "Gwalior Jn", code: "GWL", lat: 26.2183, lng: 78.1828, pf: "PF 3", arr: "02:25", dep: "02:30", distKm: 313 },
-        { name: "Bhopal Jn", code: "BPL", lat: 23.2599, lng: 77.4126, pf: "PF 6", arr: "07:10", dep: "07:20", distKm: 701 },
-        { name: "Nagpur Jn", code: "NGP", lat: 21.1528, lng: 79.0882, pf: "PF 4", arr: "14:20", dep: "14:30", distKm: 1091 },
-        { name: "Chennai Central", code: "MAS", lat: 13.0827, lng: 80.2707, pf: "PF 3", arr: "07:10", dep: "07:10", distKm: 2182 }
+        {
+          name: "New Delhi",
+          code: "NDLS",
+          lat: 28.6139,
+          lng: 77.209,
+          pf: "PF 8",
+          arr: "22:00",
+          dep: "22:00",
+          distKm: 0,
+        },
+        {
+          name: "Agra Cantt",
+          code: "AGC",
+          lat: 27.1594,
+          lng: 77.994,
+          pf: "PF 1",
+          arr: "00:38",
+          dep: "00:43",
+          distKm: 195,
+        },
+        {
+          name: "Gwalior Jn",
+          code: "GWL",
+          lat: 26.2183,
+          lng: 78.1828,
+          pf: "PF 3",
+          arr: "02:25",
+          dep: "02:30",
+          distKm: 313,
+        },
+        {
+          name: "Bhopal Jn",
+          code: "BPL",
+          lat: 23.2599,
+          lng: 77.4126,
+          pf: "PF 6",
+          arr: "07:10",
+          dep: "07:20",
+          distKm: 701,
+        },
+        {
+          name: "Nagpur Jn",
+          code: "NGP",
+          lat: 21.1528,
+          lng: 79.0882,
+          pf: "PF 4",
+          arr: "14:20",
+          dep: "14:30",
+          distKm: 1091,
+        },
+        {
+          name: "Chennai Central",
+          code: "MAS",
+          lat: 13.0827,
+          lng: 80.2707,
+          pf: "PF 3",
+          arr: "07:10",
+          dep: "07:10",
+          distKm: 2182,
+        },
       ],
-      progress: 0.65
+      progress: 0.65,
     },
     {
       id: "12650",
@@ -1160,18 +1572,64 @@ document.addEventListener("DOMContentLoaded", () => {
       brakingMargin: "1,500m",
       cabSignal: "PROCEED (GREEN)",
       cabSignalClass: "text-emerald-400",
-      routeDescription: "New Delhi (NDLS) ➔ Agra ➔ Bhopal ➔ Secunderabad ➔ KSR Bengaluru",
+      routeDescription:
+        "New Delhi (NDLS) ➔ Agra ➔ Bhopal ➔ Secunderabad ➔ KSR Bengaluru",
       depart: "21:00",
       arrive: "05:40",
       durationMins: 1960,
       stations: [
-        { name: "New Delhi", code: "NDLS", lat: 28.6139, lng: 77.2090, pf: "PF 12", arr: "21:00", dep: "21:00", distKm: 0 },
-        { name: "Agra Cantt", code: "AGC", lat: 27.1594, lng: 77.9940, pf: "PF 1", arr: "00:05", dep: "00:10", distKm: 195 },
-        { name: "Bhopal Jn", code: "BPL", lat: 23.2599, lng: 77.4126, pf: "PF 5", arr: "06:45", dep: "06:55", distKm: 701 },
-        { name: "Secunderabad Jn", code: "SC", lat: 17.4399, lng: 78.5017, pf: "PF 1", arr: "19:15", dep: "19:30", distKm: 1673 },
-        { name: "KSR Bengaluru", code: "SBC", lat: 12.9784, lng: 77.5683, pf: "PF 5", arr: "05:40", dep: "05:40", distKm: 2378 }
+        {
+          name: "New Delhi",
+          code: "NDLS",
+          lat: 28.6139,
+          lng: 77.209,
+          pf: "PF 12",
+          arr: "21:00",
+          dep: "21:00",
+          distKm: 0,
+        },
+        {
+          name: "Agra Cantt",
+          code: "AGC",
+          lat: 27.1594,
+          lng: 77.994,
+          pf: "PF 1",
+          arr: "00:05",
+          dep: "00:10",
+          distKm: 195,
+        },
+        {
+          name: "Bhopal Jn",
+          code: "BPL",
+          lat: 23.2599,
+          lng: 77.4126,
+          pf: "PF 5",
+          arr: "06:45",
+          dep: "06:55",
+          distKm: 701,
+        },
+        {
+          name: "Secunderabad Jn",
+          code: "SC",
+          lat: 17.4399,
+          lng: 78.5017,
+          pf: "PF 1",
+          arr: "19:15",
+          dep: "19:30",
+          distKm: 1673,
+        },
+        {
+          name: "KSR Bengaluru",
+          code: "SBC",
+          lat: 12.9784,
+          lng: 77.5683,
+          pf: "PF 5",
+          arr: "05:40",
+          dep: "05:40",
+          distKm: 2378,
+        },
       ],
-      progress: 0.82
+      progress: 0.82,
     },
     {
       id: "14660",
@@ -1194,19 +1652,74 @@ document.addEventListener("DOMContentLoaded", () => {
       brakingMargin: "1,200m",
       cabSignal: "PROCEED (GREEN)",
       cabSignalClass: "text-emerald-400",
-      routeDescription: "Barmer ➔ Balotra ➔ Luni ➔ Jodhpur ➔ Jaipur ➔ New Delhi",
+      routeDescription:
+        "Barmer ➔ Balotra ➔ Luni ➔ Jodhpur ➔ Jaipur ➔ New Delhi",
       depart: "06:30",
       arrive: "06:45",
       durationMins: 1455,
       stations: [
-        { name: "Barmer", code: "BME", lat: 25.7500, lng: 71.3917, pf: "PF 1", arr: "06:30", dep: "06:30", distKm: 0 },
-        { name: "Balotra Jn", code: "BLT", lat: 25.8333, lng: 72.2333, pf: "PF 2", arr: "08:15", dep: "08:20", distKm: 96 },
-        { name: "Luni Jn", code: "LUNI", lat: 26.0683, lng: 73.0189, pf: "PF 1", arr: "09:55", dep: "10:00", distKm: 177 },
-        { name: "Jodhpur Jn", code: "JU", lat: 26.2867, lng: 73.0238, pf: "PF 3", arr: "11:30", dep: "11:45", distKm: 209 },
-        { name: "Jaipur Jn", code: "JP", lat: 26.9200, lng: 75.7878, pf: "PF 2", arr: "18:00", dep: "18:10", distKm: 519 },
-        { name: "New Delhi", code: "NDLS", lat: 28.6139, lng: 77.2090, pf: "PF 7", arr: "06:45", dep: "06:45", distKm: 827 }
+        {
+          name: "Barmer",
+          code: "BME",
+          lat: 25.75,
+          lng: 71.3917,
+          pf: "PF 1",
+          arr: "06:30",
+          dep: "06:30",
+          distKm: 0,
+        },
+        {
+          name: "Balotra Jn",
+          code: "BLT",
+          lat: 25.8333,
+          lng: 72.2333,
+          pf: "PF 2",
+          arr: "08:15",
+          dep: "08:20",
+          distKm: 96,
+        },
+        {
+          name: "Luni Jn",
+          code: "LUNI",
+          lat: 26.0683,
+          lng: 73.0189,
+          pf: "PF 1",
+          arr: "09:55",
+          dep: "10:00",
+          distKm: 177,
+        },
+        {
+          name: "Jodhpur Jn",
+          code: "JU",
+          lat: 26.2867,
+          lng: 73.0238,
+          pf: "PF 3",
+          arr: "11:30",
+          dep: "11:45",
+          distKm: 209,
+        },
+        {
+          name: "Jaipur Jn",
+          code: "JP",
+          lat: 26.92,
+          lng: 75.7878,
+          pf: "PF 2",
+          arr: "18:00",
+          dep: "18:10",
+          distKm: 519,
+        },
+        {
+          name: "New Delhi",
+          code: "NDLS",
+          lat: 28.6139,
+          lng: 77.209,
+          pf: "PF 7",
+          arr: "06:45",
+          dep: "06:45",
+          distKm: 827,
+        },
       ],
-      progress: 0.18
+      progress: 0.18,
     },
     {
       id: "12462",
@@ -1234,12 +1747,48 @@ document.addEventListener("DOMContentLoaded", () => {
       arrive: "06:10",
       durationMins: 625,
       stations: [
-        { name: "Jodhpur Jn", code: "JU", lat: 26.2867, lng: 73.0238, pf: "PF 1", arr: "19:45", dep: "19:45", distKm: 0 },
-        { name: "Ajmer Jn", code: "AII", lat: 26.4526, lng: 74.6399, pf: "PF 3", arr: "23:20", dep: "23:30", distKm: 234 },
-        { name: "Jaipur Jn", code: "JP", lat: 26.9200, lng: 75.7878, pf: "PF 1", arr: "01:40", dep: "01:50", distKm: 369 },
-        { name: "New Delhi", code: "NDLS", lat: 28.6139, lng: 77.2090, pf: "PF 11", arr: "06:10", dep: "06:10", distKm: 677 }
+        {
+          name: "Jodhpur Jn",
+          code: "JU",
+          lat: 26.2867,
+          lng: 73.0238,
+          pf: "PF 1",
+          arr: "19:45",
+          dep: "19:45",
+          distKm: 0,
+        },
+        {
+          name: "Ajmer Jn",
+          code: "AII",
+          lat: 26.4526,
+          lng: 74.6399,
+          pf: "PF 3",
+          arr: "23:20",
+          dep: "23:30",
+          distKm: 234,
+        },
+        {
+          name: "Jaipur Jn",
+          code: "JP",
+          lat: 26.92,
+          lng: 75.7878,
+          pf: "PF 1",
+          arr: "01:40",
+          dep: "01:50",
+          distKm: 369,
+        },
+        {
+          name: "New Delhi",
+          code: "NDLS",
+          lat: 28.6139,
+          lng: 77.209,
+          pf: "PF 11",
+          arr: "06:10",
+          dep: "06:10",
+          distKm: 677,
+        },
       ],
-      progress: 0.52
+      progress: 0.52,
     },
     {
       id: "20488",
@@ -1267,11 +1816,29 @@ document.addEventListener("DOMContentLoaded", () => {
       arrive: "03:53",
       durationMins: 78,
       stations: [
-        { name: "Luni Jn", code: "LUNI", lat: 26.0683, lng: 73.0189, pf: "PF 1", arr: "02:35", dep: "02:35", distKm: 0 },
-        { name: "Balotra Jn", code: "BLT", lat: 25.8333, lng: 72.2333, pf: "PF 2", arr: "03:53", dep: "03:53", distKm: 81 }
+        {
+          name: "Luni Jn",
+          code: "LUNI",
+          lat: 26.0683,
+          lng: 73.0189,
+          pf: "PF 1",
+          arr: "02:35",
+          dep: "02:35",
+          distKm: 0,
+        },
+        {
+          name: "Balotra Jn",
+          code: "BLT",
+          lat: 25.8333,
+          lng: 72.2333,
+          pf: "PF 2",
+          arr: "03:53",
+          dep: "03:53",
+          distKm: 81,
+        },
       ],
-      progress: 0.60
-    }
+      progress: 0.6,
+    },
   ];
 
   // =========================================================================
@@ -1289,15 +1856,15 @@ document.addEventListener("DOMContentLoaded", () => {
       electrification: "25 kV AC 50 Hz",
       kavachStatus: "ACTIVE (SIL-4)",
       coordinates: [
-        [28.6139, 77.2090], // NDLS
+        [28.6139, 77.209], // NDLS
         [27.4924, 77.6737], // Mathura
         [27.2152, 77.4892], // Bharatpur
         [26.7297, 76.9856], // Hindaun City
         [26.4716, 76.7214], // Gangapur City
         [25.9928, 76.3533], // Sawai Madhopur
-        [25.1800, 75.8300], // Kota Jn
+        [25.18, 75.83], // Kota Jn
         [24.1878, 75.6412], // Shamgarh
-        [23.4560, 75.4124], // Nagda Jn
+        [23.456, 75.4124], // Nagda Jn
         [23.3315, 75.0367], // Ratlam Jn
         [22.8373, 74.2554], // Dahod
         [22.7554, 73.6146], // Godhra
@@ -1311,8 +1878,8 @@ document.addEventListener("DOMContentLoaded", () => {
         [19.6967, 72.7699], // Palghar
         [19.4564, 72.8081], // Virar
         [19.2288, 72.8541], // Borivali
-        [18.9712, 72.8197]  // Mumbai Central
-      ]
+        [18.9712, 72.8197], // Mumbai Central
+      ],
     },
     {
       id: "track_eastern_trunk",
@@ -1324,15 +1891,15 @@ document.addEventListener("DOMContentLoaded", () => {
       electrification: "25 kV AC 50 Hz",
       kavachStatus: "ACTIVE (SIL-4)",
       coordinates: [
-        [28.6139, 77.2090], // NDLS
+        [28.6139, 77.209], // NDLS
         [28.6692, 77.4538], // Ghaziabad
-        [27.8974, 78.0880], // Aligarh
+        [27.8974, 78.088], // Aligarh
         [27.2062, 78.2438], // Tundla
-        [26.7855, 79.0270], // Etawah
+        [26.7855, 79.027], // Etawah
         [26.4499, 80.3319], // Kanpur Central
         [25.9284, 80.8128], // Fatehpur
         [25.4358, 81.8463], // Prayagraj Jn
-        [25.1460, 82.5690], // Mirzapur
+        [25.146, 82.569], // Mirzapur
         [25.2818, 83.1162], // Pt. Deen Dayal Upadhyaya
         [24.9535, 84.0289], // Sasaram
         [24.9126, 84.1856], // Dehri-on-Sone
@@ -1344,8 +1911,8 @@ document.addEventListener("DOMContentLoaded", () => {
         [23.6889, 86.9661], // Asansol Jn
         [23.5204, 87.3119], // Durgapur
         [23.2324, 87.8615], // Bardhaman
-        [22.5850, 88.3426]  // Howrah
-      ]
+        [22.585, 88.3426], // Howrah
+      ],
     },
     {
       id: "track_grand_trunk",
@@ -1357,29 +1924,29 @@ document.addEventListener("DOMContentLoaded", () => {
       electrification: "25 kV AC",
       kavachStatus: "ACTIVE (SIL-4)",
       coordinates: [
-        [28.6139, 77.2090], // NDLS
+        [28.6139, 77.209], // NDLS
         [27.4924, 77.6737], // Mathura
         [27.1767, 78.0081], // Agra Cantt
         [26.2183, 78.1828], // Gwalior
         [25.4484, 78.5685], // VGL Jhansi
-        [24.6900, 78.4100], // Lalitpur
-        [24.1800, 78.1800], // Bina Jn
+        [24.69, 78.41], // Lalitpur
+        [24.18, 78.18], // Bina Jn
         [23.2599, 77.4126], // Bhopal Jn
-        [22.6100, 77.7600], // Itarsi Jn
-        [21.9000, 77.9000], // Betul
+        [22.61, 77.76], // Itarsi Jn
+        [21.9, 77.9], // Betul
         [21.1458, 79.0882], // Nagpur Jn
-        [20.7400, 78.6000], // Sewagram
+        [20.74, 78.6], // Sewagram
         [19.8519, 79.3789], // Balharshah
-        [18.7600, 79.5100], // Ramagundam
+        [18.76, 79.51], // Ramagundam
         [17.9689, 79.5941], // Warangal / Kazipet
-        [17.2500, 80.1500], // Khammam
-        [16.5062, 80.6480], // Vijayawada Jn
-        [16.2400, 80.6400], // Tenali
-        [15.5000, 80.0500], // Ongole
-        [14.4400, 79.9800], // Nellore
-        [13.8200, 79.8500], // Gudur
-        [13.0827, 80.2707]  // Chennai Central
-      ]
+        [17.25, 80.15], // Khammam
+        [16.5062, 80.648], // Vijayawada Jn
+        [16.24, 80.64], // Tenali
+        [15.5, 80.05], // Ongole
+        [14.44, 79.98], // Nellore
+        [13.82, 79.85], // Gudur
+        [13.0827, 80.2707], // Chennai Central
+      ],
     },
     {
       id: "track_mumbai_howrah",
@@ -1391,26 +1958,26 @@ document.addEventListener("DOMContentLoaded", () => {
       electrification: "25 kV AC",
       kavachStatus: "ACTIVE (SIL-4)",
       coordinates: [
-        [18.9400, 72.8350], // Mumbai CSMT
-        [19.2400, 73.1300], // Kalyan
+        [18.94, 72.835], // Mumbai CSMT
+        [19.24, 73.13], // Kalyan
         [19.9975, 73.7898], // Nashik
-        [20.2500, 74.4400], // Manmad
-        [20.8200, 75.7000], // Jalgaon
-        [21.0500, 75.7900], // Bhusawal
-        [20.7000, 77.0000], // Akola
-        [20.9300, 77.7500], // Badnera / Amravati
-        [20.7400, 78.6000], // Wardha
+        [20.25, 74.44], // Manmad
+        [20.82, 75.7], // Jalgaon
+        [21.05, 75.79], // Bhusawal
+        [20.7, 77.0], // Akola
+        [20.93, 77.75], // Badnera / Amravati
+        [20.74, 78.6], // Wardha
         [21.1458, 79.0882], // Nagpur
-        [21.4600, 80.2000], // Gondia
-        [21.1900, 81.2800], // Durg
-        [21.2500, 81.6300], // Raipur
-        [22.0800, 82.1500], // Bilaspur
-        [21.8500, 83.9200], // Jharsuguda
-        [22.2500, 84.8800], // Rourkela
-        [22.7500, 86.2000], // Tatanagar (Jamshedpur)
-        [22.3400, 87.3200], // Kharagpur
-        [22.5850, 88.3426]  // Howrah
-      ]
+        [21.46, 80.2], // Gondia
+        [21.19, 81.28], // Durg
+        [21.25, 81.63], // Raipur
+        [22.08, 82.15], // Bilaspur
+        [21.85, 83.92], // Jharsuguda
+        [22.25, 84.88], // Rourkela
+        [22.75, 86.2], // Tatanagar (Jamshedpur)
+        [22.34, 87.32], // Kharagpur
+        [22.585, 88.3426], // Howrah
+      ],
     },
     {
       id: "track_mumbai_chennai",
@@ -1422,17 +1989,17 @@ document.addEventListener("DOMContentLoaded", () => {
       electrification: "25 kV AC",
       kavachStatus: "DEPLOYED",
       coordinates: [
-        [18.9400, 72.8350], // Mumbai
+        [18.94, 72.835], // Mumbai
         [18.5204, 73.8567], // Pune
-        [18.4600, 74.5800], // Daund
-        [17.6600, 75.9100], // Solapur
-        [17.0500, 76.9900], // Wadi Jn
-        [16.2000, 77.3600], // Raichur
-        [15.1700, 77.3800], // Guntakal Jn
-        [14.4700, 78.8200], // Cuddapah (Kadapa)
-        [13.6300, 79.4200], // Renigunta
-        [13.0827, 80.2707]  // Chennai Central
-      ]
+        [18.46, 74.58], // Daund
+        [17.66, 75.91], // Solapur
+        [17.05, 76.99], // Wadi Jn
+        [16.2, 77.36], // Raichur
+        [15.17, 77.38], // Guntakal Jn
+        [14.47, 78.82], // Cuddapah (Kadapa)
+        [13.63, 79.42], // Renigunta
+        [13.0827, 80.2707], // Chennai Central
+      ],
     },
     {
       id: "track_east_coast",
@@ -1444,23 +2011,23 @@ document.addEventListener("DOMContentLoaded", () => {
       electrification: "25 kV AC",
       kavachStatus: "ACTIVE (SIL-4)",
       coordinates: [
-        [22.5850, 88.3426], // Howrah
-        [22.3400, 87.3200], // Kharagpur
-        [21.5000, 86.9200], // Balasore
-        [21.0500, 86.5000], // Bhadrak
-        [20.4600, 85.8800], // Cuttack
-        [20.2700, 85.8400], // Bhubaneswar
-        [19.3200, 84.7900], // Brahmapur
-        [18.6000, 84.1400], // Srikakulam
-        [18.1200, 83.4200], // Vizianagaram
+        [22.585, 88.3426], // Howrah
+        [22.34, 87.32], // Kharagpur
+        [21.5, 86.92], // Balasore
+        [21.05, 86.5], // Bhadrak
+        [20.46, 85.88], // Cuttack
+        [20.27, 85.84], // Bhubaneswar
+        [19.32, 84.79], // Brahmapur
+        [18.6, 84.14], // Srikakulam
+        [18.12, 83.42], // Vizianagaram
         [17.6868, 83.2185], // Visakhapatnam
-        [17.0000, 81.7800], // Rajahmundry
-        [16.7100, 81.1000], // Eluru
-        [16.5062, 80.6480], // Vijayawada
-        [15.5000, 80.0500], // Ongole
-        [14.4400, 79.9800], // Nellore
-        [13.0827, 80.2707]  // Chennai Central
-      ]
+        [17.0, 81.78], // Rajahmundry
+        [16.71, 81.1], // Eluru
+        [16.5062, 80.648], // Vijayawada
+        [15.5, 80.05], // Ongole
+        [14.44, 79.98], // Nellore
+        [13.0827, 80.2707], // Chennai Central
+      ],
     },
     {
       id: "track_northern_trunk",
@@ -1472,16 +2039,16 @@ document.addEventListener("DOMContentLoaded", () => {
       electrification: "25 kV AC",
       kavachStatus: "ACTIVE (160.225 MHz)",
       coordinates: [
-        [28.6139, 77.2090], // NDLS
+        [28.6139, 77.209], // NDLS
         [29.3909, 76.9635], // Panipat
         [29.6857, 76.9905], // Karnal
         [29.9695, 76.8783], // Kurukshetra
         [30.3752, 76.7821], // Ambala Cantt
-        [30.9010, 75.8573], // Ludhiana
-        [31.3260, 75.5762], // Jalandhar City
+        [30.901, 75.8573], // Ludhiana
+        [31.326, 75.5762], // Jalandhar City
         [31.5168, 75.3023], // Beas
-        [31.6340, 74.8723]  // Amritsar
-      ]
+        [31.634, 74.8723], // Amritsar
+      ],
     },
     {
       id: "track_wdfc",
@@ -1493,23 +2060,23 @@ document.addEventListener("DOMContentLoaded", () => {
       electrification: "2x25 kV AC High Rise OHE",
       kavachStatus: "ACTIVE (SIL-4)",
       coordinates: [
-        [28.5528, 77.5540], // Dadri WDFC
-        [28.1920, 76.6239], // Rewari
-        [27.9900, 76.1000], // Narnaul
-        [27.7000, 75.8000], // Neem Ka Thana
-        [27.3500, 75.5700], // Ringas
+        [28.5528, 77.554], // Dadri WDFC
+        [28.192, 76.6239], // Rewari
+        [27.99, 76.1], // Narnaul
+        [27.7, 75.8], // Neem Ka Thana
+        [27.35, 75.57], // Ringas
         [26.8727, 75.2348], // Phulera
-        [26.4700, 74.6400], // Ajmer
+        [26.47, 74.64], // Ajmer
         [25.7289, 73.3644], // Marwar Jn
-        [25.2200, 73.0500], // Falna
-        [24.4700, 72.7800], // Abu Road
+        [25.22, 73.05], // Falna
+        [24.47, 72.78], // Abu Road
         [24.1724, 72.4346], // Palanpur
-        [23.6000, 72.4000], // Mehsana
+        [23.6, 72.4], // Mehsana
         [22.9868, 72.3813], // Sanand Freight
         [22.3072, 73.1812], // Vadodara DFC
         [21.1702, 72.8311], // Surat DFC
-        [18.9500, 72.9500]  // JNPT Terminal
-      ]
+        [18.95, 72.95], // JNPT Terminal
+      ],
     },
     {
       id: "track_edfc",
@@ -1521,15 +2088,15 @@ document.addEventListener("DOMContentLoaded", () => {
       electrification: "2x25 kV AC",
       kavachStatus: "ACTIVE (SIL-4)",
       coordinates: [
-        [30.8500, 75.9500], // Sahnewal (Ludhiana)
-        [30.3500, 76.8500], // Shambhu
-        [28.2500, 77.8500], // Khurja DFC
-        [27.2000, 78.2500], // Tundla DFC
-        [26.4000, 80.2000], // Bhaupur (Kanpur)
-        [25.3500, 81.9000], // New Karchhana
+        [30.85, 75.95], // Sahnewal (Ludhiana)
+        [30.35, 76.85], // Shambhu
+        [28.25, 77.85], // Khurja DFC
+        [27.2, 78.25], // Tundla DFC
+        [26.4, 80.2], // Bhaupur (Kanpur)
+        [25.35, 81.9], // New Karchhana
         [25.2818, 83.1162], // Pt. Deen Dayal Upadhyaya
-        [24.8500, 84.2500]  // Sonnagar DFC
-      ]
+        [24.85, 84.25], // Sonnagar DFC
+      ],
     },
     {
       id: "track_southern_kerala",
@@ -1543,20 +2110,20 @@ document.addEventListener("DOMContentLoaded", () => {
       coordinates: [
         [13.0827, 80.2707], // Chennai
         [12.9698, 79.1325], // Katpadi
-        [12.5500, 78.5800], // Jolarpettai
-        [11.6600, 78.1400], // Salem
-        [11.3400, 77.7200], // Erode
-        [11.1000, 77.3400], // Tiruppur
+        [12.55, 78.58], // Jolarpettai
+        [11.66, 78.14], // Salem
+        [11.34, 77.72], // Erode
+        [11.1, 77.34], // Tiruppur
         [11.0168, 76.9558], // Coimbatore
-        [10.7800, 76.6500], // Palakkad
-        [10.7600, 76.2800], // Shoranur
-        [10.5200, 76.2100], // Thrissur
-        [9.9816, 76.2999],  // Ernakulam Town
-        [9.5900, 76.5200],  // Kottayam
-        [8.8900, 76.6000],  // Kollam
-        [8.5241, 76.9366],  // Thiruvananthapuram
-        [8.0800, 77.5500]   // Kanyakumari
-      ]
+        [10.78, 76.65], // Palakkad
+        [10.76, 76.28], // Shoranur
+        [10.52, 76.21], // Thrissur
+        [9.9816, 76.2999], // Ernakulam Town
+        [9.59, 76.52], // Kottayam
+        [8.89, 76.6], // Kollam
+        [8.5241, 76.9366], // Thiruvananthapuram
+        [8.08, 77.55], // Kanyakumari
+      ],
     },
     {
       id: "track_konkan_railway",
@@ -1568,16 +2135,16 @@ document.addEventListener("DOMContentLoaded", () => {
       electrification: "100% Electrified 25 kV AC",
       kavachStatus: "ACTIVE (Anti-Collision Device)",
       coordinates: [
-        [18.4300, 73.1200], // Roha
-        [17.5300, 73.5200], // Chiplun
-        [16.9900, 73.3000], // Ratnagiri
-        [15.9000, 73.7000], // Kudal
-        [15.2800, 73.9800], // Madgaon (Goa)
-        [14.8200, 74.1300], // Karwar
-        [13.9100, 74.5700], // Bhatkal
-        [13.3400, 74.7400], // Udupi
-        [12.8700, 74.8400]  // Mangaluru Central
-      ]
+        [18.43, 73.12], // Roha
+        [17.53, 73.52], // Chiplun
+        [16.99, 73.3], // Ratnagiri
+        [15.9, 73.7], // Kudal
+        [15.28, 73.98], // Madgaon (Goa)
+        [14.82, 74.13], // Karwar
+        [13.91, 74.57], // Bhatkal
+        [13.34, 74.74], // Udupi
+        [12.87, 74.84], // Mangaluru Central
+      ],
     },
     {
       id: "track_bengaluru_hyderabad",
@@ -1590,13 +2157,13 @@ document.addEventListener("DOMContentLoaded", () => {
       kavachStatus: "ACTIVE (SIL-4)",
       coordinates: [
         [12.9716, 77.5946], // Bengaluru
-        [14.1500, 77.7200], // Dharmavaram
-        [14.6800, 77.6000], // Anantapur
-        [15.1700, 77.3800], // Guntakal
-        [15.8200, 78.0300], // Kurnool
-        [16.7400, 77.9800], // Mahbubnagar
-        [17.3850, 78.4867]  // Hyderabad / Kacheguda
-      ]
+        [14.15, 77.72], // Dharmavaram
+        [14.68, 77.6], // Anantapur
+        [15.17, 77.38], // Guntakal
+        [15.82, 78.03], // Kurnool
+        [16.74, 77.98], // Mahbubnagar
+        [17.385, 78.4867], // Hyderabad / Kacheguda
+      ],
     },
     {
       id: "track_northeast",
@@ -1608,15 +2175,15 @@ document.addEventListener("DOMContentLoaded", () => {
       electrification: "25 kV AC Electrified",
       kavachStatus: "DEPLOYED",
       coordinates: [
-        [22.5850, 88.3426], // Kolkata
-        [25.0100, 88.1400], // Malda Town
-        [26.7200, 88.4300], // New Jalpaiguri (Siliguri)
-        [26.3200, 89.4600], // New Cooch Behar
-        [26.5000, 90.5500], // New Bongaigaon
+        [22.585, 88.3426], // Kolkata
+        [25.01, 88.14], // Malda Town
+        [26.72, 88.43], // New Jalpaiguri (Siliguri)
+        [26.32, 89.46], // New Cooch Behar
+        [26.5, 90.55], // New Bongaigaon
         [26.1445, 91.7362], // Guwahati
-        [25.7500, 93.1700], // Lumding
-        [27.4700, 94.9100]  // Dibrugarh
-      ]
+        [25.75, 93.17], // Lumding
+        [27.47, 94.91], // Dibrugarh
+      ],
     },
     {
       id: "track_rajasthan_link",
@@ -1629,10 +2196,10 @@ document.addEventListener("DOMContentLoaded", () => {
       kavachStatus: "DEPLOYED",
       coordinates: [
         [26.9124, 75.7873], // Jaipur
-        [26.4700, 74.6400], // Ajmer
+        [26.47, 74.64], // Ajmer
         [25.7289, 73.3644], // Marwar Jn
-        [26.2900, 73.0200]  // Jodhpur
-      ]
+        [26.29, 73.02], // Jodhpur
+      ],
     },
     {
       id: "track_central_link",
@@ -1645,13 +2212,13 @@ document.addEventListener("DOMContentLoaded", () => {
       kavachStatus: "ACTIVE",
       coordinates: [
         [23.2599, 77.4126], // Bhopal
-        [23.1800, 75.7800], // Ujjain
+        [23.18, 75.78], // Ujjain
         [22.7196, 75.8577], // Indore
-        [23.4560, 75.4124], // Nagda
+        [23.456, 75.4124], // Nagda
         [23.3315, 75.0367], // Ratlam
-        [23.0225, 72.5714]  // Ahmedabad
-      ]
-    }
+        [23.0225, 72.5714], // Ahmedabad
+      ],
+    },
   ];
 
   // Pan-India Hierarchical Geography Dataset (States -> Metros -> Junctions -> Towns)
@@ -1660,33 +2227,33 @@ document.addEventListener("DOMContentLoaded", () => {
     { name: "RAJASTHAN (NWR)", lat: 26.58, lng: 73.85, tier: "state" },
     { name: "UTTAR PRADESH (NCR/NR)", lat: 27.12, lng: 80.95, tier: "state" },
     { name: "MAHARASHTRA (CR/WR)", lat: 19.55, lng: 75.52, tier: "state" },
-    { name: "MADHYA PRADESH (WCR)", lat: 23.50, lng: 78.25, tier: "state" },
+    { name: "MADHYA PRADESH (WCR)", lat: 23.5, lng: 78.25, tier: "state" },
     { name: "GUJARAT (WR)", lat: 22.85, lng: 71.55, tier: "state" },
-    { name: "PUNJAB (NR)", lat: 31.05, lng: 75.40, tier: "state" },
-    { name: "HARYANA (NR)", lat: 29.25, lng: 76.50, tier: "state" },
-    { name: "BIHAR (ECR)", lat: 25.65, lng: 85.80, tier: "state" },
-    { name: "WEST BENGAL (ER/SER)", lat: 23.35, lng: 87.80, tier: "state" },
-    { name: "TAMIL NADU (SR)", lat: 11.05, lng: 78.50, tier: "state" },
-    { name: "KARNATAKA (SWR)", lat: 14.50, lng: 75.80, tier: "state" },
-    { name: "ANDHRA PRADESH (SCR)", lat: 15.80, lng: 79.70, tier: "state" },
-    { name: "TELANGANA (SCR)", lat: 17.80, lng: 79.10, tier: "state" },
-    { name: "KERALA (SR)", lat: 10.20, lng: 76.40, tier: "state" },
-    { name: "ODISHA (ECoR)", lat: 20.50, lng: 84.50, tier: "state" },
-    { name: "JHARKHAND (SER/ECR)", lat: 23.60, lng: 85.30, tier: "state" },
-    { name: "CHHATTISGARH (SECR)", lat: 21.30, lng: 81.90, tier: "state" },
-    { name: "ASSAM (NFR)", lat: 26.20, lng: 92.90, tier: "state" },
-    { name: "UTTARAKHAND (NR)", lat: 30.10, lng: 79.10, tier: "state" },
-    { name: "HIMACHAL PRADESH (NR)", lat: 31.80, lng: 77.20, tier: "state" },
-    { name: "JAMMU & KASHMIR (NR)", lat: 33.50, lng: 75.00, tier: "state" },
-    { name: "DELHI NCR (HQ)", lat: 28.6139, lng: 77.2090, tier: "state" },
+    { name: "PUNJAB (NR)", lat: 31.05, lng: 75.4, tier: "state" },
+    { name: "HARYANA (NR)", lat: 29.25, lng: 76.5, tier: "state" },
+    { name: "BIHAR (ECR)", lat: 25.65, lng: 85.8, tier: "state" },
+    { name: "WEST BENGAL (ER/SER)", lat: 23.35, lng: 87.8, tier: "state" },
+    { name: "TAMIL NADU (SR)", lat: 11.05, lng: 78.5, tier: "state" },
+    { name: "KARNATAKA (SWR)", lat: 14.5, lng: 75.8, tier: "state" },
+    { name: "ANDHRA PRADESH (SCR)", lat: 15.8, lng: 79.7, tier: "state" },
+    { name: "TELANGANA (SCR)", lat: 17.8, lng: 79.1, tier: "state" },
+    { name: "KERALA (SR)", lat: 10.2, lng: 76.4, tier: "state" },
+    { name: "ODISHA (ECoR)", lat: 20.5, lng: 84.5, tier: "state" },
+    { name: "JHARKHAND (SER/ECR)", lat: 23.6, lng: 85.3, tier: "state" },
+    { name: "CHHATTISGARH (SECR)", lat: 21.3, lng: 81.9, tier: "state" },
+    { name: "ASSAM (NFR)", lat: 26.2, lng: 92.9, tier: "state" },
+    { name: "UTTARAKHAND (NR)", lat: 30.1, lng: 79.1, tier: "state" },
+    { name: "HIMACHAL PRADESH (NR)", lat: 31.8, lng: 77.2, tier: "state" },
+    { name: "JAMMU & KASHMIR (NR)", lat: 33.5, lng: 75.0, tier: "state" },
+    { name: "DELHI NCR (HQ)", lat: 28.6139, lng: 77.209, tier: "state" },
 
     // Tier 2: Metros & Primary Cities (Visible at Zoom 6 - 8)
-    { name: "New Delhi", lat: 28.6139, lng: 77.2090, tier: "city" },
+    { name: "New Delhi", lat: 28.6139, lng: 77.209, tier: "city" },
     { name: "Mumbai", lat: 18.9712, lng: 72.8197, tier: "city" },
     { name: "Kolkata", lat: 22.5726, lng: 88.3639, tier: "city" },
     { name: "Chennai", lat: 13.0827, lng: 80.2707, tier: "city" },
     { name: "Bengaluru", lat: 12.9716, lng: 77.5946, tier: "city" },
-    { name: "Hyderabad", lat: 17.3850, lng: 78.4867, tier: "city" },
+    { name: "Hyderabad", lat: 17.385, lng: 78.4867, tier: "city" },
     { name: "Ahmedabad", lat: 23.0225, lng: 72.5714, tier: "city" },
     { name: "Jaipur", lat: 26.9124, lng: 75.7873, tier: "city" },
     { name: "Lucknow", lat: 26.8467, lng: 80.9462, tier: "city" },
@@ -1698,7 +2265,7 @@ document.addEventListener("DOMContentLoaded", () => {
     { name: "Vadodara", lat: 22.3072, lng: 73.1812, tier: "city" },
     { name: "Varanasi", lat: 25.3176, lng: 82.9739, tier: "city" },
     { name: "Agra", lat: 27.1767, lng: 78.0081, tier: "city" },
-    { name: "Amritsar", lat: 31.6340, lng: 74.8723, tier: "city" },
+    { name: "Amritsar", lat: 31.634, lng: 74.8723, tier: "city" },
     { name: "Chandigarh", lat: 30.7333, lng: 76.7794, tier: "city" },
     { name: "Indore", lat: 22.7196, lng: 75.8577, tier: "city" },
     { name: "Coimbatore", lat: 11.0168, lng: 76.9558, tier: "city" },
@@ -1706,25 +2273,30 @@ document.addEventListener("DOMContentLoaded", () => {
     { name: "Guwahati", lat: 26.1445, lng: 91.7362, tier: "city" },
 
     // Tier 3: District Junctions (Visible at Zoom 9 - 11)
-    { name: "Kota Jn", lat: 25.1800, lng: 75.8300, tier: "junction" },
+    { name: "Kota Jn", lat: 25.18, lng: 75.83, tier: "junction" },
     { name: "Ratlam Jn", lat: 23.3315, lng: 75.0367, tier: "junction" },
     { name: "Mathura Jn", lat: 27.4924, lng: 77.6737, tier: "junction" },
     { name: "Prayagraj Jn", lat: 25.4358, lng: 81.8463, tier: "junction" },
-    { name: "Pt. Deen Dayal Upadhyaya", lat: 25.2818, lng: 83.1162, tier: "junction" },
+    {
+      name: "Pt. Deen Dayal Upadhyaya",
+      lat: 25.2818,
+      lng: 83.1162,
+      tier: "junction",
+    },
     { name: "Asansol Jn", lat: 23.6889, lng: 86.9661, tier: "junction" },
     { name: "Dhanbad Jn", lat: 23.7957, lng: 86.4304, tier: "junction" },
     { name: "Gaya Jn", lat: 24.7955, lng: 85.0002, tier: "junction" },
     { name: "Ambala Cantt", lat: 30.3752, lng: 76.7821, tier: "junction" },
     { name: "Panipat Jn", lat: 29.3909, lng: 76.9635, tier: "junction" },
     { name: "Kurukshetra Jn", lat: 29.9695, lng: 76.8783, tier: "junction" },
-    { name: "Ludhiana Jn", lat: 30.9010, lng: 75.8573, tier: "junction" },
-    { name: "Jalandhar City", lat: 31.3260, lng: 75.5762, tier: "junction" },
+    { name: "Ludhiana Jn", lat: 30.901, lng: 75.8573, tier: "junction" },
+    { name: "Jalandhar City", lat: 31.326, lng: 75.5762, tier: "junction" },
     { name: "Gwalior Jn", lat: 26.2183, lng: 78.1828, tier: "junction" },
     { name: "VGL Jhansi", lat: 25.4484, lng: 78.5685, tier: "junction" },
-    { name: "Vijayawada Jn", lat: 16.5062, lng: 80.6480, tier: "junction" },
+    { name: "Vijayawada Jn", lat: 16.5062, lng: 80.648, tier: "junction" },
     { name: "Warangal", lat: 17.9689, lng: 79.5941, tier: "junction" },
     { name: "Palanpur Jn", lat: 24.1724, lng: 72.4346, tier: "junction" },
-    { name: "Rewari Jn", lat: 28.1920, lng: 76.6239, tier: "junction" },
+    { name: "Rewari Jn", lat: 28.192, lng: 76.6239, tier: "junction" },
     { name: "Phulera Jn", lat: 26.8727, lng: 75.2348, tier: "junction" },
     { name: "Marwar Jn", lat: 25.7289, lng: 73.3644, tier: "junction" },
     { name: "Vapi", lat: 20.3712, lng: 72.9048, tier: "junction" },
@@ -1736,7 +2308,7 @@ document.addEventListener("DOMContentLoaded", () => {
     { name: "Sawai Madhopur", lat: 25.9928, lng: 76.3533, tier: "town" },
     { name: "Bharatpur Jn", lat: 27.2152, lng: 77.4892, tier: "town" },
     { name: "Hindaun City", lat: 26.7297, lng: 76.9856, tier: "town" },
-    { name: "Nagda Jn", lat: 23.4560, lng: 75.4124, tier: "town" },
+    { name: "Nagda Jn", lat: 23.456, lng: 75.4124, tier: "town" },
     { name: "Shamgarh", lat: 24.1878, lng: 75.6412, tier: "town" },
     { name: "Dahod", lat: 22.8373, lng: 74.2554, tier: "town" },
     { name: "Ankleshwar", lat: 21.6264, lng: 73.0039, tier: "town" },
@@ -1750,15 +2322,15 @@ document.addEventListener("DOMContentLoaded", () => {
     { name: "Shahabad Markanda", lat: 30.1685, lng: 76.8711, tier: "town" },
     { name: "Sirhind Jn", lat: 30.6425, lng: 76.3846, tier: "town" },
     { name: "Khanna", lat: 30.7071, lng: 76.2163, tier: "town" },
-    { name: "Phagwara Jn", lat: 31.2240, lng: 75.7708, tier: "town" },
+    { name: "Phagwara Jn", lat: 31.224, lng: 75.7708, tier: "town" },
     { name: "Beas Jn", lat: 31.5168, lng: 75.3023, tier: "town" },
     { name: "Fatehpur", lat: 25.9284, lng: 80.8128, tier: "town" },
-    { name: "Mirzapur", lat: 25.1460, lng: 82.5690, tier: "town" },
+    { name: "Mirzapur", lat: 25.146, lng: 82.569, tier: "town" },
     { name: "Sasaram Jn", lat: 24.9535, lng: 84.0289, tier: "town" },
     { name: "Dehri-on-Sone", lat: 24.9126, lng: 84.1856, tier: "town" },
     { name: "Koderma Jn", lat: 24.4674, lng: 85.5936, tier: "town" },
     { name: "Gomoh Jn", lat: 23.8722, lng: 86.1554, tier: "town" },
-    { name: "Parasnath", lat: 23.9482, lng: 86.0694, tier: "town" }
+    { name: "Parasnath", lat: 23.9482, lng: 86.0694, tier: "town" },
   ];
 
   // Map Global State
@@ -1778,10 +2350,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Calculation Helper: Bearing between two lat/lng points
   function calculateBearingAngle(startLat, startLng, destLat, destLng) {
-    const y = Math.sin((destLng - startLng) * (Math.PI / 180)) * Math.cos(destLat * (Math.PI / 180));
+    const y =
+      Math.sin((destLng - startLng) * (Math.PI / 180)) *
+      Math.cos(destLat * (Math.PI / 180));
     const x =
-      Math.cos(startLat * (Math.PI / 180)) * Math.sin(destLat * (Math.PI / 180)) -
-      Math.sin(startLat * (Math.PI / 180)) * Math.cos(destLat * (Math.PI / 180)) * Math.cos((destLng - startLng) * (Math.PI / 180));
+      Math.cos(startLat * (Math.PI / 180)) *
+        Math.sin(destLat * (Math.PI / 180)) -
+      Math.sin(startLat * (Math.PI / 180)) *
+        Math.cos(destLat * (Math.PI / 180)) *
+        Math.cos((destLng - startLng) * (Math.PI / 180));
     const brng = (Math.atan2(y, x) * 180) / Math.PI;
     return (brng + 360) % 360;
   }
@@ -1790,7 +2367,13 @@ document.addEventListener("DOMContentLoaded", () => {
   function getTrainPositionAndBearing(train) {
     const stations = train.stations;
     if (!stations || stations.length < 2) {
-      return { lat: 28.6139, lng: 77.2090, bearing: 0, currentSegmentIdx: 0, frac: 0 };
+      return {
+        lat: 28.6139,
+        lng: 77.209,
+        bearing: 0,
+        currentSegmentIdx: 0,
+        frac: 0,
+      };
     }
     const totalDist = stations[stations.length - 1].distKm;
     if (!totalDist || totalDist <= 0) {
@@ -1806,13 +2389,19 @@ document.addEventListener("DOMContentLoaded", () => {
       return { lat, lng, bearing, currentSegmentIdx: segIdx, frac };
     }
 
-    const clampedProgress = Math.max(0, Math.min(0.999999, train.progress || 0));
+    const clampedProgress = Math.max(
+      0,
+      Math.min(0.999999, train.progress || 0),
+    );
     const currentDist = clampedProgress * totalDist;
     let segIdx = 0;
     let frac = 0;
 
     for (let i = 0; i < stations.length - 1; i++) {
-      if (currentDist >= stations[i].distKm && currentDist <= stations[i + 1].distKm) {
+      if (
+        currentDist >= stations[i].distKm &&
+        currentDist <= stations[i + 1].distKm
+      ) {
         segIdx = i;
         const segLen = stations[i + 1].distKm - stations[i].distKm;
         frac = segLen > 0 ? (currentDist - stations[i].distKm) / segLen : 0;
@@ -1839,10 +2428,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const baseSpeed = train.speed > 0 ? train.speed : 110;
 
     // Check weather fog condition
-    const isFogActive = window.liveWeatherState && (window.liveWeatherState.weatherCode === 45 || window.liveWeatherState.weatherCode === 48 || window.liveWeatherState.visibility < 1.5);
+    const isFogActive =
+      window.liveWeatherState &&
+      (window.liveWeatherState.weatherCode === 45 ||
+        window.liveWeatherState.weatherCode === 48 ||
+        window.liveWeatherState.visibility < 1.5);
     const effectiveSpeed = isFogActive ? Math.min(60, baseSpeed) : baseSpeed;
 
-    const trainDelay = Number(train.delayMinutes || train.current_delay_minutes || 0);
+    const trainDelay = Number(
+      train.delayMinutes || train.current_delay_minutes || 0,
+    );
     const now = new Date();
 
     const milestones = train.stations.map((stn, idx) => {
@@ -1860,20 +2455,28 @@ document.addEventListener("DOMContentLoaded", () => {
         dynamicClockETA = stn.arr || "--";
       } else {
         const segFrac = scaledProgress - currentSegIdx;
-        const currentDist = train.stations[currentSegIdx].distKm + 
-          (train.stations[currentSegIdx + 1].distKm - train.stations[currentSegIdx].distKm) * segFrac;
+        const currentDist =
+          train.stations[currentSegIdx].distKm +
+          (train.stations[currentSegIdx + 1].distKm -
+            train.stations[currentSegIdx].distKm) *
+            segFrac;
         distFromTrain = Math.max(0, Math.round(stn.distKm - currentDist));
 
         // Machine Learning Sectional Running Time Forecast
         const idealTravelMins = (distFromTrain / effectiveSpeed) * 60;
-        
+
         // Add realistic delay penalties:
         let accumulatedPenalty = 0;
         if (isFogActive) {
           accumulatedPenalty += 8;
           delayReasons.push("Fog Restriction (Max 60km/h)");
         }
-        if (stn.code === 'CNB' || stn.code === 'PRYJ' || stn.code === 'DDU' || stn.code === 'BRC') {
+        if (
+          stn.code === "CNB" ||
+          stn.code === "PRYJ" ||
+          stn.code === "DDU" ||
+          stn.code === "BRC"
+        ) {
           accumulatedPenalty += 4;
           delayReasons.push("Junction Throat Interlocking");
         }
@@ -1891,9 +2494,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const etaDate = new Date(now.getTime() + etaMins * 60000);
         let hrs = etaDate.getHours();
         let mins = etaDate.getMinutes();
-        const ampm = hrs >= 12 ? 'PM' : 'AM';
+        const ampm = hrs >= 12 ? "PM" : "AM";
         hrs = hrs % 12 || 12;
-        dynamicClockETA = `${hrs}:${mins < 10 ? '0' + mins : mins} ${ampm}`;
+        dynamicClockETA = `${hrs}:${mins < 10 ? "0" + mins : mins} ${ampm}`;
 
         if (etaMins < 60) {
           etaText = `${etaMins}m (${dynamicClockETA})`;
@@ -1916,7 +2519,7 @@ document.addEventListener("DOMContentLoaded", () => {
         predictedDelay,
         delayReasons,
         confidencePct: 96.5,
-        confidenceMargin: "±1.9m"
+        confidenceMargin: "±1.9m",
       };
     });
 
@@ -1929,14 +2532,44 @@ document.addEventListener("DOMContentLoaded", () => {
     const isRaj = train.type === "rajdhani";
     const isFreight = train.type === "freight";
 
-    let bodyColor = isVB ? "#FFFFFF" : isRaj ? "#DC2626" : isFreight ? "#15803D" : "#2563EB";
-    let stripeColor = isVB ? "#0284C7" : isRaj ? "#F59E0B" : isFreight ? "#EAB308" : "#93C5FD";
-    let coachBg = isVB ? "#F8FAFC" : isRaj ? "#B91C1C" : isFreight ? "#166534" : "#1D4ED8";
-    let coachStripe = isVB ? "#0284C7" : isRaj ? "#F59E0B" : isFreight ? "#CA8A04" : "#60A5FA";
-    let badgeColor = isVB ? "#0284C7" : isRaj ? "#DC2626" : isFreight ? "#EAB308" : "#2563EB";
+    let bodyColor = isVB
+      ? "#FFFFFF"
+      : isRaj
+        ? "#DC2626"
+        : isFreight
+          ? "#15803D"
+          : "#2563EB";
+    let stripeColor = isVB
+      ? "#0284C7"
+      : isRaj
+        ? "#F59E0B"
+        : isFreight
+          ? "#EAB308"
+          : "#93C5FD";
+    let coachBg = isVB
+      ? "#F8FAFC"
+      : isRaj
+        ? "#B91C1C"
+        : isFreight
+          ? "#166534"
+          : "#1D4ED8";
+    let coachStripe = isVB
+      ? "#0284C7"
+      : isRaj
+        ? "#F59E0B"
+        : isFreight
+          ? "#CA8A04"
+          : "#60A5FA";
+    let badgeColor = isVB
+      ? "#0284C7"
+      : isRaj
+        ? "#DC2626"
+        : isFreight
+          ? "#EAB308"
+          : "#2563EB";
 
     return `
-      <div class="train-marker-wrapper ${isSelected ? 'train-marker-selected' : ''}" style="position: relative; display: flex; flex-direction: column; align-items: center;">
+      <div class="train-marker-wrapper ${isSelected ? "train-marker-selected" : ""}" style="position: relative; display: flex; flex-direction: column; align-items: center;">
         
         <!-- Compact De-Cluttered Mini Pill (Visible at a glance without clutter) -->
         <div class="train-mini-pill" style="background: rgba(15, 23, 42, 0.92); color: #FFFFFF; border: 1.2px solid ${badgeColor}; border-radius: 9999px; padding: 2px 7px; font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 800; box-shadow: 0 3px 10px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 5px; backdrop-filter: blur(4px);">
@@ -1960,13 +2593,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         <div class="realistic-train-rake" title="${train.number} - ${train.name}">
           <!-- Kavach 160.225 MHz Radar Aura Bubble -->
-          <div class="kavach-radar-beacon ${train.kavachStatus && train.kavachStatus.includes('TSR') ? 'caution' : ''}"></div>
+          <div class="kavach-radar-beacon ${train.kavachStatus && train.kavachStatus.includes("TSR") ? "caution" : ""}"></div>
           
           <!-- Forward Headlight Beam Cone -->
           <div class="train-headlight-cone"></div>
 
           <!-- Targeting Radar Reticle (When Selected) -->
-          ${isSelected ? '<div class="targeting-radar-reticle"></div>' : ''}
+          ${isSelected ? '<div class="targeting-radar-reticle"></div>' : ""}
 
           <!-- Locomotive Engine SVG -->
           <svg viewBox="0 0 36 46" width="36" height="46" style="position: relative; z-index: 3;">
@@ -2013,11 +2646,19 @@ document.addEventListener("DOMContentLoaded", () => {
         shouldShow = true;
         markerHtml = `<div class="state-map-label"><i class="fa-solid fa-landmark text-amber-300 text-[10px]"></i> ${place.name}</div>`;
         iconSize = [130, 24];
-      } else if (place.tier === "city" && currentZoom >= 6 && currentZoom <= 9) {
+      } else if (
+        place.tier === "city" &&
+        currentZoom >= 6 &&
+        currentZoom <= 9
+      ) {
         shouldShow = true;
         markerHtml = `<div class="city-map-label"><span class="city-dot"></span> ${place.name}</div>`;
         iconSize = [100, 20];
-      } else if (place.tier === "junction" && currentZoom >= 8 && currentZoom <= 12) {
+      } else if (
+        place.tier === "junction" &&
+        currentZoom >= 8 &&
+        currentZoom <= 12
+      ) {
         shouldShow = true;
         markerHtml = `<div class="city-map-label" style="border-color: #0284C7;"><span class="city-dot" style="background-color: #0284C7;"></span> ${place.name}</div>`;
         iconSize = [110, 20];
@@ -2032,9 +2673,12 @@ document.addEventListener("DOMContentLoaded", () => {
           className: "custom-geo-lod-label",
           html: markerHtml,
           iconSize: iconSize,
-          iconAnchor: [iconSize[0] / 2, iconSize[1] / 2]
+          iconAnchor: [iconSize[0] / 2, iconSize[1] / 2],
         });
-        L.marker([place.lat, place.lng], { icon: icon, interactive: false }).addTo(mapGeoLabelsGroup);
+        L.marker([place.lat, place.lng], {
+          icon: icon,
+          interactive: false,
+        }).addTo(mapGeoLabelsGroup);
       }
     });
   }
@@ -2251,7 +2895,12 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener("click", (e) => {
       const dropdown = document.getElementById("trainSearchDropdown");
       const input = document.getElementById("liveMapTrainSearchInput");
-      if (dropdown && input && !dropdown.contains(e.target) && e.target !== input) {
+      if (
+        dropdown &&
+        input &&
+        !dropdown.contains(e.target) &&
+        e.target !== input
+      ) {
         dropdown.classList.add("hidden");
       }
     });
@@ -2259,90 +2908,121 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Map Tracks Layer Group & Filter State
   let mapTracksLayerGroup = null;
-  let activeTrackSystemFilter = 'all';
+  let activeTrackSystemFilter = "all";
 
-  window.filterRailwayTracks = function(filterType) {
+  window.filterRailwayTracks = function (filterType) {
     activeTrackSystemFilter = filterType;
-    
+
     const btnAll = document.getElementById("btnTrackAll");
     const btnKavach = document.getElementById("btnTrackKavach");
     const btnDfc = document.getElementById("btnTrackDfc");
     const btnElec = document.getElementById("btnTrackElec");
 
-    const defaultClass = "px-2.5 py-1 rounded-lg border text-xs font-bold transition-all cursor-pointer";
-    const activeClass = "px-2.5 py-1 rounded-lg bg-[#12355B] text-white text-xs font-black shadow transition-all cursor-pointer";
+    const defaultClass =
+      "px-2.5 py-1 rounded-lg border text-xs font-bold transition-all cursor-pointer";
+    const activeClass =
+      "px-2.5 py-1 rounded-lg bg-[#12355B] text-white text-xs font-black shadow transition-all cursor-pointer";
 
-    if (btnAll) btnAll.className = filterType === 'all' ? activeClass : defaultClass + " bg-slate-50 border-slate-300 text-slate-700";
-    if (btnKavach) btnKavach.className = filterType === 'kavach' ? activeClass : defaultClass + " bg-emerald-50 border-emerald-300 text-emerald-900";
-    if (btnDfc) btnDfc.className = filterType === 'dfc' ? activeClass : defaultClass + " bg-amber-50 border-amber-300 text-amber-900";
-    if (btnElec) btnElec.className = filterType === 'electrified' ? activeClass : defaultClass + " bg-sky-50 border-sky-300 text-sky-900";
+    if (btnAll)
+      btnAll.className =
+        filterType === "all"
+          ? activeClass
+          : defaultClass + " bg-slate-50 border-slate-300 text-slate-700";
+    if (btnKavach)
+      btnKavach.className =
+        filterType === "kavach"
+          ? activeClass
+          : defaultClass + " bg-emerald-50 border-emerald-300 text-emerald-900";
+    if (btnDfc)
+      btnDfc.className =
+        filterType === "dfc"
+          ? activeClass
+          : defaultClass + " bg-amber-50 border-amber-300 text-amber-900";
+    if (btnElec)
+      btnElec.className =
+        filterType === "electrified"
+          ? activeClass
+          : defaultClass + " bg-sky-50 border-sky-300 text-sky-900";
 
     renderPanIndiaRailwayTracks(filterType);
     showToast(`Track System Filter: ${filterType.toUpperCase()}`, "info");
   };
 
   // Render Complete Indian Railway Track Network on Leaflet
-  function renderPanIndiaRailwayTracks(filter = 'all') {
+  function renderPanIndiaRailwayTracks(filter = "all") {
     if (!panIndiaMap || !mapTracksLayerGroup) return;
     mapTracksLayerGroup.clearLayers();
 
     // 1. If real tracks GeoJSON is available (3,474 tracks), render them!
-    if (irTracksGeoJSON && irTracksGeoJSON.features && irTracksGeoJSON.features.length > 0) {
+    if (
+      irTracksGeoJSON &&
+      irTracksGeoJSON.features &&
+      irTracksGeoJSON.features.length > 0
+    ) {
       L.geoJSON(irTracksGeoJSON, {
         style: function (feature) {
           const p = feature.properties || {};
-          const isDfc = p.usage === 'freight' || (p.gauge && p.gauge.includes('Double'));
+          const isDfc =
+            p.usage === "freight" || (p.gauge && p.gauge.includes("Double"));
           return {
-            color: isDfc ? '#78350F' : '#0284c7',
+            color: isDfc ? "#78350F" : "#0284c7",
             weight: 2.5,
-            opacity: 0.85
+            opacity: 0.85,
           };
         },
         onEachFeature: function (feature, layer) {
           const p = feature.properties || {};
-          layer.bindTooltip(`
+          layer.bindTooltip(
+            `
             <div class="font-['Plus_Jakarta_Sans'] text-xs font-bold text-[#12355B]">
-              <span>🛤️ ${p.name || 'Indian Railways Track Section'}</span><br>
-              <span class="text-emerald-700 font-mono">Traction: ${p.electrified || '25 kV AC'} • ${p.kavach || 'SIL-4 ARMED'}</span>
+              <span>🛤️ ${p.name || "Indian Railways Track Section"}</span><br>
+              <span class="text-emerald-700 font-mono">Traction: ${p.electrified || "25 kV AC"} • ${p.kavach || "SIL-4 ARMED"}</span>
             </div>
-          `, { sticky: true });
-        }
+          `,
+            { sticky: true },
+          );
+        },
       }).addTo(mapTracksLayerGroup);
     } else {
       panIndiaRailwayTrackSystem.forEach((track) => {
         let isVisible = true;
-        if (filter === 'kavach') isVisible = track.kavachStatus.includes('ACTIVE');
-        else if (filter === 'dfc') isVisible = track.type === 'dfc_freight';
-        else if (filter === 'electrified') isVisible = track.electrification.includes('25 kV');
+        if (filter === "kavach")
+          isVisible = track.kavachStatus.includes("ACTIVE");
+        else if (filter === "dfc") isVisible = track.type === "dfc_freight";
+        else if (filter === "electrified")
+          isVisible = track.electrification.includes("25 kV");
 
         if (!isVisible) return;
 
-        const isDfc = track.type === 'dfc_freight';
+        const isDfc = track.type === "dfc_freight";
 
         // 1. Bed / Base Rail Layer
         L.polyline(track.coordinates, {
-          color: isDfc ? '#78350F' : '#0F172A',
+          color: isDfc ? "#78350F" : "#0F172A",
           weight: isDfc ? 6 : 4.5,
           opacity: 0.85,
-          lineCap: 'round',
-          interactive: false
+          lineCap: "round",
+          interactive: false,
         }).addTo(mapTracksLayerGroup);
 
         // 2. Center / Sleeper Track Layer
         const centerLine = L.polyline(track.coordinates, {
           color: track.color,
           weight: isDfc ? 3.5 : 2.5,
-          dashArray: isDfc ? '8, 4' : '5, 3',
+          dashArray: isDfc ? "8, 4" : "5, 3",
           opacity: 0.95,
-          interactive: true
+          interactive: true,
         }).addTo(mapTracksLayerGroup);
 
-        centerLine.bindTooltip(`
+        centerLine.bindTooltip(
+          `
           <div class="font-['Plus_Jakarta_Sans'] text-xs font-bold text-[#12355B]">
             <span>🛤️ ${track.name}</span><br>
             <span class="text-emerald-700 font-mono">Speed: ${track.speedRating} • ${track.kavachStatus}</span>
           </div>
-        `, { sticky: true });
+        `,
+          { sticky: true },
+        );
       });
     }
 
@@ -2351,18 +3031,20 @@ document.addEventListener("DOMContentLoaded", () => {
       mapCrossingsLayerGroup.clearLayers();
       if (irCrossingsGeoJSON && irCrossingsGeoJSON.features) {
         const sampleCrossings = irCrossingsGeoJSON.features.slice(0, 150);
-        sampleCrossings.forEach(cr => {
+        sampleCrossings.forEach((cr) => {
           if (cr.geometry && cr.geometry.coordinates) {
             const lat = cr.geometry.coordinates[1];
             const lng = cr.geometry.coordinates[0];
             const m = L.circleMarker([lat, lng], {
               radius: 4,
-              fillColor: '#FF9933',
-              color: '#FFFFFF',
+              fillColor: "#FF9933",
+              color: "#FFFFFF",
               weight: 1.5,
-              fillOpacity: 0.9
+              fillOpacity: 0.9,
             });
-            m.bindTooltip(`<div style="font-size:10px;font-weight:700;color:#12355B;">🚦 Level Crossing #${cr.properties.id || ''}<br><span style="color:#16a34a;">Kavach Whistling Active</span></div>`);
+            m.bindTooltip(
+              `<div style="font-size:10px;font-weight:700;color:#12355B;">🚦 Level Crossing #${cr.properties.id || ""}<br><span style="color:#16a34a;">Kavach Whistling Active</span></div>`,
+            );
             mapCrossingsLayerGroup.addLayer(m);
           }
         });
@@ -2373,18 +3055,20 @@ document.addEventListener("DOMContentLoaded", () => {
     if (mapSignalsLayerGroup) {
       mapSignalsLayerGroup.clearLayers();
       if (irSignalsGeoJSON && irSignalsGeoJSON.features) {
-        irSignalsGeoJSON.features.forEach(sig => {
+        irSignalsGeoJSON.features.forEach((sig) => {
           if (sig.geometry && sig.geometry.coordinates) {
             const lat = sig.geometry.coordinates[1];
             const lng = sig.geometry.coordinates[0];
             const m = L.circleMarker([lat, lng], {
               radius: 6,
-              fillColor: '#10B981',
-              color: '#FFFFFF',
+              fillColor: "#10B981",
+              color: "#FFFFFF",
               weight: 2,
-              fillOpacity: 1
+              fillOpacity: 1,
             });
-            m.bindTooltip(`<div style="font-size:10px;font-weight:800;color:#166534;">🟢 Kavach Signal Aspect: PROCEED</div>`);
+            m.bindTooltip(
+              `<div style="font-size:10px;font-weight:800;color:#166534;">🟢 Kavach Signal Aspect: PROCEED</div>`,
+            );
             mapSignalsLayerGroup.addLayer(m);
           }
         });
@@ -2395,19 +3079,21 @@ document.addEventListener("DOMContentLoaded", () => {
     if (mapEarthquakesLayerGroup) {
       mapEarthquakesLayerGroup.clearLayers();
       if (irEarthquakesGeoJSON && irEarthquakesGeoJSON.features) {
-        irEarthquakesGeoJSON.features.slice(0, 40).forEach(eq => {
+        irEarthquakesGeoJSON.features.slice(0, 40).forEach((eq) => {
           if (eq.geometry && eq.geometry.coordinates) {
             const lat = eq.geometry.coordinates[1];
             const lng = eq.geometry.coordinates[0];
             const p = eq.properties || {};
             const circle = L.circle([lat, lng], {
               radius: (p.mag || 4) * 12000,
-              fillColor: '#EF4444',
-              color: '#B91C1C',
+              fillColor: "#EF4444",
+              color: "#B91C1C",
               weight: 1,
-              fillOpacity: 0.16
+              fillOpacity: 0.16,
             });
-            circle.bindTooltip(`<div style="font-size:10px;font-weight:700;color:#991B1B;">🌋 Seismic Alert M${p.mag}<br>${p.place || ''}<br><span style="color:#b45309;">${p.kavachTsrAdvisory || ''}</span></div>`);
+            circle.bindTooltip(
+              `<div style="font-size:10px;font-weight:700;color:#991B1B;">🌋 Seismic Alert M${p.mag}<br>${p.place || ""}<br><span style="color:#b45309;">${p.kavachTsrAdvisory || ""}</span></div>`,
+            );
             mapEarthquakesLayerGroup.addLayer(circle);
           }
         });
@@ -2428,7 +3114,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Strict India Bounding Box: SW 6.5°N, 68°E | NE 37.5°N, 97.5°E
     const indiaBounds = L.latLngBounds(
       L.latLng(6.5, 68.0),
-      L.latLng(37.5, 97.5)
+      L.latLng(37.5, 97.5),
     );
 
     panIndiaMap = L.map("panIndiaRailMap", {
@@ -2439,7 +3125,7 @@ document.addEventListener("DOMContentLoaded", () => {
       maxBounds: indiaBounds,
       maxBoundsViscosity: 1.0,
       zoomControl: true,
-      scrollWheelZoom: true
+      scrollWheelZoom: true,
     });
 
     // Layer Groups
@@ -2452,26 +3138,43 @@ document.addEventListener("DOMContentLoaded", () => {
     mapTrainMarkers = {};
 
     // Initialize default tile layer to Photorealistic Esri Satellite HD View
-    switchLiveMapTileLayer('satellite');
+    switchLiveMapTileLayer("satellite");
 
     // Indian Railways Golden Strategic Territorial Outline (Crisp non-blocking boundary)
     const indiaBorderCutout = [
-      [35.67, 74.84], [34.70, 77.03], [32.90, 78.96], [30.41, 80.89],
-      [28.78, 81.33], [27.70, 88.13], [28.21, 97.40], [27.20, 96.80],
-      [24.50, 94.80], [22.00, 89.10], [21.60, 87.00], [17.80, 83.30],
-      [13.10, 80.30], [8.08, 77.55],  [9.90, 76.20],  [15.40, 73.80],
-      [18.90, 72.80], [22.80, 69.10], [23.80, 68.20], [24.70, 71.00],
-      [27.50, 70.30], [31.50, 74.40], [35.67, 74.84]
+      [35.67, 74.84],
+      [34.7, 77.03],
+      [32.9, 78.96],
+      [30.41, 80.89],
+      [28.78, 81.33],
+      [27.7, 88.13],
+      [28.21, 97.4],
+      [27.2, 96.8],
+      [24.5, 94.8],
+      [22.0, 89.1],
+      [21.6, 87.0],
+      [17.8, 83.3],
+      [13.1, 80.3],
+      [8.08, 77.55],
+      [9.9, 76.2],
+      [15.4, 73.8],
+      [18.9, 72.8],
+      [22.8, 69.1],
+      [23.8, 68.2],
+      [24.7, 71.0],
+      [27.5, 70.3],
+      [31.5, 74.4],
+      [35.67, 74.84],
     ];
     L.polyline(indiaBorderCutout, {
-      color: '#FF9933',
+      color: "#FF9933",
       weight: 2.2,
       opacity: 0.75,
-      interactive: false
+      interactive: false,
     }).addTo(panIndiaMap);
 
     // Render Complete Indian Railway Track Infrastructure Lines
-    renderPanIndiaRailwayTracks('all');
+    renderPanIndiaRailwayTracks("all");
 
     // Listen for zoom changes to update progressive geographic labels (States -> Cities -> Towns)
     panIndiaMap.on("zoomend", updateDynamicLODMarkers);
@@ -2493,30 +3196,54 @@ document.addEventListener("DOMContentLoaded", () => {
   // State & Regional Centers Database (for Smooth Animated Fly-To)
   const panIndiaStates = {
     all: { name: "All India (Full Network)", coords: [22.8, 78.9], zoom: 5 },
-    rajasthan: { name: "Rajasthan (NWR / WCR)", coords: [26.58, 73.85], zoom: 7 },
-    delhi: { name: "Delhi NCR (Northern Zone)", coords: [28.6139, 77.2090], zoom: 10 },
+    rajasthan: {
+      name: "Rajasthan (NWR / WCR)",
+      coords: [26.58, 73.85],
+      zoom: 7,
+    },
+    delhi: {
+      name: "Delhi NCR (Northern Zone)",
+      coords: [28.6139, 77.209],
+      zoom: 10,
+    },
     up: { name: "Uttar Pradesh (NCR / NER)", coords: [26.85, 80.95], zoom: 7 },
-    maharashtra: { name: "Maharashtra (CR / WR)", coords: [19.25, 75.25], zoom: 7 },
-    gujarat: { name: "Gujarat (Western Zone)", coords: [22.40, 71.80], zoom: 7 },
-    bengal: { name: "West Bengal & East (ER)", coords: [23.15, 87.85], zoom: 7 },
-    south: { name: "Southern Zone (SR / SCR / SWR)", coords: [13.08, 78.50], zoom: 7 },
-    jk: { name: "Northern High Altitude (NR)", coords: [32.73, 75.50], zoom: 7 },
-    central: { name: "Madhya Pradesh & Central (WCR)", coords: [23.47, 77.94], zoom: 7 }
+    maharashtra: {
+      name: "Maharashtra (CR / WR)",
+      coords: [19.25, 75.25],
+      zoom: 7,
+    },
+    gujarat: { name: "Gujarat (Western Zone)", coords: [22.4, 71.8], zoom: 7 },
+    bengal: {
+      name: "West Bengal & East (ER)",
+      coords: [23.15, 87.85],
+      zoom: 7,
+    },
+    south: {
+      name: "Southern Zone (SR / SCR / SWR)",
+      coords: [13.08, 78.5],
+      zoom: 7,
+    },
+    jk: { name: "Northern High Altitude (NR)", coords: [32.73, 75.5], zoom: 7 },
+    central: {
+      name: "Madhya Pradesh & Central (WCR)",
+      coords: [23.47, 77.94],
+      zoom: 7,
+    },
   };
 
   // State Fly-To Camera Control
-  window.zoomToState = function(stateKey) {
+  window.zoomToState = function (stateKey) {
     const target = panIndiaStates[stateKey];
     if (!target || !panIndiaMap) return;
     panIndiaMap.flyTo(target.coords, target.zoom, {
       duration: 1.6,
-      easeLinearity: 0.25
+      easeLinearity: 0.25,
     });
     showToast(`🗺️ Camera Flying to ${target.name}`, "info");
   };
 
   // Station-to-Station Corridor Tracker
-  window.trackCorridorRoute = function(corridorKey) {
+  window.trackCorridorRoute = function (corridorKey) {
     if (corridorKey === "all") {
       resetPanIndiaMapView();
       return;
@@ -2528,7 +3255,7 @@ document.addEventListener("DOMContentLoaded", () => {
       "NDLS-HWH": "12302", // Howrah Rajdhani
       "NDLS-MAS": "12622", // Tamil Nadu Express
       "NDLS-ADI": "12958", // ADI Rajdhani
-      "NDLS-KOTA": "12059"  // Kota Jan Shatabdi
+      "NDLS-KOTA": "12059", // Kota Jan Shatabdi
     };
     const trainId = corridorTrainMap[corridorKey];
     if (trainId) {
@@ -2541,7 +3268,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let mapIRIRailOverlayLayer = null;
 
   // Switch between Tile Layers (100% Watermark-Free: Esri HD Satellite vs OSM Atlas vs Esri Dark Canvas)
-  window.switchLiveMapTileLayer = function(layerType) {
+  window.switchLiveMapTileLayer = function (layerType) {
     if (!panIndiaMap) return;
 
     if (mapCurrentTileLayer) {
@@ -2561,49 +3288,71 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnOSM = document.getElementById("btnLayerOSM");
     const btnDark = document.getElementById("btnLayerDark");
 
-    const defaultBtn = "px-3 py-1.5 rounded-xl border border-slate-300 text-slate-700 bg-white hover:bg-slate-100 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5";
-    const activeSatBtn = "px-3 py-1.5 rounded-xl border border-[#FF9933] text-xs font-black transition-all cursor-pointer bg-[#FF9933] text-white shadow flex items-center gap-1.5";
-    const activeBtn = "px-3 py-1.5 rounded-xl border text-xs font-bold transition-all cursor-pointer bg-[#12355B] text-white shadow flex items-center gap-1.5";
+    const defaultBtn =
+      "px-3 py-1.5 rounded-xl border border-slate-300 text-slate-700 bg-white hover:bg-slate-100 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5";
+    const activeSatBtn =
+      "px-3 py-1.5 rounded-xl border border-[#FF9933] text-xs font-black transition-all cursor-pointer bg-[#FF9933] text-white shadow flex items-center gap-1.5";
+    const activeBtn =
+      "px-3 py-1.5 rounded-xl border text-xs font-bold transition-all cursor-pointer bg-[#12355B] text-white shadow flex items-center gap-1.5";
 
     if (layerType === "satellite" || layerType === "iri") {
       // 1. High-Resolution Photorealistic Satellite Imagery (Esri World Imagery - 100% Keyless, Zero Watermarks)
-      mapCurrentTileLayer = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
-        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
-        maxZoom: 19,
-        maxNativeZoom: 18
-      }).addTo(panIndiaMap);
+      mapCurrentTileLayer = L.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        {
+          attribution:
+            "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
+          maxZoom: 19,
+          maxNativeZoom: 18,
+        },
+      ).addTo(panIndiaMap);
 
       // 2. Clear Reference Labels Overlay (Crisp Cities, States, Boundaries)
-      mapSatelliteLabelsLayer = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}", {
-        maxZoom: 19,
-        opacity: 0.92
-      }).addTo(panIndiaMap);
+      mapSatelliteLabelsLayer = L.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
+        {
+          maxZoom: 19,
+          opacity: 0.92,
+        },
+      ).addTo(panIndiaMap);
 
       // 3. OpenRailwayMap Standard Track Tile Layer
-      mapIRIRailOverlayLayer = L.tileLayer("https://{s}.tile.openrailwaymap.org/standard/{z}/{x}/{y}.png", {
-        attribution: '&copy; OpenRailwayMap contributors',
-        subdomains: "abc",
-        maxZoom: 19,
-        opacity: 0.88
-      }).addTo(panIndiaMap);
+      mapIRIRailOverlayLayer = L.tileLayer(
+        "https://{s}.tile.openrailwaymap.org/standard/{z}/{x}/{y}.png",
+        {
+          attribution: "&copy; OpenRailwayMap contributors",
+          subdomains: "abc",
+          maxZoom: 19,
+          opacity: 0.88,
+        },
+      ).addTo(panIndiaMap);
 
       if (btnSat) btnSat.className = activeSatBtn;
       if (btnOSM) btnOSM.className = defaultBtn;
       if (btnDark) btnDark.className = defaultBtn;
-      showToast("🛰️ Activated Photorealistic Satellite Imagery (Esri HD)", "success");
+      showToast(
+        "🛰️ Activated Photorealistic Satellite Imagery (Esri HD)",
+        "success",
+      );
     } else if (layerType === "dark") {
       // Clean Command Center Dark Canvas (Esri Dark Gray Base - 100% Keyless, Zero Watermarks)
-      mapCurrentTileLayer = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
-        attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
-        maxZoom: 16
-      }).addTo(panIndiaMap);
+      mapCurrentTileLayer = L.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+        {
+          attribution: "Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ",
+          maxZoom: 16,
+        },
+      ).addTo(panIndiaMap);
 
-      mapIRIRailOverlayLayer = L.tileLayer("https://{s}.tile.openrailwaymap.org/standard/{z}/{x}/{y}.png", {
-        attribution: '&copy; OpenRailwayMap',
-        subdomains: "abc",
-        maxZoom: 19,
-        opacity: 0.65
-      }).addTo(panIndiaMap);
+      mapIRIRailOverlayLayer = L.tileLayer(
+        "https://{s}.tile.openrailwaymap.org/standard/{z}/{x}/{y}.png",
+        {
+          attribution: "&copy; OpenRailwayMap",
+          subdomains: "abc",
+          maxZoom: 19,
+          opacity: 0.65,
+        },
+      ).addTo(panIndiaMap);
 
       if (btnDark) btnDark.className = activeBtn;
       if (btnSat) btnSat.className = defaultBtn;
@@ -2611,17 +3360,23 @@ document.addEventListener("DOMContentLoaded", () => {
       showToast("🌙 Activated Dark Radar Mode (Clean Canvas)", "info");
     } else {
       // OpenStreetMap Standard Track Atlas (100% Keyless, Zero Watermarks)
-      mapCurrentTileLayer = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: '&copy; OpenStreetMap contributors',
-        maxZoom: 19
-      }).addTo(panIndiaMap);
+      mapCurrentTileLayer = L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+          attribution: "&copy; OpenStreetMap contributors",
+          maxZoom: 19,
+        },
+      ).addTo(panIndiaMap);
 
-      mapIRIRailOverlayLayer = L.tileLayer("https://{s}.tile.openrailwaymap.org/standard/{z}/{x}/{y}.png", {
-        attribution: '&copy; OpenRailwayMap',
-        subdomains: "abc",
-        maxZoom: 19,
-        opacity: 0.85
-      }).addTo(panIndiaMap);
+      mapIRIRailOverlayLayer = L.tileLayer(
+        "https://{s}.tile.openrailwaymap.org/standard/{z}/{x}/{y}.png",
+        {
+          attribution: "&copy; OpenRailwayMap",
+          subdomains: "abc",
+          maxZoom: 19,
+          opacity: 0.85,
+        },
+      ).addTo(panIndiaMap);
 
       if (btnOSM) btnOSM.className = activeBtn;
       if (btnSat) btnSat.className = defaultBtn;
@@ -2631,7 +3386,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // Reset to Pan-India Full View
-  window.resetPanIndiaMapView = function() {
+  window.resetPanIndiaMapView = function () {
     if (!panIndiaMap) return;
     isFollowingTrainCamera = false;
     const chk = document.getElementById("chkFollowCamera");
@@ -2639,7 +3394,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     panIndiaMap.flyTo([22.8, 78.9], 5, {
       duration: 1.5,
-      easeLinearity: 0.25
+      easeLinearity: 0.25,
     });
     showToast("Reset map to full Pan-India geographic overview", "info");
   };
@@ -2650,7 +3405,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     panIndiaTrainData.forEach((train) => {
       const pos = getTrainPositionAndBearing(train);
-      const isSelected = activeSelectedTrain && activeSelectedTrain.id === train.id;
+      const isSelected =
+        activeSelectedTrain && activeSelectedTrain.id === train.id;
 
       const customIcon = L.divIcon({
         className: "custom-train-leaflet-marker",
@@ -2658,21 +3414,26 @@ document.addEventListener("DOMContentLoaded", () => {
                  ${generateRealisticTrainSVG(train, isSelected)}
                </div>`,
         iconSize: [44, 76],
-        iconAnchor: [22, 23]
+        iconAnchor: [22, 23],
       });
 
-      const marker = L.marker([pos.lat, pos.lng], { icon: customIcon }).addTo(panIndiaMap);
+      const marker = L.marker([pos.lat, pos.lng], { icon: customIcon }).addTo(
+        panIndiaMap,
+      );
 
       marker.on("click", () => {
         selectAndFocusTrain(train.id);
       });
 
-      marker.bindTooltip(`
+      marker.bindTooltip(
+        `
         <div class="font-bold text-xs text-[#12355B]">
           <span>${train.number} ${train.shortName}</span><br>
           <span class="text-emerald-700 font-mono">Speed: ${train.speed} km/h • Kavach: ${train.kavachStatus}</span>
         </div>
-      `, { direction: "top", offset: [0, -25] });
+      `,
+        { direction: "top", offset: [0, -25] },
+      );
 
       mapTrainMarkers[train.id] = marker;
     });
@@ -2702,7 +3463,7 @@ document.addEventListener("DOMContentLoaded", () => {
       opacity: 0.95,
       lineCap: "round",
       dashArray: "2, 8",
-      className: "illuminated-rail-track"
+      className: "illuminated-rail-track",
     }).addTo(panIndiaMap);
 
     // Calculate forward station milestones
@@ -2710,44 +3471,55 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Station Markers along route
     milestones.forEach((stn) => {
-      const isTerminus = stn.index === 0 || stn.index === train.stations.length - 1;
-      const markerColor = isTerminus ? "#FF9933" : stn.isPassed ? "#64748B" : "#12355B";
-      const statusBadge = stn.isPassed 
-        ? '<span class="text-[9px] text-slate-400 font-bold ml-1">✓ Passed</span>' 
+      const isTerminus =
+        stn.index === 0 || stn.index === train.stations.length - 1;
+      const markerColor = isTerminus
+        ? "#FF9933"
+        : stn.isPassed
+          ? "#64748B"
+          : "#12355B";
+      const statusBadge = stn.isPassed
+        ? '<span class="text-[9px] text-slate-400 font-bold ml-1">✓ Passed</span>'
         : `<span class="text-[9px] text-emerald-600 font-mono font-bold ml-1">+${stn.distFromTrain}km (${stn.etaText})</span>`;
 
       const stationIcon = L.divIcon({
         className: "station-leaflet-icon",
         html: `
           <div class="milestone-station-pin" title="${stn.name} (${stn.code}) • Scheduled: ${stn.arr}">
-            <div class="milestone-station-dot" style="background: ${isTerminus ? '#FF9933' : stn.isPassed ? '#94A3B8' : '#38BDF8'}; border: 2px solid #FFFFFF; box-shadow: 0 0 8px ${isTerminus ? '#FF9933' : '#38BDF8'};"></div>
-            <div class="milestone-station-label" style="border-color: ${markerColor}; opacity: ${stn.isPassed ? '0.75' : '1'};">
+            <div class="milestone-station-dot" style="background: ${isTerminus ? "#FF9933" : stn.isPassed ? "#94A3B8" : "#38BDF8"}; border: 2px solid #FFFFFF; box-shadow: 0 0 8px ${isTerminus ? "#FF9933" : "#38BDF8"};"></div>
+            <div class="milestone-station-label" style="border-color: ${markerColor}; opacity: ${stn.isPassed ? "0.75" : "1"};">
               <strong>${stn.name} (${stn.code})</strong> ${statusBadge}
             </div>
           </div>
         `,
         iconSize: [160, 22],
-        iconAnchor: [4, 4]
+        iconAnchor: [4, 4],
       });
 
-      const stnMarker = L.marker([stn.lat, stn.lng], { icon: stationIcon }).addTo(mapStationMarkersGroup);
-      
+      const stnMarker = L.marker([stn.lat, stn.lng], {
+        icon: stationIcon,
+      }).addTo(mapStationMarkersGroup);
+
       stnMarker.bindPopup(`
         <div class="p-2 font-['Plus_Jakarta_Sans'] min-w-[200px]">
           <div class="flex items-center justify-between border-b border-slate-200 pb-1.5 mb-2">
             <span class="font-extrabold text-sm text-[#12355B]">${stn.name} (${stn.code})</span>
-            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-black ${stn.isPassed ? 'bg-slate-100 text-slate-500' : 'bg-emerald-100 text-emerald-800'}">
-              ${stn.isPassed ? 'DEPARTED' : 'UPCOMING'}
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-black ${stn.isPassed ? "bg-slate-100 text-slate-500" : "bg-emerald-100 text-emerald-800"}">
+              ${stn.isPassed ? "DEPARTED" : "UPCOMING"}
             </span>
           </div>
           <div class="space-y-1 text-xs text-slate-700">
             <p><strong>Scheduled Time:</strong> ${stn.arr}</p>
             <p><strong>Platform:</strong> ${stn.pf}</p>
-            ${!stn.isPassed ? `
+            ${
+              !stn.isPassed
+                ? `
               <p class="text-emerald-700 font-bold"><strong>Distance from Train:</strong> +${stn.distFromTrain} km</p>
               <p class="text-blue-900 font-bold"><strong>Estimated Time to Reach:</strong> ${stn.etaText}</p>
               <p class="text-slate-500 text-[11px]"><strong>Signal Block:</strong> 🟢 PROCEED (130 km/h)</p>
-            ` : ''}
+            `
+                : ""
+            }
           </div>
         </div>
       `);
@@ -2766,7 +3538,8 @@ document.addEventListener("DOMContentLoaded", () => {
       milestones = calculateForwardMilestones(train);
     }
 
-    const nextStn = milestones.find((m) => !m.isPassed) || milestones[milestones.length - 1];
+    const nextStn =
+      milestones.find((m) => !m.isPassed) || milestones[milestones.length - 1];
 
     timelineContainer.innerHTML = `
       <div class="space-y-2">
@@ -2785,31 +3558,45 @@ document.addEventListener("DOMContentLoaded", () => {
 
         <!-- Horizontal Station Sequence Nodes -->
         <div class="route-timeline-strip">
-          ${milestones.map((m, idx) => {
-            const isLast = idx === milestones.length - 1;
-            const nodeClass = m.isPassed ? "active-passed" : m.isNextImmediate ? "active-current" : "";
-            const pinColor = m.isPassed ? "bg-slate-400" : m.isNextImmediate ? "bg-[#138808]" : "bg-[#12355B]";
-            const connectorClass = m.isPassed ? "completed" : "upcoming";
+          ${milestones
+            .map((m, idx) => {
+              const isLast = idx === milestones.length - 1;
+              const nodeClass = m.isPassed
+                ? "active-passed"
+                : m.isNextImmediate
+                  ? "active-current"
+                  : "";
+              const pinColor = m.isPassed
+                ? "bg-slate-400"
+                : m.isNextImmediate
+                  ? "bg-[#138808]"
+                  : "bg-[#12355B]";
+              const connectorClass = m.isPassed ? "completed" : "upcoming";
 
-            return `
-              <div class="timeline-station-node ${nodeClass}" onclick="inspectAheadStation('${train.id}', ${idx})" title="${m.name} (${m.code}) • ML ETA: ${m.dynamicClockETA} • Factors: ${(m.delayReasons || []).join(', ')}">
+              return `
+              <div class="timeline-station-node ${nodeClass}" onclick="inspectAheadStation('${train.id}', ${idx})" title="${m.name} (${m.code}) • ML ETA: ${m.dynamicClockETA} • Factors: ${(m.delayReasons || []).join(", ")}">
                 <div class="timeline-node-pin ${pinColor}">
-                  ${m.isPassed ? '✓' : idx + 1}
+                  ${m.isPassed ? "✓" : idx + 1}
                 </div>
                 <div class="text-[11px] font-black text-[#12355B] truncate max-w-[95px]">${m.code}</div>
                 <div class="text-[9px] font-mono text-slate-500 truncate max-w-[95px]">${m.name}</div>
-                <div class="text-[9px] font-mono font-extrabold ${m.isPassed ? 'text-slate-400' : 'text-emerald-700'}">
-                  ${m.isPassed ? 'Departed' : `<span class="px-1 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200">${m.dynamicClockETA}</span>`}
+                <div class="text-[9px] font-mono font-extrabold ${m.isPassed ? "text-slate-400" : "text-emerald-700"}">
+                  ${m.isPassed ? "Departed" : `<span class="px-1 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200">${m.dynamicClockETA}</span>`}
                 </div>
-                ${!m.isPassed && m.delayReasons && m.delayReasons.length > 0 ? `
+                ${
+                  !m.isPassed && m.delayReasons && m.delayReasons.length > 0
+                    ? `
                   <div class="text-[8px] font-mono font-bold text-amber-700 truncate max-w-[95px]" title="${m.delayReasons[0]}">
                     ${m.delayReasons[0].slice(0, 16)}..
                   </div>
-                ` : ''}
+                `
+                    : ""
+                }
               </div>
-              ${!isLast ? `<div class="timeline-connector-bar ${connectorClass}"></div>` : ''}
+              ${!isLast ? `<div class="timeline-connector-bar ${connectorClass}"></div>` : ""}
             `;
-          }).join("")}
+            })
+            .join("")}
         </div>
 
         <!-- Interactive Forward Track Inspector Slider -->
@@ -2835,7 +3622,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Handle Forward Track Scrubber Slider: Move camera and preview ahead track
-  window.handleForwardTrackScrubber = function(trainId, percentVal) {
+  window.handleForwardTrackScrubber = function (trainId, percentVal) {
     const train = panIndiaTrainData.find((t) => t.id === trainId);
     if (!train || !panIndiaMap) return;
 
@@ -2865,9 +3652,11 @@ document.addEventListener("DOMContentLoaded", () => {
         className: "ghost-scrubber-icon",
         html: `<div style="width: 16px; height: 16px; background: #00F0FF; border: 3px solid #12355B; border-radius: 50%; box-shadow: 0 0 10px #00F0FF;"></div>`,
         iconSize: [16, 16],
-        iconAnchor: [8, 8]
+        iconAnchor: [8, 8],
       });
-      mapGhostScrubberMarker = L.marker([lat, lng], { icon: ghostIcon }).addTo(panIndiaMap);
+      mapGhostScrubberMarker = L.marker([lat, lng], { icon: ghostIcon }).addTo(
+        panIndiaMap,
+      );
     }
 
     const readingEl = document.getElementById("scrubberReading");
@@ -2877,7 +3666,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // Inspect Ahead Station: Glide camera to that station and pop open details
-  window.inspectAheadStation = function(trainId, stationIndex) {
+  window.inspectAheadStation = function (trainId, stationIndex) {
     const train = panIndiaTrainData.find((t) => t.id === trainId);
     if (!train || !panIndiaMap) return;
 
@@ -2886,14 +3675,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     panIndiaMap.flyTo([stn.lat, stn.lng], 13, {
       duration: 1.5,
-      easeLinearity: 0.25
+      easeLinearity: 0.25,
     });
 
     showToast(`Inspecting Track Ahead at ${stn.name} (${stn.code})`, "info");
   };
 
   // Handle Search Input & Render Dropdown
-  window.handleLiveMapTrainSearch = function(query) {
+  window.handleLiveMapTrainSearch = function (query) {
     const dropdown = document.getElementById("trainSearchDropdown");
     if (!dropdown) return;
 
@@ -2904,7 +3693,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const inNum = t.number.toLowerCase().includes(q);
       const inName = t.name.toLowerCase().includes(q);
       const inRoute = t.routeDescription.toLowerCase().includes(q);
-      const inStations = t.stations.some((s) => s.name.toLowerCase().includes(q) || s.code.toLowerCase().includes(q));
+      const inStations = t.stations.some(
+        (s) =>
+          s.name.toLowerCase().includes(q) || s.code.toLowerCase().includes(q),
+      );
       return inNum || inName || inRoute || inStations;
     });
 
@@ -2918,7 +3710,9 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    dropdown.innerHTML = matches.map((t) => `
+    dropdown.innerHTML = matches
+      .map(
+        (t) => `
       <div onclick="selectAndFocusTrain('${t.id}')" class="p-3 hover:bg-slate-50 flex items-center justify-between cursor-pointer transition-all border-b border-slate-100 last:border-b-0">
         <div class="flex items-center gap-3">
           <div class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-white text-xs shadow-sm" style="background-color: ${t.color};">
@@ -2927,8 +3721,8 @@ document.addEventListener("DOMContentLoaded", () => {
           <div>
             <div class="flex items-center gap-2">
               <span class="font-extrabold text-[#12355B] text-xs">${t.number} - ${t.name}</span>
-              <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase font-mono ${t.type === 'vande_bharat' ? 'bg-sky-100 text-sky-800' : t.type === 'rajdhani' ? 'bg-red-100 text-red-800' : 'bg-amber-100 text-amber-800'}">
-                ${t.type.replace('_', ' ')}
+              <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase font-mono ${t.type === "vande_bharat" ? "bg-sky-100 text-sky-800" : t.type === "rajdhani" ? "bg-red-100 text-red-800" : "bg-amber-100 text-amber-800"}">
+                ${t.type.replace("_", " ")}
               </span>
             </div>
             <p class="text-[11px] text-slate-500">${t.routeDescription}</p>
@@ -2939,13 +3733,15 @@ document.addEventListener("DOMContentLoaded", () => {
           <span class="text-[10px] text-slate-400 font-bold">ETA: ${t.etaNextStation}</span>
         </div>
       </div>
-    `).join("");
+    `,
+      )
+      .join("");
 
     dropdown.classList.remove("hidden");
   };
 
   // Select a train: Fly to location, draw route, open telemetry HUD
-  window.selectAndFocusTrain = function(trainId) {
+  window.selectAndFocusTrain = function (trainId) {
     const dropdown = document.getElementById("trainSearchDropdown");
     if (dropdown) dropdown.classList.add("hidden");
 
@@ -2969,7 +3765,7 @@ document.addEventListener("DOMContentLoaded", () => {
         padding: [60, 60],
         maxZoom: 8.5,
         animate: true,
-        duration: 1.5
+        duration: 1.5,
       });
     }
 
@@ -2984,7 +3780,7 @@ document.addEventListener("DOMContentLoaded", () => {
                  ${generateRealisticTrainSVG(t, isSel)}
                </div>`,
         iconSize: [44, 76],
-        iconAnchor: [22, 23]
+        iconAnchor: [22, 23],
       });
       mapTrainMarkers[tid].setIcon(icon);
     });
@@ -2998,16 +3794,22 @@ document.addEventListener("DOMContentLoaded", () => {
       statusText.innerHTML = `LOCKED ON TRAIN ${train.number} (${train.shortName}) • SPEED: ${train.speed} KM/H`;
     }
 
-    showToast(`🎯 Auto-Detected & Camera Locked on ${train.number} ${train.name}`, "success");
+    showToast(
+      `🎯 Auto-Detected & Camera Locked on ${train.number} ${train.name}`,
+      "success",
+    );
   };
 
   // Toggle Camera Lock to follow train continuously
-  window.toggleFollowTrainCamera = function(checked) {
+  window.toggleFollowTrainCamera = function (checked) {
     isFollowingTrainCamera = checked;
     if (checked && activeSelectedTrain && panIndiaMap) {
       const pos = getTrainPositionAndBearing(activeSelectedTrain);
       panIndiaMap.panTo([pos.lat, pos.lng], { animate: true });
-      showToast(`Camera lock enabled for ${activeSelectedTrain.number}`, "info");
+      showToast(
+        `Camera lock enabled for ${activeSelectedTrain.number}`,
+        "info",
+      );
     }
   };
 
@@ -3083,7 +3885,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="flex items-center justify-between">
             <span class="text-slate-500">Cab Signal Aspect:</span>
             <span class="font-extrabold flex items-center gap-1.5 ${train.cabSignalClass}">
-              <span class="w-2.5 h-2.5 rounded-full ${train.cabSignalClass.includes('emerald') ? 'bg-emerald-500' : 'bg-amber-500'} animate-pulse"></span>
+              <span class="w-2.5 h-2.5 rounded-full ${train.cabSignalClass.includes("emerald") ? "bg-emerald-500" : "bg-amber-500"} animate-pulse"></span>
               ${train.cabSignal}
             </span>
           </div>
@@ -3141,25 +3943,56 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let targetStation = "NDLS";
     if (train.stations && train.stations.length > 0) {
-      const remaining = train.stations.find(s => !s.isPassed);
-      targetStation = (remaining ? remaining.code : train.stations[0].code);
+      const remaining = train.stations.find((s) => !s.isPassed);
+      targetStation = remaining ? remaining.code : train.stations[0].code;
     }
 
-    if (window.WeatherEngine && typeof window.WeatherEngine.getStationWeather === "function") {
-      window.WeatherEngine.getStationWeather(targetStation).then((wx) => {
-        const el = document.getElementById("hudWeatherTelemetry");
-        if (!el || !wx) return;
+    if (
+      window.WeatherEngine &&
+      typeof window.WeatherEngine.getStationWeather === "function"
+    ) {
+      window.WeatherEngine.getStationWeather(targetStation)
+        .then((wx) => {
+          const el = document.getElementById("hudWeatherTelemetry");
+          if (!el || !wx) return;
 
-        const temp = wx.temp !== undefined ? wx.temp : (wx.tempC !== undefined ? wx.tempC : 32);
-        const visKm = wx.visibilityKm !== undefined ? parseFloat(wx.visibilityKm).toFixed(1) : (wx.safety && wx.safety.visKm ? parseFloat(wx.safety.visKm).toFixed(1) : "8.0");
-        const railTemp = (wx.safety && wx.safety.railTemp !== undefined) ? wx.safety.railTemp : (wx.tRailC !== undefined ? wx.tRailC : 46);
-        const railStatus = (wx.safety && wx.safety.railStatus) ? wx.safety.railStatus : (wx.railStressStatus || "NORMAL");
-        const fogTsrSpeed = (wx.safety && wx.safety.fogTsrSpeed) ? wx.safety.fogTsrSpeed : (wx.fogTsrKmh ? `${wx.fogTsrKmh} km/h` : "Full Track MPS (130)");
-        const isFoggy = parseFloat(visKm) < 1.0;
-        const isThermalWarning = railTemp > 52;
-        const iconClass = wx.icon ? (wx.icon.startsWith("fa-") ? wx.icon : `fa-${wx.icon}`) : "fa-sun text-amber-500";
+          const temp =
+            wx.temp !== undefined
+              ? wx.temp
+              : wx.tempC !== undefined
+                ? wx.tempC
+                : 32;
+          const visKm =
+            wx.visibilityKm !== undefined
+              ? parseFloat(wx.visibilityKm).toFixed(1)
+              : wx.safety && wx.safety.visKm
+                ? parseFloat(wx.safety.visKm).toFixed(1)
+                : "8.0";
+          const railTemp =
+            wx.safety && wx.safety.railTemp !== undefined
+              ? wx.safety.railTemp
+              : wx.tRailC !== undefined
+                ? wx.tRailC
+                : 46;
+          const railStatus =
+            wx.safety && wx.safety.railStatus
+              ? wx.safety.railStatus
+              : wx.railStressStatus || "NORMAL";
+          const fogTsrSpeed =
+            wx.safety && wx.safety.fogTsrSpeed
+              ? wx.safety.fogTsrSpeed
+              : wx.fogTsrKmh
+                ? `${wx.fogTsrKmh} km/h`
+                : "Full Track MPS (130)";
+          const isFoggy = parseFloat(visKm) < 1.0;
+          const isThermalWarning = railTemp > 52;
+          const iconClass = wx.icon
+            ? wx.icon.startsWith("fa-")
+              ? wx.icon
+              : `fa-${wx.icon}`
+            : "fa-sun text-amber-500";
 
-        el.innerHTML = `
+          el.innerHTML = `
           <div class="p-3 rounded-xl bg-gradient-to-br from-[#0A192F] via-[#0F172A] to-[#1E293B] border-2 border-cyan-500/40 text-white shadow-xl space-y-2">
             <div class="flex items-center justify-between border-b border-white/10 pb-1.5">
               <div class="flex items-center gap-2">
@@ -3188,20 +4021,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
               <div class="p-1.5 rounded-lg bg-white/5 border border-white/10">
                 <span class="text-[9px] text-slate-400 font-mono block">Optical Vis.</span>
-                <div class="text-xs font-black ${isFoggy ? 'text-amber-400' : 'text-emerald-400'} mt-0.5">
+                <div class="text-xs font-black ${isFoggy ? "text-amber-400" : "text-emerald-400"} mt-0.5">
                   ${visKm} km
                 </div>
-                <div class="text-[9px] ${isFoggy ? 'text-amber-300 font-bold' : 'text-slate-300'} truncate mt-0.5">
-                  ${isFoggy ? 'Fog Caution' : 'Clear Sight'}
+                <div class="text-[9px] ${isFoggy ? "text-amber-300 font-bold" : "text-slate-300"} truncate mt-0.5">
+                  ${isFoggy ? "Fog Caution" : "Clear Sight"}
                 </div>
               </div>
 
               <div class="p-1.5 rounded-lg bg-white/5 border border-white/10">
                 <span class="text-[9px] text-slate-400 font-mono block">Rail Temp</span>
-                <div class="text-xs font-black ${isThermalWarning ? 'text-rose-400' : 'text-sky-300'} mt-0.5">
+                <div class="text-xs font-black ${isThermalWarning ? "text-rose-400" : "text-sky-300"} mt-0.5">
                   ${railTemp}°C
                 </div>
-                <div class="text-[9px] ${isThermalWarning ? 'text-rose-300 font-bold' : 'text-emerald-400 font-bold'} truncate mt-0.5">
+                <div class="text-[9px] ${isThermalWarning ? "text-rose-300 font-bold" : "text-emerald-400 font-bold"} truncate mt-0.5">
                   ${railStatus}
                 </div>
               </div>
@@ -3210,15 +4043,16 @@ document.addEventListener("DOMContentLoaded", () => {
             <!-- Kavach Speed Advisory for Weather -->
             <div class="flex items-center justify-between text-[10px] bg-black/40 px-2.5 py-1 rounded border border-white/10 font-mono">
               <span class="text-slate-300 font-semibold">Kavach Fog TSR Advisory:</span>
-              <span class="font-black ${isFoggy ? 'text-amber-300' : 'text-emerald-400'}">
+              <span class="font-black ${isFoggy ? "text-amber-300" : "text-emerald-400"}">
                 ${fogTsrSpeed}
               </span>
             </div>
           </div>
         `;
-      }).catch(err => {
-        console.warn("HUD weather fetch failed:", err);
-      });
+        })
+        .catch((err) => {
+          console.warn("HUD weather fetch failed:", err);
+        });
     }
   }
 
@@ -3241,7 +4075,10 @@ document.addEventListener("DOMContentLoaded", () => {
     // Find current station segment
     let segIdx = 0;
     for (let i = 0; i < stations.length - 1; i++) {
-      if (currentDist >= stations[i].distKm && currentDist <= stations[i + 1].distKm) {
+      if (
+        currentDist >= stations[i].distKm &&
+        currentDist <= stations[i + 1].distKm
+      ) {
         segIdx = i;
         break;
       }
@@ -3249,7 +4086,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const curStn = stations[segIdx];
     const nextStn = stations[segIdx + 1];
     const segLen = Math.max(1, nextStn.distKm - curStn.distKm);
-    const segFrac = Math.max(0, Math.min(1, (currentDist - curStn.distKm) / segLen));
+    const segFrac = Math.max(
+      0,
+      Math.min(1, (currentDist - curStn.distKm) / segLen),
+    );
 
     // Authentic Speed Profile & Braking Curve:
     let currentSpeed = V_max;
@@ -3283,7 +4123,10 @@ document.addEventListener("DOMContentLoaded", () => {
         brakePressure = "2.5 kg/cm² (Emergency Application)";
         brakingMargin = "120m (Platform Berthing)";
       } else {
-        currentSpeed = Math.max(12, Math.round(V_max * Math.pow(decelRatio, 1.15)));
+        currentSpeed = Math.max(
+          12,
+          Math.round(V_max * Math.pow(decelRatio, 1.15)),
+        );
         status = "BRAKING";
         statusBadge = `BRAKING FOR ${nextStn.code}`;
         cabSignal = "CAUTION (YELLOW) • KAVACH BRAKING";
@@ -3325,11 +4168,15 @@ document.addEventListener("DOMContentLoaded", () => {
     train.brakingMargin = brakingMargin;
     train.currentSection = `${curStn.name} (${curStn.code}) ➔ ${nextStn.name} (${nextStn.code})`;
     train.nextStation = `${nextStn.name} (PF #${nextStn.pf || 1})`;
-    const distRemaining = Math.max(0, nextStn.distKm - (progress * totalDistKm));
-    const minsToNext = currentSpeed > 5 ? Math.round((distRemaining / currentSpeed) * 60) : 1;
+    const distRemaining = Math.max(0, nextStn.distKm - progress * totalDistKm);
+    const minsToNext =
+      currentSpeed > 5 ? Math.round((distRemaining / currentSpeed) * 60) : 1;
     train.etaNextStation = `${minsToNext} mins (${Math.round(distRemaining)} km)`;
     train.distCovered = Math.round(progress * totalDistKm);
-    train.distRemaining = Math.max(0, Math.round(totalDistKm - (progress * totalDistKm)));
+    train.distRemaining = Math.max(
+      0,
+      Math.round(totalDistKm - progress * totalDistKm),
+    );
   }
 
   // Update Cockpit HUD Inspector live elements every tick
@@ -3344,19 +4191,25 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     const container = document.getElementById("locomotiveInspectorHUD");
     if (container) {
-      const marginEl = container.querySelector(".text-base.font-black.text-\\[\\#138808\\].font-mono");
+      const marginEl = container.querySelector(
+        ".text-base.font-black.text-\\[\\#138808\\].font-mono",
+      );
       if (marginEl) marginEl.textContent = train.brakingMargin;
-      
-      const aspectEl = container.querySelector(".font-extrabold.flex.items-center.gap-1\\.5");
+
+      const aspectEl = container.querySelector(
+        ".font-extrabold.flex.items-center.gap-1\\.5",
+      );
       if (aspectEl) {
         aspectEl.className = `font-extrabold flex items-center gap-1.5 ${train.cabSignalClass}`;
         aspectEl.innerHTML = `
-          <span class="w-2.5 h-2.5 rounded-full ${train.cabSignalClass.includes('emerald') ? 'bg-emerald-500' : (train.cabSignalClass.includes('rose') ? 'bg-rose-500' : 'bg-amber-500')} animate-pulse"></span>
+          <span class="w-2.5 h-2.5 rounded-full ${train.cabSignalClass.includes("emerald") ? "bg-emerald-500" : train.cabSignalClass.includes("rose") ? "bg-rose-500" : "bg-amber-500"} animate-pulse"></span>
           ${train.cabSignal}
         `;
       }
-      
-      const sectionVals = container.querySelectorAll(".p-3.rounded-xl.bg-white.border-2.border-slate-200 .flex.items-center.justify-between span:last-child");
+
+      const sectionVals = container.querySelectorAll(
+        ".p-3.rounded-xl.bg-white.border-2.border-slate-200 .flex.items-center.justify-between span:last-child",
+      );
       if (sectionVals.length >= 4) {
         sectionVals[1].textContent = train.currentSection;
         sectionVals[2].textContent = train.nextStation;
@@ -3475,266 +4328,1020 @@ document.addEventListener("DOMContentLoaded", () => {
   // Comprehensive Train Database — 5,208 Real Indian Trains (Dynamically Loaded)
   let irTrainDatabase = [
     {
-      number: "22436", name: "VANDE BHARAT EXP", type: "Vande Bharat",
-      from: "NDLS", to: "BSB", depart: "06:00", arrive: "14:00", duration: "08h 00m",
-      classes: ["CC", "EC"], days: [true,true,true,true,true,true,false],
-      delay: 0, delayText: "ON TIME",
+      number: "22436",
+      name: "VANDE BHARAT EXP",
+      type: "Vande Bharat",
+      from: "NDLS",
+      to: "BSB",
+      depart: "06:00",
+      arrive: "14:00",
+      duration: "08h 00m",
+      classes: ["CC", "EC"],
+      days: [true, true, true, true, true, true, false],
+      delay: 0,
+      delayText: "ON TIME",
       stations: [
-        { code: "NDLS", name: "New Delhi", arr: "--", dep: "06:00", pf: 16, delay: 0 },
-        { code: "CNB", name: "Kanpur Central", arr: "10:08", dep: "10:13", pf: 1, delay: 0 },
-        { code: "PRYJ", name: "Prayagraj Jn", arr: "12:08", dep: "12:13", pf: 6, delay: 0 },
-        { code: "BSB", name: "Varanasi Jn", arr: "14:00", dep: "--", pf: 1, delay: 0 },
+        {
+          code: "NDLS",
+          name: "New Delhi",
+          arr: "--",
+          dep: "06:00",
+          pf: 16,
+          delay: 0,
+        },
+        {
+          code: "CNB",
+          name: "Kanpur Central",
+          arr: "10:08",
+          dep: "10:13",
+          pf: 1,
+          delay: 0,
+        },
+        {
+          code: "PRYJ",
+          name: "Prayagraj Jn",
+          arr: "12:08",
+          dep: "12:13",
+          pf: 6,
+          delay: 0,
+        },
+        {
+          code: "BSB",
+          name: "Varanasi Jn",
+          arr: "14:00",
+          dep: "--",
+          pf: 1,
+          delay: 0,
+        },
       ],
-      speed: "160 km/h", kavach: "ARMED (SIL-4)"
+      speed: "160 km/h",
+      kavach: "ARMED (SIL-4)",
     },
     {
-      number: "12951", name: "MUMBAI RAJDHANI", type: "Rajdhani",
-      from: "MMCT", to: "NDLS", depart: "17:00", arrive: "08:32", duration: "15h 32m",
-      classes: ["1A", "2A", "3A"], days: [true,true,true,true,true,true,true],
-      delay: 0, delayText: "ON TIME",
+      number: "12951",
+      name: "MUMBAI RAJDHANI",
+      type: "Rajdhani",
+      from: "MMCT",
+      to: "NDLS",
+      depart: "17:00",
+      arrive: "08:32",
+      duration: "15h 32m",
+      classes: ["1A", "2A", "3A"],
+      days: [true, true, true, true, true, true, true],
+      delay: 0,
+      delayText: "ON TIME",
       stations: [
-        { code: "MMCT", name: "Mumbai Central", arr: "--", dep: "17:00", pf: 1, delay: 0 },
-        { code: "BRC", name: "Vadodara Jn", arr: "21:05", dep: "21:15", pf: 2, delay: 0 },
-        { code: "RTM", name: "Ratlam Jn", arr: "00:25", dep: "00:30", pf: 4, delay: 0 },
-        { code: "KOTA", name: "Kota Jn", arr: "03:15", dep: "03:20", pf: 1, delay: 0 },
-        { code: "NDLS", name: "New Delhi", arr: "08:32", dep: "--", pf: 1, delay: 0 },
+        {
+          code: "MMCT",
+          name: "Mumbai Central",
+          arr: "--",
+          dep: "17:00",
+          pf: 1,
+          delay: 0,
+        },
+        {
+          code: "BRC",
+          name: "Vadodara Jn",
+          arr: "21:05",
+          dep: "21:15",
+          pf: 2,
+          delay: 0,
+        },
+        {
+          code: "RTM",
+          name: "Ratlam Jn",
+          arr: "00:25",
+          dep: "00:30",
+          pf: 4,
+          delay: 0,
+        },
+        {
+          code: "KOTA",
+          name: "Kota Jn",
+          arr: "03:15",
+          dep: "03:20",
+          pf: 1,
+          delay: 0,
+        },
+        {
+          code: "NDLS",
+          name: "New Delhi",
+          arr: "08:32",
+          dep: "--",
+          pf: 1,
+          delay: 0,
+        },
       ],
-      speed: "130 km/h", kavach: "ARMED (SIL-4)"
+      speed: "130 km/h",
+      kavach: "ARMED (SIL-4)",
     },
     {
-      number: "12302", name: "HOWRAH RAJDHANI", type: "Rajdhani",
-      from: "NDLS", to: "HWH", depart: "16:55", arrive: "10:00", duration: "17h 05m",
-      classes: ["1A", "2A", "3A"], days: [true,true,true,true,true,true,true],
-      delay: 12, delayText: "+12 MIN",
+      number: "12302",
+      name: "HOWRAH RAJDHANI",
+      type: "Rajdhani",
+      from: "NDLS",
+      to: "HWH",
+      depart: "16:55",
+      arrive: "10:00",
+      duration: "17h 05m",
+      classes: ["1A", "2A", "3A"],
+      days: [true, true, true, true, true, true, true],
+      delay: 12,
+      delayText: "+12 MIN",
       stations: [
-        { code: "NDLS", name: "New Delhi", arr: "--", dep: "16:55", pf: 16, delay: 0 },
-        { code: "CNB", name: "Kanpur Central", arr: "21:38", dep: "21:43", pf: 1, delay: 5 },
-        { code: "PRYJ", name: "Prayagraj Jn", arr: "00:05", dep: "00:10", pf: 4, delay: 8 },
-        { code: "PNBE", name: "Patna Jn", arr: "05:45", dep: "05:50", pf: 1, delay: 10 },
-        { code: "HWH", name: "Howrah Jn", arr: "10:00", dep: "--", pf: 9, delay: 12 },
+        {
+          code: "NDLS",
+          name: "New Delhi",
+          arr: "--",
+          dep: "16:55",
+          pf: 16,
+          delay: 0,
+        },
+        {
+          code: "CNB",
+          name: "Kanpur Central",
+          arr: "21:38",
+          dep: "21:43",
+          pf: 1,
+          delay: 5,
+        },
+        {
+          code: "PRYJ",
+          name: "Prayagraj Jn",
+          arr: "00:05",
+          dep: "00:10",
+          pf: 4,
+          delay: 8,
+        },
+        {
+          code: "PNBE",
+          name: "Patna Jn",
+          arr: "05:45",
+          dep: "05:50",
+          pf: 1,
+          delay: 10,
+        },
+        {
+          code: "HWH",
+          name: "Howrah Jn",
+          arr: "10:00",
+          dep: "--",
+          pf: 9,
+          delay: 12,
+        },
       ],
-      speed: "130 km/h", kavach: "ARMED (SIL-4)"
+      speed: "130 km/h",
+      kavach: "ARMED (SIL-4)",
     },
     {
-      number: "12952", name: "MUMBAI RAJDHANI", type: "Rajdhani",
-      from: "NDLS", to: "MMCT", depart: "16:25", arrive: "08:15", duration: "15h 50m",
-      classes: ["1A", "2A", "3A"], days: [true,true,true,true,true,true,true],
-      delay: 0, delayText: "ON TIME",
+      number: "12952",
+      name: "MUMBAI RAJDHANI",
+      type: "Rajdhani",
+      from: "NDLS",
+      to: "MMCT",
+      depart: "16:25",
+      arrive: "08:15",
+      duration: "15h 50m",
+      classes: ["1A", "2A", "3A"],
+      days: [true, true, true, true, true, true, true],
+      delay: 0,
+      delayText: "ON TIME",
       stations: [
-        { code: "NDLS", name: "New Delhi", arr: "--", dep: "16:25", pf: 2, delay: 0 },
-        { code: "KOTA", name: "Kota Jn", arr: "21:50", dep: "21:55", pf: 1, delay: 0 },
-        { code: "BRC", name: "Vadodara Jn", arr: "03:05", dep: "03:10", pf: 3, delay: 0 },
-        { code: "MMCT", name: "Mumbai Central", arr: "08:15", dep: "--", pf: 1, delay: 0 },
+        {
+          code: "NDLS",
+          name: "New Delhi",
+          arr: "--",
+          dep: "16:25",
+          pf: 2,
+          delay: 0,
+        },
+        {
+          code: "KOTA",
+          name: "Kota Jn",
+          arr: "21:50",
+          dep: "21:55",
+          pf: 1,
+          delay: 0,
+        },
+        {
+          code: "BRC",
+          name: "Vadodara Jn",
+          arr: "03:05",
+          dep: "03:10",
+          pf: 3,
+          delay: 0,
+        },
+        {
+          code: "MMCT",
+          name: "Mumbai Central",
+          arr: "08:15",
+          dep: "--",
+          pf: 1,
+          delay: 0,
+        },
       ],
-      speed: "130 km/h", kavach: "ARMED (SIL-4)"
+      speed: "130 km/h",
+      kavach: "ARMED (SIL-4)",
     },
     {
-      number: "12059", name: "KOTA JAN SHTBDI", type: "Jan Shatabdi",
-      from: "NDLS", to: "KOTA", depart: "17:50", arrive: "23:20", duration: "05h 30m",
-      classes: ["CC", "2S"], days: [true,true,true,true,true,true,false],
-      delay: 28, delayText: "+28 MIN",
+      number: "12059",
+      name: "KOTA JAN SHTBDI",
+      type: "Jan Shatabdi",
+      from: "NDLS",
+      to: "KOTA",
+      depart: "17:50",
+      arrive: "23:20",
+      duration: "05h 30m",
+      classes: ["CC", "2S"],
+      days: [true, true, true, true, true, true, false],
+      delay: 28,
+      delayText: "+28 MIN",
       stations: [
-        { code: "NDLS", name: "New Delhi", arr: "--", dep: "17:50", pf: 9, delay: 0 },
-        { code: "MTJ", name: "Mathura Jn", arr: "19:45", dep: "19:47", pf: 3, delay: 8 },
-        { code: "AGC", name: "Agra Cantt", arr: "20:15", dep: "20:18", pf: 1, delay: 12 },
-        { code: "GWL", name: "Gwalior Jn", arr: "21:32", dep: "21:35", pf: 2, delay: 18 },
-        { code: "KOTA", name: "Kota Jn", arr: "23:20", dep: "--", pf: 1, delay: 28 },
+        {
+          code: "NDLS",
+          name: "New Delhi",
+          arr: "--",
+          dep: "17:50",
+          pf: 9,
+          delay: 0,
+        },
+        {
+          code: "MTJ",
+          name: "Mathura Jn",
+          arr: "19:45",
+          dep: "19:47",
+          pf: 3,
+          delay: 8,
+        },
+        {
+          code: "AGC",
+          name: "Agra Cantt",
+          arr: "20:15",
+          dep: "20:18",
+          pf: 1,
+          delay: 12,
+        },
+        {
+          code: "GWL",
+          name: "Gwalior Jn",
+          arr: "21:32",
+          dep: "21:35",
+          pf: 2,
+          delay: 18,
+        },
+        {
+          code: "KOTA",
+          name: "Kota Jn",
+          arr: "23:20",
+          dep: "--",
+          pf: 1,
+          delay: 28,
+        },
       ],
-      speed: "110 km/h", kavach: "TSR ENFORCED"
+      speed: "110 km/h",
+      kavach: "TSR ENFORCED",
     },
     {
-      number: "12626", name: "KERALA EXPRESS", type: "Superfast",
-      from: "NDLS", to: "TVC", depart: "11:25", arrive: "19:05", duration: "31h 40m",
-      classes: ["SL", "3A", "2A", "1A"], days: [true,true,true,true,true,true,true],
-      delay: 45, delayText: "+45 MIN",
+      number: "12626",
+      name: "KERALA EXPRESS",
+      type: "Superfast",
+      from: "NDLS",
+      to: "TVC",
+      depart: "11:25",
+      arrive: "19:05",
+      duration: "31h 40m",
+      classes: ["SL", "3A", "2A", "1A"],
+      days: [true, true, true, true, true, true, true],
+      delay: 45,
+      delayText: "+45 MIN",
       stations: [
-        { code: "NDLS", name: "New Delhi", arr: "--", dep: "11:25", pf: 5, delay: 0 },
-        { code: "AGC", name: "Agra Cantt", arr: "14:05", dep: "14:10", pf: 1, delay: 10 },
-        { code: "BPL", name: "Bhopal Jn", arr: "20:10", dep: "20:20", pf: 4, delay: 22 },
-        { code: "NGP", name: "Nagpur Jn", arr: "02:45", dep: "02:55", pf: 3, delay: 30 },
-        { code: "SC", name: "Secunderabad Jn", arr: "10:30", dep: "10:40", pf: 1, delay: 38 },
-        { code: "TVC", name: "Thiruvananthapuram", arr: "19:05", dep: "--", pf: 1, delay: 45 },
+        {
+          code: "NDLS",
+          name: "New Delhi",
+          arr: "--",
+          dep: "11:25",
+          pf: 5,
+          delay: 0,
+        },
+        {
+          code: "AGC",
+          name: "Agra Cantt",
+          arr: "14:05",
+          dep: "14:10",
+          pf: 1,
+          delay: 10,
+        },
+        {
+          code: "BPL",
+          name: "Bhopal Jn",
+          arr: "20:10",
+          dep: "20:20",
+          pf: 4,
+          delay: 22,
+        },
+        {
+          code: "NGP",
+          name: "Nagpur Jn",
+          arr: "02:45",
+          dep: "02:55",
+          pf: 3,
+          delay: 30,
+        },
+        {
+          code: "SC",
+          name: "Secunderabad Jn",
+          arr: "10:30",
+          dep: "10:40",
+          pf: 1,
+          delay: 38,
+        },
+        {
+          code: "TVC",
+          name: "Thiruvananthapuram",
+          arr: "19:05",
+          dep: "--",
+          pf: 1,
+          delay: 45,
+        },
       ],
-      speed: "110 km/h", kavach: "CAB SIGNAL PROCEED"
+      speed: "110 km/h",
+      kavach: "CAB SIGNAL PROCEED",
     },
     {
-      number: "20488", name: "MALANI EXPRESS", type: "Express",
-      from: "LUNI", to: "BLT", depart: "02:35", arrive: "03:53", duration: "01h 18m",
-      classes: ["SL", "3A", "2A", "1A"], days: [true,true,true,true,true,true,true],
-      delay: 0, delayText: "ON TIME",
+      number: "20488",
+      name: "MALANI EXPRESS",
+      type: "Express",
+      from: "LUNI",
+      to: "BLT",
+      depart: "02:35",
+      arrive: "03:53",
+      duration: "01h 18m",
+      classes: ["SL", "3A", "2A", "1A"],
+      days: [true, true, true, true, true, true, true],
+      delay: 0,
+      delayText: "ON TIME",
       stations: [
-        { code: "LUNI", name: "Luni Jn", arr: "--", dep: "02:35", pf: 1, delay: 0 },
-        { code: "BLT", name: "Balotra Jn", arr: "03:53", dep: "--", pf: 2, delay: 0 },
+        {
+          code: "LUNI",
+          name: "Luni Jn",
+          arr: "--",
+          dep: "02:35",
+          pf: 1,
+          delay: 0,
+        },
+        {
+          code: "BLT",
+          name: "Balotra Jn",
+          arr: "03:53",
+          dep: "--",
+          pf: 2,
+          delay: 0,
+        },
       ],
-      speed: "80 km/h", kavach: "ARMED"
+      speed: "80 km/h",
+      kavach: "ARMED",
     },
     {
-      number: "14887", name: "RKSH BME EXP", type: "Express",
-      from: "LUNI", to: "BLT", depart: "16:22", arrive: "17:43", duration: "01h 21m",
-      classes: ["SL", "3A", "2A"], days: [true,true,true,true,true,true,true],
-      delay: 0, delayText: "ON TIME",
+      number: "14887",
+      name: "RKSH BME EXP",
+      type: "Express",
+      from: "LUNI",
+      to: "BLT",
+      depart: "16:22",
+      arrive: "17:43",
+      duration: "01h 21m",
+      classes: ["SL", "3A", "2A"],
+      days: [true, true, true, true, true, true, true],
+      delay: 0,
+      delayText: "ON TIME",
       stations: [
-        { code: "LUNI", name: "Luni Jn", arr: "--", dep: "16:22", pf: 2, delay: 0 },
-        { code: "BLT", name: "Balotra Jn", arr: "17:43", dep: "--", pf: 1, delay: 0 },
+        {
+          code: "LUNI",
+          name: "Luni Jn",
+          arr: "--",
+          dep: "16:22",
+          pf: 2,
+          delay: 0,
+        },
+        {
+          code: "BLT",
+          name: "Balotra Jn",
+          arr: "17:43",
+          dep: "--",
+          pf: 1,
+          delay: 0,
+        },
       ],
-      speed: "75 km/h", kavach: "ARMED"
+      speed: "75 km/h",
+      kavach: "ARMED",
     },
     {
-      number: "04812", name: "HW BME SPL", type: "Special",
-      from: "LUNI", to: "BLT", depart: "03:12", arrive: "04:35", duration: "01h 23m",
-      classes: ["SL", "3A", "2A"], days: [true,false,true,false,true,true,true],
-      delay: 0, delayText: "ON TIME",
+      number: "04812",
+      name: "HW BME SPL",
+      type: "Special",
+      from: "LUNI",
+      to: "BLT",
+      depart: "03:12",
+      arrive: "04:35",
+      duration: "01h 23m",
+      classes: ["SL", "3A", "2A"],
+      days: [true, false, true, false, true, true, true],
+      delay: 0,
+      delayText: "ON TIME",
       stations: [
-        { code: "LUNI", name: "Luni Jn", arr: "--", dep: "03:12", pf: 1, delay: 0 },
-        { code: "BLT", name: "Balotra Jn", arr: "04:35", dep: "--", pf: 2, delay: 0 },
+        {
+          code: "LUNI",
+          name: "Luni Jn",
+          arr: "--",
+          dep: "03:12",
+          pf: 1,
+          delay: 0,
+        },
+        {
+          code: "BLT",
+          name: "Balotra Jn",
+          arr: "04:35",
+          dep: "--",
+          pf: 2,
+          delay: 0,
+        },
       ],
-      speed: "70 km/h", kavach: "ARMED"
+      speed: "70 km/h",
+      kavach: "ARMED",
     },
     {
-      number: "15632", name: "GHY BME EXPRESS", type: "Express",
-      from: "LUNI", to: "BLT", depart: "04:23", arrive: "06:05", duration: "01h 42m",
-      classes: ["SL", "3A", "2A"], days: [true,true,true,true,true,true,true],
-      delay: 0, delayText: "ON TIME",
+      number: "15632",
+      name: "GHY BME EXPRESS",
+      type: "Express",
+      from: "LUNI",
+      to: "BLT",
+      depart: "04:23",
+      arrive: "06:05",
+      duration: "01h 42m",
+      classes: ["SL", "3A", "2A"],
+      days: [true, true, true, true, true, true, true],
+      delay: 0,
+      delayText: "ON TIME",
       stations: [
-        { code: "LUNI", name: "Luni Jn", arr: "--", dep: "04:23", pf: 1, delay: 0 },
-        { code: "BLT", name: "Balotra Jn", arr: "06:05", dep: "--", pf: 1, delay: 0 },
+        {
+          code: "LUNI",
+          name: "Luni Jn",
+          arr: "--",
+          dep: "04:23",
+          pf: 1,
+          delay: 0,
+        },
+        {
+          code: "BLT",
+          name: "Balotra Jn",
+          arr: "06:05",
+          dep: "--",
+          pf: 1,
+          delay: 0,
+        },
       ],
-      speed: "70 km/h", kavach: "ARMED"
+      speed: "70 km/h",
+      kavach: "ARMED",
     },
     {
-      number: "12015", name: "AJMER SHATABDI", type: "Shatabdi",
-      from: "NDLS", to: "AII", depart: "06:15", arrive: "12:40", duration: "06h 25m",
-      classes: ["CC", "EC"], days: [true,true,true,true,true,true,false],
-      delay: 0, delayText: "ON TIME",
+      number: "12015",
+      name: "AJMER SHATABDI",
+      type: "Shatabdi",
+      from: "NDLS",
+      to: "AII",
+      depart: "06:15",
+      arrive: "12:40",
+      duration: "06h 25m",
+      classes: ["CC", "EC"],
+      days: [true, true, true, true, true, true, false],
+      delay: 0,
+      delayText: "ON TIME",
       stations: [
-        { code: "NDLS", name: "New Delhi", arr: "--", dep: "06:15", pf: 1, delay: 0 },
-        { code: "JP", name: "Jaipur Jn", arr: "10:40", dep: "10:50", pf: 1, delay: 0 },
-        { code: "AII", name: "Ajmer Jn", arr: "12:40", dep: "--", pf: 3, delay: 0 },
+        {
+          code: "NDLS",
+          name: "New Delhi",
+          arr: "--",
+          dep: "06:15",
+          pf: 1,
+          delay: 0,
+        },
+        {
+          code: "JP",
+          name: "Jaipur Jn",
+          arr: "10:40",
+          dep: "10:50",
+          pf: 1,
+          delay: 0,
+        },
+        {
+          code: "AII",
+          name: "Ajmer Jn",
+          arr: "12:40",
+          dep: "--",
+          pf: 3,
+          delay: 0,
+        },
       ],
-      speed: "130 km/h", kavach: "ARMED (SIL-4)"
+      speed: "130 km/h",
+      kavach: "ARMED (SIL-4)",
     },
     {
-      number: "12958", name: "ADI RAJDHANI", type: "Rajdhani",
-      from: "NDLS", to: "ADI", depart: "19:25", arrive: "07:40", duration: "12h 15m",
-      classes: ["1A", "2A", "3A"], days: [true,true,true,true,true,true,true],
-      delay: 8, delayText: "+8 MIN",
+      number: "12958",
+      name: "ADI RAJDHANI",
+      type: "Rajdhani",
+      from: "NDLS",
+      to: "ADI",
+      depart: "19:25",
+      arrive: "07:40",
+      duration: "12h 15m",
+      classes: ["1A", "2A", "3A"],
+      days: [true, true, true, true, true, true, true],
+      delay: 8,
+      delayText: "+8 MIN",
       stations: [
-        { code: "NDLS", name: "New Delhi", arr: "--", dep: "19:25", pf: 4, delay: 0 },
-        { code: "KOTA", name: "Kota Jn", arr: "00:20", dep: "00:25", pf: 3, delay: 5 },
-        { code: "ADI", name: "Ahmedabad Jn", arr: "07:40", dep: "--", pf: 1, delay: 8 },
+        {
+          code: "NDLS",
+          name: "New Delhi",
+          arr: "--",
+          dep: "19:25",
+          pf: 4,
+          delay: 0,
+        },
+        {
+          code: "KOTA",
+          name: "Kota Jn",
+          arr: "00:20",
+          dep: "00:25",
+          pf: 3,
+          delay: 5,
+        },
+        {
+          code: "ADI",
+          name: "Ahmedabad Jn",
+          arr: "07:40",
+          dep: "--",
+          pf: 1,
+          delay: 8,
+        },
       ],
-      speed: "130 km/h", kavach: "ARMED (SIL-4)"
+      speed: "130 km/h",
+      kavach: "ARMED (SIL-4)",
     },
     {
-      number: "12904", name: "GOLDEN TEMPLE ML", type: "Superfast",
-      from: "MMCT", to: "NDLS", depart: "21:30", arrive: "14:45", duration: "17h 15m",
-      classes: ["SL", "3A", "2A", "1A"], days: [true,true,true,true,true,true,true],
-      delay: 15, delayText: "+15 MIN",
+      number: "12904",
+      name: "GOLDEN TEMPLE ML",
+      type: "Superfast",
+      from: "MMCT",
+      to: "NDLS",
+      depart: "21:30",
+      arrive: "14:45",
+      duration: "17h 15m",
+      classes: ["SL", "3A", "2A", "1A"],
+      days: [true, true, true, true, true, true, true],
+      delay: 15,
+      delayText: "+15 MIN",
       stations: [
-        { code: "MMCT", name: "Mumbai Central", arr: "--", dep: "21:30", pf: 5, delay: 0 },
-        { code: "ST", name: "Surat", arr: "00:30", dep: "00:35", pf: 2, delay: 5 },
-        { code: "BRC", name: "Vadodara Jn", arr: "02:30", dep: "02:35", pf: 3, delay: 8 },
-        { code: "KOTA", name: "Kota Jn", arr: "09:10", dep: "09:15", pf: 1, delay: 12 },
-        { code: "NDLS", name: "New Delhi", arr: "14:45", dep: "--", pf: 6, delay: 15 },
+        {
+          code: "MMCT",
+          name: "Mumbai Central",
+          arr: "--",
+          dep: "21:30",
+          pf: 5,
+          delay: 0,
+        },
+        {
+          code: "ST",
+          name: "Surat",
+          arr: "00:30",
+          dep: "00:35",
+          pf: 2,
+          delay: 5,
+        },
+        {
+          code: "BRC",
+          name: "Vadodara Jn",
+          arr: "02:30",
+          dep: "02:35",
+          pf: 3,
+          delay: 8,
+        },
+        {
+          code: "KOTA",
+          name: "Kota Jn",
+          arr: "09:10",
+          dep: "09:15",
+          pf: 1,
+          delay: 12,
+        },
+        {
+          code: "NDLS",
+          name: "New Delhi",
+          arr: "14:45",
+          dep: "--",
+          pf: 6,
+          delay: 15,
+        },
       ],
-      speed: "110 km/h", kavach: "CAB SIGNAL PROCEED"
+      speed: "110 km/h",
+      kavach: "CAB SIGNAL PROCEED",
     },
     {
-      number: "12622", name: "TAMIL NADU EXP", type: "Superfast",
-      from: "NDLS", to: "MAS", depart: "22:00", arrive: "07:10", duration: "33h 10m",
-      classes: ["SL", "3A", "2A", "1A"], days: [true,true,true,true,true,true,true],
-      delay: 0, delayText: "ON TIME",
+      number: "12622",
+      name: "TAMIL NADU EXP",
+      type: "Superfast",
+      from: "NDLS",
+      to: "MAS",
+      depart: "22:00",
+      arrive: "07:10",
+      duration: "33h 10m",
+      classes: ["SL", "3A", "2A", "1A"],
+      days: [true, true, true, true, true, true, true],
+      delay: 0,
+      delayText: "ON TIME",
       stations: [
-        { code: "NDLS", name: "New Delhi", arr: "--", dep: "22:00", pf: 8, delay: 0 },
-        { code: "AGC", name: "Agra Cantt", arr: "00:38", dep: "00:43", pf: 1, delay: 0 },
-        { code: "GWL", name: "Gwalior Jn", arr: "02:25", dep: "02:30", pf: 3, delay: 0 },
-        { code: "BPL", name: "Bhopal Jn", arr: "07:10", dep: "07:20", pf: 6, delay: 0 },
-        { code: "NGP", name: "Nagpur Jn", arr: "14:20", dep: "14:30", pf: 4, delay: 0 },
-        { code: "MAS", name: "Chennai Central", arr: "07:10", dep: "--", pf: 3, delay: 0 },
+        {
+          code: "NDLS",
+          name: "New Delhi",
+          arr: "--",
+          dep: "22:00",
+          pf: 8,
+          delay: 0,
+        },
+        {
+          code: "AGC",
+          name: "Agra Cantt",
+          arr: "00:38",
+          dep: "00:43",
+          pf: 1,
+          delay: 0,
+        },
+        {
+          code: "GWL",
+          name: "Gwalior Jn",
+          arr: "02:25",
+          dep: "02:30",
+          pf: 3,
+          delay: 0,
+        },
+        {
+          code: "BPL",
+          name: "Bhopal Jn",
+          arr: "07:10",
+          dep: "07:20",
+          pf: 6,
+          delay: 0,
+        },
+        {
+          code: "NGP",
+          name: "Nagpur Jn",
+          arr: "14:20",
+          dep: "14:30",
+          pf: 4,
+          delay: 0,
+        },
+        {
+          code: "MAS",
+          name: "Chennai Central",
+          arr: "07:10",
+          dep: "--",
+          pf: 3,
+          delay: 0,
+        },
       ],
-      speed: "110 km/h", kavach: "ARMED"
+      speed: "110 km/h",
+      kavach: "ARMED",
     },
     {
-      number: "12432", name: "TRIVNDRM RAJDHNI", type: "Rajdhani",
-      from: "NDLS", to: "TVC", depart: "10:55", arrive: "05:30", duration: "30h 35m",
-      classes: ["1A", "2A", "3A"], days: [true,false,true,false,true,false,true],
-      delay: 20, delayText: "+20 MIN",
+      number: "12432",
+      name: "TRIVNDRM RAJDHNI",
+      type: "Rajdhani",
+      from: "NDLS",
+      to: "TVC",
+      depart: "10:55",
+      arrive: "05:30",
+      duration: "30h 35m",
+      classes: ["1A", "2A", "3A"],
+      days: [true, false, true, false, true, false, true],
+      delay: 20,
+      delayText: "+20 MIN",
       stations: [
-        { code: "NDLS", name: "New Delhi", arr: "--", dep: "10:55", pf: 3, delay: 0 },
-        { code: "BPL", name: "Bhopal Jn", arr: "17:45", dep: "17:55", pf: 4, delay: 5 },
-        { code: "NGP", name: "Nagpur Jn", arr: "23:20", dep: "23:30", pf: 3, delay: 10 },
-        { code: "SC", name: "Secunderabad Jn", arr: "06:30", dep: "06:40", pf: 1, delay: 14 },
-        { code: "TVC", name: "Thiruvananthapuram", arr: "05:30", dep: "--", pf: 1, delay: 20 },
+        {
+          code: "NDLS",
+          name: "New Delhi",
+          arr: "--",
+          dep: "10:55",
+          pf: 3,
+          delay: 0,
+        },
+        {
+          code: "BPL",
+          name: "Bhopal Jn",
+          arr: "17:45",
+          dep: "17:55",
+          pf: 4,
+          delay: 5,
+        },
+        {
+          code: "NGP",
+          name: "Nagpur Jn",
+          arr: "23:20",
+          dep: "23:30",
+          pf: 3,
+          delay: 10,
+        },
+        {
+          code: "SC",
+          name: "Secunderabad Jn",
+          arr: "06:30",
+          dep: "06:40",
+          pf: 1,
+          delay: 14,
+        },
+        {
+          code: "TVC",
+          name: "Thiruvananthapuram",
+          arr: "05:30",
+          dep: "--",
+          pf: 1,
+          delay: 20,
+        },
       ],
-      speed: "110 km/h", kavach: "ARMED"
+      speed: "110 km/h",
+      kavach: "ARMED",
     },
     {
-      number: "12650", name: "KSK SAMPARK KRNTI", type: "Superfast",
-      from: "NDLS", to: "SBC", depart: "21:00", arrive: "05:40", duration: "32h 40m",
-      classes: ["SL", "3A", "2A"], days: [true,true,true,true,true,false,true],
-      delay: 0, delayText: "ON TIME",
+      number: "12650",
+      name: "KSK SAMPARK KRNTI",
+      type: "Superfast",
+      from: "NDLS",
+      to: "SBC",
+      depart: "21:00",
+      arrive: "05:40",
+      duration: "32h 40m",
+      classes: ["SL", "3A", "2A"],
+      days: [true, true, true, true, true, false, true],
+      delay: 0,
+      delayText: "ON TIME",
       stations: [
-        { code: "NDLS", name: "New Delhi", arr: "--", dep: "21:00", pf: 12, delay: 0 },
-        { code: "AGC", name: "Agra Cantt", arr: "00:05", dep: "00:10", pf: 1, delay: 0 },
-        { code: "BPL", name: "Bhopal Jn", arr: "06:45", dep: "06:55", pf: 5, delay: 0 },
-        { code: "SC", name: "Secunderabad Jn", arr: "19:15", dep: "19:30", pf: 1, delay: 0 },
-        { code: "SBC", name: "KSR Bengaluru", arr: "05:40", dep: "--", pf: 5, delay: 0 },
+        {
+          code: "NDLS",
+          name: "New Delhi",
+          arr: "--",
+          dep: "21:00",
+          pf: 12,
+          delay: 0,
+        },
+        {
+          code: "AGC",
+          name: "Agra Cantt",
+          arr: "00:05",
+          dep: "00:10",
+          pf: 1,
+          delay: 0,
+        },
+        {
+          code: "BPL",
+          name: "Bhopal Jn",
+          arr: "06:45",
+          dep: "06:55",
+          pf: 5,
+          delay: 0,
+        },
+        {
+          code: "SC",
+          name: "Secunderabad Jn",
+          arr: "19:15",
+          dep: "19:30",
+          pf: 1,
+          delay: 0,
+        },
+        {
+          code: "SBC",
+          name: "KSR Bengaluru",
+          arr: "05:40",
+          dep: "--",
+          pf: 5,
+          delay: 0,
+        },
       ],
-      speed: "110 km/h", kavach: "ARMED"
+      speed: "110 km/h",
+      kavach: "ARMED",
     },
     {
-      number: "14660", name: "JSM DLI EXPRESS", type: "Express",
-      from: "BME", to: "NDLS", depart: "06:30", arrive: "06:45", duration: "24h 15m",
-      classes: ["SL", "3A", "2A"], days: [true,true,true,true,true,true,true],
-      delay: 35, delayText: "+35 MIN",
+      number: "14660",
+      name: "JSM DLI EXPRESS",
+      type: "Express",
+      from: "BME",
+      to: "NDLS",
+      depart: "06:30",
+      arrive: "06:45",
+      duration: "24h 15m",
+      classes: ["SL", "3A", "2A"],
+      days: [true, true, true, true, true, true, true],
+      delay: 35,
+      delayText: "+35 MIN",
       stations: [
-        { code: "BME", name: "Barmer", arr: "--", dep: "06:30", pf: 1, delay: 0 },
-        { code: "BLT", name: "Balotra Jn", arr: "08:15", dep: "08:20", pf: 2, delay: 5 },
-        { code: "LUNI", name: "Luni Jn", arr: "09:55", dep: "10:00", pf: 1, delay: 10 },
-        { code: "JU", name: "Jodhpur Jn", arr: "11:30", dep: "11:45", pf: 3, delay: 15 },
-        { code: "JP", name: "Jaipur Jn", arr: "18:00", dep: "18:10", pf: 2, delay: 25 },
-        { code: "NDLS", name: "New Delhi", arr: "06:45", dep: "--", pf: 7, delay: 35 },
+        {
+          code: "BME",
+          name: "Barmer",
+          arr: "--",
+          dep: "06:30",
+          pf: 1,
+          delay: 0,
+        },
+        {
+          code: "BLT",
+          name: "Balotra Jn",
+          arr: "08:15",
+          dep: "08:20",
+          pf: 2,
+          delay: 5,
+        },
+        {
+          code: "LUNI",
+          name: "Luni Jn",
+          arr: "09:55",
+          dep: "10:00",
+          pf: 1,
+          delay: 10,
+        },
+        {
+          code: "JU",
+          name: "Jodhpur Jn",
+          arr: "11:30",
+          dep: "11:45",
+          pf: 3,
+          delay: 15,
+        },
+        {
+          code: "JP",
+          name: "Jaipur Jn",
+          arr: "18:00",
+          dep: "18:10",
+          pf: 2,
+          delay: 25,
+        },
+        {
+          code: "NDLS",
+          name: "New Delhi",
+          arr: "06:45",
+          dep: "--",
+          pf: 7,
+          delay: 35,
+        },
       ],
-      speed: "75 km/h", kavach: "CAB SIGNAL PROCEED"
+      speed: "75 km/h",
+      kavach: "CAB SIGNAL PROCEED",
     },
     {
-      number: "12462", name: "MANDORE EXPRESS", type: "Superfast",
-      from: "JU", to: "NDLS", depart: "19:45", arrive: "06:10", duration: "10h 25m",
-      classes: ["SL", "3A", "2A", "1A"], days: [true,true,true,true,true,true,true],
-      delay: 0, delayText: "ON TIME",
+      number: "12462",
+      name: "MANDORE EXPRESS",
+      type: "Superfast",
+      from: "JU",
+      to: "NDLS",
+      depart: "19:45",
+      arrive: "06:10",
+      duration: "10h 25m",
+      classes: ["SL", "3A", "2A", "1A"],
+      days: [true, true, true, true, true, true, true],
+      delay: 0,
+      delayText: "ON TIME",
       stations: [
-        { code: "JU", name: "Jodhpur Jn", arr: "--", dep: "19:45", pf: 1, delay: 0 },
-        { code: "AII", name: "Ajmer Jn", arr: "23:20", dep: "23:30", pf: 3, delay: 0 },
-        { code: "JP", name: "Jaipur Jn", arr: "01:40", dep: "01:50", pf: 1, delay: 0 },
-        { code: "NDLS", name: "New Delhi", arr: "06:10", dep: "--", pf: 11, delay: 0 },
+        {
+          code: "JU",
+          name: "Jodhpur Jn",
+          arr: "--",
+          dep: "19:45",
+          pf: 1,
+          delay: 0,
+        },
+        {
+          code: "AII",
+          name: "Ajmer Jn",
+          arr: "23:20",
+          dep: "23:30",
+          pf: 3,
+          delay: 0,
+        },
+        {
+          code: "JP",
+          name: "Jaipur Jn",
+          arr: "01:40",
+          dep: "01:50",
+          pf: 1,
+          delay: 0,
+        },
+        {
+          code: "NDLS",
+          name: "New Delhi",
+          arr: "06:10",
+          dep: "--",
+          pf: 11,
+          delay: 0,
+        },
       ],
-      speed: "110 km/h", kavach: "ARMED"
+      speed: "110 km/h",
+      kavach: "ARMED",
     },
     {
-      number: "12308", name: "JODHPUR RAJDHANI", type: "Rajdhani",
-      from: "JU", to: "NDLS", depart: "14:45", arrive: "05:05", duration: "14h 20m",
-      classes: ["1A", "2A", "3A"], days: [false,true,false,true,false,true,false],
-      delay: 0, delayText: "ON TIME",
+      number: "12308",
+      name: "JODHPUR RAJDHANI",
+      type: "Rajdhani",
+      from: "JU",
+      to: "NDLS",
+      depart: "14:45",
+      arrive: "05:05",
+      duration: "14h 20m",
+      classes: ["1A", "2A", "3A"],
+      days: [false, true, false, true, false, true, false],
+      delay: 0,
+      delayText: "ON TIME",
       stations: [
-        { code: "JU", name: "Jodhpur Jn", arr: "--", dep: "14:45", pf: 1, delay: 0 },
-        { code: "AII", name: "Ajmer Jn", arr: "18:05", dep: "18:15", pf: 3, delay: 0 },
-        { code: "JP", name: "Jaipur Jn", arr: "20:20", dep: "20:30", pf: 1, delay: 0 },
-        { code: "NDLS", name: "New Delhi", arr: "05:05", dep: "--", pf: 16, delay: 0 },
+        {
+          code: "JU",
+          name: "Jodhpur Jn",
+          arr: "--",
+          dep: "14:45",
+          pf: 1,
+          delay: 0,
+        },
+        {
+          code: "AII",
+          name: "Ajmer Jn",
+          arr: "18:05",
+          dep: "18:15",
+          pf: 3,
+          delay: 0,
+        },
+        {
+          code: "JP",
+          name: "Jaipur Jn",
+          arr: "20:20",
+          dep: "20:30",
+          pf: 1,
+          delay: 0,
+        },
+        {
+          code: "NDLS",
+          name: "New Delhi",
+          arr: "05:05",
+          dep: "--",
+          pf: 16,
+          delay: 0,
+        },
       ],
-      speed: "130 km/h", kavach: "ARMED (SIL-4)"
+      speed: "130 km/h",
+      kavach: "ARMED (SIL-4)",
     },
     {
-      number: "22478", name: "JODHPUR SF EXP", type: "Superfast",
-      from: "NDLS", to: "JU", depart: "05:35", arrive: "16:00", duration: "10h 25m",
-      classes: ["SL", "3A", "2A"], days: [true,true,true,true,true,true,true],
-      delay: 5, delayText: "+5 MIN",
+      number: "22478",
+      name: "JODHPUR SF EXP",
+      type: "Superfast",
+      from: "NDLS",
+      to: "JU",
+      depart: "05:35",
+      arrive: "16:00",
+      duration: "10h 25m",
+      classes: ["SL", "3A", "2A"],
+      days: [true, true, true, true, true, true, true],
+      delay: 5,
+      delayText: "+5 MIN",
       stations: [
-        { code: "NDLS", name: "New Delhi", arr: "--", dep: "05:35", pf: 13, delay: 0 },
-        { code: "JP", name: "Jaipur Jn", arr: "10:15", dep: "10:25", pf: 5, delay: 3 },
-        { code: "AII", name: "Ajmer Jn", arr: "12:30", dep: "12:35", pf: 1, delay: 5 },
-        { code: "JU", name: "Jodhpur Jn", arr: "16:00", dep: "--", pf: 4, delay: 5 },
+        {
+          code: "NDLS",
+          name: "New Delhi",
+          arr: "--",
+          dep: "05:35",
+          pf: 13,
+          delay: 0,
+        },
+        {
+          code: "JP",
+          name: "Jaipur Jn",
+          arr: "10:15",
+          dep: "10:25",
+          pf: 5,
+          delay: 3,
+        },
+        {
+          code: "AII",
+          name: "Ajmer Jn",
+          arr: "12:30",
+          dep: "12:35",
+          pf: 1,
+          delay: 5,
+        },
+        {
+          code: "JU",
+          name: "Jodhpur Jn",
+          arr: "16:00",
+          dep: "--",
+          pf: 4,
+          delay: 5,
+        },
       ],
-      speed: "110 km/h", kavach: "ARMED"
+      speed: "110 km/h",
+      kavach: "ARMED",
     },
   ];
 
@@ -3754,7 +5361,7 @@ document.addEventListener("DOMContentLoaded", () => {
           `/frontend/src/data/${filename}`,
           `/data/processed/${filename}`,
           `../../data/processed/${filename}`,
-          `data/processed/${filename}`
+          `data/processed/${filename}`,
         ];
         for (const p of staticPaths) {
           try {
@@ -3766,71 +5373,99 @@ document.addEventListener("DOMContentLoaded", () => {
       };
 
       // 1. Stations (8,990 real stations)
-      const stData = await fetchJson('stations_index.json', '/api/v1/stations');
+      const stData = await fetchJson("stations_index.json", "/api/v1/stations");
       if (stData && Array.isArray(stData)) {
         irStations = stData;
-        console.log(`✓ Loaded ${irStations.length} Real Indian Railway Stations`);
+        console.log(
+          `✓ Loaded ${irStations.length} Real Indian Railway Stations`,
+        );
       } else if (stData && stData.stations) {
         irStations = stData.stations;
       }
       window.irStations = irStations;
 
       // 2. Trains (5,208 real trains)
-      const trData = await fetchJson('trains_light.json', '/data/processed/trains_light.json');
+      const trData = await fetchJson(
+        "trains_light.json",
+        "/data/processed/trains_light.json",
+      );
       if (trData && Array.isArray(trData)) {
         irTrainDatabase = trData;
         window.irTrainDatabase = irTrainDatabase;
-        console.log(`✓ Loaded ${irTrainDatabase.length} Real Indian Railway Trains`);
+        console.log(
+          `✓ Loaded ${irTrainDatabase.length} Real Indian Railway Trains`,
+        );
       }
 
       // 3. Train Schedules Index (commercial stops timetable)
-      const schData = await fetchJson('train_schedules_index.json', '/data/processed/train_schedules_index.json');
-      if (schData && typeof schData === 'object') {
+      const schData = await fetchJson(
+        "train_schedules_index.json",
+        "/data/processed/train_schedules_index.json",
+      );
+      if (schData && typeof schData === "object") {
         irSchedulesIndex = schData;
         window.irSchedulesIndex = irSchedulesIndex;
         console.log(`✓ Loaded Real Train Timetable Schedules Index`);
       }
 
       // 4. Delay Model
-      const delayData = await fetchJson('delay_model.json', '/api/v1/delays/model');
+      const delayData = await fetchJson(
+        "delay_model.json",
+        "/api/v1/delays/model",
+      );
       if (delayData) {
         irDelayModel = delayData;
         window.irDelayModel = irDelayModel;
       }
 
       // 5. Maintenance Telemetry (100k real records)
-      const maintData = await fetchJson('maintenance_telemetry.json', '/api/v1/maintenance/telemetry');
+      const maintData = await fetchJson(
+        "maintenance_telemetry.json",
+        "/api/v1/maintenance/telemetry",
+      );
       if (maintData && maintData.records) {
         irMaintenanceDataset = maintData.records;
         window.irMaintenanceDataset = irMaintenanceDataset;
       }
 
       // 6. Tracks GeoJSON (3,474 tracks)
-      const trackData = await fetchJson('tracks_geojson.json', '/api/v1/gis/tracks');
+      const trackData = await fetchJson(
+        "tracks_geojson.json",
+        "/api/v1/gis/tracks",
+      );
       if (trackData && trackData.features) {
         irTracksGeoJSON = trackData;
         window.irTracksGeoJSON = irTracksGeoJSON;
-        if (panIndiaMap && activeNavView === 'live_map') {
+        if (panIndiaMap && activeNavView === "live_map") {
           renderPanIndiaRailwayTracks();
         }
       }
 
       // 7. Crossings GeoJSON (3,308 crossings)
-      const crData = await fetchJson('crossings_geojson.json', '/api/v1/gis/crossings');
+      const crData = await fetchJson(
+        "crossings_geojson.json",
+        "/api/v1/gis/crossings",
+      );
       if (crData && crData.features) {
         irCrossingsGeoJSON = crData;
         window.irCrossingsGeoJSON = irCrossingsGeoJSON;
       }
 
       // 8. Signals GeoJSON
-      const sigData = await fetchJson('signals_geojson.json', '/api/v1/gis/signals');
+      const sigData = await fetchJson(
+        "signals_geojson.json",
+        "/api/v1/gis/signals",
+      );
       if (sigData && sigData.features) {
         irSignalsGeoJSON = sigData;
         window.irSignalsGeoJSON = irSignalsGeoJSON;
       }
 
       // 9. Earthquakes GeoJSON
-      const eqData = await fetchJson('earthquakes_geojson.json', '/api/v1/gis/earthquakes');
+      const eqData = await fetchJson(
+        "earthquakes_geojson.json",
+        "/api/v1/gis/earthquakes",
+      );
       if (eqData && eqData.features) {
         irEarthquakesGeoJSON = eqData;
         window.irEarthquakesGeoJSON = irEarthquakesGeoJSON;
@@ -3840,7 +5475,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Initialize Live Cyclic Train Simulation Engine & Analytics Modules
       if (window.LiveTrainEngine) {
-        window.LiveTrainEngine.init(irTrainDatabase, irSchedulesIndex, irStations, irDelayModel);
+        window.LiveTrainEngine.init(
+          irTrainDatabase,
+          irSchedulesIndex,
+          irStations,
+          irDelayModel,
+        );
       }
       if (window.ReschedulingEngine) {
         window.ReschedulingEngine.init(window.LiveTrainEngine);
@@ -3874,7 +5514,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function getStationDisplay(code) {
     if (!code) return "";
     const cleanCode = code.trim().toUpperCase();
-    const s = irStations.find(st => st.code === cleanCode);
+    const s = irStations.find((st) => st.code === cleanCode);
     if (s) {
       const extra = s.state ? ` (${s.state})` : s.zone ? ` (${s.zone})` : "";
       return `${s.code} - ${s.name.toUpperCase()}${extra}`;
@@ -3894,7 +5534,12 @@ document.addEventListener("DOMContentLoaded", () => {
         day: d.toLocaleDateString("en-IN", { weekday: "short" }),
         date: d.getDate(),
         month: d.toLocaleDateString("en-IN", { month: "short" }),
-        label: i === 0 ? "Today" : i === 1 ? "Tomorrow" : `${d.toLocaleDateString("en-IN", { weekday: "short" })}, ${d.getDate()} ${d.toLocaleDateString("en-IN", { month: "short" })}`
+        label:
+          i === 0
+            ? "Today"
+            : i === 1
+              ? "Tomorrow"
+              : `${d.toLocaleDateString("en-IN", { weekday: "short" })}, ${d.getDate()} ${d.toLocaleDateString("en-IN", { month: "short" })}`,
       });
     }
     return dates;
@@ -3928,15 +5573,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const getHubAliases = (code) => {
       const c = (code || "").trim().toUpperCase();
       const clusters = [
-        ['NDLS', 'DLI', 'NZM', 'DEE', 'ANVT'],
-        ['MMCT', 'BCT', 'BDTS', 'CSMT', 'LTT', 'DR'],
-        ['HWH', 'SDAH', 'KOAA', 'SHM'],
-        ['MAS', 'MS', 'PER', 'TBM'],
-        ['SBC', 'YPR', 'SMVB', 'BNC'],
-        ['ADI', 'SBT', 'GER'],
-        ['SC', 'HYB', 'KCG'],
-        ['PNBE', 'RJPB', 'DNR'],
-        ['LKO', 'LJN', 'BNZ']
+        ["NDLS", "DLI", "NZM", "DEE", "ANVT"],
+        ["MMCT", "BCT", "BDTS", "CSMT", "LTT", "DR"],
+        ["HWH", "SDAH", "KOAA", "SHM"],
+        ["MAS", "MS", "PER", "TBM"],
+        ["SBC", "YPR", "SMVB", "BNC"],
+        ["ADI", "SBT", "GER"],
+        ["SC", "HYB", "KCG"],
+        ["PNBE", "RJPB", "DNR"],
+        ["LKO", "LJN", "BNZ"],
       ];
       for (const cl of clusters) {
         if (cl.includes(c)) return cl;
@@ -3947,13 +5592,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const toAliases = getHubAliases(trainSearchTo);
 
     // Find matching trains from irTrainDatabase (all 5,208 real trains!)
-    trainSearchResults = irTrainDatabase.filter(t => {
+    trainSearchResults = irTrainDatabase.filter((t) => {
       // 1. Direct match
       if (fromAliases.includes(t.from) && toAliases.includes(t.to)) return true;
       // 2. Intermediate stop match
       if (t.stopCodes && t.stopCodes.length > 1) {
-        const fromIdx = t.stopCodes.findIndex(c => fromAliases.includes(c));
-        const toIdx = t.stopCodes.findIndex(c => toAliases.includes(c));
+        const fromIdx = t.stopCodes.findIndex((c) => fromAliases.includes(c));
+        const toIdx = t.stopCodes.findIndex((c) => toAliases.includes(c));
         if (fromIdx !== -1 && toIdx !== -1 && fromIdx < toIdx) return true;
       }
       return false;
@@ -3961,18 +5606,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // If search class is selected and not 'All', filter
     if (trainSearchClass && trainSearchClass !== "All") {
-      const matchingClass = trainSearchResults.filter(t => t.classes && t.classes.includes(trainSearchClass));
+      const matchingClass = trainSearchResults.filter(
+        (t) => t.classes && t.classes.includes(trainSearchClass),
+      );
       if (matchingClass.length > 0) trainSearchResults = matchingClass;
     }
 
     // Attach real timetable schedule to each train result
-    trainSearchResults.forEach(t => {
+    trainSearchResults.forEach((t) => {
       if (!t.stations || t.stations.length === 0) {
         t.stations = irSchedulesIndex[t.number] || [];
       }
       // Apply real delay model
       if (irDelayModel && irDelayModel.avgDelayByType) {
-        const baseDelay = irDelayModel.avgDelayByType[t.type] || (t.type === 'Rajdhani' || t.type === 'Vande Bharat' ? 0 : 8);
+        const baseDelay =
+          irDelayModel.avgDelayByType[t.type] ||
+          (t.type === "Rajdhani" || t.type === "Vande Bharat" ? 0 : 8);
         t.delay = baseDelay;
         t.delayText = baseDelay === 0 ? "ON TIME" : `+${baseDelay} MIN`;
       }
@@ -3980,7 +5629,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Sort: Vande Bharat & Rajdhani & Superfast first, then by departure time
     trainSearchResults.sort((a, b) => {
-      const pMap = { 'Vande Bharat': 1, 'Rajdhani': 2, 'Shatabdi': 3, 'Duronto': 4, 'Superfast': 5, 'Express': 6 };
+      const pMap = {
+        "Vande Bharat": 1,
+        Rajdhani: 2,
+        Shatabdi: 3,
+        Duronto: 4,
+        Superfast: 5,
+        Express: 6,
+      };
       const pA = pMap[a.type] || 7;
       const pB = pMap[b.type] || 7;
       if (pA !== pB) return pA - pB;
@@ -3988,8 +5644,17 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Add to recent searches
-    const searchEntry = { from: trainSearchFrom, to: trainSearchTo, date: trainSearchDate };
-    trainRecentSearches = [searchEntry, ...trainRecentSearches.filter(r => !(r.from === searchEntry.from && r.to === searchEntry.to))].slice(0, 5);
+    const searchEntry = {
+      from: trainSearchFrom,
+      to: trainSearchTo,
+      date: trainSearchDate,
+    };
+    trainRecentSearches = [
+      searchEntry,
+      ...trainRecentSearches.filter(
+        (r) => !(r.from === searchEntry.from && r.to === searchEntry.to),
+      ),
+    ].slice(0, 5);
 
     trainSearchScreen = "results";
     const container = document.getElementById("activeSubTabContainer");
@@ -4012,19 +5677,49 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // View train detail with real timetable stops
   window.viewTrainDetail = function (trainNumber) {
-    trainDetailSelected = irTrainDatabase.find(t => t.number === trainNumber);
+    trainDetailSelected = irTrainDatabase.find((t) => t.number === trainNumber);
     if (!trainDetailSelected) {
-      trainDetailSelected = irTrainDatabase.find(t => t.number.includes(trainNumber));
+      trainDetailSelected = irTrainDatabase.find((t) =>
+        t.number.includes(trainNumber),
+      );
     }
     if (trainDetailSelected) {
-      if (!trainDetailSelected.stations || trainDetailSelected.stations.length === 0) {
-        trainDetailSelected.stations = irSchedulesIndex[trainDetailSelected.number] || [];
+      if (
+        !trainDetailSelected.stations ||
+        trainDetailSelected.stations.length === 0
+      ) {
+        trainDetailSelected.stations =
+          irSchedulesIndex[trainDetailSelected.number] || [];
         if (trainDetailSelected.stations.length === 0) {
-          const fromSt = irStations.find(s => s.code === trainDetailSelected.from) || { name: trainDetailSelected.fromName || trainDetailSelected.from, code: trainDetailSelected.from };
-          const toSt = irStations.find(s => s.code === trainDetailSelected.to) || { name: trainDetailSelected.toName || trainDetailSelected.to, code: trainDetailSelected.to };
+          const fromSt = irStations.find(
+            (s) => s.code === trainDetailSelected.from,
+          ) || {
+            name: trainDetailSelected.fromName || trainDetailSelected.from,
+            code: trainDetailSelected.from,
+          };
+          const toSt = irStations.find(
+            (s) => s.code === trainDetailSelected.to,
+          ) || {
+            name: trainDetailSelected.toName || trainDetailSelected.to,
+            code: trainDetailSelected.to,
+          };
           trainDetailSelected.stations = [
-            { code: trainDetailSelected.from, name: fromSt.name || trainDetailSelected.from, pf: 1, arr: "--", dep: trainDetailSelected.depart || "06:00", delay: 0 },
-            { code: trainDetailSelected.to, name: toSt.name || trainDetailSelected.to, pf: 2, arr: trainDetailSelected.arrive || "14:00", dep: "--", delay: trainDetailSelected.delay || 0 }
+            {
+              code: trainDetailSelected.from,
+              name: fromSt.name || trainDetailSelected.from,
+              pf: 1,
+              arr: "--",
+              dep: trainDetailSelected.depart || "06:00",
+              delay: 0,
+            },
+            {
+              code: trainDetailSelected.to,
+              name: toSt.name || trainDetailSelected.to,
+              pf: 2,
+              arr: trainDetailSelected.arrive || "14:00",
+              dep: "--",
+              delay: trainDetailSelected.delay || 0,
+            },
           ];
         }
       }
@@ -4054,25 +5749,67 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let matches = [];
     if (!query) {
-      const topCodes = ["NDLS", "MMCT", "BCT", "HWH", "MAS", "SBC", "BSB", "CNB", "JU", "JP", "BPL", "NGP", "SC", "LKO", "PNBE", "PUNE", "ADI", "KOTA", "AGC", "GWL", "ST", "RTM", "GHY", "CDG", "JAT", "BDTS", "NZM", "DLI"];
-      matches = topCodes.map(c => irStations.find(s => s.code === c)).filter(Boolean);
+      const topCodes = [
+        "NDLS",
+        "MMCT",
+        "BCT",
+        "HWH",
+        "MAS",
+        "SBC",
+        "BSB",
+        "CNB",
+        "JU",
+        "JP",
+        "BPL",
+        "NGP",
+        "SC",
+        "LKO",
+        "PNBE",
+        "PUNE",
+        "ADI",
+        "KOTA",
+        "AGC",
+        "GWL",
+        "ST",
+        "RTM",
+        "GHY",
+        "CDG",
+        "JAT",
+        "BDTS",
+        "NZM",
+        "DLI",
+      ];
+      matches = topCodes
+        .map((c) => irStations.find((s) => s.code === c))
+        .filter(Boolean);
     } else {
-      matches = irStations.filter(s => {
-        return s.code.toLowerCase().includes(query) ||
-               s.name.toLowerCase().includes(query) ||
-               (s.aliases && s.aliases.some(a => a.toLowerCase().includes(query)));
-      }).slice(0, 35);
+      matches = irStations
+        .filter((s) => {
+          return (
+            s.code.toLowerCase().includes(query) ||
+            s.name.toLowerCase().includes(query) ||
+            (s.aliases &&
+              s.aliases.some((a) => a.toLowerCase().includes(query)))
+          );
+        })
+        .slice(0, 35);
     }
 
-    container.innerHTML = matches.map(s => `
-      <div class="station-option" onclick="selectStation('${isFrom ? 'from' : 'to'}','${s.code}'); document.getElementById('${listId}').classList.add('hidden');"
+    container.innerHTML =
+      matches
+        .map(
+          (s) => `
+      <div class="station-option" onclick="selectStation('${isFrom ? "from" : "to"}','${s.code}'); document.getElementById('${listId}').classList.add('hidden');"
         style="padding: 10px 14px; cursor: pointer; font-size: 13px; font-weight: 600; color: #0f172a; border-radius: 10px; margin: 2px 0; transition: background 0.15s;"
         onmouseover="this.style.background='#eaf3f8'" onmouseout="this.style.background='white'">
         <i class="fa-solid fa-train" style="color: #12355B; margin-right: 8px; font-size: 11px;"></i>
         <strong>${s.code}</strong> - ${s.name.toUpperCase()}
-        <span style="float: right; font-size: 10px; color: #64748b; font-weight: 700;">${s.state || s.zone || ''}</span>
+        <span style="float: right; font-size: 10px; color: #64748b; font-weight: 700;">${s.state || s.zone || ""}</span>
       </div>
-    `).join("") || `<div style="padding: 12px; font-size: 12px; color: #94a3b8; text-align: center;">No stations found matching "${query}"</div>`;
+    `,
+        )
+        .join("") ||
+      `<div style="padding: 12px; font-size: 12px; color: #94a3b8; text-align: center;">No stations found matching "${query}"</div>`;
 
     list.classList.remove("hidden");
   };
@@ -4089,7 +5826,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (list) {
       list.classList.toggle("hidden");
       if (!list.classList.contains("hidden")) {
-        const inputId = listId.startsWith("from") ? "fromSearchInput" : "toSearchInput";
+        const inputId = listId.startsWith("from")
+          ? "fromSearchInput"
+          : "toSearchInput";
         filterStationDropdown(inputId, listId);
       }
     }
@@ -4098,7 +5837,8 @@ document.addEventListener("DOMContentLoaded", () => {
   window.setTrainSearchClass = function (cls) {
     trainSearchClass = cls;
     const container = document.getElementById("activeSubTabContainer");
-    if (container && trainSearchScreen === "search") renderTrainListSection(container);
+    if (container && trainSearchScreen === "search")
+      renderTrainListSection(container);
   };
 
   window.setTrainSearchDate = function (date) {
@@ -4129,8 +5869,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const dayNames = ["M", "T", "W", "T", "F", "S", "S"];
     const classOptions = ["All", "2S", "SL", "3A", "2A", "1A", "CC", "EC"];
 
-    const fromStation = trainSearchFrom ? irStations.find(s => s.code === trainSearchFrom) : null;
-    const toStation = trainSearchTo ? irStations.find(s => s.code === trainSearchTo) : null;
+    const fromStation = trainSearchFrom
+      ? irStations.find((s) => s.code === trainSearchFrom)
+      : null;
+    const toStation = trainSearchTo
+      ? irStations.find((s) => s.code === trainSearchTo)
+      : null;
 
     container.innerHTML = `
       <div class="space-y-5" style="max-width: 620px; margin: 0 auto;">
@@ -4159,8 +5903,8 @@ document.addEventListener("DOMContentLoaded", () => {
                    style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border: 2px solid #d6e3ec; border-radius: 16px; cursor: pointer; background: #f8fafc; transition: border-color 0.2s;"
                    onmouseover="this.style.borderColor='#2563eb'" onmouseout="this.style.borderColor='#d6e3ec'">
                 <i class="fa-solid fa-train-tram" style="color: #12355B; font-size: 16px;"></i>
-                <span style="font-size: 14px; font-weight: 700; color: ${fromStation ? '#0f172a' : '#94a3b8'};">
-                  ${fromStation ? `${fromStation.code} - ${fromStation.name.toUpperCase()}` : 'Select Source Station'}
+                <span style="font-size: 14px; font-weight: 700; color: ${fromStation ? "#0f172a" : "#94a3b8"};">
+                  ${fromStation ? `${fromStation.code} - ${fromStation.name.toUpperCase()}` : "Select Source Station"}
                 </span>
               </div>
               <div id="fromStationList" class="hidden" style="position: absolute; top: 100%; left: 0; right: 0; z-index: 40; max-height: 240px; overflow-y: auto; background: white; border: 2px solid #2563eb; border-radius: 18px; margin-top: 6px; box-shadow: 0 20px 40px rgba(18,53,91,0.18); padding: 8px;">
@@ -4169,15 +5913,20 @@ document.addEventListener("DOMContentLoaded", () => {
                     style="width: 100%; padding: 9px 14px; border: 1.5px solid #d6e3ec; border-radius: 12px; font-size: 12px; font-weight: 600; outline: none; box-sizing: border-box;" />
                 </div>
                 <div class="station-options-container">
-                  ${irStations.slice(0, 30).map(s => `
+                  ${irStations
+                    .slice(0, 30)
+                    .map(
+                      (s) => `
                     <div class="station-option" onclick="selectStation('from','${s.code}'); document.getElementById('fromStationList').classList.add('hidden');"
                       style="padding: 10px 14px; cursor: pointer; font-size: 13px; font-weight: 600; color: #0f172a; border-radius: 10px; margin: 2px 0; transition: background 0.15s;"
                       onmouseover="this.style.background='#eaf3f8'" onmouseout="this.style.background='white'">
                       <i class="fa-solid fa-train" style="color: #12355B; margin-right: 8px; font-size: 11px;"></i>
                       <strong>${s.code}</strong> - ${s.name.toUpperCase()}
-                      <span style="float: right; font-size: 10px; color: #64748b; font-weight: 700;">${s.state || s.zone || ''}</span>
+                      <span style="float: right; font-size: 10px; color: #64748b; font-weight: 700;">${s.state || s.zone || ""}</span>
                     </div>
-                  `).join("")}
+                  `,
+                    )
+                    .join("")}
                 </div>
               </div>
             </div>
@@ -4202,8 +5951,8 @@ document.addEventListener("DOMContentLoaded", () => {
                    style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border: 2px solid #d6e3ec; border-radius: 16px; cursor: pointer; background: #f8fafc; transition: border-color 0.2s;"
                    onmouseover="this.style.borderColor='#2563eb'" onmouseout="this.style.borderColor='#d6e3ec'">
                 <i class="fa-solid fa-train-tram" style="color: #12355B; font-size: 16px;"></i>
-                <span style="font-size: 14px; font-weight: 700; color: ${toStation ? '#0f172a' : '#94a3b8'};">
-                  ${toStation ? `${toStation.code} - ${toStation.name.toUpperCase()}` : 'Select Destination Station'}
+                <span style="font-size: 14px; font-weight: 700; color: ${toStation ? "#0f172a" : "#94a3b8"};">
+                  ${toStation ? `${toStation.code} - ${toStation.name.toUpperCase()}` : "Select Destination Station"}
                 </span>
               </div>
               <div id="toStationList" class="hidden" style="position: absolute; top: 100%; left: 0; right: 0; z-index: 40; max-height: 240px; overflow-y: auto; background: white; border: 2px solid #2563eb; border-radius: 18px; margin-top: 6px; box-shadow: 0 20px 40px rgba(18,53,91,0.18); padding: 8px;">
@@ -4212,15 +5961,20 @@ document.addEventListener("DOMContentLoaded", () => {
                     style="width: 100%; padding: 9px 14px; border: 1.5px solid #d6e3ec; border-radius: 12px; font-size: 12px; font-weight: 600; outline: none; box-sizing: border-box;" />
                 </div>
                 <div class="station-options-container">
-                  ${irStations.slice(0, 30).map(s => `
+                  ${irStations
+                    .slice(0, 30)
+                    .map(
+                      (s) => `
                     <div class="station-option" onclick="selectStation('to','${s.code}'); document.getElementById('toStationList').classList.add('hidden');"
                       style="padding: 10px 14px; cursor: pointer; font-size: 13px; font-weight: 600; color: #0f172a; border-radius: 10px; margin: 2px 0; transition: background 0.15s;"
                       onmouseover="this.style.background='#eaf3f8'" onmouseout="this.style.background='white'">
                       <i class="fa-solid fa-train" style="color: #12355B; margin-right: 8px; font-size: 11px;"></i>
                       <strong>${s.code}</strong> - ${s.name.toUpperCase()}
-                      <span style="float: right; font-size: 10px; color: #64748b; font-weight: 700;">${s.state || s.zone || ''}</span>
+                      <span style="float: right; font-size: 10px; color: #64748b; font-weight: 700;">${s.state || s.zone || ""}</span>
                     </div>
-                  `).join("")}
+                  `,
+                    )
+                    .join("")}
                 </div>
               </div>
             </div>
@@ -4234,13 +5988,18 @@ document.addEventListener("DOMContentLoaded", () => {
             <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
               <input type="date" value="${trainSearchDate}" onchange="setTrainSearchDate(this.value)"
                 style="padding: 10px 14px; border: 2px solid #d6e3ec; border-radius: 14px; font-size: 13px; font-weight: 700; color: #0f172a; background: #f8fafc; cursor: pointer; outline: none; font-family: 'Plus Jakarta Sans', sans-serif;" />
-              ${dates.slice(1, 4).map(d => `
+              ${dates
+                .slice(1, 4)
+                .map(
+                  (d) => `
                 <button onclick="setTrainSearchDate('${d.full}')"
-                  style="padding: 7px 16px; border-radius: 20px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s; border: 1.5px solid ${trainSearchDate === d.full ? '#2563eb' : '#d6e3ec'}; background: ${trainSearchDate === d.full ? '#2563eb' : 'white'}; color: ${trainSearchDate === d.full ? 'white' : '#475569'};"
+                  style="padding: 7px 16px; border-radius: 20px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s; border: 1.5px solid ${trainSearchDate === d.full ? "#2563eb" : "#d6e3ec"}; background: ${trainSearchDate === d.full ? "#2563eb" : "white"}; color: ${trainSearchDate === d.full ? "white" : "#475569"};"
                   onmouseover="if('${trainSearchDate}'!=='${d.full}'){this.style.borderColor='#2563eb';this.style.color='#2563eb'}" onmouseout="if('${trainSearchDate}'!=='${d.full}'){this.style.borderColor='#d6e3ec';this.style.color='#475569'}">
                   ${d.date} ${d.month}
                 </button>
-              `).join("")}
+              `,
+                )
+                .join("")}
             </div>
           </div>
 
@@ -4250,13 +6009,17 @@ document.addEventListener("DOMContentLoaded", () => {
               <i class="fa-solid fa-chair" style="margin-right: 4px;"></i> Class
             </label>
             <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-              ${classOptions.map(cls => `
+              ${classOptions
+                .map(
+                  (cls) => `
                 <button onclick="setTrainSearchClass('${cls}')"
-                  style="padding: 8px 18px; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; border: 1.5px solid ${trainSearchClass === cls ? '#2563eb' : '#d6e3ec'}; background: ${trainSearchClass === cls ? '#2563eb' : 'white'}; color: ${trainSearchClass === cls ? 'white' : '#475569'};"
+                  style="padding: 8px 18px; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; border: 1.5px solid ${trainSearchClass === cls ? "#2563eb" : "#d6e3ec"}; background: ${trainSearchClass === cls ? "#2563eb" : "white"}; color: ${trainSearchClass === cls ? "white" : "#475569"};"
                   onmouseover="if('${trainSearchClass}'!=='${cls}'){this.style.borderColor='#2563eb';this.style.color='#2563eb'}" onmouseout="if('${trainSearchClass}'!=='${cls}'){this.style.borderColor='#d6e3ec';this.style.color='#475569'}">
                   ${cls}
                 </button>
-              `).join("")}
+              `,
+                )
+                .join("")}
             </div>
           </div>
 
@@ -4267,12 +6030,12 @@ document.addEventListener("DOMContentLoaded", () => {
             </label>
             <select onchange="trainSearchQuota = this.value"
               style="width: 100%; padding: 11px 16px; border: 2px solid #d6e3ec; border-radius: 14px; font-size: 13px; font-weight: 700; color: #0f172a; background: #f8fafc; cursor: pointer; outline: none; font-family: 'Plus Jakarta Sans', sans-serif; appearance: auto;">
-              <option value="General" ${trainSearchQuota === 'General' ? 'selected' : ''}>General</option>
-              <option value="Tatkal" ${trainSearchQuota === 'Tatkal' ? 'selected' : ''}>Tatkal</option>
-              <option value="Ladies" ${trainSearchQuota === 'Ladies' ? 'selected' : ''}>Ladies</option>
-              <option value="Lower Berth" ${trainSearchQuota === 'Lower Berth' ? 'selected' : ''}>Lower Berth / Senior Citizen</option>
-              <option value="Divyaang" ${trainSearchQuota === 'Divyaang' ? 'selected' : ''}>Divyaang</option>
-              <option value="Defence" ${trainSearchQuota === 'Defence' ? 'selected' : ''}>Defence</option>
+              <option value="General" ${trainSearchQuota === "General" ? "selected" : ""}>General</option>
+              <option value="Tatkal" ${trainSearchQuota === "Tatkal" ? "selected" : ""}>Tatkal</option>
+              <option value="Ladies" ${trainSearchQuota === "Ladies" ? "selected" : ""}>Ladies</option>
+              <option value="Lower Berth" ${trainSearchQuota === "Lower Berth" ? "selected" : ""}>Lower Berth / Senior Citizen</option>
+              <option value="Divyaang" ${trainSearchQuota === "Divyaang" ? "selected" : ""}>Divyaang</option>
+              <option value="Defence" ${trainSearchQuota === "Defence" ? "selected" : ""}>Defence</option>
             </select>
           </div>
 
@@ -4285,23 +6048,31 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
 
         <!-- Recent Searches -->
-        ${trainRecentSearches.length > 0 ? `
+        ${
+          trainRecentSearches.length > 0
+            ? `
           <div style="padding: 0 4px;">
             <h4 style="font-size: 13px; font-weight: 800; color: #12355B; margin-bottom: 10px;">
               <i class="fa-solid fa-clock-rotate-left" style="margin-right: 6px; color: #2563eb;"></i> Recent Searches
             </h4>
             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-              ${trainRecentSearches.map(r => `
+              ${trainRecentSearches
+                .map(
+                  (r) => `
                 <button onclick="useRecentSearch('${r.from}', '${r.to}')"
                   style="padding: 9px 18px; border-radius: 14px; background: white; border: 1.5px solid #d6e3ec; font-size: 11px; font-weight: 700; color: #12355B; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.06); transition: all 0.2s; display: flex; align-items: center; gap: 6px;"
                   onmouseover="this.style.borderColor='#2563eb'; this.style.boxShadow='0 4px 12px rgba(37,99,235,0.15)'" onmouseout="this.style.borderColor='#d6e3ec'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.06)'">
                   <i class="fa-solid fa-route" style="color: #2563eb; font-size: 10px;"></i>
                   ${r.from} → ${r.to}
                 </button>
-              `).join("")}
+              `,
+                )
+                .join("")}
             </div>
           </div>
-        ` : ''}
+        `
+            : ""
+        }
 
         <!-- Featured Active Train Fleet (Direct 1-Click Dashboard Access) -->
         <div style="padding: 4px 4px 0 4px;">
@@ -4313,14 +6084,36 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
 
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-            ${irTrainDatabase.slice(0, 6).map(tr => {
-              const liveSt = window.LiveTrainEngine ? window.LiveTrainEngine.getTrainStatus(tr.number) : null;
-              const liveDelay = liveSt ? liveSt.delayMinutes : (tr.delay || 0);
-              const dCol = liveDelay === 0 ? '#138808' : liveDelay <= 15 ? '#f59e0b' : '#dc2626';
-              const dBg = liveDelay === 0 ? '#f0fdf4' : liveDelay <= 15 ? '#fffbeb' : '#fef2f2';
-              const delayText = liveDelay === 0 ? '✓ ON TIME' : `+${liveDelay} MIN DELAY`;
-              const typeColor = tr.type === 'Vande Bharat' ? '#ea580c' : tr.type === 'Rajdhani' ? '#991b1b' : tr.type === 'Shatabdi' ? '#0284c7' : '#2563eb';
-              return `
+            ${irTrainDatabase
+              .slice(0, 6)
+              .map((tr) => {
+                const liveSt = window.LiveTrainEngine
+                  ? window.LiveTrainEngine.getTrainStatus(tr.number)
+                  : null;
+                const liveDelay = liveSt ? liveSt.delayMinutes : tr.delay || 0;
+                const dCol =
+                  liveDelay === 0
+                    ? "#138808"
+                    : liveDelay <= 15
+                      ? "#f59e0b"
+                      : "#dc2626";
+                const dBg =
+                  liveDelay === 0
+                    ? "#f0fdf4"
+                    : liveDelay <= 15
+                      ? "#fffbeb"
+                      : "#fef2f2";
+                const delayText =
+                  liveDelay === 0 ? "✓ ON TIME" : `+${liveDelay} MIN DELAY`;
+                const typeColor =
+                  tr.type === "Vande Bharat"
+                    ? "#ea580c"
+                    : tr.type === "Rajdhani"
+                      ? "#991b1b"
+                      : tr.type === "Shatabdi"
+                        ? "#0284c7"
+                        : "#2563eb";
+                return `
                 <div onclick="viewTrainDetail('${tr.number}')"
                   class="glass-card" style="padding: 14px 16px; border-radius: 18px !important; cursor: pointer; transition: all 0.2s; border-left: 4px solid ${dCol} !important;"
                   onmouseover="this.style.boxShadow='0 8px 24px rgba(18,53,91,0.14)'; this.style.transform='translateY(-2px)'"
@@ -4338,7 +6131,8 @@ document.addEventListener("DOMContentLoaded", () => {
                   </div>
                 </div>
               `;
-            }).join("")}
+              })
+              .join("")}
           </div>
         </div>
       </div>
@@ -4346,12 +6140,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Close dropdowns on outside click
     setTimeout(() => {
-      document.addEventListener("click", function closeDropdowns(e) {
-        const fromList = document.getElementById("fromStationList");
-        const toList = document.getElementById("toStationList");
-        if (fromList && !fromList.parentElement.contains(e.target)) fromList.classList.add("hidden");
-        if (toList && !toList.parentElement.contains(e.target)) toList.classList.add("hidden");
-      }, { once: false });
+      document.addEventListener(
+        "click",
+        function closeDropdowns(e) {
+          const fromList = document.getElementById("fromStationList");
+          const toList = document.getElementById("toStationList");
+          if (fromList && !fromList.parentElement.contains(e.target))
+            fromList.classList.add("hidden");
+          if (toList && !toList.parentElement.contains(e.target))
+            toList.classList.add("hidden");
+        },
+        { once: false },
+      );
     }, 100);
   }
 
@@ -4361,15 +6161,22 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderTrainResultsScreen(container) {
     const dates = getSearchDates();
     const dayLabels = ["M", "T", "W", "T", "F", "S", "S"];
-    const fromStn = irStations.find(s => s.code === trainSearchFrom);
-    const toStn = irStations.find(s => s.code === trainSearchTo);
+    const fromStn = irStations.find((s) => s.code === trainSearchFrom);
+    const toStn = irStations.find((s) => s.code === trainSearchTo);
     const selectedDateObj = new Date(trainSearchDate);
-    const dateStr = selectedDateObj.toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
+    const dateStr = selectedDateObj.toLocaleDateString("en-IN", {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
 
     // Filter by class if not "All"
     let filteredResults = [...trainSearchResults];
     if (trainSearchClass !== "All") {
-      filteredResults = filteredResults.filter(t => t.classes.includes(trainSearchClass));
+      filteredResults = filteredResults.filter((t) =>
+        t.classes.includes(trainSearchClass),
+      );
     }
 
     container.innerHTML = `
@@ -4405,12 +6212,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
         <!-- Date Tabs (Horizontal Scroll) -->
         <div style="display: flex; gap: 8px; overflow-x: auto; padding: 2px 0; -webkit-overflow-scrolling: touch;">
-          ${dates.map(d => `
+          ${dates
+            .map(
+              (d) => `
             <button onclick="setTrainSearchDate('${d.full}'); executeTrainSearch();"
-              style="flex-shrink: 0; padding: 9px 20px; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; border: 1.5px solid ${trainSearchDate === d.full ? '#2563eb' : '#d6e3ec'}; background: ${trainSearchDate === d.full ? '#2563eb' : 'white'}; color: ${trainSearchDate === d.full ? 'white' : '#475569'}; box-shadow: ${trainSearchDate === d.full ? '0 4px 12px rgba(37,99,235,0.25)' : '0 1px 3px rgba(0,0,0,0.06)'};">
+              style="flex-shrink: 0; padding: 9px 20px; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; border: 1.5px solid ${trainSearchDate === d.full ? "#2563eb" : "#d6e3ec"}; background: ${trainSearchDate === d.full ? "#2563eb" : "white"}; color: ${trainSearchDate === d.full ? "white" : "#475569"}; box-shadow: ${trainSearchDate === d.full ? "0 4px 12px rgba(37,99,235,0.25)" : "0 1px 3px rgba(0,0,0,0.06)"};">
               ${d.day}, ${d.date} ${d.month}
             </button>
-          `).join("")}
+          `,
+            )
+            .join("")}
         </div>
 
         <!-- Filter / Sort Bar -->
@@ -4430,7 +6241,9 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
 
         <!-- Train Cards -->
-        ${filteredResults.length === 0 ? `
+        ${
+          filteredResults.length === 0
+            ? `
           <div class="glass-card" style="padding: 48px 24px; text-align: center; border-radius: 20px !important;">
             <i class="fa-solid fa-train" style="font-size: 48px; color: #d6e3ec; margin-bottom: 16px;"></i>
             <h4 style="font-size: 16px; font-weight: 800; color: #12355B; margin: 0 0 8px 0;">No Trains Found</h4>
@@ -4439,31 +6252,72 @@ document.addEventListener("DOMContentLoaded", () => {
               <i class="fa-solid fa-arrow-left" style="margin-right: 6px;"></i> Modify Search
             </button>
           </div>
-        ` : filteredResults.map(train => {
-          const fromAliases = [trainSearchFrom];
-          if (trainSearchFrom === 'MMCT' || trainSearchFrom === 'BCT') fromAliases.push('MMCT', 'BCT', 'BDTS');
-          if (trainSearchFrom === 'NDLS') fromAliases.push('DLI', 'NZM', 'DEE');
-          const toAliases = [trainSearchTo];
-          if (trainSearchTo === 'MMCT' || trainSearchTo === 'BCT') toAliases.push('MMCT', 'BCT', 'BDTS');
-          if (trainSearchTo === 'NDLS') toAliases.push('DLI', 'NZM', 'DEE');
+        `
+            : filteredResults
+                .map((train) => {
+                  const fromAliases = [trainSearchFrom];
+                  if (trainSearchFrom === "MMCT" || trainSearchFrom === "BCT")
+                    fromAliases.push("MMCT", "BCT", "BDTS");
+                  if (trainSearchFrom === "NDLS")
+                    fromAliases.push("DLI", "NZM", "DEE");
+                  const toAliases = [trainSearchTo];
+                  if (trainSearchTo === "MMCT" || trainSearchTo === "BCT")
+                    toAliases.push("MMCT", "BCT", "BDTS");
+                  if (trainSearchTo === "NDLS")
+                    toAliases.push("DLI", "NZM", "DEE");
 
-          const stList = train.stations || [];
-          const fromStIdx = stList.findIndex(s => fromAliases.includes(s.code));
-          const toStIdx = stList.findIndex(s => toAliases.includes(s.code));
-          const depTime = fromStIdx !== -1 && stList[fromStIdx].dep !== "--" ? stList[fromStIdx].dep : train.depart;
-          const arrTime = toStIdx !== -1 && stList[toStIdx].arr !== "--" ? stList[toStIdx].arr : train.arrive;
-          const depTimeAMPM = window.LiveTrainEngine ? window.LiveTrainEngine.formatAMPM(depTime) : depTime;
-          const arrTimeAMPM = window.LiveTrainEngine ? window.LiveTrainEngine.formatAMPM(arrTime) : arrTime;
-          const fromStName = fromStIdx !== -1 ? stList[fromStIdx].name : (train.fromName || train.from);
-          const toStName = toStIdx !== -1 ? stList[toStIdx].name : (train.toName || train.to);
+                  const stList = train.stations || [];
+                  const fromStIdx = stList.findIndex((s) =>
+                    fromAliases.includes(s.code),
+                  );
+                  const toStIdx = stList.findIndex((s) =>
+                    toAliases.includes(s.code),
+                  );
+                  const depTime =
+                    fromStIdx !== -1 && stList[fromStIdx].dep !== "--"
+                      ? stList[fromStIdx].dep
+                      : train.depart;
+                  const arrTime =
+                    toStIdx !== -1 && stList[toStIdx].arr !== "--"
+                      ? stList[toStIdx].arr
+                      : train.arrive;
+                  const depTimeAMPM = window.LiveTrainEngine
+                    ? window.LiveTrainEngine.formatAMPM(depTime)
+                    : depTime;
+                  const arrTimeAMPM = window.LiveTrainEngine
+                    ? window.LiveTrainEngine.formatAMPM(arrTime)
+                    : arrTime;
+                  const fromStName =
+                    fromStIdx !== -1
+                      ? stList[fromStIdx].name
+                      : train.fromName || train.from;
+                  const toStName =
+                    toStIdx !== -1
+                      ? stList[toStIdx].name
+                      : train.toName || train.to;
 
-          const liveSt = window.LiveTrainEngine ? window.LiveTrainEngine.getTrainStatus(train.number) : null;
-          const liveDelay = liveSt ? liveSt.delayMinutes : (train.delay || 0);
-          const delayColor = liveDelay === 0 ? '#138808' : liveDelay <= 15 ? '#f59e0b' : '#dc2626';
-          const delayBg = liveDelay === 0 ? '#f0fdf4' : liveDelay <= 15 ? '#fffbeb' : '#fef2f2';
-          const delayText = liveDelay === 0 ? '✓ ON TIME' : `+${liveDelay} MIN DELAY`;
+                  const liveSt = window.LiveTrainEngine
+                    ? window.LiveTrainEngine.getTrainStatus(train.number)
+                    : null;
+                  const liveDelay = liveSt
+                    ? liveSt.delayMinutes
+                    : train.delay || 0;
+                  const delayColor =
+                    liveDelay === 0
+                      ? "#138808"
+                      : liveDelay <= 15
+                        ? "#f59e0b"
+                        : "#dc2626";
+                  const delayBg =
+                    liveDelay === 0
+                      ? "#f0fdf4"
+                      : liveDelay <= 15
+                        ? "#fffbeb"
+                        : "#fef2f2";
+                  const delayText =
+                    liveDelay === 0 ? "✓ ON TIME" : `+${liveDelay} MIN DELAY`;
 
-          return `
+                  return `
             <div class="glass-card" onclick="viewTrainDetail('${train.number}')" style="padding: 20px 22px; border-radius: 20px !important; cursor: pointer; transition: all 0.2s; border-left: 5px solid ${delayColor} !important; box-shadow: 0 4px 18px rgba(18,53,91,0.06);"
               onmouseover="this.style.boxShadow='0 8px 30px rgba(18,53,91,0.14)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.boxShadow='0 4px 18px rgba(18,53,91,0.06)'; this.style.transform='translateY(0)'">
 
@@ -4506,20 +6360,28 @@ document.addEventListener("DOMContentLoaded", () => {
               <!-- Running Days -->
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
                 <div style="display: flex; gap: 4px;">
-                  ${dayLabels.map((day, i) => `
-                    <span style="width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: ${train.days[i] ? '800' : '500'}; color: ${train.days[i] ? '#2563eb' : '#cbd5e1'}; background: ${train.days[i] ? '#eef4ff' : 'transparent'}; border: 1px solid ${train.days[i] ? '#2563eb30' : '#e2e8f030'};">
+                  ${dayLabels
+                    .map(
+                      (day, i) => `
+                    <span style="width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: ${train.days[i] ? "800" : "500"}; color: ${train.days[i] ? "#2563eb" : "#cbd5e1"}; background: ${train.days[i] ? "#eef4ff" : "transparent"}; border: 1px solid ${train.days[i] ? "#2563eb30" : "#e2e8f030"};">
                       ${day}
                     </span>
-                  `).join("")}
+                  `,
+                    )
+                    .join("")}
                 </div>
               </div>
 
               <!-- Bottom: Classes & Actions (Delay Analytics + View Details) -->
               <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
                 <div style="display: flex; gap: 6px;">
-                  ${train.classes.map(cls => `
+                  ${train.classes
+                    .map(
+                      (cls) => `
                     <span style="padding: 4px 10px; border-radius: 10px; font-size: 11px; font-weight: 700; color: #12355B; background: #eaf3f8; border: 1px solid #d6e3ec;">${cls}</span>
-                  `).join("")}
+                  `,
+                    )
+                    .join("")}
                 </div>
                 <div style="display: flex; gap: 8px;">
                   <button onclick="event.stopPropagation(); openTrainDelayModal('${train.number}')"
@@ -4536,14 +6398,18 @@ document.addEventListener("DOMContentLoaded", () => {
               </div>
             </div>
           `;
-        }).join("")}
+                })
+                .join("")
+        }
 
       </div>
     `;
 
     // Asynchronously fetch and populate live weather for Departure and Arrival stations
     setTimeout(async () => {
-      const pillsContainer = document.getElementById("resultsScreenWeatherPills");
+      const pillsContainer = document.getElementById(
+        "resultsScreenWeatherPills",
+      );
       if (pillsContainer && window.WeatherEngine) {
         try {
           const [wFrom, wTo] = await Promise.all([
@@ -4595,11 +6461,17 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   window.simulateKavachBrakeTest = function () {
-    showToast("Kavach 4.0 ATP Test Triggered: Emergency Braking Curve (EBD) calculated at 440m. SIL-4 Safety Interlock Nominal.", "success");
+    showToast(
+      "Kavach 4.0 ATP Test Triggered: Emergency Braking Curve (EBD) calculated at 440m. SIL-4 Safety Interlock Nominal.",
+      "success",
+    );
   };
 
   window.refreshTrainTelemetry = function () {
-    showToast("Real-time Kavach & GPS Telemetry Synced with Central Server!", "info");
+    showToast(
+      "Real-time Kavach & GPS Telemetry Synced with Central Server!",
+      "info",
+    );
     const container = document.getElementById("activeSubTabContainer");
     if (container && trainSearchScreen === "detail") {
       renderTrainDetailScreen(container);
@@ -4607,22 +6479,28 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   window.exportTrainTelemetryPdf = function (trainNo) {
-    showToast(`Generating Official E-Telemetry & Safety Report for Train #${trainNo}... Ready.`, "success");
+    showToast(
+      `Generating Official E-Telemetry & Safety Report for Train #${trainNo}... Ready.`,
+      "success",
+    );
   };
 
   function renderCoachInspectorHtml(c, coachIdx) {
     const classBadgeColors = {
-      "ENG": { bg: "#475569", text: "#f8fafc" },
+      ENG: { bg: "#475569", text: "#f8fafc" },
       "1A": { bg: "#991B1B", text: "#fef2f2" },
       "2A": { bg: "#6B21A8", text: "#faf5ff" },
       "3A": { bg: "#1D4ED8", text: "#eff6ff" },
-      "CC": { bg: "#0284C7", text: "#f0f9ff" },
-      "EC": { bg: "#D97706", text: "#fffbeb" },
-      "SL": { bg: "#047857", text: "#ecfdf5" },
-      "PC": { bg: "#EA580C", text: "#fff7ed" },
-      "SLR": { bg: "#64748B", text: "#f8fafc" }
+      CC: { bg: "#0284C7", text: "#f0f9ff" },
+      EC: { bg: "#D97706", text: "#fffbeb" },
+      SL: { bg: "#047857", text: "#ecfdf5" },
+      PC: { bg: "#EA580C", text: "#fff7ed" },
+      SLR: { bg: "#64748B", text: "#f8fafc" },
     };
-    const badge = classBadgeColors[c.classKey] || { bg: "#2563eb", text: "white" };
+    const badge = classBadgeColors[c.classKey] || {
+      bg: "#2563eb",
+      text: "white",
+    };
     const occPct = c.cap > 0 ? Math.round((c.booked / c.cap) * 100) : 100;
 
     return `
@@ -4673,11 +6551,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const nameLower = (t.name || "").toLowerCase();
     const typeLower = (t.type || "").toLowerCase();
 
-    const isVandeBharat = typeLower.includes("vande") || nameLower.includes("vande");
-    const isRajdhani = typeLower.includes("rajdhani") || nameLower.includes("rajdhani");
-    const isShatabdi = typeLower.includes("shatabdi") || nameLower.includes("shatabdi");
+    const isVandeBharat =
+      typeLower.includes("vande") || nameLower.includes("vande");
+    const isRajdhani =
+      typeLower.includes("rajdhani") || nameLower.includes("rajdhani");
+    const isShatabdi =
+      typeLower.includes("shatabdi") || nameLower.includes("shatabdi");
     const isTejas = typeLower.includes("tejas") || nameLower.includes("tejas");
-    const isGaribRath = typeLower.includes("garib") || nameLower.includes("garib") || nameLower.includes("humsafar");
+    const isGaribRath =
+      typeLower.includes("garib") ||
+      nameLower.includes("garib") ||
+      nameLower.includes("humsafar");
 
     let theme = {
       typeName: t.type,
@@ -4693,7 +6577,7 @@ document.addEventListener("DOMContentLoaded", () => {
       rakeName: "LHB Mixed Superfast Composite Rake",
       traction: "25 kV AC 50 Hz OHE",
       icon: "fa-train",
-      coachPreset: "mixed"
+      coachPreset: "mixed",
     };
 
     if (isVandeBharat) {
@@ -4711,7 +6595,7 @@ document.addEventListener("DOMContentLoaded", () => {
         rakeName: "Aerodynamic 16-Car EMU Trainset (ICF Chennai)",
         traction: "25 kV AC 50 Hz Pantograph High-Speed Catenary",
         icon: "fa-bolt",
-        coachPreset: "vande_bharat"
+        coachPreset: "vande_bharat",
       };
     } else if (isRajdhani) {
       theme = {
@@ -4728,7 +6612,7 @@ document.addEventListener("DOMContentLoaded", () => {
         rakeName: "LHB Red-Silver All-AC Smart Rake (22 Coaches)",
         traction: "25 kV AC Single Phase OHE (2 x 25 kV AT System)",
         icon: "fa-crown",
-        coachPreset: "rajdhani"
+        coachPreset: "rajdhani",
       };
     } else if (isShatabdi) {
       theme = {
@@ -4745,7 +6629,7 @@ document.addEventListener("DOMContentLoaded", () => {
         rakeName: "LHB Executive & AC Chair Car Rake (16 Coaches)",
         traction: "25 kV AC 50 Hz HOG Converter Fed System",
         icon: "fa-gauge-high",
-        coachPreset: "shatabdi"
+        coachPreset: "shatabdi",
       };
     } else if (isTejas) {
       theme = {
@@ -4762,7 +6646,7 @@ document.addEventListener("DOMContentLoaded", () => {
         rakeName: "Tejas Smart Automatic Plug-Door Rake (18 Coaches)",
         traction: "25 kV AC 50 Hz with Regenerative Dynamic Brakes",
         icon: "fa-rocket",
-        coachPreset: "shatabdi"
+        coachPreset: "shatabdi",
       };
     } else if (isGaribRath) {
       theme = {
@@ -4779,112 +6663,900 @@ document.addEventListener("DOMContentLoaded", () => {
         rakeName: "LHB AC 3-Tier Economy Green Rake (19 Coaches)",
         traction: "25 kV AC 50 Hz Overhead Catenary",
         icon: "fa-leaf",
-        coachPreset: "garib_rath"
+        coachPreset: "garib_rath",
       };
     }
 
     let coaches = [];
     if (theme.coachPreset === "vande_bharat") {
       coaches = [
-        { code: "DTC", label: "Driving Trailer Car (Nose)", classKey: "ENG", cap: 44, booked: 42, temp: "22.1°C", water: "100%", bogie: "Motorized EMU Bogie", no: "VB 22001/DTC", axleTemp: "41°C" },
-        { code: "C1", label: "Executive Chair Car", classKey: "EC", cap: 52, booked: 50, temp: "21.8°C", water: "96%", bogie: "LHB Trailer Bogie", no: "VB 22002/EC", axleTemp: "39°C" },
-        { code: "C2", label: "Executive Chair Car", classKey: "EC", cap: 52, booked: 51, temp: "22.0°C", water: "95%", bogie: "LHB Trailer Bogie", no: "VB 22003/EC", axleTemp: "40°C" },
-        { code: "C3", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 78, temp: "22.3°C", water: "90%", bogie: "Motor Bogie", no: "VB 22004/CC", axleTemp: "42°C" },
-        { code: "C4", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 76, temp: "22.1°C", water: "88%", bogie: "Trailer Bogie", no: "VB 22005/CC", axleTemp: "41°C" },
-        { code: "C5", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 78, temp: "22.4°C", water: "85%", bogie: "Motor Bogie", no: "VB 22006/CC", axleTemp: "43°C" },
-        { code: "C6", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 75, temp: "21.9°C", water: "92%", bogie: "Trailer Bogie", no: "VB 22007/CC", axleTemp: "38°C" },
-        { code: "C7", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 77, temp: "22.2°C", water: "89%", bogie: "Motor Bogie", no: "VB 22008/CC", axleTemp: "42°C" },
-        { code: "C8", label: "Mini Pantry & Service Car", classKey: "PC", cap: 40, booked: 39, temp: "22.0°C", water: "98%", bogie: "Trailer Bogie", no: "VB 22009/PC", axleTemp: "39°C" },
-        { code: "C9", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 78, temp: "22.1°C", water: "84%", bogie: "Motor Bogie", no: "VB 22010/CC", axleTemp: "41°C" },
-        { code: "C10", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 76, temp: "22.3°C", water: "91%", bogie: "Trailer Bogie", no: "VB 22011/CC", axleTemp: "40°C" },
-        { code: "C11", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 77, temp: "22.0°C", water: "87%", bogie: "Motor Bogie", no: "VB 22012/CC", axleTemp: "43°C" },
-        { code: "C12", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 75, temp: "22.2°C", water: "89%", bogie: "Trailer Bogie", no: "VB 22013/CC", axleTemp: "39°C" },
-        { code: "C13", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 78, temp: "22.5°C", water: "86%", bogie: "Motor Bogie", no: "VB 22014/CC", axleTemp: "41°C" },
-        { code: "C14", label: "Executive Chair Car", classKey: "EC", cap: 52, booked: 52, temp: "21.9°C", water: "94%", bogie: "Trailer Bogie", no: "VB 22015/EC", axleTemp: "38°C" },
-        { code: "DTC", label: "Driving Trailer Car (Rear)", classKey: "ENG", cap: 44, booked: 41, temp: "22.0°C", water: "100%", bogie: "Motorized EMU Bogie", no: "VB 22016/DTC", axleTemp: "40°C" },
+        {
+          code: "DTC",
+          label: "Driving Trailer Car (Nose)",
+          classKey: "ENG",
+          cap: 44,
+          booked: 42,
+          temp: "22.1°C",
+          water: "100%",
+          bogie: "Motorized EMU Bogie",
+          no: "VB 22001/DTC",
+          axleTemp: "41°C",
+        },
+        {
+          code: "C1",
+          label: "Executive Chair Car",
+          classKey: "EC",
+          cap: 52,
+          booked: 50,
+          temp: "21.8°C",
+          water: "96%",
+          bogie: "LHB Trailer Bogie",
+          no: "VB 22002/EC",
+          axleTemp: "39°C",
+        },
+        {
+          code: "C2",
+          label: "Executive Chair Car",
+          classKey: "EC",
+          cap: 52,
+          booked: 51,
+          temp: "22.0°C",
+          water: "95%",
+          bogie: "LHB Trailer Bogie",
+          no: "VB 22003/EC",
+          axleTemp: "40°C",
+        },
+        {
+          code: "C3",
+          label: "AC Chair Car",
+          classKey: "CC",
+          cap: 78,
+          booked: 78,
+          temp: "22.3°C",
+          water: "90%",
+          bogie: "Motor Bogie",
+          no: "VB 22004/CC",
+          axleTemp: "42°C",
+        },
+        {
+          code: "C4",
+          label: "AC Chair Car",
+          classKey: "CC",
+          cap: 78,
+          booked: 76,
+          temp: "22.1°C",
+          water: "88%",
+          bogie: "Trailer Bogie",
+          no: "VB 22005/CC",
+          axleTemp: "41°C",
+        },
+        {
+          code: "C5",
+          label: "AC Chair Car",
+          classKey: "CC",
+          cap: 78,
+          booked: 78,
+          temp: "22.4°C",
+          water: "85%",
+          bogie: "Motor Bogie",
+          no: "VB 22006/CC",
+          axleTemp: "43°C",
+        },
+        {
+          code: "C6",
+          label: "AC Chair Car",
+          classKey: "CC",
+          cap: 78,
+          booked: 75,
+          temp: "21.9°C",
+          water: "92%",
+          bogie: "Trailer Bogie",
+          no: "VB 22007/CC",
+          axleTemp: "38°C",
+        },
+        {
+          code: "C7",
+          label: "AC Chair Car",
+          classKey: "CC",
+          cap: 78,
+          booked: 77,
+          temp: "22.2°C",
+          water: "89%",
+          bogie: "Motor Bogie",
+          no: "VB 22008/CC",
+          axleTemp: "42°C",
+        },
+        {
+          code: "C8",
+          label: "Mini Pantry & Service Car",
+          classKey: "PC",
+          cap: 40,
+          booked: 39,
+          temp: "22.0°C",
+          water: "98%",
+          bogie: "Trailer Bogie",
+          no: "VB 22009/PC",
+          axleTemp: "39°C",
+        },
+        {
+          code: "C9",
+          label: "AC Chair Car",
+          classKey: "CC",
+          cap: 78,
+          booked: 78,
+          temp: "22.1°C",
+          water: "84%",
+          bogie: "Motor Bogie",
+          no: "VB 22010/CC",
+          axleTemp: "41°C",
+        },
+        {
+          code: "C10",
+          label: "AC Chair Car",
+          classKey: "CC",
+          cap: 78,
+          booked: 76,
+          temp: "22.3°C",
+          water: "91%",
+          bogie: "Trailer Bogie",
+          no: "VB 22011/CC",
+          axleTemp: "40°C",
+        },
+        {
+          code: "C11",
+          label: "AC Chair Car",
+          classKey: "CC",
+          cap: 78,
+          booked: 77,
+          temp: "22.0°C",
+          water: "87%",
+          bogie: "Motor Bogie",
+          no: "VB 22012/CC",
+          axleTemp: "43°C",
+        },
+        {
+          code: "C12",
+          label: "AC Chair Car",
+          classKey: "CC",
+          cap: 78,
+          booked: 75,
+          temp: "22.2°C",
+          water: "89%",
+          bogie: "Trailer Bogie",
+          no: "VB 22013/CC",
+          axleTemp: "39°C",
+        },
+        {
+          code: "C13",
+          label: "AC Chair Car",
+          classKey: "CC",
+          cap: 78,
+          booked: 78,
+          temp: "22.5°C",
+          water: "86%",
+          bogie: "Motor Bogie",
+          no: "VB 22014/CC",
+          axleTemp: "41°C",
+        },
+        {
+          code: "C14",
+          label: "Executive Chair Car",
+          classKey: "EC",
+          cap: 52,
+          booked: 52,
+          temp: "21.9°C",
+          water: "94%",
+          bogie: "Trailer Bogie",
+          no: "VB 22015/EC",
+          axleTemp: "38°C",
+        },
+        {
+          code: "DTC",
+          label: "Driving Trailer Car (Rear)",
+          classKey: "ENG",
+          cap: 44,
+          booked: 41,
+          temp: "22.0°C",
+          water: "100%",
+          bogie: "Motorized EMU Bogie",
+          no: "VB 22016/DTC",
+          axleTemp: "40°C",
+        },
       ];
     } else if (theme.coachPreset === "rajdhani") {
       coaches = [
-        { code: "LOCO", label: "Locomotive Front (WAP-7)", classKey: "ENG", cap: 2, booked: 2, temp: "Cab 24°C", water: "--", bogie: "Co-Co High Adhesion", no: theme.locoModel, axleTemp: "58°C" },
-        { code: "EOG", label: "Power Generator Car", classKey: "SLR", cap: 0, booked: 0, temp: "--", water: "100%", bogie: "FIAT LHB", no: "NR 21890/EOG", axleTemp: "42°C" },
-        { code: "H1", label: "AC First Class (1A)", classKey: "1A", cap: 24, booked: 24, temp: "21.5°C", water: "96%", bogie: "FIAT Disc Brake", no: "NR 21102/1A", axleTemp: "38°C" },
-        { code: "A1", label: "AC 2-Tier (2A)", classKey: "2A", cap: 52, booked: 52, temp: "22.0°C", water: "94%", bogie: "FIAT Disc Brake", no: "NR 21204/2A", axleTemp: "40°C" },
-        { code: "A2", label: "AC 2-Tier (2A)", classKey: "2A", cap: 52, booked: 50, temp: "22.1°C", water: "92%", bogie: "FIAT Disc Brake", no: "NR 21205/2A", axleTemp: "39°C" },
-        { code: "A3", label: "AC 2-Tier (2A)", classKey: "2A", cap: 52, booked: 51, temp: "21.9°C", water: "91%", bogie: "FIAT Disc Brake", no: "NR 21206/2A", axleTemp: "41°C" },
-        { code: "B1", label: "AC 3-Tier (3A)", classKey: "3A", cap: 72, booked: 72, temp: "22.4°C", water: "88%", bogie: "FIAT Disc Brake", no: "NR 21301/3A", axleTemp: "42°C" },
-        { code: "B2", label: "AC 3-Tier (3A)", classKey: "3A", cap: 72, booked: 72, temp: "22.2°C", water: "86%", bogie: "FIAT Disc Brake", no: "NR 21302/3A", axleTemp: "40°C" },
-        { code: "B3", label: "AC 3-Tier (3A)", classKey: "3A", cap: 72, booked: 70, temp: "22.3°C", water: "90%", bogie: "FIAT Disc Brake", no: "NR 21303/3A", axleTemp: "41°C" },
-        { code: "B4", label: "AC 3-Tier (3A)", classKey: "3A", cap: 72, booked: 72, temp: "22.5°C", water: "84%", bogie: "FIAT Disc Brake", no: "NR 21304/3A", axleTemp: "43°C" },
-        { code: "PC", label: "Hot Buffet Pantry Car", classKey: "PC", cap: 0, booked: 0, temp: "Kitchen 25°C", water: "98%", bogie: "FIAT Heavy Duty", no: "NR 21501/PC", axleTemp: "44°C" },
-        { code: "B5", label: "AC 3-Tier (3A)", classKey: "3A", cap: 72, booked: 72, temp: "22.1°C", water: "89%", bogie: "FIAT Disc Brake", no: "NR 21305/3A", axleTemp: "39°C" },
-        { code: "B6", label: "AC 3-Tier (3A)", classKey: "3A", cap: 72, booked: 71, temp: "22.2°C", water: "87%", bogie: "FIAT Disc Brake", no: "NR 21306/3A", axleTemp: "40°C" },
-        { code: "B7", label: "AC 3-Tier (3A)", classKey: "3A", cap: 72, booked: 72, temp: "22.4°C", water: "85%", bogie: "FIAT Disc Brake", no: "NR 21307/3A", axleTemp: "41°C" },
-        { code: "B8", label: "AC 3-Tier (3A)", classKey: "3A", cap: 72, booked: 72, temp: "22.0°C", water: "88%", bogie: "FIAT Disc Brake", no: "NR 21308/3A", axleTemp: "42°C" },
-        { code: "B9", label: "AC 3-Tier (3A)", classKey: "3A", cap: 72, booked: 69, temp: "22.3°C", water: "92%", bogie: "FIAT Disc Brake", no: "NR 21309/3A", axleTemp: "39°C" },
-        { code: "B10", label: "AC 3-Tier (3A)", classKey: "3A", cap: 72, booked: 72, temp: "22.1°C", water: "84%", bogie: "FIAT Disc Brake", no: "NR 21310/3A", axleTemp: "43°C" },
-        { code: "A4", label: "AC 2-Tier (2A)", classKey: "2A", cap: 52, booked: 52, temp: "21.8°C", water: "90%", bogie: "FIAT Disc Brake", no: "NR 21207/2A", axleTemp: "39°C" },
-        { code: "EOG", label: "Power Generator Car", classKey: "SLR", cap: 0, booked: 0, temp: "--", water: "100%", bogie: "FIAT LHB", no: "NR 21891/EOG", axleTemp: "41°C" },
+        {
+          code: "LOCO",
+          label: "Locomotive Front (WAP-7)",
+          classKey: "ENG",
+          cap: 2,
+          booked: 2,
+          temp: "Cab 24°C",
+          water: "--",
+          bogie: "Co-Co High Adhesion",
+          no: theme.locoModel,
+          axleTemp: "58°C",
+        },
+        {
+          code: "EOG",
+          label: "Power Generator Car",
+          classKey: "SLR",
+          cap: 0,
+          booked: 0,
+          temp: "--",
+          water: "100%",
+          bogie: "FIAT LHB",
+          no: "NR 21890/EOG",
+          axleTemp: "42°C",
+        },
+        {
+          code: "H1",
+          label: "AC First Class (1A)",
+          classKey: "1A",
+          cap: 24,
+          booked: 24,
+          temp: "21.5°C",
+          water: "96%",
+          bogie: "FIAT Disc Brake",
+          no: "NR 21102/1A",
+          axleTemp: "38°C",
+        },
+        {
+          code: "A1",
+          label: "AC 2-Tier (2A)",
+          classKey: "2A",
+          cap: 52,
+          booked: 52,
+          temp: "22.0°C",
+          water: "94%",
+          bogie: "FIAT Disc Brake",
+          no: "NR 21204/2A",
+          axleTemp: "40°C",
+        },
+        {
+          code: "A2",
+          label: "AC 2-Tier (2A)",
+          classKey: "2A",
+          cap: 52,
+          booked: 50,
+          temp: "22.1°C",
+          water: "92%",
+          bogie: "FIAT Disc Brake",
+          no: "NR 21205/2A",
+          axleTemp: "39°C",
+        },
+        {
+          code: "A3",
+          label: "AC 2-Tier (2A)",
+          classKey: "2A",
+          cap: 52,
+          booked: 51,
+          temp: "21.9°C",
+          water: "91%",
+          bogie: "FIAT Disc Brake",
+          no: "NR 21206/2A",
+          axleTemp: "41°C",
+        },
+        {
+          code: "B1",
+          label: "AC 3-Tier (3A)",
+          classKey: "3A",
+          cap: 72,
+          booked: 72,
+          temp: "22.4°C",
+          water: "88%",
+          bogie: "FIAT Disc Brake",
+          no: "NR 21301/3A",
+          axleTemp: "42°C",
+        },
+        {
+          code: "B2",
+          label: "AC 3-Tier (3A)",
+          classKey: "3A",
+          cap: 72,
+          booked: 72,
+          temp: "22.2°C",
+          water: "86%",
+          bogie: "FIAT Disc Brake",
+          no: "NR 21302/3A",
+          axleTemp: "40°C",
+        },
+        {
+          code: "B3",
+          label: "AC 3-Tier (3A)",
+          classKey: "3A",
+          cap: 72,
+          booked: 70,
+          temp: "22.3°C",
+          water: "90%",
+          bogie: "FIAT Disc Brake",
+          no: "NR 21303/3A",
+          axleTemp: "41°C",
+        },
+        {
+          code: "B4",
+          label: "AC 3-Tier (3A)",
+          classKey: "3A",
+          cap: 72,
+          booked: 72,
+          temp: "22.5°C",
+          water: "84%",
+          bogie: "FIAT Disc Brake",
+          no: "NR 21304/3A",
+          axleTemp: "43°C",
+        },
+        {
+          code: "PC",
+          label: "Hot Buffet Pantry Car",
+          classKey: "PC",
+          cap: 0,
+          booked: 0,
+          temp: "Kitchen 25°C",
+          water: "98%",
+          bogie: "FIAT Heavy Duty",
+          no: "NR 21501/PC",
+          axleTemp: "44°C",
+        },
+        {
+          code: "B5",
+          label: "AC 3-Tier (3A)",
+          classKey: "3A",
+          cap: 72,
+          booked: 72,
+          temp: "22.1°C",
+          water: "89%",
+          bogie: "FIAT Disc Brake",
+          no: "NR 21305/3A",
+          axleTemp: "39°C",
+        },
+        {
+          code: "B6",
+          label: "AC 3-Tier (3A)",
+          classKey: "3A",
+          cap: 72,
+          booked: 71,
+          temp: "22.2°C",
+          water: "87%",
+          bogie: "FIAT Disc Brake",
+          no: "NR 21306/3A",
+          axleTemp: "40°C",
+        },
+        {
+          code: "B7",
+          label: "AC 3-Tier (3A)",
+          classKey: "3A",
+          cap: 72,
+          booked: 72,
+          temp: "22.4°C",
+          water: "85%",
+          bogie: "FIAT Disc Brake",
+          no: "NR 21307/3A",
+          axleTemp: "41°C",
+        },
+        {
+          code: "B8",
+          label: "AC 3-Tier (3A)",
+          classKey: "3A",
+          cap: 72,
+          booked: 72,
+          temp: "22.0°C",
+          water: "88%",
+          bogie: "FIAT Disc Brake",
+          no: "NR 21308/3A",
+          axleTemp: "42°C",
+        },
+        {
+          code: "B9",
+          label: "AC 3-Tier (3A)",
+          classKey: "3A",
+          cap: 72,
+          booked: 69,
+          temp: "22.3°C",
+          water: "92%",
+          bogie: "FIAT Disc Brake",
+          no: "NR 21309/3A",
+          axleTemp: "39°C",
+        },
+        {
+          code: "B10",
+          label: "AC 3-Tier (3A)",
+          classKey: "3A",
+          cap: 72,
+          booked: 72,
+          temp: "22.1°C",
+          water: "84%",
+          bogie: "FIAT Disc Brake",
+          no: "NR 21310/3A",
+          axleTemp: "43°C",
+        },
+        {
+          code: "A4",
+          label: "AC 2-Tier (2A)",
+          classKey: "2A",
+          cap: 52,
+          booked: 52,
+          temp: "21.8°C",
+          water: "90%",
+          bogie: "FIAT Disc Brake",
+          no: "NR 21207/2A",
+          axleTemp: "39°C",
+        },
+        {
+          code: "EOG",
+          label: "Power Generator Car",
+          classKey: "SLR",
+          cap: 0,
+          booked: 0,
+          temp: "--",
+          water: "100%",
+          bogie: "FIAT LHB",
+          no: "NR 21891/EOG",
+          axleTemp: "41°C",
+        },
       ];
     } else if (theme.coachPreset === "shatabdi") {
       coaches = [
-        { code: "LOCO", label: "Locomotive WAP-7 HOG", classKey: "ENG", cap: 2, booked: 2, temp: "Cab 23°C", water: "--", bogie: "Co-Co High Adhesion", no: theme.locoModel, axleTemp: "56°C" },
-        { code: "EOG", label: "Power Generator Car", classKey: "SLR", cap: 0, booked: 0, temp: "--", water: "100%", bogie: "FIAT LHB", no: "WR 20110/EOG", axleTemp: "40°C" },
-        { code: "E1", label: "Executive Anubhuti Chair", classKey: "EC", cap: 56, booked: 56, temp: "21.8°C", water: "95%", bogie: "FIAT Disc Brake", no: "WR 20112/EC", axleTemp: "38°C" },
-        { code: "E2", label: "Executive Chair Car", classKey: "EC", cap: 56, booked: 54, temp: "22.0°C", water: "93%", bogie: "FIAT Disc Brake", no: "WR 20113/EC", axleTemp: "39°C" },
-        { code: "C1", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 78, temp: "22.2°C", water: "90%", bogie: "FIAT Disc Brake", no: "WR 20201/CC", axleTemp: "41°C" },
-        { code: "C2", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 77, temp: "22.1°C", water: "88%", bogie: "FIAT Disc Brake", no: "WR 20202/CC", axleTemp: "40°C" },
-        { code: "C3", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 78, temp: "22.4°C", water: "85%", bogie: "FIAT Disc Brake", no: "WR 20203/CC", axleTemp: "42°C" },
-        { code: "C4", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 76, temp: "22.0°C", water: "89%", bogie: "FIAT Disc Brake", no: "WR 20204/CC", axleTemp: "39°C" },
-        { code: "C5", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 78, temp: "22.3°C", water: "86%", bogie: "FIAT Disc Brake", no: "WR 20205/CC", axleTemp: "41°C" },
-        { code: "C6", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 74, temp: "22.1°C", water: "91%", bogie: "FIAT Disc Brake", no: "WR 20206/CC", axleTemp: "38°C" },
-        { code: "C7", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 78, temp: "22.2°C", water: "87%", bogie: "FIAT Disc Brake", no: "WR 20207/CC", axleTemp: "42°C" },
-        { code: "C8", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 75, temp: "22.5°C", water: "83%", bogie: "FIAT Disc Brake", no: "WR 20208/CC", axleTemp: "43°C" },
-        { code: "C9", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 78, temp: "21.9°C", water: "92%", bogie: "FIAT Disc Brake", no: "WR 20209/CC", axleTemp: "39°C" },
-        { code: "C10", label: "AC Chair Car", classKey: "CC", cap: 78, booked: 78, temp: "22.0°C", water: "86%", bogie: "FIAT Disc Brake", no: "WR 20210/CC", axleTemp: "41°C" },
-        { code: "EOG", label: "Power Generator Car", classKey: "SLR", cap: 0, booked: 0, temp: "--", water: "100%", bogie: "FIAT LHB", no: "WR 20111/EOG", axleTemp: "40°C" },
+        {
+          code: "LOCO",
+          label: "Locomotive WAP-7 HOG",
+          classKey: "ENG",
+          cap: 2,
+          booked: 2,
+          temp: "Cab 23°C",
+          water: "--",
+          bogie: "Co-Co High Adhesion",
+          no: theme.locoModel,
+          axleTemp: "56°C",
+        },
+        {
+          code: "EOG",
+          label: "Power Generator Car",
+          classKey: "SLR",
+          cap: 0,
+          booked: 0,
+          temp: "--",
+          water: "100%",
+          bogie: "FIAT LHB",
+          no: "WR 20110/EOG",
+          axleTemp: "40°C",
+        },
+        {
+          code: "E1",
+          label: "Executive Anubhuti Chair",
+          classKey: "EC",
+          cap: 56,
+          booked: 56,
+          temp: "21.8°C",
+          water: "95%",
+          bogie: "FIAT Disc Brake",
+          no: "WR 20112/EC",
+          axleTemp: "38°C",
+        },
+        {
+          code: "E2",
+          label: "Executive Chair Car",
+          classKey: "EC",
+          cap: 56,
+          booked: 54,
+          temp: "22.0°C",
+          water: "93%",
+          bogie: "FIAT Disc Brake",
+          no: "WR 20113/EC",
+          axleTemp: "39°C",
+        },
+        {
+          code: "C1",
+          label: "AC Chair Car",
+          classKey: "CC",
+          cap: 78,
+          booked: 78,
+          temp: "22.2°C",
+          water: "90%",
+          bogie: "FIAT Disc Brake",
+          no: "WR 20201/CC",
+          axleTemp: "41°C",
+        },
+        {
+          code: "C2",
+          label: "AC Chair Car",
+          classKey: "CC",
+          cap: 78,
+          booked: 77,
+          temp: "22.1°C",
+          water: "88%",
+          bogie: "FIAT Disc Brake",
+          no: "WR 20202/CC",
+          axleTemp: "40°C",
+        },
+        {
+          code: "C3",
+          label: "AC Chair Car",
+          classKey: "CC",
+          cap: 78,
+          booked: 78,
+          temp: "22.4°C",
+          water: "85%",
+          bogie: "FIAT Disc Brake",
+          no: "WR 20203/CC",
+          axleTemp: "42°C",
+        },
+        {
+          code: "C4",
+          label: "AC Chair Car",
+          classKey: "CC",
+          cap: 78,
+          booked: 76,
+          temp: "22.0°C",
+          water: "89%",
+          bogie: "FIAT Disc Brake",
+          no: "WR 20204/CC",
+          axleTemp: "39°C",
+        },
+        {
+          code: "C5",
+          label: "AC Chair Car",
+          classKey: "CC",
+          cap: 78,
+          booked: 78,
+          temp: "22.3°C",
+          water: "86%",
+          bogie: "FIAT Disc Brake",
+          no: "WR 20205/CC",
+          axleTemp: "41°C",
+        },
+        {
+          code: "C6",
+          label: "AC Chair Car",
+          classKey: "CC",
+          cap: 78,
+          booked: 74,
+          temp: "22.1°C",
+          water: "91%",
+          bogie: "FIAT Disc Brake",
+          no: "WR 20206/CC",
+          axleTemp: "38°C",
+        },
+        {
+          code: "C7",
+          label: "AC Chair Car",
+          classKey: "CC",
+          cap: 78,
+          booked: 78,
+          temp: "22.2°C",
+          water: "87%",
+          bogie: "FIAT Disc Brake",
+          no: "WR 20207/CC",
+          axleTemp: "42°C",
+        },
+        {
+          code: "C8",
+          label: "AC Chair Car",
+          classKey: "CC",
+          cap: 78,
+          booked: 75,
+          temp: "22.5°C",
+          water: "83%",
+          bogie: "FIAT Disc Brake",
+          no: "WR 20208/CC",
+          axleTemp: "43°C",
+        },
+        {
+          code: "C9",
+          label: "AC Chair Car",
+          classKey: "CC",
+          cap: 78,
+          booked: 78,
+          temp: "21.9°C",
+          water: "92%",
+          bogie: "FIAT Disc Brake",
+          no: "WR 20209/CC",
+          axleTemp: "39°C",
+        },
+        {
+          code: "C10",
+          label: "AC Chair Car",
+          classKey: "CC",
+          cap: 78,
+          booked: 78,
+          temp: "22.0°C",
+          water: "86%",
+          bogie: "FIAT Disc Brake",
+          no: "WR 20210/CC",
+          axleTemp: "41°C",
+        },
+        {
+          code: "EOG",
+          label: "Power Generator Car",
+          classKey: "SLR",
+          cap: 0,
+          booked: 0,
+          temp: "--",
+          water: "100%",
+          bogie: "FIAT LHB",
+          no: "WR 20111/EOG",
+          axleTemp: "40°C",
+        },
       ];
     } else {
       coaches = [
-        { code: "LOCO", label: "Locomotive WAP-7 / WDG-4D", classKey: "ENG", cap: 2, booked: 2, temp: "Cab 24°C", water: "--", bogie: "Co-Co High Traction", no: theme.locoModel, axleTemp: "59°C" },
-        { code: "SLR", label: "Seating-cum-Luggage Rake", classKey: "SLR", cap: 36, booked: 36, temp: "--", water: "100%", bogie: "LHB Non-AC", no: "NWR 19210/SLR", axleTemp: "39°C" },
-        { code: "GS", label: "General Unreserved", classKey: "SLR", cap: 100, booked: 98, temp: "--", water: "85%", bogie: "LHB Non-AC", no: "NWR 19211/GS", axleTemp: "40°C" },
-        { code: "S1", label: "Sleeper Class (SL)", classKey: "SL", cap: 72, booked: 72, temp: "Ambient", water: "90%", bogie: "LHB Non-AC", no: "NWR 19301/S1", axleTemp: "41°C" },
-        { code: "S2", label: "Sleeper Class (SL)", classKey: "SL", cap: 72, booked: 72, temp: "Ambient", water: "88%", bogie: "LHB Non-AC", no: "NWR 19302/S2", axleTemp: "42°C" },
-        { code: "S3", label: "Sleeper Class (SL)", classKey: "SL", cap: 72, booked: 70, temp: "Ambient", water: "85%", bogie: "LHB Non-AC", no: "NWR 19303/S3", axleTemp: "39°C" },
-        { code: "S4", label: "Sleeper Class (SL)", classKey: "SL", cap: 72, booked: 72, temp: "Ambient", water: "87%", bogie: "LHB Non-AC", no: "NWR 19304/S4", axleTemp: "40°C" },
-        { code: "S5", label: "Sleeper Class (SL)", classKey: "SL", cap: 72, booked: 72, temp: "Ambient", water: "82%", bogie: "LHB Non-AC", no: "NWR 19305/S5", axleTemp: "43°C" },
-        { code: "S6", label: "Sleeper Class (SL)", classKey: "SL", cap: 72, booked: 71, temp: "Ambient", water: "86%", bogie: "LHB Non-AC", no: "NWR 19306/S6", axleTemp: "41°C" },
-        { code: "PC", label: "Pantry Car", classKey: "PC", cap: 0, booked: 0, temp: "26°C", water: "96%", bogie: "LHB Pantry", no: "NWR 19401/PC", axleTemp: "44°C" },
-        { code: "B1", label: "AC 3-Tier (3A)", classKey: "3A", cap: 72, booked: 72, temp: "22.1°C", water: "92%", bogie: "LHB AC", no: "NWR 19501/B1", axleTemp: "40°C" },
-        { code: "B2", label: "AC 3-Tier (3A)", classKey: "3A", cap: 72, booked: 72, temp: "22.3°C", water: "89%", bogie: "LHB AC", no: "NWR 19502/B2", axleTemp: "39°C" },
-        { code: "B3", label: "AC 3-Tier (3A)", classKey: "3A", cap: 72, booked: 72, temp: "22.0°C", water: "88%", bogie: "LHB AC", no: "NWR 19503/B3", axleTemp: "41°C" },
-        { code: "B4", label: "AC 3-Tier (3A)", classKey: "3A", cap: 72, booked: 70, temp: "22.2°C", water: "91%", bogie: "LHB AC", no: "NWR 19504/B4", axleTemp: "42°C" },
-        { code: "A1", label: "AC 2-Tier (2A)", classKey: "2A", cap: 52, booked: 52, temp: "21.9°C", water: "94%", bogie: "LHB AC", no: "NWR 19601/A1", axleTemp: "38°C" },
-        { code: "A2", label: "AC 2-Tier (2A)", classKey: "2A", cap: 52, booked: 51, temp: "22.0°C", water: "93%", bogie: "LHB AC", no: "NWR 19602/A2", axleTemp: "39°C" },
-        { code: "H1", label: "AC First Class (1A)", classKey: "1A", cap: 24, booked: 24, temp: "21.5°C", water: "98%", bogie: "LHB AC", no: "NWR 19701/H1", axleTemp: "37°C" },
-        { code: "GS", label: "General Unreserved", classKey: "SLR", cap: 100, booked: 95, temp: "--", water: "84%", bogie: "LHB Non-AC", no: "NWR 19212/GS", axleTemp: "41°C" },
-        { code: "SLR", label: "Guard Brake Van", classKey: "SLR", cap: 36, booked: 36, temp: "--", water: "100%", bogie: "LHB Non-AC", no: "NWR 19213/SLR", axleTemp: "40°C" },
+        {
+          code: "LOCO",
+          label: "Locomotive WAP-7 / WDG-4D",
+          classKey: "ENG",
+          cap: 2,
+          booked: 2,
+          temp: "Cab 24°C",
+          water: "--",
+          bogie: "Co-Co High Traction",
+          no: theme.locoModel,
+          axleTemp: "59°C",
+        },
+        {
+          code: "SLR",
+          label: "Seating-cum-Luggage Rake",
+          classKey: "SLR",
+          cap: 36,
+          booked: 36,
+          temp: "--",
+          water: "100%",
+          bogie: "LHB Non-AC",
+          no: "NWR 19210/SLR",
+          axleTemp: "39°C",
+        },
+        {
+          code: "GS",
+          label: "General Unreserved",
+          classKey: "SLR",
+          cap: 100,
+          booked: 98,
+          temp: "--",
+          water: "85%",
+          bogie: "LHB Non-AC",
+          no: "NWR 19211/GS",
+          axleTemp: "40°C",
+        },
+        {
+          code: "S1",
+          label: "Sleeper Class (SL)",
+          classKey: "SL",
+          cap: 72,
+          booked: 72,
+          temp: "Ambient",
+          water: "90%",
+          bogie: "LHB Non-AC",
+          no: "NWR 19301/S1",
+          axleTemp: "41°C",
+        },
+        {
+          code: "S2",
+          label: "Sleeper Class (SL)",
+          classKey: "SL",
+          cap: 72,
+          booked: 72,
+          temp: "Ambient",
+          water: "88%",
+          bogie: "LHB Non-AC",
+          no: "NWR 19302/S2",
+          axleTemp: "42°C",
+        },
+        {
+          code: "S3",
+          label: "Sleeper Class (SL)",
+          classKey: "SL",
+          cap: 72,
+          booked: 70,
+          temp: "Ambient",
+          water: "85%",
+          bogie: "LHB Non-AC",
+          no: "NWR 19303/S3",
+          axleTemp: "39°C",
+        },
+        {
+          code: "S4",
+          label: "Sleeper Class (SL)",
+          classKey: "SL",
+          cap: 72,
+          booked: 72,
+          temp: "Ambient",
+          water: "87%",
+          bogie: "LHB Non-AC",
+          no: "NWR 19304/S4",
+          axleTemp: "40°C",
+        },
+        {
+          code: "S5",
+          label: "Sleeper Class (SL)",
+          classKey: "SL",
+          cap: 72,
+          booked: 72,
+          temp: "Ambient",
+          water: "82%",
+          bogie: "LHB Non-AC",
+          no: "NWR 19305/S5",
+          axleTemp: "43°C",
+        },
+        {
+          code: "S6",
+          label: "Sleeper Class (SL)",
+          classKey: "SL",
+          cap: 72,
+          booked: 71,
+          temp: "Ambient",
+          water: "86%",
+          bogie: "LHB Non-AC",
+          no: "NWR 19306/S6",
+          axleTemp: "41°C",
+        },
+        {
+          code: "PC",
+          label: "Pantry Car",
+          classKey: "PC",
+          cap: 0,
+          booked: 0,
+          temp: "26°C",
+          water: "96%",
+          bogie: "LHB Pantry",
+          no: "NWR 19401/PC",
+          axleTemp: "44°C",
+        },
+        {
+          code: "B1",
+          label: "AC 3-Tier (3A)",
+          classKey: "3A",
+          cap: 72,
+          booked: 72,
+          temp: "22.1°C",
+          water: "92%",
+          bogie: "LHB AC",
+          no: "NWR 19501/B1",
+          axleTemp: "40°C",
+        },
+        {
+          code: "B2",
+          label: "AC 3-Tier (3A)",
+          classKey: "3A",
+          cap: 72,
+          booked: 72,
+          temp: "22.3°C",
+          water: "89%",
+          bogie: "LHB AC",
+          no: "NWR 19502/B2",
+          axleTemp: "39°C",
+        },
+        {
+          code: "B3",
+          label: "AC 3-Tier (3A)",
+          classKey: "3A",
+          cap: 72,
+          booked: 72,
+          temp: "22.0°C",
+          water: "88%",
+          bogie: "LHB AC",
+          no: "NWR 19503/B3",
+          axleTemp: "41°C",
+        },
+        {
+          code: "B4",
+          label: "AC 3-Tier (3A)",
+          classKey: "3A",
+          cap: 72,
+          booked: 70,
+          temp: "22.2°C",
+          water: "91%",
+          bogie: "LHB AC",
+          no: "NWR 19504/B4",
+          axleTemp: "42°C",
+        },
+        {
+          code: "A1",
+          label: "AC 2-Tier (2A)",
+          classKey: "2A",
+          cap: 52,
+          booked: 52,
+          temp: "21.9°C",
+          water: "94%",
+          bogie: "LHB AC",
+          no: "NWR 19601/A1",
+          axleTemp: "38°C",
+        },
+        {
+          code: "A2",
+          label: "AC 2-Tier (2A)",
+          classKey: "2A",
+          cap: 52,
+          booked: 51,
+          temp: "22.0°C",
+          water: "93%",
+          bogie: "LHB AC",
+          no: "NWR 19602/A2",
+          axleTemp: "39°C",
+        },
+        {
+          code: "H1",
+          label: "AC First Class (1A)",
+          classKey: "1A",
+          cap: 24,
+          booked: 24,
+          temp: "21.5°C",
+          water: "98%",
+          bogie: "LHB AC",
+          no: "NWR 19701/H1",
+          axleTemp: "37°C",
+        },
+        {
+          code: "GS",
+          label: "General Unreserved",
+          classKey: "SLR",
+          cap: 100,
+          booked: 95,
+          temp: "--",
+          water: "84%",
+          bogie: "LHB Non-AC",
+          no: "NWR 19212/GS",
+          axleTemp: "41°C",
+        },
+        {
+          code: "SLR",
+          label: "Guard Brake Van",
+          classKey: "SLR",
+          cap: 36,
+          booked: 36,
+          temp: "--",
+          water: "100%",
+          bogie: "LHB Non-AC",
+          no: "NWR 19213/SLR",
+          axleTemp: "40°C",
+        },
       ];
     }
 
     window._currentTrainCoaches = coaches;
 
-    const mRecord = irMaintenanceDataset && irMaintenanceDataset.length > 0 
-      ? irMaintenanceDataset[seed % irMaintenanceDataset.length] 
-      : null;
+    const mRecord =
+      irMaintenanceDataset && irMaintenanceDataset.length > 0
+        ? irMaintenanceDataset[seed % irMaintenanceDataset.length]
+        : null;
 
-    const numStations = (t.stations && t.stations.length > 0) ? t.stations.length : 1;
-    const currentStnIdx = Math.max(0, Math.min(Math.floor(numStations / 2), numStations - 2));
-    const currentStn = (t.stations && t.stations[currentStnIdx]) || { name: t.fromName || t.from, code: t.from, pf: 1, arr: t.depart, dep: t.depart };
+    const numStations =
+      t.stations && t.stations.length > 0 ? t.stations.length : 1;
+    const currentStnIdx = Math.max(
+      0,
+      Math.min(Math.floor(numStations / 2), numStations - 2),
+    );
+    const currentStn = (t.stations && t.stations[currentStnIdx]) || {
+      name: t.fromName || t.from,
+      code: t.from,
+      pf: 1,
+      arr: t.depart,
+      dep: t.depart,
+    };
     const nextStn = (t.stations && t.stations[currentStnIdx + 1]) || currentStn;
 
-    const liveTrain = panIndiaTrainData.find(pt => pt.number === t.number || pt.id === t.number);
-    const totalDistKm = liveTrain ? (liveTrain.stations[liveTrain.stations.length - 1].distKm) : (t.distance || ((seed * 67) % 450 + 480));
-    const distCompletedKm = liveTrain ? liveTrain.distCovered : Math.round(totalDistKm * ((currentStnIdx + 0.6) / numStations));
-    const distRemainingKm = liveTrain ? liveTrain.distRemaining : Math.max(0, totalDistKm - distCompletedKm);
-    const progressPct = liveTrain ? Math.round(liveTrain.progress * 100) : Math.min(100, Math.round((distCompletedKm / totalDistKm) * 100));
-    const curSpeed = liveTrain ? liveTrain.speed : (t.delay > 20 ? Math.round(theme.baseSpeed * 0.88) : theme.baseSpeed);
-    const liveStatus = liveTrain ? liveTrain.status : (t.delay > 0 ? "RUNNING DELAYED" : "ON ROUTE • ON TIME");
+    const liveTrain = panIndiaTrainData.find(
+      (pt) => pt.number === t.number || pt.id === t.number,
+    );
+    const totalDistKm = liveTrain
+      ? liveTrain.stations[liveTrain.stations.length - 1].distKm
+      : t.distance || ((seed * 67) % 450) + 480;
+    const distCompletedKm = liveTrain
+      ? liveTrain.distCovered
+      : Math.round(totalDistKm * ((currentStnIdx + 0.6) / numStations));
+    const distRemainingKm = liveTrain
+      ? liveTrain.distRemaining
+      : Math.max(0, totalDistKm - distCompletedKm);
+    const progressPct = liveTrain
+      ? Math.round(liveTrain.progress * 100)
+      : Math.min(100, Math.round((distCompletedKm / totalDistKm) * 100));
+    const curSpeed = liveTrain
+      ? liveTrain.speed
+      : t.delay > 20
+        ? Math.round(theme.baseSpeed * 0.88)
+        : theme.baseSpeed;
+    const liveStatus = liveTrain
+      ? liveTrain.status
+      : t.delay > 0
+        ? "RUNNING DELAYED"
+        : "ON ROUTE • ON TIME";
 
     return {
       theme,
@@ -4903,23 +7575,37 @@ document.addEventListener("DOMContentLoaded", () => {
       trackKm: `KM ${120 + (seed % 150)} / ${(seed % 9) + 1}`,
       oheVoltage: (24.8 + (seed % 9) / 10).toFixed(1),
       oheCurrent: 320 + (seed % 90),
-      tractionPower: mRecord ? Math.round(mRecord.powerKw / 10) : 72 + (seed % 22),
-      tractionMotorTemp: mRecord ? Math.round(mRecord.tractionMotorTempC) : 60 + (seed % 18),
+      tractionPower: mRecord
+        ? Math.round(mRecord.powerKw / 10)
+        : 72 + (seed % 22),
+      tractionMotorTemp: mRecord
+        ? Math.round(mRecord.tractionMotorTempC)
+        : 60 + (seed % 18),
       transformerTemp: 54 + (seed % 14),
       rfSignalDbm: -(58 + (seed % 16)),
-      trackVibrationG: mRecord ? mRecord.trackVibrationG.toFixed(2) : (0.12 + (seed % 6) / 100).toFixed(2),
+      trackVibrationG: mRecord
+        ? mRecord.trackVibrationG.toFixed(2)
+        : (0.12 + (seed % 6) / 100).toFixed(2),
       railTempC: mRecord ? Math.round(mRecord.trackTempC) : 34 + (seed % 8),
       rfidTagId: `#TAG-KAV-${(seed % 8999) + 1000}`,
-      signalAspect: t.delay === 0 ? "GREEN / PROCEED" : (t.delay <= 15 ? "DOUBLE YELLOW / ATTN" : "YELLOW / CAUTION"),
+      signalAspect:
+        t.delay === 0
+          ? "GREEN / PROCEED"
+          : t.delay <= 15
+            ? "DOUBLE YELLOW / ATTN"
+            : "YELLOW / CAUTION",
       signalDistance: 820 + (seed % 400),
       movementAuthorityM: 4200 + (seed % 1200),
       brakingEnvelopeM: 460 + (seed % 80),
       tsrLocation: `Bridge #${(seed % 80) + 12}: Caution 30 km/h at KM ${140 + (seed % 40)}/2`,
       lastPohDate: `${(seed % 25) + 1}-Jan-2026 at Ajmer Central`,
-      nextInspectionDue: `In ${(seed % 5) + 2} days (${(seed * 17) % 900 + 700} km remaining)`,
-      usfdStatus: mRecord && mRecord.failureType !== 'None' ? `USFD Alert: ${mRecord.failureType} Detected` : "0 Flaws Detected • Class-1 Track Standard",
+      nextInspectionDue: `In ${(seed % 5) + 2} days (${((seed * 17) % 900) + 700} km remaining)`,
+      usfdStatus:
+        mRecord && mRecord.failureType !== "None"
+          ? `USFD Alert: ${mRecord.failureType} Detected`
+          : "0 Flaws Detected • Class-1 Track Standard",
       energyRegenerated: 1240 + (seed % 600),
-      mRecord
+      mRecord,
     };
   }
 
@@ -4928,8 +7614,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const t = trainDetailSelected;
     const data = getTrainPersonalDashboardData(t);
 
-    const delayColor = t.delay === 0 ? '#138808' : t.delay <= 15 ? '#d97706' : '#dc2626';
-    const delayBg = t.delay === 0 ? '#f0fdf4' : t.delay <= 15 ? '#fffbeb' : '#fef2f2';
+    const delayColor =
+      t.delay === 0 ? "#138808" : t.delay <= 15 ? "#d97706" : "#dc2626";
+    const delayBg =
+      t.delay === 0 ? "#f0fdf4" : t.delay <= 15 ? "#fffbeb" : "#fef2f2";
 
     // Speedometer calculation
     const gaugeRadius = 55;
@@ -4938,7 +7626,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const dashOffset = gaugeCircumference * (1 - speedRatio);
 
     // Initial coach inspector HTML
-    const initialCoach = data.coaches[activeCoachInspectorIndex] || data.coaches[0];
+    const initialCoach =
+      data.coaches[activeCoachInspectorIndex] || data.coaches[0];
 
     container.innerHTML = `
       <div class="space-y-4" style="max-width: 1400px; margin: 0 auto;">
@@ -5151,14 +7840,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
             <div style="display: flex; align-items: baseline; gap: 6px; margin: 4px 0;">
               <span style="font-size: 22px; font-weight: 900; color: #0f172a; font-family: 'JetBrains Mono', monospace;">
-                ${t.delay === 0 ? '0' : '+' + t.delay}
+                ${t.delay === 0 ? "0" : "+" + t.delay}
               </span>
               <span style="font-size: 11px; font-weight: 700; color: #64748b;">min delay</span>
             </div>
 
             <div style="background: #f8fafc; padding: 7px 10px; border-radius: 14px; border: 1px solid #e2e8f0; font-size: 10px; margin-bottom: 6px;">
               <p style="margin: 0; color: #0f172a; font-weight: 600;">
-                ${t.delay === 0 ? 'Coasting profile engaged; on-time arrival guaranteed.' : 'Cruising profile; predicted to recover 4 min.'}
+                ${t.delay === 0 ? "Coasting profile engaged; on-time arrival guaranteed." : "Cruising profile; predicted to recover 4 min."}
               </p>
             </div>
 
@@ -5216,13 +7905,13 @@ document.addEventListener("DOMContentLoaded", () => {
               <div>
                 <p style="margin: 0; font-size: 9px; color: #64748b;">ARR TIME</p>
                 <p style="margin: 0; font-size: 13px; font-weight: 900; color: #0f172a; font-family: 'JetBrains Mono', monospace;">
-                  ${data.nextStn.arr !== '--' ? data.nextStn.arr : data.nextStn.dep}
+                  ${data.nextStn.arr !== "--" ? data.nextStn.arr : data.nextStn.dep}
                 </p>
               </div>
               <div style="text-align: right;">
                 <p style="margin: 0; font-size: 9px; color: #64748b;">REMAINING</p>
                 <p style="margin: 0; font-size: 13px; font-weight: 900; color: #2563eb; font-family: 'JetBrains Mono', monospace;">
-                  ${(data.seed * 11) % 25 + 8} km
+                  ${((data.seed * 11) % 25) + 8} km
                 </p>
               </div>
             </div>
@@ -5308,35 +7997,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
           <!-- Horizontally Scrollable Rake Track -->
           <div style="overflow-x: auto; padding: 6px 2px 10px 2px; display: flex; align-items: flex-end; gap: 6px; scrollbar-width: thin;" class="coach-rake-container">
-            ${data.coaches.map((c, idx) => {
-              const classBadgeColors = {
-                "ENG": { bg: "#475569", text: "#f8fafc" },
-                "1A": { bg: "#991B1B", text: "#fef2f2" },
-                "2A": { bg: "#6B21A8", text: "#faf5ff" },
-                "3A": { bg: "#1D4ED8", text: "#eff6ff" },
-                "CC": { bg: "#0284C7", text: "#f0f9ff" },
-                "EC": { bg: "#D97706", text: "#fffbeb" },
-                "SL": { bg: "#047857", text: "#ecfdf5" },
-                "PC": { bg: "#EA580C", text: "#fff7ed" },
-                "SLR": { bg: "#64748B", text: "#f8fafc" }
-              };
-              const col = classBadgeColors[c.classKey] || { bg: "#2563eb", text: "white" };
-              const isSelected = idx === activeCoachInspectorIndex;
-              const occPct = c.cap > 0 ? Math.round((c.booked / c.cap) * 100) : 100;
+            ${data.coaches
+              .map((c, idx) => {
+                const classBadgeColors = {
+                  ENG: { bg: "#475569", text: "#f8fafc" },
+                  "1A": { bg: "#991B1B", text: "#fef2f2" },
+                  "2A": { bg: "#6B21A8", text: "#faf5ff" },
+                  "3A": { bg: "#1D4ED8", text: "#eff6ff" },
+                  CC: { bg: "#0284C7", text: "#f0f9ff" },
+                  EC: { bg: "#D97706", text: "#fffbeb" },
+                  SL: { bg: "#047857", text: "#ecfdf5" },
+                  PC: { bg: "#EA580C", text: "#fff7ed" },
+                  SLR: { bg: "#64748B", text: "#f8fafc" },
+                };
+                const col = classBadgeColors[c.classKey] || {
+                  bg: "#2563eb",
+                  text: "white",
+                };
+                const isSelected = idx === activeCoachInspectorIndex;
+                const occPct =
+                  c.cap > 0 ? Math.round((c.booked / c.cap) * 100) : 100;
 
-              return `
+                return `
                 <div onclick="inspectCoach(${idx})"
                   class="coach-rake-box"
-                  style="flex-shrink: 0; width: 54px; background: ${isSelected ? '#eff6ff' : '#f8fafc'}; border: 1.5px solid ${isSelected ? '#2563eb' : '#cbd5e1'}; border-radius: 12px; padding: 6px 2px; text-align: center; cursor: pointer; transition: all 0.2s; transform: ${isSelected ? 'translateY(-4px)' : 'translateY(0)'}; box-shadow: ${isSelected ? '0 4px 12px rgba(37,99,235,0.25)' : 'none'};">
+                  style="flex-shrink: 0; width: 54px; background: ${isSelected ? "#eff6ff" : "#f8fafc"}; border: 1.5px solid ${isSelected ? "#2563eb" : "#cbd5e1"}; border-radius: 12px; padding: 6px 2px; text-align: center; cursor: pointer; transition: all 0.2s; transform: ${isSelected ? "translateY(-4px)" : "translateY(0)"}; box-shadow: ${isSelected ? "0 4px 12px rgba(37,99,235,0.25)" : "none"};">
                   <p style="font-size: 8px; color: #64748b; margin: 0 0 2px 0; font-family: 'JetBrains Mono', monospace; font-weight: 700;">#${idx + 1}</p>
                   <div style="background: ${col.bg}; height: 4px; border-radius: 3px; margin-bottom: 4px;"></div>
                   <p style="font-size: 11px; font-weight: 900; color: #0f172a; margin: 0; font-family: 'JetBrains Mono', monospace;">${c.code}</p>
-                  <span style="display: inline-block; font-size: 8px; font-weight: 800; color: ${occPct >= 95 ? '#b91c1c' : '#15803d'}; background: ${occPct >= 95 ? '#fef2f2' : '#f0fdf4'}; border: 1px solid ${occPct >= 95 ? '#fecaca' : '#bbf7d0'}; padding: 2px 4px; border-radius: 6px; margin-top: 2px;">
+                  <span style="display: inline-block; font-size: 8px; font-weight: 800; color: ${occPct >= 95 ? "#b91c1c" : "#15803d"}; background: ${occPct >= 95 ? "#fef2f2" : "#f0fdf4"}; border: 1px solid ${occPct >= 95 ? "#fecaca" : "#bbf7d0"}; padding: 2px 4px; border-radius: 6px; margin-top: 2px;">
                     ${occPct}%
                   </span>
                 </div>
               `;
-            }).join("")}
+              })
+              .join("")}
           </div>
 
           <!-- Railway Tracks representation -->
@@ -5363,21 +8058,37 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
 
             <div style="position: relative; padding-left: 6px;">
-              ${t.stations.map((st, idx) => {
-                const isPassed = idx <= data.currentStnIdx;
-                const isCurrentNext = idx === data.currentStnIdx + 1;
-                const isLast = idx === t.stations.length - 1;
-                const delayVal = typeof st.delay === 'number' ? st.delay : (t.delay || 0);
-                const stDelayCol = delayVal === 0 ? '#138808' : delayVal <= 15 ? '#d97706' : '#dc2626';
-                const stDelayBg = delayVal === 0 ? '#f0fdf4' : delayVal <= 15 ? '#fffbeb' : '#fef2f2';
+              ${t.stations
+                .map((st, idx) => {
+                  const isPassed = idx <= data.currentStnIdx;
+                  const isCurrentNext = idx === data.currentStnIdx + 1;
+                  const isLast = idx === t.stations.length - 1;
+                  const delayVal =
+                    typeof st.delay === "number" ? st.delay : t.delay || 0;
+                  const stDelayCol =
+                    delayVal === 0
+                      ? "#138808"
+                      : delayVal <= 15
+                        ? "#d97706"
+                        : "#dc2626";
+                  const stDelayBg =
+                    delayVal === 0
+                      ? "#f0fdf4"
+                      : delayVal <= 15
+                        ? "#fffbeb"
+                        : "#fef2f2";
 
-                return `
-                  <div style="position: relative; padding-left: 32px; padding-bottom: ${isLast ? '0' : '12px'};">
-                    ${!isLast ? `
-                      <div style="position: absolute; left: 11px; top: 18px; bottom: 0; width: 2px; background: ${isPassed ? '#10b981' : '#e2e8f0'};"></div>
-                    ` : ''}
+                  return `
+                  <div style="position: relative; padding-left: 32px; padding-bottom: ${isLast ? "0" : "12px"};">
+                    ${
+                      !isLast
+                        ? `
+                      <div style="position: absolute; left: 11px; top: 18px; bottom: 0; width: 2px; background: ${isPassed ? "#10b981" : "#e2e8f0"};"></div>
+                    `
+                        : ""
+                    }
 
-                    <div style="position: absolute; left: 0; top: 0; width: 24px; height: 24px; border-radius: 50%; background: ${isPassed ? '#10b981' : isCurrentNext ? '#2563eb' : '#94a3b8'}; color: white; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; box-shadow: ${isCurrentNext ? '0 0 0 3px rgba(37,99,235,0.2)' : 'none'};">
+                    <div style="position: absolute; left: 0; top: 0; width: 24px; height: 24px; border-radius: 50%; background: ${isPassed ? "#10b981" : isCurrentNext ? "#2563eb" : "#94a3b8"}; color: white; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; box-shadow: ${isCurrentNext ? "0 0 0 3px rgba(37,99,235,0.2)" : "none"};">
                       ${isPassed ? '<i class="fa-solid fa-check" style="font-size: 9px;"></i>' : idx + 1}
                     </div>
 
@@ -5386,11 +8097,11 @@ document.addEventListener("DOMContentLoaded", () => {
                         <div style="display: flex; align-items: center; gap: 5px;">
                           <div style="font-size: 13px; font-weight: 800; color: #12355B; font-family: 'Outfit', sans-serif;">${st.name}</div>
                           <span style="font-size: 9px; font-weight: 700; color: #64748b; font-family: 'JetBrains Mono', monospace; background: #f1f5f9; padding: 2px 6px; border-radius: 8px;">${st.code}</span>
-                          ${isPassed ? '<span style="font-size: 8px; font-weight: 800; color: #166534; background: #dcfce7; padding: 2px 6px; border-radius: 8px;">DEPARTED</span>' : ''}
-                          ${isCurrentNext ? '<span style="font-size: 8px; font-weight: 800; color: #1e40af; background: #dbeafe; padding: 2px 6px; border-radius: 8px;">NEXT STOP</span>' : ''}
+                          ${isPassed ? '<span style="font-size: 8px; font-weight: 800; color: #166534; background: #dcfce7; padding: 2px 6px; border-radius: 8px;">DEPARTED</span>' : ""}
+                          ${isCurrentNext ? '<span style="font-size: 8px; font-weight: 800; color: #1e40af; background: #dbeafe; padding: 2px 6px; border-radius: 8px;">NEXT STOP</span>' : ""}
                         </div>
                         <p style="margin: 1px 0 0 0; font-size: 10px; color: #64748b; font-weight: 600;">
-                          PF #${st.pf || (idx + 1)} &nbsp;•&nbsp; Arr: <span style="color: #0f172a; font-family: 'JetBrains Mono', monospace; font-weight: 700;">${window.LiveTrainEngine ? window.LiveTrainEngine.formatAMPM(st.arr) : st.arr}</span> &nbsp;•&nbsp; Dep: <span style="color: #0f172a; font-family: 'JetBrains Mono', monospace; font-weight: 700;">${window.LiveTrainEngine ? window.LiveTrainEngine.formatAMPM(st.dep) : st.dep}</span>
+                          PF #${st.pf || idx + 1} &nbsp;•&nbsp; Arr: <span style="color: #0f172a; font-family: 'JetBrains Mono', monospace; font-weight: 700;">${window.LiveTrainEngine ? window.LiveTrainEngine.formatAMPM(st.arr) : st.arr}</span> &nbsp;•&nbsp; Dep: <span style="color: #0f172a; font-family: 'JetBrains Mono', monospace; font-weight: 700;">${window.LiveTrainEngine ? window.LiveTrainEngine.formatAMPM(st.dep) : st.dep}</span>
                         </p>
                       </div>
 
@@ -5402,25 +8113,30 @@ document.addEventListener("DOMContentLoaded", () => {
                           </span>
                         </div>
                         <span style="padding: 3px 10px; border-radius: 8px; font-size: 10px; font-weight: 800; background: ${stDelayBg}; color: ${stDelayCol}; border: 1px solid ${stDelayCol}30;">
-                          ${delayVal === 0 ? '✓ ON TIME' : '+' + delayVal + ' MIN'}
+                          ${delayVal === 0 ? "✓ ON TIME" : "+" + delayVal + " MIN"}
                         </span>
                       </div>
                     </div>
 
-                    ${idx === data.currentStnIdx && !isLast ? `
+                    ${
+                      idx === data.currentStnIdx && !isLast
+                        ? `
                       <div style="margin: 8px 0 4px 0; background: #eff6ff; border: 1.5px dashed #2563eb; padding: 8px 12px; border-radius: 14px; display: flex; align-items: center; justify-content: space-between; font-size: 10px;">
                         <span style="color: #1e40af; font-weight: 800; display: flex; align-items: center; gap: 5px;">
                           <i class="fa-solid fa-train" style="color: #2563eb;"></i>
                           TRAIN HERE • ${data.curSpeed} km/h
                         </span>
                         <span style="color: #2563eb; font-weight: 700; font-family: 'JetBrains Mono', monospace;">
-                          ${(data.seed * 11) % 25 + 8} km to ${data.nextStn.code}
+                          ${((data.seed * 11) % 25) + 8} km to ${data.nextStn.code}
                         </span>
                       </div>
-                    ` : ''}
+                    `
+                        : ""
+                    }
                   </div>
                 `;
-              }).join("")}
+                })
+                .join("")}
             </div>
           </div>
 
@@ -5471,10 +8187,10 @@ document.addEventListener("DOMContentLoaded", () => {
                   <circle cx="330" cy="42" r="3" fill="white" stroke="#2563eb" stroke-width="1.5" />
                   <circle cx="380" cy="90" r="3" fill="white" stroke="#2563eb" stroke-width="1.5" />
 
-                  <text x="46" y="106" font-size="8" fill="#64748b" text-anchor="middle" font-weight="700">${t.stations[0] ? t.stations[0].code : 'ORG'}</text>
+                  <text x="46" y="106" font-size="8" fill="#64748b" text-anchor="middle" font-weight="700">${t.stations[0] ? t.stations[0].code : "ORG"}</text>
                   <text x="190" y="106" font-size="8" fill="#64748b" text-anchor="middle" font-weight="700">${data.currentStn.code}</text>
                   <text x="260" y="106" font-size="8" fill="#10b981" text-anchor="middle" font-weight="800">HERE</text>
-                  <text x="380" y="106" font-size="8" fill="#64748b" text-anchor="middle" font-weight="700">${t.stations[t.stations.length - 1] ? t.stations[t.stations.length - 1].code : 'DST'}</text>
+                  <text x="380" y="106" font-size="8" fill="#64748b" text-anchor="middle" font-weight="700">${t.stations[t.stations.length - 1] ? t.stations[t.stations.length - 1].code : "DST"}</text>
                 </svg>
               </div>
             </div>
@@ -5633,8 +8349,13 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
 
     // 1. Render Route Weather Banner (Origin, Cruising, Destination)
-    if (window.WeatherEngine && typeof window.WeatherEngine.renderTrainRouteWeatherBanner === "function") {
-      const weatherContainer = document.getElementById("trainDetailRouteWeatherContainer");
+    if (
+      window.WeatherEngine &&
+      typeof window.WeatherEngine.renderTrainRouteWeatherBanner === "function"
+    ) {
+      const weatherContainer = document.getElementById(
+        "trainDetailRouteWeatherContainer",
+      );
       if (weatherContainer) {
         window.WeatherEngine.renderTrainRouteWeatherBanner(t, weatherContainer);
       }
@@ -5644,11 +8365,16 @@ document.addEventListener("DOMContentLoaded", () => {
     if (window.WeatherEngine && Array.isArray(t.stations)) {
       t.stations.forEach((st, idx) => {
         setTimeout(async () => {
-          const badgeEl = document.getElementById(`stnWeatherBadge_${st.code}_${idx}`);
+          const badgeEl = document.getElementById(
+            `stnWeatherBadge_${st.code}_${idx}`,
+          );
           if (badgeEl) {
             try {
-              const stWeather = await window.WeatherEngine.getStationWeather(st.code);
-              badgeEl.innerHTML = window.WeatherEngine.getStationWeatherBadgeHtml(stWeather);
+              const stWeather = await window.WeatherEngine.getStationWeather(
+                st.code,
+              );
+              badgeEl.innerHTML =
+                window.WeatherEngine.getStationWeatherBadgeHtml(stWeather);
             } catch (err) {
               console.warn(`Could not load weather for stop ${st.code}:`, err);
             }
@@ -5748,10 +8474,17 @@ document.addEventListener("DOMContentLoaded", () => {
     renderReschedulingDetailPanel(trainNumber);
   };
 
-  window.applyRescheduleDirective = function (trainNumber, solutionId, timeSaved) {
+  window.applyRescheduleDirective = function (
+    trainNumber,
+    solutionId,
+    timeSaved,
+  ) {
     if (!window.ReschedulingEngine) return;
     window.ReschedulingEngine.applySolution(trainNumber, solutionId, timeSaved);
-    showToast(`🚀 AI Directive Applied! Dispatched to Section Controller via Kavach RF (${timeSaved}m delay recovered)`, "success");
+    showToast(
+      `🚀 AI Directive Applied! Dispatched to Section Controller via Kavach RF (${timeSaved}m delay recovered)`,
+      "success",
+    );
     renderReschedulingDetailPanel(trainNumber);
     renderReschedulingLeftList();
     updateReschedulingStatusBar();
@@ -5814,28 +8547,38 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let trains = [];
     if (reschedulingStateFilter && reschedulingStateFilter !== "all") {
-      trains = window.LiveTrainEngine.getTrainsByState(reschedulingStateFilter, { minDelay: 1, limit: 100, all: true });
+      trains = window.LiveTrainEngine.getTrainsByState(
+        reschedulingStateFilter,
+        { minDelay: 1, limit: 100, all: true },
+      );
     } else {
-      trains = window.LiveTrainEngine.getDelayedTrainsGrid({ minDelay: 1, limit: 100, all: true });
+      trains = window.LiveTrainEngine.getDelayedTrainsGrid({
+        minDelay: 1,
+        limit: 100,
+        all: true,
+      });
     }
 
     // Apply search query
     if (reschedulingSearchQuery) {
-      trains = trains.filter(t =>
-        t.number.toLowerCase().includes(reschedulingSearchQuery) ||
-        t.name.toLowerCase().includes(reschedulingSearchQuery) ||
-        (t.from && t.from.toLowerCase().includes(reschedulingSearchQuery)) ||
-        (t.to && t.to.toLowerCase().includes(reschedulingSearchQuery))
+      trains = trains.filter(
+        (t) =>
+          t.number.toLowerCase().includes(reschedulingSearchQuery) ||
+          t.name.toLowerCase().includes(reschedulingSearchQuery) ||
+          (t.from && t.from.toLowerCase().includes(reschedulingSearchQuery)) ||
+          (t.to && t.to.toLowerCase().includes(reschedulingSearchQuery)),
       );
     }
 
     // Apply severity filter
     if (reschedulingSeverityFilter === "major") {
-      trains = trains.filter(t => t.delayMinutes > 30);
+      trains = trains.filter((t) => t.delayMinutes > 30);
     } else if (reschedulingSeverityFilter === "moderate") {
-      trains = trains.filter(t => t.delayMinutes >= 15 && t.delayMinutes <= 30);
+      trains = trains.filter(
+        (t) => t.delayMinutes >= 15 && t.delayMinutes <= 30,
+      );
     } else if (reschedulingSeverityFilter === "minor") {
-      trains = trains.filter(t => t.delayMinutes < 15);
+      trains = trains.filter((t) => t.delayMinutes < 15);
     }
 
     if (trains.length === 0) {
@@ -5850,28 +8593,47 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Auto-select first train if none selected or selected not in list
-    if (!selectedRescheduleTrainNumber || !trains.some(t => t.number === selectedRescheduleTrainNumber)) {
+    if (
+      !selectedRescheduleTrainNumber ||
+      !trains.some((t) => t.number === selectedRescheduleTrainNumber)
+    ) {
       selectedRescheduleTrainNumber = trains[0].number;
-      setTimeout(() => renderReschedulingDetailPanel(selectedRescheduleTrainNumber), 50);
+      setTimeout(
+        () => renderReschedulingDetailPanel(selectedRescheduleTrainNumber),
+        50,
+      );
     }
 
-    listEl.innerHTML = trains.map(tr => {
-      const isSelected = tr.number === selectedRescheduleTrainNumber;
-      const delayColor = tr.delayMinutes > 30 ? "#dc2626" : tr.delayMinutes > 15 ? "#ea580c" : "#d97706";
-      const delayBg = tr.delayMinutes > 30 ? "#fef2f2" : tr.delayMinutes > 15 ? "#fff7ed" : "#fffbeb";
-      const isApplied = window.ReschedulingEngine && !!window.ReschedulingEngine.appliedSolutions[tr.number];
+    listEl.innerHTML = trains
+      .map((tr) => {
+        const isSelected = tr.number === selectedRescheduleTrainNumber;
+        const delayColor =
+          tr.delayMinutes > 30
+            ? "#dc2626"
+            : tr.delayMinutes > 15
+              ? "#ea580c"
+              : "#d97706";
+        const delayBg =
+          tr.delayMinutes > 30
+            ? "#fef2f2"
+            : tr.delayMinutes > 15
+              ? "#fff7ed"
+              : "#fffbeb";
+        const isApplied =
+          window.ReschedulingEngine &&
+          !!window.ReschedulingEngine.appliedSolutions[tr.number];
 
-      return `
+        return `
         <div onclick="selectRescheduleTrain('${tr.number}')"
-          class="p-3.5 rounded-xl transition-all cursor-pointer space-y-2 border-l-4 ${isSelected ? 'bg-blue-50/90 border-blue-500 shadow-md ring-2 ring-blue-400/30' : 'bg-white hover:bg-slate-50 border-slate-200'}"
-          style="border-left-color: ${isSelected ? '#2563eb' : delayColor} !important;">
+          class="p-3.5 rounded-xl transition-all cursor-pointer space-y-2 border-l-4 ${isSelected ? "bg-blue-50/90 border-blue-500 shadow-md ring-2 ring-blue-400/30" : "bg-white hover:bg-slate-50 border-slate-200"}"
+          style="border-left-color: ${isSelected ? "#2563eb" : delayColor} !important;">
 
           <div class="flex items-start justify-between gap-2">
             <div>
               <div class="flex items-center gap-1.5 flex-wrap">
-                <span class="text-xs font-black font-mono ${isSelected ? 'text-blue-700' : 'text-slate-800'}">${tr.number}</span>
-                <span class="px-2 py-0.5 rounded text-[9px] font-extrabold uppercase bg-slate-100 text-slate-700">${tr.type || 'Express'}</span>
-                ${isApplied ? '<span class="px-1.5 py-0.5 rounded text-[9px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300">AI OPTIMIZED</span>' : ''}
+                <span class="text-xs font-black font-mono ${isSelected ? "text-blue-700" : "text-slate-800"}">${tr.number}</span>
+                <span class="px-2 py-0.5 rounded text-[9px] font-extrabold uppercase bg-slate-100 text-slate-700">${tr.type || "Express"}</span>
+                ${isApplied ? '<span class="px-1.5 py-0.5 rounded text-[9px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300">AI OPTIMIZED</span>' : ""}
               </div>
               <h5 class="text-xs font-black text-[#12355B] font-['Outfit'] mt-0.5 line-clamp-1">${tr.name}</h5>
             </div>
@@ -5887,7 +8649,8 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         </div>
       `;
-    }).join("");
+      })
+      .join("");
   }
 
   function renderReschedulingDetailPanel(trainNumber) {
@@ -5906,13 +8669,32 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const reasons = window.ReschedulingEngine.generateDelayReasons(trainStatus);
-    const solutions = window.ReschedulingEngine.generateProposedSolutions(trainStatus, reasons);
+    const solutions = window.ReschedulingEngine.generateProposedSolutions(
+      trainStatus,
+      reasons,
+    );
     const cascade = window.ReschedulingEngine.getDependencyCascade(trainStatus);
     const isApplied = !!window.ReschedulingEngine.appliedSolutions[trainNumber];
-    const appliedData = isApplied ? window.ReschedulingEngine.appliedSolutions[trainNumber] : null;
+    const appliedData = isApplied
+      ? window.ReschedulingEngine.appliedSolutions[trainNumber]
+      : null;
 
-    const delayColor = trainStatus.delayMinutes > 30 ? "#dc2626" : trainStatus.delayMinutes > 15 ? "#ea580c" : trainStatus.delayMinutes > 0 ? "#d97706" : "#16a34a";
-    const delayBg = trainStatus.delayMinutes > 30 ? "#fef2f2" : trainStatus.delayMinutes > 15 ? "#fff7ed" : trainStatus.delayMinutes > 0 ? "#fffbeb" : "#f0fdf4";
+    const delayColor =
+      trainStatus.delayMinutes > 30
+        ? "#dc2626"
+        : trainStatus.delayMinutes > 15
+          ? "#ea580c"
+          : trainStatus.delayMinutes > 0
+            ? "#d97706"
+            : "#16a34a";
+    const delayBg =
+      trainStatus.delayMinutes > 30
+        ? "#fef2f2"
+        : trainStatus.delayMinutes > 15
+          ? "#fff7ed"
+          : trainStatus.delayMinutes > 0
+            ? "#fffbeb"
+            : "#f0fdf4";
 
     panelEl.innerHTML = `
       <div class="space-y-6">
@@ -5927,7 +8709,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">
                   <i class="fa-solid fa-shield-halved mr-1"></i>KAVACH 4.0 SIL-4 PROTECTED
                 </span>
-                ${isApplied ? '<span class="px-2.5 py-0.5 rounded-full text-xs font-black bg-purple-100 text-purple-800 border border-purple-300 animate-pulse"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i>DIRECTIVE ACTIVE</span>' : ''}
+                ${isApplied ? '<span class="px-2.5 py-0.5 rounded-full text-xs font-black bg-purple-100 text-purple-800 border border-purple-300 animate-pulse"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i>DIRECTIVE ACTIVE</span>' : ""}
               </div>
               <h3 class="text-xl font-black text-[#12355B] font-['Outfit'] mt-1">${trainStatus.trainName}</h3>
               <p class="text-xs text-slate-500 font-semibold flex items-center gap-2">
@@ -5969,7 +8751,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-100">
-                ${reasons.map(r => `
+                ${reasons
+                  .map(
+                    (r) => `
                   <tr class="hover:bg-slate-50/80 transition-colors">
                     <td class="py-2.5 px-3">
                       <span class="px-2 py-0.5 rounded-md text-[10px] font-black inline-flex items-center gap-1.5"
@@ -5981,7 +8765,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     <td class="py-2.5 px-3 font-mono text-[11px] text-slate-600">${r.location}</td>
                     <td class="py-2.5 px-3 text-right font-mono font-black" style="color: ${r.color};">${r.timeImpact}</td>
                   </tr>
-                `).join("")}
+                `,
+                  )
+                  .join("")}
               </tbody>
             </table>
           </div>
@@ -6002,14 +8788,16 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-            ${solutions.map((sol, idx) => {
-              const solApplied = isApplied && appliedData.solutionId === sol.id;
-              return `
-                <div class="p-4 rounded-xl border flex flex-col justify-between space-y-3 transition-all ${solApplied ? 'bg-purple-50/70 border-purple-400 ring-2 ring-purple-300 shadow-md' : 'bg-slate-50/60 border-slate-200 hover:border-slate-300'}">
+            ${solutions
+              .map((sol, idx) => {
+                const solApplied =
+                  isApplied && appliedData.solutionId === sol.id;
+                return `
+                <div class="p-4 rounded-xl border flex flex-col justify-between space-y-3 transition-all ${solApplied ? "bg-purple-50/70 border-purple-400 ring-2 ring-purple-300 shadow-md" : "bg-slate-50/60 border-slate-200 hover:border-slate-300"}">
                   <div class="space-y-2">
                     <div class="flex items-center justify-between gap-1">
                       <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase"
-                        style="background-color: ${sol.riskBadgeBg || '#dcfce7'}; color: ${sol.riskBadgeText || '#15803d'};">
+                        style="background-color: ${sol.riskBadgeBg || "#dcfce7"}; color: ${sol.riskBadgeText || "#15803d"};">
                         ${sol.risk} RISK
                       </span>
                       <span class="px-2 py-0.5 rounded text-[10px] font-mono font-black bg-emerald-100 text-emerald-800">
@@ -6022,20 +8810,25 @@ document.addEventListener("DOMContentLoaded", () => {
                   </div>
 
                   <div>
-                    ${solApplied ? `
+                    ${
+                      solApplied
+                        ? `
                       <button disabled class="w-full py-2 rounded-xl bg-emerald-600 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow cursor-default">
                         <i class="fa-solid fa-check-double"></i> Directive Applied & Active
                       </button>
-                    ` : `
+                    `
+                        : `
                       <button onclick="applyRescheduleDirective('${trainStatus.trainNumber}', '${sol.id}', ${sol.timeSaved})"
                         class="w-full py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow hover:shadow-md cursor-pointer transition-all">
                         <i class="fa-solid fa-bolt text-amber-300"></i> Apply Directive
                       </button>
-                    `}
+                    `
+                    }
                   </div>
                 </div>
               `;
-            }).join("")}
+              })
+              .join("")}
           </div>
         </div>
 
@@ -6123,7 +8916,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-100">
-                ${cascade.map(c => `
+                ${cascade
+                  .map(
+                    (c) => `
                   <tr class="hover:bg-slate-50/80 transition-colors">
                     <td class="py-2.5 px-3">
                       <span class="font-mono font-bold text-blue-700">#${c.number}</span>
@@ -6132,16 +8927,18 @@ document.addEventListener("DOMContentLoaded", () => {
                     <td class="py-2.5 px-3 text-slate-600 font-mono text-[11px]">${c.segment}</td>
                     <td class="py-2.5 px-3 font-mono font-bold text-red-600">+${c.initialDelay}m</td>
                     <td class="py-2.5 px-3 font-mono font-black text-emerald-600">-${c.cascadeReduction}m</td>
-                    <td class="py-2.5 px-3 font-mono font-bold ${c.finalDelay === 0 ? 'text-emerald-700' : 'text-amber-600'}">
+                    <td class="py-2.5 px-3 font-mono font-bold ${c.finalDelay === 0 ? "text-emerald-700" : "text-amber-600"}">
                       +${c.finalDelay}m
                     </td>
                     <td class="py-2.5 px-3 text-right">
-                      <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase ${c.finalDelay === 0 ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'bg-blue-100 text-blue-800 border border-blue-300'}">
+                      <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase ${c.finalDelay === 0 ? "bg-emerald-100 text-emerald-800 border border-emerald-300" : "bg-blue-100 text-blue-800 border border-blue-300"}">
                         ${c.status}
                       </span>
                     </td>
                   </tr>
-                `).join("")}
+                `,
+                  )
+                  .join("")}
               </tbody>
             </table>
           </div>
@@ -6152,7 +8949,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Render the 4 Chart.js charts
     setTimeout(() => {
-      const chartData = window.ReschedulingEngine.generateReschedulingChartsData(trainStatus);
+      const chartData =
+        window.ReschedulingEngine.generateReschedulingChartsData(trainStatus);
       initReschedulingCharts(chartData);
     }, 100);
   }
@@ -6161,9 +8959,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!window.Chart || !chartData) return;
 
     // Destroy existing instances to avoid duplicates
-    Object.keys(reschedulingChartInstances).forEach(k => {
+    Object.keys(reschedulingChartInstances).forEach((k) => {
       if (reschedulingChartInstances[k]) {
-        try { reschedulingChartInstances[k].destroy(); } catch (e) {}
+        try {
+          reschedulingChartInstances[k].destroy();
+        } catch (e) {}
       }
     });
     reschedulingChartInstances = {};
@@ -6183,7 +8983,7 @@ document.addEventListener("DOMContentLoaded", () => {
               backgroundColor: "rgba(220, 38, 38, 0.08)",
               borderWidth: 2,
               pointRadius: 2,
-              tension: 0.3
+              tension: 0.3,
             },
             {
               label: "Post-Directive Recovery",
@@ -6194,21 +8994,34 @@ document.addEventListener("DOMContentLoaded", () => {
               borderDash: [4, 4],
               pointRadius: 3,
               fill: true,
-              tension: 0.3
-            }
-          ]
+              tension: 0.3,
+            },
+          ],
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: { position: "top", labels: { boxWidth: 10, font: { size: 9, family: "'Plus Jakarta Sans'" } } }
+            legend: {
+              position: "top",
+              labels: {
+                boxWidth: 10,
+                font: { size: 9, family: "'Plus Jakarta Sans'" },
+              },
+            },
           },
           scales: {
-            y: { beginAtZero: true, grid: { color: "#f1f5f9" }, ticks: { font: { size: 9, family: "'JetBrains Mono'" } } },
-            x: { grid: { display: false }, ticks: { font: { size: 9, family: "'JetBrains Mono'" } } }
-          }
-        }
+            y: {
+              beginAtZero: true,
+              grid: { color: "#f1f5f9" },
+              ticks: { font: { size: 9, family: "'JetBrains Mono'" } },
+            },
+            x: {
+              grid: { display: false },
+              ticks: { font: { size: 9, family: "'JetBrains Mono'" } },
+            },
+          },
+        },
       });
     }
 
@@ -6226,7 +9039,7 @@ document.addEventListener("DOMContentLoaded", () => {
               borderColor: "#64748b",
               backgroundColor: "transparent",
               borderWidth: 1.5,
-              tension: 0.25
+              tension: 0.25,
             },
             {
               label: "Optimized Speed",
@@ -6235,21 +9048,34 @@ document.addEventListener("DOMContentLoaded", () => {
               backgroundColor: "rgba(37, 99, 235, 0.12)",
               borderWidth: 2.5,
               fill: true,
-              tension: 0.25
-            }
-          ]
+              tension: 0.25,
+            },
+          ],
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: { position: "top", labels: { boxWidth: 10, font: { size: 9, family: "'Plus Jakarta Sans'" } } }
+            legend: {
+              position: "top",
+              labels: {
+                boxWidth: 10,
+                font: { size: 9, family: "'Plus Jakarta Sans'" },
+              },
+            },
           },
           scales: {
-            y: { beginAtZero: true, grid: { color: "#f1f5f9" }, ticks: { font: { size: 9, family: "'JetBrains Mono'" } } },
-            x: { grid: { display: false }, ticks: { font: { size: 9, family: "'JetBrains Mono'" } } }
-          }
-        }
+            y: {
+              beginAtZero: true,
+              grid: { color: "#f1f5f9" },
+              ticks: { font: { size: 9, family: "'JetBrains Mono'" } },
+            },
+            x: {
+              grid: { display: false },
+              ticks: { font: { size: 9, family: "'JetBrains Mono'" } },
+            },
+          },
+        },
       });
     }
 
@@ -6260,22 +9086,31 @@ document.addEventListener("DOMContentLoaded", () => {
         type: "bar",
         data: {
           labels: chartData.cascadeLabels,
-          datasets: [{
-            label: "Minutes Recovered",
-            data: chartData.cascadeReductions,
-            backgroundColor: ["#3b82f6", "#8b5cf6", "#10b981", "#06b6d4"],
-            borderRadius: 6
-          }]
+          datasets: [
+            {
+              label: "Minutes Recovered",
+              data: chartData.cascadeReductions,
+              backgroundColor: ["#3b82f6", "#8b5cf6", "#10b981", "#06b6d4"],
+              borderRadius: 6,
+            },
+          ],
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
           plugins: { legend: { display: false } },
           scales: {
-            y: { beginAtZero: true, grid: { color: "#f1f5f9" }, ticks: { font: { size: 9, family: "'JetBrains Mono'" } } },
-            x: { grid: { display: false }, ticks: { font: { size: 9, family: "'Plus Jakarta Sans'" } } }
-          }
-        }
+            y: {
+              beginAtZero: true,
+              grid: { color: "#f1f5f9" },
+              ticks: { font: { size: 9, family: "'JetBrains Mono'" } },
+            },
+            x: {
+              grid: { display: false },
+              ticks: { font: { size: 9, family: "'Plus Jakarta Sans'" } },
+            },
+          },
+        },
       });
     }
 
@@ -6286,38 +9121,58 @@ document.addEventListener("DOMContentLoaded", () => {
         type: "bar",
         data: {
           labels: chartData.solLabels,
-          datasets: [{
-            label: "Time Saved (Min)",
-            data: chartData.solSavings,
-            backgroundColor: ["#8b5cf6", "#10b981", "#3b82f6"],
-            borderRadius: 6
-          }]
+          datasets: [
+            {
+              label: "Time Saved (Min)",
+              data: chartData.solSavings,
+              backgroundColor: ["#8b5cf6", "#10b981", "#3b82f6"],
+              borderRadius: 6,
+            },
+          ],
         },
         options: {
-          indexAxis: 'y',
+          indexAxis: "y",
           responsive: true,
           maintainAspectRatio: false,
           plugins: { legend: { display: false } },
           scales: {
-            x: { beginAtZero: true, grid: { color: "#f1f5f9" }, ticks: { font: { size: 9, family: "'JetBrains Mono'" } } },
-            y: { grid: { display: false }, ticks: { font: { size: 9, family: "'Plus Jakarta Sans'" } } }
-          }
-        }
+            x: {
+              beginAtZero: true,
+              grid: { color: "#f1f5f9" },
+              ticks: { font: { size: 9, family: "'JetBrains Mono'" } },
+            },
+            y: {
+              grid: { display: false },
+              ticks: { font: { size: 9, family: "'Plus Jakarta Sans'" } },
+            },
+          },
+        },
       });
     }
   }
 
   function renderReschedulingSection(container) {
     if (window.LiveTrainEngine && isRealDatasetsLoaded) {
-      window.LiveTrainEngine.init(irTrainDatabase, irSchedulesIndex, irStations, irDelayModel);
+      window.LiveTrainEngine.init(
+        irTrainDatabase,
+        irSchedulesIndex,
+        irStations,
+        irDelayModel,
+      );
     }
     if (window.ReschedulingEngine) {
       window.ReschedulingEngine.init(window.LiveTrainEngine);
     }
 
-    const states = window.LiveTrainEngine ? window.LiveTrainEngine.getAllStates() : [];
-    const nowIST = window.LiveTrainEngine ? window.LiveTrainEngine.getISTTime() : new Date();
-    const timeAMPM = window.LiveTrainEngine ? window.LiveTrainEngine.formatAMPM(nowIST) : "--";
+    const states = window.LiveTrainEngine
+      ? window.LiveTrainEngine.getAllStates()
+      : [];
+    const nowIST = window.LiveTrainEngine
+      ? window.LiveTrainEngine.getISTTime()
+      : new Date();
+    const timeAMPM = window.LiveTrainEngine
+      ? window.LiveTrainEngine.formatAMPM(nowIST)
+      : "--";
 
     container.innerHTML = `
       <div class="space-y-5">
@@ -6328,7 +9183,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <div>
               <div class="flex items-center gap-2 mb-1">
                 <span class="px-2.5 py-0.5 rounded-md bg-[#FF9933] text-slate-950 text-[10px] font-black uppercase tracking-wider">
-                  GOVERNMENT OF INDIA • MINISTRY OF RAILWAYS
+                  AUTONEX • RAILWAY INTELLIGENCE
                 </span>
                 <span class="px-2.5 py-0.5 rounded-md bg-purple-500/30 text-purple-200 border border-purple-400/40 text-[10px] font-black uppercase">
                   <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> AI RESCHEDULING COMMAND
@@ -6363,7 +9218,7 @@ document.addEventListener("DOMContentLoaded", () => {
               <select id="rescheduleStateFilterSelect" onchange="setRescheduleStateFilter(this.value)"
                 class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 focus:outline-none focus:border-purple-500">
                 <option value="all">All States (Pan-India Network)</option>
-                ${states.map(st => `<option value="${st}">${st}</option>`).join("")}
+                ${states.map((st) => `<option value="${st}">${st}</option>`).join("")}
               </select>
             </div>
 
@@ -6430,7 +9285,8 @@ document.addEventListener("DOMContentLoaded", () => {
     updateReschedulingStatusBar();
 
     // Setup 10-second auto-refresh interval for rescheduling
-    if (reschedulingAutoRefreshTimer) clearInterval(reschedulingAutoRefreshTimer);
+    if (reschedulingAutoRefreshTimer)
+      clearInterval(reschedulingAutoRefreshTimer);
     reschedulingAutoRefreshTimer = setInterval(() => {
       if (activeNavView !== "rescheduling") {
         clearInterval(reschedulingAutoRefreshTimer);
@@ -6483,7 +9339,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Autocomplete search handlers
   window.handleStationAutocomplete = function (type, query) {
-    const dropdownEl = document.getElementById(type === "from" ? "stationDelayFromDropdown" : "stationDelayToDropdown");
+    const dropdownEl = document.getElementById(
+      type === "from" ? "stationDelayFromDropdown" : "stationDelayToDropdown",
+    );
     if (!dropdownEl || !window.LiveTrainEngine) return;
 
     const trimmed = (query || "").trim();
@@ -6500,16 +9358,20 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    dropdownEl.innerHTML = matches.map(st => `
+    dropdownEl.innerHTML = matches
+      .map(
+        (st) => `
       <div onclick="selectStationAutocomplete('${type}', '${st.code}', '${st.name ? st.name.replace(/'/g, "\\'") : st.code}')"
         class="p-2.5 hover:bg-blue-50 cursor-pointer flex items-center justify-between border-b border-slate-100 last:border-0 transition-colors">
         <div class="truncate mr-2">
           <p class="text-xs font-bold text-slate-800 truncate">${st.name}</p>
-          <p class="text-[10px] text-slate-400 font-mono">${st.state || st.zone || 'Indian Railways'}</p>
+          <p class="text-[10px] text-slate-400 font-mono">${st.state || st.zone || "Indian Railways"}</p>
         </div>
         <span class="px-2 py-0.5 rounded font-mono font-black text-[10px] bg-blue-100 text-blue-800 shrink-0">${st.code}</span>
       </div>
-    `).join("");
+    `,
+      )
+      .join("");
 
     dropdownEl.classList.remove("hidden");
   };
@@ -6552,7 +9414,9 @@ document.addEventListener("DOMContentLoaded", () => {
       stationDelaySearchTo = toEl.value.trim();
     }
 
-    const resultsContainer = document.getElementById("stationDelaySearchResultsContainer");
+    const resultsContainer = document.getElementById(
+      "stationDelaySearchResultsContainer",
+    );
     if (!resultsContainer) return;
 
     if (!window.LiveTrainEngine) {
@@ -6561,10 +9425,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Resolves both station codes or station names to find ALL live trains
-    const matches = window.LiveTrainEngine.searchTrainsBetweenStations(stationDelaySearchFrom, stationDelaySearchTo);
+    const matches = window.LiveTrainEngine.searchTrainsBetweenStations(
+      stationDelaySearchFrom,
+      stationDelaySearchTo,
+    );
 
-    const fromCodeResolved = window.LiveTrainEngine.resolveStationCode(stationDelaySearchFrom);
-    const toCodeResolved = window.LiveTrainEngine.resolveStationCode(stationDelaySearchTo);
+    const fromCodeResolved = window.LiveTrainEngine.resolveStationCode(
+      stationDelaySearchFrom,
+    );
+    const toCodeResolved =
+      window.LiveTrainEngine.resolveStationCode(stationDelaySearchTo);
 
     if (matches.length === 0) {
       resultsContainer.innerHTML = `
@@ -6581,8 +9451,8 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const delayedCount = matches.filter(t => t.delayMinutes > 0).length;
-    const runningCount = matches.filter(t => t.state === "RUNNING").length;
+    const delayedCount = matches.filter((t) => t.delayMinutes > 0).length;
+    const runningCount = matches.filter((t) => t.state === "RUNNING").length;
 
     resultsContainer.innerHTML = `
       <div class="space-y-3">
@@ -6591,13 +9461,28 @@ document.addEventListener("DOMContentLoaded", () => {
           <span class="text-blue-700 font-mono">${fromCodeResolved} ➔ ${toCodeResolved}</span>
         </div>
         <div class="space-y-2.5 max-h-[600px] overflow-y-auto pr-1">
-          ${matches.map(tr => {
-            const isDelayed = tr.delayMinutes > 0;
-            const delayColor = tr.delayMinutes > 30 ? "#dc2626" : tr.delayMinutes > 15 ? "#ea580c" : tr.delayMinutes > 0 ? "#d97706" : "#16a34a";
-            const delayBg = tr.delayMinutes > 30 ? "#fef2f2" : tr.delayMinutes > 15 ? "#fff7ed" : tr.delayMinutes > 0 ? "#fffbeb" : "#f0fdf4";
-            const isRunning = tr.state === "RUNNING";
+          ${matches
+            .map((tr) => {
+              const isDelayed = tr.delayMinutes > 0;
+              const delayColor =
+                tr.delayMinutes > 30
+                  ? "#dc2626"
+                  : tr.delayMinutes > 15
+                    ? "#ea580c"
+                    : tr.delayMinutes > 0
+                      ? "#d97706"
+                      : "#16a34a";
+              const delayBg =
+                tr.delayMinutes > 30
+                  ? "#fef2f2"
+                  : tr.delayMinutes > 15
+                    ? "#fff7ed"
+                    : tr.delayMinutes > 0
+                      ? "#fffbeb"
+                      : "#f0fdf4";
+              const isRunning = tr.state === "RUNNING";
 
-            return `
+              return `
               <div onclick="openTrainDelayModal('${tr.number}')"
                 class="p-3.5 rounded-xl bg-white border hover:border-blue-400 shadow-sm hover:shadow-md transition-all cursor-pointer space-y-2 border-l-4 group"
                 style="border-left-color: ${delayColor} !important;">
@@ -6606,8 +9491,8 @@ document.addEventListener("DOMContentLoaded", () => {
                   <div>
                     <div class="flex items-center gap-1.5 flex-wrap">
                       <span class="text-xs font-extrabold font-mono text-blue-600">${tr.number}</span>
-                      <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-slate-100 text-slate-700">${tr.type || 'Express'}</span>
-                      <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase ${isRunning ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-600'}">
+                      <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-slate-100 text-slate-700">${tr.type || "Express"}</span>
+                      <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase ${isRunning ? "bg-emerald-100 text-emerald-800" : "bg-slate-100 text-slate-600"}">
                         ${isRunning ? '<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-ping mr-1"></span>RUNNING' : tr.state}
                       </span>
                     </div>
@@ -6615,7 +9500,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   </div>
                   <span class="px-2.5 py-1 rounded-lg text-[10px] font-black shrink-0 border"
                     style="background-color: ${delayBg}; color: ${delayColor}; border-color: ${delayColor}40;">
-                    ${isDelayed ? `+${tr.delayMinutes} MIN DELAY` : 'ON TIME'}
+                    ${isDelayed ? `+${tr.delayMinutes} MIN DELAY` : "ON TIME"}
                   </span>
                 </div>
 
@@ -6624,7 +9509,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   <span class="text-slate-300">•</span>
                   <span>Speed: <strong class="text-slate-800 font-mono">${tr.speed} km/h</strong></span>
                   <span class="text-slate-300">•</span>
-                  <span>Arr: <strong class="${isDelayed ? 'text-red-600' : 'text-emerald-700'} font-mono">${tr.arrivalAMPM}</strong></span>
+                  <span>Arr: <strong class="${isDelayed ? "text-red-600" : "text-emerald-700"} font-mono">${tr.arrivalAMPM}</strong></span>
                 </div>
 
                 <div class="p-2 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-between text-[10px] font-mono">
@@ -6633,7 +9518,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
               </div>
             `;
-          }).join("")}
+            })
+            .join("")}
         </div>
       </div>
     `;
@@ -6650,29 +9536,39 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let delayedTrains = [];
     if (delayGridStateFilter && delayGridStateFilter !== "all") {
-      delayedTrains = window.LiveTrainEngine.getTrainsByState(delayGridStateFilter, { minDelay: 1, limit: 120, all: true });
+      delayedTrains = window.LiveTrainEngine.getTrainsByState(
+        delayGridStateFilter,
+        { minDelay: 1, limit: 120, all: true },
+      );
     } else {
-      delayedTrains = window.LiveTrainEngine.getDelayedTrainsGrid({ minDelay: 1, limit: 120 });
+      delayedTrains = window.LiveTrainEngine.getDelayedTrainsGrid({
+        minDelay: 1,
+        limit: 120,
+      });
     }
 
     // Apply search query
     if (delayGridSearchQuery) {
-      delayedTrains = delayedTrains.filter(t =>
-        t.number.toLowerCase().includes(delayGridSearchQuery) ||
-        t.name.toLowerCase().includes(delayGridSearchQuery) ||
-        (t.from && t.from.toLowerCase().includes(delayGridSearchQuery)) ||
-        (t.to && t.to.toLowerCase().includes(delayGridSearchQuery)) ||
-        (t.currentStation && t.currentStation.toLowerCase().includes(delayGridSearchQuery))
+      delayedTrains = delayedTrains.filter(
+        (t) =>
+          t.number.toLowerCase().includes(delayGridSearchQuery) ||
+          t.name.toLowerCase().includes(delayGridSearchQuery) ||
+          (t.from && t.from.toLowerCase().includes(delayGridSearchQuery)) ||
+          (t.to && t.to.toLowerCase().includes(delayGridSearchQuery)) ||
+          (t.currentStation &&
+            t.currentStation.toLowerCase().includes(delayGridSearchQuery)),
       );
     }
 
     // Apply severity filter
     if (delayGridSeverityFilter === "major") {
-      delayedTrains = delayedTrains.filter(t => t.delayMinutes > 30);
+      delayedTrains = delayedTrains.filter((t) => t.delayMinutes > 30);
     } else if (delayGridSeverityFilter === "moderate") {
-      delayedTrains = delayedTrains.filter(t => t.delayMinutes >= 15 && t.delayMinutes <= 30);
+      delayedTrains = delayedTrains.filter(
+        (t) => t.delayMinutes >= 15 && t.delayMinutes <= 30,
+      );
     } else if (delayGridSeverityFilter === "minor") {
-      delayedTrains = delayedTrains.filter(t => t.delayMinutes < 15);
+      delayedTrains = delayedTrains.filter((t) => t.delayMinutes < 15);
     }
 
     // Update state badge
@@ -6697,14 +9593,38 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    gridEl.innerHTML = delayedTrains.map(tr => {
-      const typeColor = tr.type === 'Vande Bharat' ? '#ea580c' : tr.type === 'Rajdhani' ? '#dc2626' : tr.type === 'Shatabdi' ? '#0284c7' : '#2563eb';
-      const delayBadgeCol = tr.delayMinutes > 30 ? '#dc2626' : tr.delayMinutes > 15 ? '#ea580c' : '#d97706';
-      const delayBadgeBg = tr.delayMinutes > 30 ? '#fef2f2' : tr.delayMinutes > 15 ? '#fff7ed' : '#fffbeb';
-      const speedStatusText = tr.speed === 0 ? 'Halted at Station' : tr.speed <= 20 ? 'Approach Decel (~15 km/h)' : `Cruising (${tr.speed} km/h)`;
-      const speedStatusColor = tr.speed === 0 ? '#64748b' : tr.speed <= 20 ? '#d97706' : '#16a34a';
+    gridEl.innerHTML = delayedTrains
+      .map((tr) => {
+        const typeColor =
+          tr.type === "Vande Bharat"
+            ? "#ea580c"
+            : tr.type === "Rajdhani"
+              ? "#dc2626"
+              : tr.type === "Shatabdi"
+                ? "#0284c7"
+                : "#2563eb";
+        const delayBadgeCol =
+          tr.delayMinutes > 30
+            ? "#dc2626"
+            : tr.delayMinutes > 15
+              ? "#ea580c"
+              : "#d97706";
+        const delayBadgeBg =
+          tr.delayMinutes > 30
+            ? "#fef2f2"
+            : tr.delayMinutes > 15
+              ? "#fff7ed"
+              : "#fffbeb";
+        const speedStatusText =
+          tr.speed === 0
+            ? "Halted at Station"
+            : tr.speed <= 20
+              ? "Approach Decel (~15 km/h)"
+              : `Cruising (${tr.speed} km/h)`;
+        const speedStatusColor =
+          tr.speed === 0 ? "#64748b" : tr.speed <= 20 ? "#d97706" : "#16a34a";
 
-      return `
+        return `
         <div onclick="openTrainDelayModal('${tr.number}')"
           class="glass-card hover:shadow-xl transition-all duration-200 cursor-pointer p-4 space-y-3 relative group border-l-4"
           style="border-left-color: ${delayBadgeCol} !important; border-radius: 18px !important;">
@@ -6714,7 +9634,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <div>
               <div class="flex items-center gap-2">
                 <span class="text-xs font-black font-mono" style="color: ${typeColor};">${tr.number}</span>
-                <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-slate-100 text-slate-700">${tr.type || 'Express'}</span>
+                <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-slate-100 text-slate-700">${tr.type || "Express"}</span>
               </div>
               <h5 class="text-sm font-black text-[#12355B] font-['Outfit'] mt-0.5 line-clamp-1 group-hover:text-blue-600 transition-colors">${tr.name}</h5>
             </div>
@@ -6729,14 +9649,14 @@ document.addEventListener("DOMContentLoaded", () => {
           <!-- Route & Timings in 12-Hour AM/PM Format -->
           <div class="flex items-center justify-between text-xs py-1 border-y border-slate-100">
             <div>
-              <p class="text-[10px] text-slate-600 font-semibold uppercase">${tr.from || 'Origin'}</p>
+              <p class="text-[10px] text-slate-600 font-semibold uppercase">${tr.from || "Origin"}</p>
               <p class="font-extrabold text-[#12355B] font-['Outfit']">${tr.departureAMPM}</p>
             </div>
             <div class="text-center px-2">
               <i class="fa-solid fa-arrow-right text-slate-300 text-xs"></i>
             </div>
             <div class="text-right">
-              <p class="text-[10px] text-slate-600 font-semibold uppercase">${tr.to || 'Dest'}</p>
+              <p class="text-[10px] text-slate-600 font-semibold uppercase">${tr.to || "Dest"}</p>
               <p class="font-extrabold text-red-600 font-['Outfit']">${tr.arrivalAMPM}</p>
             </div>
           </div>
@@ -6746,7 +9666,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="flex items-center justify-between">
               <span class="text-slate-500 font-medium">Live Telemetry:</span>
               <span class="font-bold flex items-center gap-1" style="color: ${speedStatusColor};">
-                <i class="fa-solid ${tr.speed === 0 ? 'fa-pause' : 'fa-gauge-high'} text-[10px]"></i>
+                <i class="fa-solid ${tr.speed === 0 ? "fa-pause" : "fa-gauge-high"} text-[10px]"></i>
                 ${speedStatusText}
               </span>
             </div>
@@ -6767,21 +9687,46 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         </div>
       `;
-    }).join("");
+      })
+      .join("");
   }
 
   function renderDelayAnalyticsSection(container) {
     if (window.LiveTrainEngine && isRealDatasetsLoaded) {
-      window.LiveTrainEngine.init(irTrainDatabase, irSchedulesIndex, irStations, irDelayModel);
+      window.LiveTrainEngine.init(
+        irTrainDatabase,
+        irSchedulesIndex,
+        irStations,
+        irDelayModel,
+      );
     }
 
-    const allDelayed = window.LiveTrainEngine ? window.LiveTrainEngine.getDelayedTrainsGrid({ minDelay: 1, limit: 500, all: true }) : [];
+    const allDelayed = window.LiveTrainEngine
+      ? window.LiveTrainEngine.getDelayedTrainsGrid({
+          minDelay: 1,
+          limit: 500,
+          all: true,
+        })
+      : [];
     const delayedCount = allDelayed.length;
-    const avgDelay = delayedCount > 0 ? (allDelayed.reduce((acc, cur) => acc + cur.delayMinutes, 0) / delayedCount).toFixed(1) : "0.0";
-    const maxDelay = delayedCount > 0 ? Math.max(...allDelayed.map(t => t.delayMinutes)) : 0;
-    const nowIST = window.LiveTrainEngine ? window.LiveTrainEngine.getISTTime() : new Date();
-    const timeAMPM = window.LiveTrainEngine ? window.LiveTrainEngine.formatAMPM(nowIST) : "";
-    const states = window.LiveTrainEngine ? window.LiveTrainEngine.getAllStates() : [];
+    const avgDelay =
+      delayedCount > 0
+        ? (
+            allDelayed.reduce((acc, cur) => acc + cur.delayMinutes, 0) /
+            delayedCount
+          ).toFixed(1)
+        : "0.0";
+    const maxDelay =
+      delayedCount > 0 ? Math.max(...allDelayed.map((t) => t.delayMinutes)) : 0;
+    const nowIST = window.LiveTrainEngine
+      ? window.LiveTrainEngine.getISTTime()
+      : new Date();
+    const timeAMPM = window.LiveTrainEngine
+      ? window.LiveTrainEngine.formatAMPM(nowIST)
+      : "";
+    const states = window.LiveTrainEngine
+      ? window.LiveTrainEngine.getAllStates()
+      : [];
 
     container.innerHTML = `
       <div class="space-y-5">
@@ -6792,7 +9737,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <div>
               <div class="flex items-center gap-2 mb-1">
                 <span class="px-2.5 py-0.5 rounded-md bg-[#FF9933] text-slate-950 text-[10px] font-black uppercase tracking-wider">
-                  GOVERNMENT OF INDIA • MINISTRY OF RAILWAYS
+                  AUTONEX • RAILWAY INTELLIGENCE
                 </span>
                 <span class="px-2.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[10px] font-black uppercase">
                   <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-ping mr-1"></span> LIVE IST SIMULATION
@@ -6837,7 +9782,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="p-3.5 rounded-xl bg-white/10 backdrop-blur border border-white/15">
               <p class="text-[10px] font-bold text-slate-300 uppercase">Network Punctuality Index</p>
               <p class="text-2xl font-black font-mono text-emerald-400 mt-0.5">91.8%</p>
-              <p class="text-[10px] text-emerald-200 font-semibold mt-1">Above Ministry 90% SLA</p>
+              <p class="text-[10px] text-emerald-200 font-semibold mt-1">Above Network 90% SLA</p>
             </div>
           </div>
         </div>
@@ -6860,7 +9805,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   <select id="delayStateFilterSelect" onchange="setDelayStateFilter(this.value)"
                     class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 focus:outline-none focus:border-blue-500">
                     <option value="all">All States (Pan-India)</option>
-                    ${states.map(st => `<option value="${st}" ${st === delayGridStateFilter ? 'selected' : ''}>${st}</option>`).join("")}
+                    ${states.map((st) => `<option value="${st}" ${st === delayGridStateFilter ? "selected" : ""}>${st}</option>`).join("")}
                   </select>
                 </div>
 
@@ -7032,9 +9977,11 @@ document.addEventListener("DOMContentLoaded", () => {
     activeDelayModalTrain = null;
 
     // Clean up chart instances to avoid memory leaks
-    Object.keys(delayModalChartInstances).forEach(k => {
+    Object.keys(delayModalChartInstances).forEach((k) => {
       if (delayModalChartInstances[k]) {
-        try { delayModalChartInstances[k].destroy(); } catch (e) {}
+        try {
+          delayModalChartInstances[k].destroy();
+        } catch (e) {}
       }
     });
     delayModalChartInstances = {};
@@ -7048,12 +9995,28 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const analytics = window.LiveTrainEngine.getTrainDelayAnalytics(activeDelayModalTrain);
+    const analytics = window.LiveTrainEngine.getTrainDelayAnalytics(
+      activeDelayModalTrain,
+    );
     if (!analytics) return;
     const st = analytics.status;
 
-    const delayCol = st.delayMinutes > 30 ? '#dc2626' : st.delayMinutes > 15 ? '#ea580c' : st.delayMinutes > 0 ? '#d97706' : '#166534';
-    const delayBg = st.delayMinutes > 30 ? '#fef2f2' : st.delayMinutes > 15 ? '#fff7ed' : st.delayMinutes > 0 ? '#fffbeb' : '#f0fdf4';
+    const delayCol =
+      st.delayMinutes > 30
+        ? "#dc2626"
+        : st.delayMinutes > 15
+          ? "#ea580c"
+          : st.delayMinutes > 0
+            ? "#d97706"
+            : "#166534";
+    const delayBg =
+      st.delayMinutes > 30
+        ? "#fef2f2"
+        : st.delayMinutes > 15
+          ? "#fff7ed"
+          : st.delayMinutes > 0
+            ? "#fffbeb"
+            : "#f0fdf4";
 
     // Update DOM indicators smoothly
     const pillEl = document.getElementById("modalLiveDelayPill");
@@ -7083,29 +10046,50 @@ document.addEventListener("DOMContentLoaded", () => {
     if (arrEl) arrEl.textContent = st.arrivalTimeAMPM;
 
     // Update Chart.js instances dynamically without full destroy
-    if (delayModalChartInstances.line && delayModalChartInstances.line.data.datasets[0]) {
+    if (
+      delayModalChartInstances.line &&
+      delayModalChartInstances.line.data.datasets[0]
+    ) {
       delayModalChartInstances.line.data.labels = analytics.labels;
-      delayModalChartInstances.line.data.datasets[0].data = analytics.delayPoints;
-      delayModalChartInstances.line.update('none');
+      delayModalChartInstances.line.data.datasets[0].data =
+        analytics.delayPoints;
+      delayModalChartInstances.line.update("none");
     }
 
-    if (delayModalChartInstances.speed && delayModalChartInstances.speed.data.datasets[0]) {
+    if (
+      delayModalChartInstances.speed &&
+      delayModalChartInstances.speed.data.datasets[0]
+    ) {
       delayModalChartInstances.speed.data.labels = analytics.labels;
-      delayModalChartInstances.speed.data.datasets[0].data = analytics.speedProfile;
-      delayModalChartInstances.speed.update('none');
+      delayModalChartInstances.speed.data.datasets[0].data =
+        analytics.speedProfile;
+      delayModalChartInstances.speed.update("none");
     }
 
-    if (delayModalChartInstances.bar && delayModalChartInstances.bar.data.datasets[0]) {
+    if (
+      delayModalChartInstances.bar &&
+      delayModalChartInstances.bar.data.datasets[0]
+    ) {
       delayModalChartInstances.bar.data.labels = analytics.labels;
-      delayModalChartInstances.bar.data.datasets[0].data = analytics.delayPoints;
-      delayModalChartInstances.bar.data.datasets[0].backgroundColor = analytics.delayPoints.map(d => d > 25 ? "#dc2626" : d > 10 ? "#f59e0b" : "#10b981");
-      delayModalChartInstances.bar.update('none');
+      delayModalChartInstances.bar.data.datasets[0].data =
+        analytics.delayPoints;
+      delayModalChartInstances.bar.data.datasets[0].backgroundColor =
+        analytics.delayPoints.map((d) =>
+          d > 25 ? "#dc2626" : d > 10 ? "#f59e0b" : "#10b981",
+        );
+      delayModalChartInstances.bar.update("none");
     }
 
-    if (delayModalChartInstances.pie && delayModalChartInstances.pie.data.datasets[0]) {
-      delayModalChartInstances.pie.data.labels = analytics.delayCauses.map(c => c.label);
-      delayModalChartInstances.pie.data.datasets[0].data = analytics.delayCauses.map(c => c.pct);
-      delayModalChartInstances.pie.update('none');
+    if (
+      delayModalChartInstances.pie &&
+      delayModalChartInstances.pie.data.datasets[0]
+    ) {
+      delayModalChartInstances.pie.data.labels = analytics.delayCauses.map(
+        (c) => c.label,
+      );
+      delayModalChartInstances.pie.data.datasets[0].data =
+        analytics.delayCauses.map((c) => c.pct);
+      delayModalChartInstances.pie.update("none");
     }
   }
 
@@ -7115,7 +10099,8 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const analytics = window.LiveTrainEngine.getTrainDelayAnalytics(trainNumber);
+    const analytics =
+      window.LiveTrainEngine.getTrainDelayAnalytics(trainNumber);
     if (!analytics) {
       showToast(`Train #${trainNumber} schedule data unavailable.`, "warning");
       return;
@@ -7127,14 +10112,32 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!modal) {
       modal = document.createElement("div");
       modal.id = "trainDelayDetailModal";
-      modal.className = "fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-3 sm:p-5 overflow-y-auto";
+      modal.className =
+        "fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-3 sm:p-5 overflow-y-auto";
       document.body.appendChild(modal);
     }
 
     const st = analytics.status;
-    const cyclicRuns = window.LiveTrainEngine.getCyclicRollingSchedule(trainNumber, 15);
-    const delayCol = st.delayMinutes > 30 ? '#dc2626' : st.delayMinutes > 15 ? '#ea580c' : st.delayMinutes > 0 ? '#d97706' : '#166534';
-    const delayBg = st.delayMinutes > 30 ? '#fef2f2' : st.delayMinutes > 15 ? '#fff7ed' : st.delayMinutes > 0 ? '#fffbeb' : '#f0fdf4';
+    const cyclicRuns = window.LiveTrainEngine.getCyclicRollingSchedule(
+      trainNumber,
+      15,
+    );
+    const delayCol =
+      st.delayMinutes > 30
+        ? "#dc2626"
+        : st.delayMinutes > 15
+          ? "#ea580c"
+          : st.delayMinutes > 0
+            ? "#d97706"
+            : "#166534";
+    const delayBg =
+      st.delayMinutes > 30
+        ? "#fef2f2"
+        : st.delayMinutes > 15
+          ? "#fff7ed"
+          : st.delayMinutes > 0
+            ? "#fffbeb"
+            : "#f0fdf4";
 
     modal.innerHTML = `
       <div class="glass-card max-w-5xl w-full max-h-[92vh] overflow-y-auto p-5 sm:p-7 space-y-6 shadow-2xl relative border-t-8"
@@ -7299,10 +10302,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-100">
-                ${cyclicRuns.map(run => `
-                  <tr class="${run.isToday ? 'bg-blue-50/70 font-bold' : 'hover:bg-slate-50'}">
-                    <td class="p-2.5 font-mono ${run.isToday ? 'text-blue-700 font-black' : 'text-slate-700'}">
-                      ${run.dateFormatted} ${run.isToday ? '★ TODAY' : ''}
+                ${cyclicRuns
+                  .map(
+                    (run) => `
+                  <tr class="${run.isToday ? "bg-blue-50/70 font-bold" : "hover:bg-slate-50"}">
+                    <td class="p-2.5 font-mono ${run.isToday ? "text-blue-700 font-black" : "text-slate-700"}">
+                      ${run.dateFormatted} ${run.isToday ? "★ TODAY" : ""}
                     </td>
                     <td class="p-2.5">
                       <span class="px-2 py-0.5 rounded-md text-[9px] font-black uppercase"
@@ -7312,12 +10317,14 @@ document.addEventListener("DOMContentLoaded", () => {
                     </td>
                     <td class="p-2.5 font-mono">${run.departureAMPM}</td>
                     <td class="p-2.5 font-mono">${run.arrivalAMPM}</td>
-                    <td class="p-2.5 font-mono font-bold ${run.delayMinutes > 0 ? 'text-red-600' : 'text-emerald-600'}">
+                    <td class="p-2.5 font-mono font-bold ${run.delayMinutes > 0 ? "text-red-600" : "text-emerald-600"}">
                       ${run.delayText}
                     </td>
                     <td class="p-2.5 text-[10px] text-slate-500">${run.liveStatusText}</td>
                   </tr>
-                `).join("")}
+                `,
+                  )
+                  .join("")}
               </tbody>
             </table>
           </div>
@@ -7348,15 +10355,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-100 font-mono text-[11px]">
-                ${st.stations.map((s, idx) => {
-                  const sDelayCol = s.delayMinutes === 0 ? '#166534' : s.delayMinutes <= 15 ? '#d97706' : '#dc2626';
-                  const isCurrent = idx === st.currentStationIndex;
-                  return `
-                    <tr class="${isCurrent ? 'bg-blue-50/80 font-bold' : 'hover:bg-slate-50'}">
+                ${st.stations
+                  .map((s, idx) => {
+                    const sDelayCol =
+                      s.delayMinutes === 0
+                        ? "#166534"
+                        : s.delayMinutes <= 15
+                          ? "#d97706"
+                          : "#dc2626";
+                    const isCurrent = idx === st.currentStationIndex;
+                    return `
+                    <tr class="${isCurrent ? "bg-blue-50/80 font-bold" : "hover:bg-slate-50"}">
                       <td class="p-2 text-center text-slate-400 font-sans">${idx + 1}</td>
                       <td class="p-2 font-sans font-bold text-[#12355B]">
                         ${s.name} <span class="text-[10px] text-slate-400 font-mono">(${s.code})</span>
-                        ${isCurrent ? '<span class="ml-1.5 px-1.5 py-0.5 rounded bg-blue-600 text-white text-[9px] font-sans">ACTIVE HERE</span>' : ''}
+                        ${isCurrent ? '<span class="ml-1.5 px-1.5 py-0.5 rounded bg-blue-600 text-white text-[9px] font-sans">ACTIVE HERE</span>' : ""}
                       </td>
                       <td class="p-2 text-center text-slate-600">#${s.pf}</td>
                       <td class="p-2 text-slate-500">${s.dist} km</td>
@@ -7366,13 +10379,14 @@ document.addEventListener("DOMContentLoaded", () => {
                       <td class="p-2 font-bold" style="color: ${sDelayCol};">${s.actualDepAMPM}</td>
                       <td class="p-2 text-right">
                         <span class="px-2 py-0.5 rounded text-[10px] font-bold"
-                          style="background: ${s.delayMinutes === 0 ? '#f0fdf4' : '#fef2f2'}; color: ${sDelayCol};">
-                          ${s.delayMinutes === 0 ? '✓ ON TIME' : `+${s.delayMinutes}m`}
+                          style="background: ${s.delayMinutes === 0 ? "#f0fdf4" : "#fef2f2"}; color: ${sDelayCol};">
+                          ${s.delayMinutes === 0 ? "✓ ON TIME" : `+${s.delayMinutes}m`}
                         </span>
                       </td>
                     </tr>
                   `;
-                }).join("")}
+                  })
+                  .join("")}
               </tbody>
             </table>
           </div>
@@ -7413,17 +10427,19 @@ document.addEventListener("DOMContentLoaded", () => {
         type: "line",
         data: {
           labels: analytics.labels,
-          datasets: [{
-            label: "Delay (Minutes)",
-            data: analytics.delayPoints,
-            borderColor: "#dc2626",
-            backgroundColor: "rgba(220, 38, 38, 0.08)",
-            fill: true,
-            tension: 0.35,
-            pointBackgroundColor: "#dc2626",
-            pointRadius: 3,
-            borderWidth: 2.5
-          }]
+          datasets: [
+            {
+              label: "Delay (Minutes)",
+              data: analytics.delayPoints,
+              borderColor: "#dc2626",
+              backgroundColor: "rgba(220, 38, 38, 0.08)",
+              fill: true,
+              tension: 0.35,
+              pointBackgroundColor: "#dc2626",
+              pointRadius: 3,
+              borderWidth: 2.5,
+            },
+          ],
         },
         options: {
           responsive: true,
@@ -7432,22 +10448,22 @@ document.addEventListener("DOMContentLoaded", () => {
             legend: { display: false },
             tooltip: {
               callbacks: {
-                label: (c) => `Delay: +${c.raw} min`
-              }
-            }
+                label: (c) => `Delay: +${c.raw} min`,
+              },
+            },
           },
           scales: {
             y: {
               beginAtZero: true,
               grid: { color: "#f1f5f9" },
-              ticks: { font: { size: 9, family: "'JetBrains Mono'" } }
+              ticks: { font: { size: 9, family: "'JetBrains Mono'" } },
             },
             x: {
               grid: { display: false },
-              ticks: { font: { size: 9, family: "'JetBrains Mono'" } }
-            }
-          }
-        }
+              ticks: { font: { size: 9, family: "'JetBrains Mono'" } },
+            },
+          },
+        },
       });
     }
 
@@ -7458,16 +10474,18 @@ document.addEventListener("DOMContentLoaded", () => {
         type: "line",
         data: {
           labels: analytics.labels,
-          datasets: [{
-            label: "Speed (km/h)",
-            data: analytics.speedProfile,
-            borderColor: "#2563eb",
-            backgroundColor: "rgba(37, 99, 235, 0.12)",
-            fill: true,
-            tension: 0.25,
-            borderWidth: 2.5,
-            pointRadius: 2
-          }]
+          datasets: [
+            {
+              label: "Speed (km/h)",
+              data: analytics.speedProfile,
+              borderColor: "#2563eb",
+              backgroundColor: "rgba(37, 99, 235, 0.12)",
+              fill: true,
+              tension: 0.25,
+              borderWidth: 2.5,
+              pointRadius: 2,
+            },
+          ],
         },
         options: {
           responsive: true,
@@ -7476,22 +10494,22 @@ document.addEventListener("DOMContentLoaded", () => {
             legend: { display: false },
             tooltip: {
               callbacks: {
-                label: (c) => `Speed: ${c.raw} km/h`
-              }
-            }
+                label: (c) => `Speed: ${c.raw} km/h`,
+              },
+            },
           },
           scales: {
             y: {
               beginAtZero: true,
               grid: { color: "#f1f5f9" },
-              ticks: { font: { size: 9, family: "'JetBrains Mono'" } }
+              ticks: { font: { size: 9, family: "'JetBrains Mono'" } },
             },
             x: {
               grid: { display: false },
-              ticks: { font: { size: 9, family: "'JetBrains Mono'" } }
-            }
-          }
-        }
+              ticks: { font: { size: 9, family: "'JetBrains Mono'" } },
+            },
+          },
+        },
       });
     }
 
@@ -7502,12 +10520,16 @@ document.addEventListener("DOMContentLoaded", () => {
         type: "bar",
         data: {
           labels: analytics.labels,
-          datasets: [{
-            label: "Delay Minutes",
-            data: analytics.delayPoints,
-            backgroundColor: analytics.delayPoints.map(d => d > 25 ? "#dc2626" : d > 10 ? "#f59e0b" : "#10b981"),
-            borderRadius: 6
-          }]
+          datasets: [
+            {
+              label: "Delay Minutes",
+              data: analytics.delayPoints,
+              backgroundColor: analytics.delayPoints.map((d) =>
+                d > 25 ? "#dc2626" : d > 10 ? "#f59e0b" : "#10b981",
+              ),
+              borderRadius: 6,
+            },
+          ],
         },
         options: {
           responsive: true,
@@ -7517,14 +10539,14 @@ document.addEventListener("DOMContentLoaded", () => {
             y: {
               beginAtZero: true,
               grid: { color: "#f1f5f9" },
-              ticks: { font: { size: 9, family: "'JetBrains Mono'" } }
+              ticks: { font: { size: 9, family: "'JetBrains Mono'" } },
             },
             x: {
               grid: { display: false },
-              ticks: { font: { size: 9, family: "'JetBrains Mono'" } }
-            }
-          }
-        }
+              ticks: { font: { size: 9, family: "'JetBrains Mono'" } },
+            },
+          },
+        },
       });
     }
 
@@ -7534,13 +10556,15 @@ document.addEventListener("DOMContentLoaded", () => {
       delayModalChartInstances.pie = new Chart(ctxPie, {
         type: "doughnut",
         data: {
-          labels: analytics.delayCauses.map(c => c.label),
-          datasets: [{
-            data: analytics.delayCauses.map(c => c.pct),
-            backgroundColor: analytics.delayCauses.map(c => c.color),
-            borderWidth: 0,
-            hoverOffset: 4
-          }]
+          labels: analytics.delayCauses.map((c) => c.label),
+          datasets: [
+            {
+              data: analytics.delayCauses.map((c) => c.pct),
+              backgroundColor: analytics.delayCauses.map((c) => c.color),
+              borderWidth: 0,
+              hoverOffset: 4,
+            },
+          ],
         },
         options: {
           responsive: true,
@@ -7549,10 +10573,13 @@ document.addEventListener("DOMContentLoaded", () => {
           plugins: {
             legend: {
               position: "bottom",
-              labels: { boxWidth: 10, font: { size: 9, family: "'Plus Jakarta Sans'" } }
-            }
-          }
-        }
+              labels: {
+                boxWidth: 10,
+                font: { size: 9, family: "'Plus Jakarta Sans'" },
+              },
+            },
+          },
+        },
       });
     }
   }
@@ -7563,7 +10590,10 @@ document.addEventListener("DOMContentLoaded", () => {
   let tickerIndex = 0;
   function updateLiveTicker() {
     if (!window.LiveTrainEngine) return;
-    const delayedList = window.LiveTrainEngine.getDelayedTrainsGrid({ minDelay: 0, limit: 30 });
+    const delayedList = window.LiveTrainEngine.getDelayedTrainsGrid({
+      minDelay: 0,
+      limit: 30,
+    });
     if (!delayedList || delayedList.length === 0) return;
 
     const tr = delayedList[tickerIndex % delayedList.length];
@@ -7578,7 +10608,12 @@ document.addEventListener("DOMContentLoaded", () => {
       titleEl.innerHTML = `<strong>${tr.number}</strong> ${tr.name} &nbsp;•&nbsp; <span class="text-cyan-300 font-mono">${tr.from} ➔ ${tr.to}</span>`;
     }
     if (speedEl) {
-      const stateText = tr.speed === 0 ? 'Halted' : tr.speed <= 20 ? 'Approach Decel' : 'Cruising';
+      const stateText =
+        tr.speed === 0
+          ? "Halted"
+          : tr.speed <= 20
+            ? "Approach Decel"
+            : "Cruising";
       speedEl.innerHTML = `<i class="fa-solid fa-gauge-high mr-1"></i>${tr.speed} km/h <span class="opacity-75">(${stateText})</span>`;
     }
     if (etaEl) {
@@ -7586,9 +10621,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     if (delayEl) {
       delayEl.innerHTML = `<i class="fa-solid fa-clock-rotate-left mr-1"></i>${tr.delayText}`;
-      delayEl.className = tr.delayMinutes > 0
-        ? "px-2 py-0.5 rounded bg-red-500/20 text-red-300 border border-red-500/30 font-bold"
-        : "px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold";
+      delayEl.className =
+        tr.delayMinutes > 0
+          ? "px-2 py-0.5 rounded bg-red-500/20 text-red-300 border border-red-500/30 font-bold"
+          : "px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold";
     }
   }
 
@@ -7612,13 +10648,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   window.changeAnalyticsZone = function (zoneCode) {
     selectedAnalyticsZone = zoneCode;
-    const zoneContentEl = document.getElementById("analyticsZoneContentContainer");
+    const zoneContentEl = document.getElementById(
+      "analyticsZoneContentContainer",
+    );
     if (zoneContentEl) renderAnalyticsZoneTab(zoneContentEl);
   };
 
   window.changeAnalyticsTrain = function (trainNum) {
     selectedAnalyticsTrain = trainNum;
-    const trainContentEl = document.getElementById("analyticsTrainContentContainer");
+    const trainContentEl = document.getElementById(
+      "analyticsTrainContentContainer",
+    );
     if (trainContentEl) renderAnalyticsTrainTab(trainContentEl);
   };
 
@@ -7639,7 +10679,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="p-4 rounded-2xl bg-slate-900 border border-white/10 space-y-1">
           <p class="text-[10px] text-slate-400 font-bold uppercase">Pan-India On-Time Punctuality</p>
           <p class="text-2xl font-black text-emerald-400 font-mono">${metrics.onTimePct}%</p>
-          <p class="text-[10px] text-emerald-300 font-semibold">&gt;90.0% Ministry SLA Passed</p>
+          <p class="text-[10px] text-emerald-300 font-semibold">&gt;90.0% Network SLA Passed</p>
         </div>
 
         <div class="p-4 rounded-2xl bg-slate-900 border border-white/10 space-y-1">
@@ -7728,9 +10768,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!window.Chart || !window.AnalyticsEngine) return;
 
     // Clean up old charts
-    Object.keys(analyticsChartInstances).forEach(k => {
+    Object.keys(analyticsChartInstances).forEach((k) => {
       if (analyticsChartInstances[k]) {
-        try { analyticsChartInstances[k].destroy(); } catch (e) {}
+        try {
+          analyticsChartInstances[k].destroy();
+        } catch (e) {}
       }
     });
     analyticsChartInstances = {};
@@ -7743,22 +10785,31 @@ document.addEventListener("DOMContentLoaded", () => {
         type: "bar",
         data: {
           labels: distData.labels,
-          datasets: [{
-            label: "Trains Count",
-            data: distData.data,
-            backgroundColor: distData.colors,
-            borderRadius: 6
-          }]
+          datasets: [
+            {
+              label: "Trains Count",
+              data: distData.data,
+              backgroundColor: distData.colors,
+              borderRadius: 6,
+            },
+          ],
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
           plugins: { legend: { display: false } },
           scales: {
-            y: { beginAtZero: true, grid: { color: "#f1f5f9" }, ticks: { font: { size: 9, family: "'JetBrains Mono'" } } },
-            x: { grid: { display: false }, ticks: { font: { size: 9, family: "'Plus Jakarta Sans'" } } }
-          }
-        }
+            y: {
+              beginAtZero: true,
+              grid: { color: "#f1f5f9" },
+              ticks: { font: { size: 9, family: "'JetBrains Mono'" } },
+            },
+            x: {
+              grid: { display: false },
+              ticks: { font: { size: 9, family: "'Plus Jakarta Sans'" } },
+            },
+          },
+        },
       });
     }
 
@@ -7770,23 +10821,37 @@ document.addEventListener("DOMContentLoaded", () => {
         type: "bar",
         data: {
           labels: zoneData.labels.slice(0, 10),
-          datasets: [{
-            label: "On-Time %",
-            data: zoneData.data.slice(0, 10),
-            backgroundColor: zoneData.data.slice(0, 10).map(p => p >= 94 ? "#10b981" : p >= 90 ? "#3b82f6" : "#f59e0b"),
-            borderRadius: 5
-          }]
+          datasets: [
+            {
+              label: "On-Time %",
+              data: zoneData.data.slice(0, 10),
+              backgroundColor: zoneData.data
+                .slice(0, 10)
+                .map((p) =>
+                  p >= 94 ? "#10b981" : p >= 90 ? "#3b82f6" : "#f59e0b",
+                ),
+              borderRadius: 5,
+            },
+          ],
         },
         options: {
-          indexAxis: 'y',
+          indexAxis: "y",
           responsive: true,
           maintainAspectRatio: false,
           plugins: { legend: { display: false } },
           scales: {
-            x: { min: 80, max: 100, grid: { color: "#f1f5f9" }, ticks: { font: { size: 9, family: "'JetBrains Mono'" } } },
-            y: { grid: { display: false }, ticks: { font: { size: 9, family: "'JetBrains Mono'" } } }
-          }
-        }
+            x: {
+              min: 80,
+              max: 100,
+              grid: { color: "#f1f5f9" },
+              ticks: { font: { size: 9, family: "'JetBrains Mono'" } },
+            },
+            y: {
+              grid: { display: false },
+              ticks: { font: { size: 9, family: "'JetBrains Mono'" } },
+            },
+          },
+        },
       });
     }
 
@@ -7801,7 +10866,13 @@ document.addEventListener("DOMContentLoaded", () => {
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: { position: "top", labels: { boxWidth: 10, font: { size: 9, family: "'Plus Jakarta Sans'" } } }
+            legend: {
+              position: "top",
+              labels: {
+                boxWidth: 10,
+                font: { size: 9, family: "'Plus Jakarta Sans'" },
+              },
+            },
           },
           scales: {
             r: {
@@ -7809,10 +10880,10 @@ document.addEventListener("DOMContentLoaded", () => {
               max: 100,
               ticks: { display: false },
               grid: { color: "#f1f5f9" },
-              pointLabels: { font: { size: 9, family: "'Plus Jakarta Sans'" } }
-            }
-          }
-        }
+              pointLabels: { font: { size: 9, family: "'Plus Jakarta Sans'" } },
+            },
+          },
+        },
       });
     }
 
@@ -7824,22 +10895,33 @@ document.addEventListener("DOMContentLoaded", () => {
         type: "bar",
         data: {
           labels: hourlyData.labels,
-          datasets: [{
-            label: "Reported Delays",
-            data: hourlyData.data,
-            backgroundColor: hourlyData.data.map(v => v > 70 ? "#dc2626" : v > 40 ? "#f59e0b" : "#3b82f6"),
-            borderRadius: 4
-          }]
+          datasets: [
+            {
+              label: "Reported Delays",
+              data: hourlyData.data,
+              backgroundColor: hourlyData.data.map((v) =>
+                v > 70 ? "#dc2626" : v > 40 ? "#f59e0b" : "#3b82f6",
+              ),
+              borderRadius: 4,
+            },
+          ],
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
           plugins: { legend: { display: false } },
           scales: {
-            y: { beginAtZero: true, grid: { color: "#f1f5f9" }, ticks: { font: { size: 9, family: "'JetBrains Mono'" } } },
-            x: { grid: { display: false }, ticks: { font: { size: 8, family: "'JetBrains Mono'" } } }
-          }
-        }
+            y: {
+              beginAtZero: true,
+              grid: { color: "#f1f5f9" },
+              ticks: { font: { size: 9, family: "'JetBrains Mono'" } },
+            },
+            x: {
+              grid: { display: false },
+              ticks: { font: { size: 8, family: "'JetBrains Mono'" } },
+            },
+          },
+        },
       });
     }
   }
@@ -7847,7 +10929,9 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderAnalyticsZoneTab(container) {
     if (!window.AnalyticsEngine) return;
     const ranking = window.AnalyticsEngine.getZonePunctualityRanking();
-    const zoneMetrics = window.AnalyticsEngine.getZoneMetrics(selectedAnalyticsZone);
+    const zoneMetrics = window.AnalyticsEngine.getZoneMetrics(
+      selectedAnalyticsZone,
+    );
     const z = zoneMetrics.zone;
 
     container.innerHTML = `
@@ -7869,7 +10953,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <label class="text-xs font-bold text-slate-600">Select Zone:</label>
             <select onchange="changeAnalyticsZone(this.value)"
               class="px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 focus:outline-none focus:border-blue-500">
-              ${ranking.zones.map(zn => `<option value="${zn.code}" ${zn.code === selectedAnalyticsZone ? 'selected' : ''}>${zn.code} — ${zn.name}</option>`).join("")}
+              ${ranking.zones.map((zn) => `<option value="${zn.code}" ${zn.code === selectedAnalyticsZone ? "selected" : ""}>${zn.code} — ${zn.name}</option>`).join("")}
             </select>
           </div>
         </div>
@@ -7923,7 +11007,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-100">
-                ${zoneMetrics.topDelayedTrains.map(tr => `
+                ${zoneMetrics.topDelayedTrains
+                  .map(
+                    (tr) => `
                   <tr class="hover:bg-slate-50/80 transition-colors cursor-pointer" onclick="openTrainDelayModal('${tr.number}')">
                     <td class="py-2.5 px-3 font-mono font-black text-blue-700">${tr.number}</td>
                     <td class="py-2.5 px-3 font-bold text-[#12355B]">${tr.name}</td>
@@ -7934,7 +11020,9 @@ document.addEventListener("DOMContentLoaded", () => {
                       <span class="text-blue-600 font-bold text-xs hover:underline">Inspect →</span>
                     </td>
                   </tr>
-                `).join("")}
+                `,
+                  )
+                  .join("")}
               </tbody>
             </table>
           </div>
@@ -7946,7 +11034,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderAnalyticsTrainTab(container) {
     if (!window.LiveTrainEngine) return;
-    const analytics = window.LiveTrainEngine.getTrainDelayAnalytics(selectedAnalyticsTrain);
+    const analytics = window.LiveTrainEngine.getTrainDelayAnalytics(
+      selectedAnalyticsTrain,
+    );
 
     container.innerHTML = `
       <div class="space-y-5">
@@ -7978,9 +11068,11 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         </div>
 
-        ${analytics ? `
+        ${
+          analytics
+            ? `
           <!-- Train Identity Header -->
-          <div class="glass-card p-5 border-l-4 space-y-3" style="border-left-color: ${analytics.totalDelay > 15 ? '#dc2626' : '#10b981'} !important; border-radius: 20px !important;">
+          <div class="glass-card p-5 border-l-4 space-y-3" style="border-left-color: ${analytics.totalDelay > 15 ? "#dc2626" : "#10b981"} !important; border-radius: 20px !important;">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <div>
                 <div class="flex items-center gap-2 flex-wrap">
@@ -8006,7 +11098,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2">
               <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
                 <p class="text-[10px] text-slate-500 font-bold uppercase">Current Delay</p>
-                <p class="text-xl font-black font-mono ${analytics.totalDelay > 0 ? 'text-red-600' : 'text-emerald-600'}">+${analytics.totalDelay} min</p>
+                <p class="text-xl font-black font-mono ${analytics.totalDelay > 0 ? "text-red-600" : "text-emerald-600"}">+${analytics.totalDelay} min</p>
               </div>
               <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
                 <p class="text-[10px] text-slate-500 font-bold uppercase">Punctuality Score</p>
@@ -8036,13 +11128,15 @@ document.addEventListener("DOMContentLoaded", () => {
               <canvas id="analyticsSingleTrainChart"></canvas>
             </div>
           </div>
-        ` : `
+        `
+            : `
           <div class="p-8 text-center bg-white rounded-2xl border border-slate-200">
             <i class="fa-solid fa-circle-question text-3xl text-amber-500 mb-2"></i>
             <h5 class="text-sm font-bold text-slate-800">Train Data Not Found</h5>
             <p class="text-xs text-slate-500 mt-1">Please enter a valid Indian Railways train number (e.g. 12952, 12002, 12419).</p>
           </div>
-        `}
+        `
+        }
 
       </div>
     `;
@@ -8052,31 +11146,42 @@ document.addEventListener("DOMContentLoaded", () => {
         const ctxTrain = document.getElementById("analyticsSingleTrainChart");
         if (ctxTrain && window.Chart) {
           if (analyticsChartInstances.train) {
-            try { analyticsChartInstances.train.destroy(); } catch (e) {}
+            try {
+              analyticsChartInstances.train.destroy();
+            } catch (e) {}
           }
           analyticsChartInstances.train = new Chart(ctxTrain, {
             type: "line",
             data: {
               labels: analytics.labels,
-              datasets: [{
-                label: "Delay (Minutes)",
-                data: analytics.delayPoints,
-                borderColor: "#dc2626",
-                backgroundColor: "rgba(220, 38, 38, 0.08)",
-                fill: true,
-                borderWidth: 2.5,
-                tension: 0.3
-              }]
+              datasets: [
+                {
+                  label: "Delay (Minutes)",
+                  data: analytics.delayPoints,
+                  borderColor: "#dc2626",
+                  backgroundColor: "rgba(220, 38, 38, 0.08)",
+                  fill: true,
+                  borderWidth: 2.5,
+                  tension: 0.3,
+                },
+              ],
             },
             options: {
               responsive: true,
               maintainAspectRatio: false,
               plugins: { legend: { display: false } },
               scales: {
-                y: { beginAtZero: true, grid: { color: "#f1f5f9" }, ticks: { font: { size: 9, family: "'JetBrains Mono'" } } },
-                x: { grid: { display: false }, ticks: { font: { size: 9, family: "'JetBrains Mono'" } } }
-              }
-            }
+                y: {
+                  beginAtZero: true,
+                  grid: { color: "#f1f5f9" },
+                  ticks: { font: { size: 9, family: "'JetBrains Mono'" } },
+                },
+                x: {
+                  grid: { display: false },
+                  ticks: { font: { size: 9, family: "'JetBrains Mono'" } },
+                },
+              },
+            },
           });
         }
       }, 100);
@@ -8085,14 +11190,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderAnalyticsSection(container) {
     if (window.LiveTrainEngine && isRealDatasetsLoaded) {
-      window.LiveTrainEngine.init(irTrainDatabase, irSchedulesIndex, irStations, irDelayModel);
+      window.LiveTrainEngine.init(
+        irTrainDatabase,
+        irSchedulesIndex,
+        irStations,
+        irDelayModel,
+      );
     }
     if (window.AnalyticsEngine) {
       window.AnalyticsEngine.init(window.LiveTrainEngine);
     }
 
-    const nowIST = window.LiveTrainEngine ? window.LiveTrainEngine.getISTTime() : new Date();
-    const timeAMPM = window.LiveTrainEngine ? window.LiveTrainEngine.formatAMPM(nowIST) : "";
+    const nowIST = window.LiveTrainEngine
+      ? window.LiveTrainEngine.getISTTime()
+      : new Date();
+    const timeAMPM = window.LiveTrainEngine
+      ? window.LiveTrainEngine.formatAMPM(nowIST)
+      : "";
 
     container.innerHTML = `
       <div class="space-y-5">
@@ -8103,7 +11217,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <div>
               <div class="flex items-center gap-2 mb-1">
                 <span class="px-2.5 py-0.5 rounded-md bg-[#FF9933] text-slate-950 text-[10px] font-black uppercase tracking-wider">
-                  GOVERNMENT OF INDIA • MINISTRY OF RAILWAYS
+                  AUTONEX • RAILWAY INTELLIGENCE
                 </span>
                 <span class="px-2.5 py-0.5 rounded-md bg-cyan-500/30 text-cyan-200 border border-cyan-400/40 text-[10px] font-black uppercase">
                   <i class="fa-solid fa-chart-line mr-1"></i> PAN-INDIA INTELLIGENCE HUB
@@ -8129,24 +11243,24 @@ document.addEventListener("DOMContentLoaded", () => {
         <!-- Tab Navigation Bar -->
         <div class="flex items-center gap-2 p-1.5 rounded-2xl bg-slate-200/80 border border-slate-300/80">
           <button onclick="switchAnalyticsTab('network')"
-            class="flex-1 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer ${activeAnalyticsTab === 'network' ? 'bg-white text-[#12355B] shadow-md' : 'text-slate-600 hover:text-slate-900'}">
+            class="flex-1 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer ${activeAnalyticsTab === "network" ? "bg-white text-[#12355B] shadow-md" : "text-slate-600 hover:text-slate-900"}">
             <i class="fa-solid fa-network-wired"></i> Pan-India Network Intelligence
           </button>
           <button onclick="switchAnalyticsTab('zone')"
-            class="flex-1 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer ${activeAnalyticsTab === 'zone' ? 'bg-white text-[#12355B] shadow-md' : 'text-slate-600 hover:text-slate-900'}">
+            class="flex-1 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer ${activeAnalyticsTab === "zone" ? "bg-white text-[#12355B] shadow-md" : "text-slate-600 hover:text-slate-900"}">
             <i class="fa-solid fa-map-location-dot"></i> Zone-Wise Deep Dive
           </button>
           <button onclick="switchAnalyticsTab('train')"
-            class="flex-1 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer ${activeAnalyticsTab === 'train' ? 'bg-white text-[#12355B] shadow-md' : 'text-slate-600 hover:text-slate-900'}">
+            class="flex-1 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer ${activeAnalyticsTab === "train" ? "bg-white text-[#12355B] shadow-md" : "text-slate-600 hover:text-slate-900"}">
             <i class="fa-solid fa-train-subway"></i> Train-Wise Performance Index
           </button>
         </div>
 
         <!-- Active Tab Container -->
         <div id="analyticsActiveTabBody" class="space-y-5">
-          ${activeAnalyticsTab === 'network' ? '<div id="analyticsNetworkContentContainer"></div>' : ''}
-          ${activeAnalyticsTab === 'zone' ? '<div id="analyticsZoneContentContainer"></div>' : ''}
-          ${activeAnalyticsTab === 'train' ? '<div id="analyticsTrainContentContainer"></div>' : ''}
+          ${activeAnalyticsTab === "network" ? '<div id="analyticsNetworkContentContainer"></div>' : ""}
+          ${activeAnalyticsTab === "zone" ? '<div id="analyticsZoneContentContainer"></div>' : ""}
+          ${activeAnalyticsTab === "train" ? '<div id="analyticsTrainContentContainer"></div>' : ""}
         </div>
 
       </div>
@@ -8180,7 +11294,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // VIEW 6: WEATHER RADAR (weather)
   function renderWeatherSection(container) {
-    if (window.WeatherEngine && typeof window.WeatherEngine.renderWeatherHub === "function") {
+    if (
+      window.WeatherEngine &&
+      typeof window.WeatherEngine.renderWeatherHub === "function"
+    ) {
       window.WeatherEngine.renderWeatherHub(container);
     } else {
       const state = window.liveWeatherState || {};
@@ -9899,7 +13016,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const rawHash = window.location.hash
       ? window.location.hash.replace("#", "")
       : "";
-    const initialView = (rawHash === "overview" || !rawHash) ? "live_map" : rawHash;
+    const initialView =
+      rawHash === "overview" || !rawHash ? "live_map" : rawHash;
     switchNavView(initialView);
   }
 
@@ -9907,7 +13025,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const rawHash = window.location.hash
       ? window.location.hash.replace("#", "")
       : "";
-    switchNavView((rawHash === "overview" || !rawHash) ? "live_map" : rawHash);
+    switchNavView(rawHash === "overview" || !rawHash ? "live_map" : rawHash);
   });
 
   initRoute();
