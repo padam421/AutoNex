@@ -1,0 +1,16 @@
+[
+  "distance_km",
+  "scheduled_duration_min",
+  "current_delay_min",
+  "train_priority_rank",
+  "max_permitted_speed_kmh",
+  "signal_aspect_code",
+  "active_tsr_speed_kmh",
+  "weather_visibility_km",
+  "weather_rain_hazard",
+  "downstream_congestion_density",
+  "preceding_train_delay_min",
+  "time_of_day_hour",
+  "day_of_week",
+  "is_major_junction"
+]

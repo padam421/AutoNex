@@ -655,6 +655,230 @@
           </div>
         </div>
       `;
+    } else if (activeSmSubTab === "sm_eta_planning") {
+      contentHtml = `
+        <!-- SUB-TAB 6: DYNAMIC ML ETA, PLATFORM REALLOCATION & RESOURCE PLANNING (SIH 2026) -->
+        <div class="space-y-4">
+
+          <!-- Platform Clash Warning Banner (If conflict detected) -->
+          <div id="smPlatformConflictAlert" class="p-4 rounded-2xl bg-gradient-to-r from-red-600 to-amber-600 text-white shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-2 border-red-300 animate-pulse">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-xl shrink-0">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 rounded bg-black/40 text-[10px] font-mono font-black uppercase">CRITICAL PLATFORM CLASH DETECTED</span>
+                  <span class="text-xs font-mono">Platform 2 at 11:35 AM</span>
+                </div>
+                <p class="text-sm font-black mt-0.5">Train 12304 (Poorva Express) ETA overlaps with Train 12951 (Mumbai Rajdhani) on Platform 2!</p>
+                <p class="text-[11px] text-white/90">Outer home signal hold risk: 14 min cascade delay if not reallocated immediately.</p>
+              </div>
+            </div>
+            <button onclick="window.smAutoReassignPlatform('12304', 'Platform 4')" class="px-4 py-2 rounded-xl bg-white text-slate-900 font-black text-xs hover:bg-slate-100 shadow-lg flex items-center gap-1.5 shrink-0 cursor-pointer">
+              <i class="fa-solid fa-wand-magic-sparkles text-amber-600"></i> 1-Click Reallocate to Platform 4
+            </button>
+          </div>
+
+          <!-- Summary KPI Cards -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+            <div class="glass-card p-3.5 border-l-4 border-blue-600 flex items-center justify-between">
+              <div>
+                <p class="text-[11px] text-slate-500 font-bold uppercase">ML Forecast Confidence</p>
+                <p class="text-xl font-black text-[#12355B] font-mono">96.5% (±1.9m)</p>
+              </div>
+              <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-base">
+                <i class="fa-solid fa-brain"></i>
+              </div>
+            </div>
+
+            <div class="glass-card p-3.5 border-l-4 border-emerald-500 flex items-center justify-between">
+              <div>
+                <p class="text-[11px] text-slate-500 font-bold uppercase">Average NDLS Delay</p>
+                <p class="text-xl font-black text-emerald-700 font-mono">+12.4 min</p>
+              </div>
+              <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-base">
+                <i class="fa-solid fa-hourglass-half"></i>
+              </div>
+            </div>
+
+            <div class="glass-card p-3.5 border-l-4 border-purple-500 flex items-center justify-between">
+              <div>
+                <p class="text-[11px] text-slate-500 font-bold uppercase">Cleaning Pit Lines Ready</p>
+                <p class="text-xl font-black text-purple-700 font-mono">4 Rakes Active</p>
+              </div>
+              <div class="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-base">
+                <i class="fa-solid fa-broom"></i>
+              </div>
+            </div>
+
+            <div class="glass-card p-3.5 border-l-4 border-amber-500 flex items-center justify-between">
+              <div>
+                <p class="text-[11px] text-slate-500 font-bold uppercase">Feeder Fleet Synced</p>
+                <p class="text-xl font-black text-amber-700 font-mono">18 DTC Buses</p>
+              </div>
+              <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-base">
+                <i class="fa-solid fa-bus"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic ETA Arrival Schedule & Operations Coordination Table -->
+          <div class="glass-card p-5 space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-3">
+              <div>
+                <h3 class="text-base font-black text-[#12355B] font-['Outfit'] flex items-center gap-2">
+                  <i class="fa-solid fa-clock-rotate-left text-blue-600"></i> Dynamic ML Arrival Forecasts & Operational Handover
+                </h3>
+                <p class="text-xs text-slate-500">Live AI Expected Time of Arrival (ETA) adapting to ground speed restrictions, fog, and cascade headway</p>
+              </div>
+              <span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-mono font-bold self-start sm:self-auto">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-ping mr-1"></span> GRADIENT BOOSTING v4.0 ACTIVE
+              </span>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs font-sans">
+                <thead>
+                  <tr class="border-b border-slate-200 text-slate-500 font-bold uppercase text-[10px]">
+                    <th class="py-2 px-3">Train # & Name</th>
+                    <th class="py-2 px-3">Priority</th>
+                    <th class="py-2 px-3">Scheduled Arr</th>
+                    <th class="py-2 px-3">Dynamic ML ETA</th>
+                    <th class="py-2 px-3">Live Delay Factors</th>
+                    <th class="py-2 px-3">Platform</th>
+                    <th class="py-2 px-3">Cleaning Window</th>
+                    <th class="py-2 px-3">Crew Lobby</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 font-medium">
+                  <tr class="hover:bg-slate-50">
+                    <td class="py-3 px-3 font-bold text-[#12355B]">
+                      <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                        <span>22436 Kashi Vande Bharat</span>
+                      </div>
+                      <span class="text-[10px] text-slate-400 font-mono">WAP-7 / Trainset #02</span>
+                    </td>
+                    <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-blue-100 text-blue-800 text-[10px] font-bold">PREMIUM (1)</span></td>
+                    <td class="py-3 px-3 font-mono">10:08 AM</td>
+                    <td class="py-3 px-3 font-mono font-bold text-emerald-700">10:14 AM <span class="text-[10px] text-amber-600">(+6m)</span></td>
+                    <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200 text-[10px]">Dense Fog 0.8km / Double Yellow</span></td>
+                    <td class="py-3 px-3 font-mono font-bold text-blue-700">Platform 1</td>
+                    <td class="py-3 px-3"><span class="text-slate-700 font-mono">30 mins (10:20–10:50)</span></td>
+                    <td class="py-3 px-3"><span class="text-emerald-700 font-mono font-bold">LP-2436 (Ready)</span></td>
+                  </tr>
+
+                  <tr class="hover:bg-slate-50">
+                    <td class="py-3 px-3 font-bold text-[#12355B]">
+                      <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                        <span>12951 Mumbai Rajdhani</span>
+                      </div>
+                      <span class="text-[10px] text-slate-400 font-mono">WAP-7 #30211</span>
+                    </td>
+                    <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-purple-100 text-purple-800 text-[10px] font-bold">SUPERFAST (2)</span></td>
+                    <td class="py-3 px-3 font-mono">10:35 AM</td>
+                    <td class="py-3 px-3 font-mono font-bold text-amber-700">10:48 AM <span class="text-[10px] text-red-600">(+13m)</span></td>
+                    <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200 text-[10px]">TSR 30km/h Caution at Km 14</span></td>
+                    <td class="py-3 px-3 font-mono font-bold text-blue-700">Platform 2</td>
+                    <td class="py-3 px-3"><span class="text-slate-700 font-mono">35 mins (10:55–11:30)</span></td>
+                    <td class="py-3 px-3"><span class="text-emerald-700 font-mono font-bold">LP-2951 (Ready)</span></td>
+                  </tr>
+
+                  <tr class="hover:bg-slate-50">
+                    <td class="py-3 px-3 font-bold text-[#12355B]">
+                      <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                        <span>12007 Chennai Shatabdi</span>
+                      </div>
+                      <span class="text-[10px] text-slate-400 font-mono">WAP-7 #30412</span>
+                    </td>
+                    <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-blue-100 text-blue-800 text-[10px] font-bold">PREMIUM (1)</span></td>
+                    <td class="py-3 px-3 font-mono">11:10 AM</td>
+                    <td class="py-3 px-3 font-mono font-bold text-emerald-700">11:10 AM <span class="text-[10px] text-emerald-600">(Right Time)</span></td>
+                    <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px]">Nominal Line Clear Aspect</span></td>
+                    <td class="py-3 px-3 font-mono font-bold text-blue-700">Platform 3</td>
+                    <td class="py-3 px-3"><span class="text-slate-700 font-mono">Turnaround Pit 1</span></td>
+                    <td class="py-3 px-3"><span class="text-emerald-700 font-mono font-bold">LP-2007 (Signed On)</span></td>
+                  </tr>
+
+                  <tr class="hover:bg-slate-50 bg-amber-50/40">
+                    <td class="py-3 px-3 font-bold text-[#12355B]">
+                      <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-red-500"></span>
+                        <span>12304 Poorva Express</span>
+                      </div>
+                      <span class="text-[10px] text-slate-400 font-mono">WAP-7 #30219</span>
+                    </td>
+                    <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-slate-100 text-slate-800 text-[10px] font-bold">EXPRESS (3)</span></td>
+                    <td class="py-3 px-3 font-mono">11:15 AM</td>
+                    <td class="py-3 px-3 font-mono font-bold text-red-600">11:35 AM <span class="text-[10px] font-black">(+20m)</span></td>
+                    <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-red-50 text-red-800 border border-red-200 text-[10px]">Preceding Freight Cascade (+12m)</span></td>
+                    <td class="py-3 px-3 font-mono font-bold text-purple-700" id="poorvaPlatformCell">Platform 2 <span class="text-[9px] text-red-600 block">(Clash Alert)</span></td>
+                    <td class="py-3 px-3"><span class="text-slate-700 font-mono">40 mins (11:45–12:25)</span></td>
+                    <td class="py-3 px-3"><span class="text-amber-700 font-mono font-bold">LP-2304 (En Route)</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Bottom Operational Panels: Turnaround Cleaning & Feeder Transport -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 text-xs">
+            <div class="glass-card p-4 space-y-3">
+              <h4 class="font-black text-[#12355B] font-['Outfit'] flex items-center gap-2">
+                <i class="fa-solid fa-broom text-purple-600"></i> Rake Turnaround Cleaning & Water Maintenance
+              </h4>
+              <p class="text-slate-500 text-[11px]">Dynamic cleaning crew coordination calculated from predicted arrival timestamps</p>
+              
+              <div class="space-y-2 font-mono">
+                <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                  <div>
+                    <span class="font-bold text-[#12355B] block">Washing Pit Line 2 (Vande Bharat Rake)</span>
+                    <span class="text-[10px] text-slate-500">Scheduled: 10:20 AM – 10:50 AM (30 min window)</span>
+                  </div>
+                  <span class="px-2 py-1 rounded bg-emerald-100 text-emerald-800 font-bold text-[10px]">CREW READY</span>
+                </div>
+
+                <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                  <div>
+                    <span class="font-bold text-[#12355B] block">Washing Pit Line 4 (Rajdhani Express)</span>
+                    <span class="text-[10px] text-slate-500">Rescheduled ETA: 10:55 AM (Turnaround Adjusted)</span>
+                  </div>
+                  <span class="px-2 py-1 rounded bg-amber-100 text-amber-800 font-bold text-[10px]">TIME SHIFTED</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="glass-card p-4 space-y-3">
+              <h4 class="font-black text-[#12355B] font-['Outfit'] flex items-center gap-2">
+                <i class="fa-solid fa-bus text-amber-600"></i> City Feeder Bus & Downstream Logistics Dispatch
+              </h4>
+              <p class="text-slate-500 text-[11px]">Automated passenger connectivity broadcast to DTC & Metro feeder fleets</p>
+              
+              <div class="space-y-2">
+                <div class="p-3 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-between">
+                  <div>
+                    <span class="font-bold text-[#12355B] block">DTC Route 419 (NDLS to Central Secretariat)</span>
+                    <span class="text-[10px] text-slate-600">Departure synchronized with Rajdhani 12951 (+13m push)</span>
+                  </div>
+                  <span class="px-2 py-1 rounded bg-blue-600 text-white font-mono font-bold text-[10px]">FLEET SYNCED</span>
+                </div>
+
+                <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-between">
+                  <div>
+                    <span class="font-bold text-[#12355B] block">NDLS Metro Airport Express Link</span>
+                    <span class="text-[10px] text-slate-600">Peak interval running at 10-minute frequency</span>
+                  </div>
+                  <span class="px-2 py-1 rounded bg-emerald-600 text-white font-mono font-bold text-[10px]">NOMINAL</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      `;
     }
 
     // Wrap in Master Station Master Container
@@ -691,6 +915,9 @@
 
         <!-- Sub-Tabs Navigation Bar -->
         <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs no-scrollbar">
+          <button type="button" onclick="switchSmSubTab('sm_eta_planning')" class="px-4 py-2.5 rounded-xl border transition-all shrink-0 cursor-pointer ${activeSmSubTab === 'sm_eta_planning' ? 'bg-[#12355B] text-white font-black shadow-md border-[#12355B]' : 'bg-white text-slate-700 hover:bg-slate-100 border-slate-300 font-bold'}">
+            <i class="fa-solid fa-clock-rotate-left text-[#FF9933] mr-1.5"></i> Dynamic ML ETA & Platform Reallocation
+          </button>
           <button type="button" onclick="switchSmSubTab('sm_platforms')" class="px-4 py-2.5 rounded-xl border transition-all shrink-0 cursor-pointer ${activeSmSubTab === 'sm_platforms' ? 'bg-[#12355B] text-white font-black shadow-md border-[#12355B]' : 'bg-white text-slate-700 hover:bg-slate-100 border-slate-300 font-bold'}">
             <i class="fa-solid fa-diagram-project text-[#FF9933] mr-1.5"></i> Platform Lines & Interlocking (16 Lines)
           </button>
@@ -876,4 +1103,49 @@
       window.renderStationMasterWorkspace(container);
     }
   };
+
+  // SIH 2026: 1-Click Platform Reallocation Handler
+  window.smAutoReassignPlatform = function (trainNo, newPf) {
+    const alertEl = document.getElementById("smPlatformConflictAlert");
+    if (alertEl) {
+      alertEl.classList.remove("from-red-600", "to-amber-600", "animate-pulse", "border-red-300");
+      alertEl.classList.add("from-emerald-700", "to-teal-800", "border-emerald-400");
+      alertEl.innerHTML = `
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-xl shrink-0">
+            <i class="fa-solid fa-circle-check text-emerald-300"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded bg-black/30 text-[10px] font-mono font-black uppercase text-emerald-200">PLATFORM CONFLICT RESOLVED</span>
+              <span class="text-xs font-mono text-emerald-100">Diverted via Route 4-Up</span>
+            </div>
+            <p class="text-sm font-black mt-0.5">Train ${trainNo} successfully reallocated to ${newPf}!</p>
+            <p class="text-[11px] text-emerald-100">Outer home delay avoided: 0 min cascade hold. Feeder and cleaning crews notified automatically.</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="px-3 py-1.5 rounded-xl bg-emerald-900/60 text-emerald-200 text-xs font-mono font-bold">
+            <i class="fa-solid fa-satellite-dish mr-1 text-[#FF9933]"></i> Route Set & Locked
+          </span>
+        </div>
+      `;
+    }
+
+    const cell = document.getElementById("poorvaPlatformCell");
+    if (cell) {
+      cell.className = "py-3 px-3 font-mono font-bold text-emerald-700";
+      cell.innerHTML = `${newPf} <span class="text-[9px] text-emerald-600 font-bold block">(Reallocated • Clear)</span>`;
+    }
+
+    if (window.showToast) {
+      window.showToast(`✅ Reallocated Train ${trainNo} to ${newPf}! Platform clash avoided and IPIS boards updated.`, "success");
+    }
+
+    // Trigger PA announcement for platform reallocation
+    if (window.triggerStationAnnouncement) {
+      window.triggerStationAnnouncement(trainNo, newPf.replace(/\D/g, ''), "plat_change");
+    }
+  };
 })();
+

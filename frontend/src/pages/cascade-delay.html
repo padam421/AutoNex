@@ -3,15 +3,692 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Indian Railways - Cascade Delay & AI Rescheduling</title>
-  <link rel="stylesheet" href="../css/theme.css">
+  <title>PROJECT-KAVACH — AI Cascade Delay & Schedule Recovery</title>
+  <meta name="description" content="Indian Railways AI-driven Cascade Delay Propagation Predictor & Dynamic Timetable Rescheduling Console" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- FontAwesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      border-radius: 1rem;
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+    }
+    .gradient-rail {
+      background: linear-gradient(135deg, #12355B 0%, #0c2340 100%);
+    }
+  </style>
 </head>
-<body class="min-h-screen bg-[#EAF3F8] text-slate-900 p-6 font-sans">
-  <div class="max-w-4xl mx-auto space-y-4">
-    <a href="dashboard.html" class="text-[#12355B] font-bold text-sm hover:underline">← Back to Dashboard</a>
-    <h1 class="text-2xl font-bold text-[#12355B]">AI Cascade Delay Analysis & Timetable Rescheduling</h1>
-    <p class="text-slate-600 text-sm">Real-time conflict propagation predictor and automated schedule recovery system.</p>
+<body class="min-h-screen bg-[#EAF3F8] text-slate-800 p-4 sm:p-6 lg:p-8">
+
+  <div class="max-w-7xl mx-auto space-y-6">
+
+    <!-- Top Navigation & Header -->
+    <header class="glass-card p-4 sm:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-l-8 border-[#FF9933]">
+      <div class="space-y-1">
+        <div class="flex items-center gap-3">
+          <a href="dashboard.html" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-[#12355B] font-bold text-xs flex items-center gap-1.5 transition-all">
+            <i class="fa-solid fa-arrow-left"></i> Dashboard
+          </a>
+          <span class="px-2.5 py-0.5 rounded-full bg-blue-100 text-[#12355B] text-[11px] font-mono font-black uppercase">
+            SIH 2026 • Real-Time Dynamic ETA Engine
+          </span>
+          <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-mono font-bold">
+            CASCADE_ENGINE_v4.2 ACTIVE
+          </span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-black text-[#12355B] font-['Outfit'] flex items-center gap-2">
+          <span>⚡ AI Cascade Delay Predictor & Schedule Recovery</span>
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-600">
+          Simulate preceding train bottlenecks, forecast automatic signaling headway deficits, and execute 1-click AI rescheduling (loop-line leapfrogs, dwell compression, and section speed elevation).
+        </p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2 text-xs font-mono shrink-0">
+        <div class="px-3 py-2 rounded-xl bg-white border border-slate-200 shadow-sm text-right">
+          <span class="text-[10px] text-slate-400 block font-sans">Corridor Monitored</span>
+          <strong class="text-[#12355B]">NDLS–CNB Quadruple Line</strong>
+        </div>
+        <div class="px-3 py-2 rounded-xl bg-white border border-slate-200 shadow-sm text-right">
+          <span class="text-[10px] text-slate-400 block font-sans">Min Safe Headway</span>
+          <strong class="text-emerald-700">15.0 min (Auto Block)</strong>
+        </div>
+      </div>
+    </header>
+
+    <!-- Top KPI Cards -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+      <div class="glass-card p-4 border-l-4 border-red-500">
+        <div class="flex items-center justify-between">
+          <p class="text-[11px] text-slate-500 font-bold uppercase">Trigger Disruption</p>
+          <i class="fa-solid fa-triangle-exclamation text-red-500 text-base"></i>
+        </div>
+        <p class="text-2xl font-black text-red-600 font-mono mt-1" id="kpiTriggerDelay">+25.0 min</p>
+        <p class="text-[10px] text-slate-500 mt-1" id="kpiTriggerTrain">Train 54302 (BOXN Freight)</p>
+      </div>
+
+      <div class="glass-card p-4 border-l-4 border-amber-500">
+        <div class="flex items-center justify-between">
+          <p class="text-[11px] text-slate-500 font-bold uppercase">Total Corridor Delay</p>
+          <i class="fa-solid fa-hourglass-half text-amber-500 text-base"></i>
+        </div>
+        <p class="text-2xl font-black text-amber-600 font-mono mt-1" id="kpiCorridorDelay">+58.0 min</p>
+        <p class="text-[10px] text-slate-500 mt-1">Summed across 4 following trains</p>
+      </div>
+
+      <div class="glass-card p-4 border-l-4 border-purple-500">
+        <div class="flex items-center justify-between">
+          <p class="text-[11px] text-slate-500 font-bold uppercase">Signal Choke Points</p>
+          <i class="fa-solid fa-traffic-light text-purple-500 text-base"></i>
+        </div>
+        <p class="text-2xl font-black text-purple-700 font-mono mt-1" id="kpiChokePoints">3 Signals Red/Yellow</p>
+        <p class="text-[10px] text-slate-500 mt-1">Km 18/4 to Km 32/8 section</p>
+      </div>
+
+      <div class="glass-card p-4 border-l-4 border-emerald-500">
+        <div class="flex items-center justify-between">
+          <p class="text-[11px] text-slate-500 font-bold uppercase">AI Recovery Potential</p>
+          <i class="fa-solid fa-wand-magic-sparkles text-emerald-500 text-base"></i>
+        </div>
+        <p class="text-2xl font-black text-emerald-700 font-mono mt-1" id="kpiRecoverableTime">49.5 min (85%)</p>
+        <p class="text-[10px] text-emerald-600 font-bold mt-1">Via Loop Overtake + Dwell Tuning</p>
+      </div>
+    </div>
+
+    <!-- Simulator Control & Domino Chain Container -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+      <!-- Left Column: Disruption Simulation Controller (4 cols) -->
+      <div class="lg:col-span-4 glass-card p-5 space-y-4">
+        <div class="border-b border-slate-200 pb-3">
+          <h2 class="text-base font-black text-[#12355B] font-['Outfit'] flex items-center gap-2">
+            <i class="fa-solid fa-sliders text-[#FF9933]"></i> Disruption Injection Cockpit
+          </h2>
+          <p class="text-xs text-slate-500">Inject real-world operational bottlenecks to evaluate downline cascade propagation</p>
+        </div>
+
+        <div class="space-y-3.5 text-xs">
+          <!-- Leading Train Selector -->
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Preceding / Leading Train</label>
+            <select id="simLeadingTrain" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-slate-900 font-bold">
+              <option value="54302|BOXN Freight (4,800t)|Km 24/2">54302 BOXN Freight (Trailing Load 4,800t)</option>
+              <option value="14218|Unchahar Express|Km 31/0">14218 Unchahar Express (Coaching/Mail)</option>
+              <option value="64091|Shakur Basti EMU|Km 12/6">64091 Shakur Basti EMU Suburban</option>
+              <option value="12424|Dibrugarh Rajdhani|Km 48/0">12424 Dibrugarh Rajdhani Express</option>
+            </select>
+          </div>
+
+          <!-- Root Cause Selector -->
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Primary Disruption Root Cause</label>
+            <select id="simCause" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-slate-900 font-bold">
+              <option value="Traction Motor Thermal Alert (Loco Stalled)">Traction Motor Thermal Alert (Loco Stalled)</option>
+              <option value="Emergency TSR: Ultrasonic Flaw (20 km/h Caution)">Emergency TSR: Ultrasonic Flaw (20 km/h Caution)</option>
+              <option value="Dense Radiation Fog: Visibility < 300m">Dense Radiation Fog: Visibility &lt; 300m</option>
+              <option value="Downstream Junction Yard Congestion">Downstream Junction Yard Congestion</option>
+              <option value="Overhead Equipment (OHE) Voltage Fluctuation">Overhead Equipment (OHE) Voltage Fluctuation</option>
+            </select>
+          </div>
+
+          <!-- Delay Slider -->
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="font-bold text-slate-700">Initial Delay Magnitude:</label>
+              <span class="px-2 py-0.5 rounded bg-red-100 text-red-800 font-mono font-bold" id="sliderValLabel">25 mins</span>
+            </div>
+            <input type="range" id="simDelaySlider" min="5" max="60" value="25" step="5" class="w-full accent-red-600 cursor-pointer" />
+            <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+              <span>5m (Minor)</span>
+              <span>25m (Caution)</span>
+              <span>60m (Severe Block)</span>
+            </div>
+          </div>
+
+          <!-- Minimum Required Headway -->
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Corridor Headway Rule</label>
+            <select id="simHeadway" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-slate-900 font-mono">
+              <option value="15">15 Minutes (Automatic Block Territory)</option>
+              <option value="12">12 Minutes (High-Density Multi-Aspect Signalling)</option>
+              <option value="20">20 Minutes (Absolute Block Manual Section)</option>
+            </select>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="pt-2 space-y-2">
+            <button onclick="window.runCascadeSimulation()" class="w-full py-2.5 rounded-xl bg-[#12355B] hover:bg-[#1D4877] text-white font-black text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer">
+              <i class="fa-solid fa-play text-[#FF9933]"></i> Run Cascade Evaluation
+            </button>
+            <button onclick="window.resetCascadeSimulation()" class="w-full py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+              <i class="fa-solid fa-rotate-left"></i> Reset to Baseline
+            </button>
+          </div>
+        </div>
+
+        <!-- Section Infrastructure Telemetry -->
+        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-2 font-mono">
+          <span class="text-[10px] text-slate-500 font-bold uppercase block font-sans">Ground Sensor Status (Km 10–40)</span>
+          <div class="flex items-center justify-between text-[11px]">
+            <span>Axle Counter Blocks:</span>
+            <span class="text-emerald-700 font-bold">14 Active / 0 Fault</span>
+          </div>
+          <div class="flex items-center justify-between text-[11px]">
+            <span>Track Circuit Impedance:</span>
+            <span class="text-slate-800">0.42 Ω/km (Nominal)</span>
+          </div>
+          <div class="flex items-center justify-between text-[11px]">
+            <span>Loop Lines Available:</span>
+            <span class="text-blue-700 font-bold">Ghaziabad Loop 3 & 4 Clear</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Interactive Domino Cascade Chain & AI Rescheduling (8 cols) -->
+      <div class="lg:col-span-8 space-y-5">
+
+        <!-- Visual Domino Chain -->
+        <div class="glass-card p-5 space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-3">
+            <div>
+              <h3 class="text-base font-black text-[#12355B] font-['Outfit'] flex items-center gap-2">
+                <i class="fa-solid fa-network-wired text-blue-600"></i> Live Dynamic Delay Propagation Chain
+              </h3>
+              <p class="text-xs text-slate-500">Signaling aspect degradation & headway deficit across the moving block corridor</p>
+            </div>
+            <span id="cascadeStatusBadge" class="px-2.5 py-1 rounded-full bg-red-100 text-red-800 text-[11px] font-mono font-bold self-start sm:self-auto">
+              CASCADE PROPAGATION ACTIVE
+            </span>
+          </div>
+
+          <!-- The Domino List of Trains in Section -->
+          <div id="cascadeTrainList" class="space-y-3">
+            <!-- Dynamically populated via JS -->
+          </div>
+        </div>
+
+        <!-- AI Dynamic Rescheduling & Mitigation Suite -->
+        <div class="glass-card p-5 space-y-4 border-2 border-emerald-200 bg-gradient-to-br from-white to-emerald-50/30">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-3">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-mono font-black">
+                  AI RECOMMENDATION ENGINE v4.2
+                </span>
+                <span class="text-[10px] font-mono text-slate-400">Confidence: 97.4%</span>
+              </div>
+              <h3 class="text-base font-black text-[#12355B] font-['Outfit'] mt-1 flex items-center gap-2">
+                <i class="fa-solid fa-wand-magic-sparkles text-emerald-600"></i> Automated Timetable Mitigation Package
+              </h3>
+              <p class="text-xs text-slate-500">3 coordinated operational actions to arrest cascade delay and restore mainline flow</p>
+            </div>
+
+            <button id="btnApplyAiAction" onclick="window.applyAiReschedulingPlan()" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs shadow-lg flex items-center gap-2 cursor-pointer transition-all shrink-0">
+              <i class="fa-solid fa-check-double"></i> Execute 1-Click AI Mitigation
+            </button>
+          </div>
+
+          <!-- The 3 Action Cards -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+            <!-- Action 1: Loop Leapfrog -->
+            <div class="p-3.5 rounded-xl bg-white border border-emerald-200 shadow-sm space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="px-2 py-0.5 rounded bg-blue-100 text-blue-800 font-bold text-[10px]">ACTION #1</span>
+                <span class="text-emerald-700 font-mono font-bold">-35 min</span>
+              </div>
+              <h4 class="font-bold text-[#12355B]">Dynamic Loop Leapfrog</h4>
+              <p class="text-slate-600 text-[11px]">
+                Divert freight 54302 into <strong>Ghaziabad Loop 3</strong> at Km 24. Clear mainline for Rajdhani & Vande Bharat.
+              </p>
+              <div class="text-[10px] text-slate-400 font-mono flex items-center gap-1">
+                <i class="fa-solid fa-code-fork text-blue-500"></i> Points 104A/B Reverse
+              </div>
+            </div>
+
+            <!-- Action 2: Section Speed Elevation -->
+            <div class="p-3.5 rounded-xl bg-white border border-emerald-200 shadow-sm space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="px-2 py-0.5 rounded bg-purple-100 text-purple-800 font-bold text-[10px]">ACTION #2</span>
+                <span class="text-emerald-700 font-mono font-bold">-8 min</span>
+              </div>
+              <h4 class="font-bold text-[#12355B]">Kavach Safe Elevation</h4>
+              <p class="text-slate-600 text-[11px]">
+                Elevate Vande Bharat running speed to <strong>130 km/h</strong> over clear tangent section Km 45–90 with dynamic braking curve.
+              </p>
+              <div class="text-[10px] text-slate-400 font-mono flex items-center gap-1">
+                <i class="fa-solid fa-gauge-high text-purple-500"></i> Speed Curve Adjusted
+              </div>
+            </div>
+
+            <!-- Action 3: Dwell Compression -->
+            <div class="p-3.5 rounded-xl bg-white border border-emerald-200 shadow-sm space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 font-bold text-[10px]">ACTION #3</span>
+                <span class="text-emerald-700 font-mono font-bold">-6 min</span>
+              </div>
+              <h4 class="font-bold text-[#12355B]">Station Dwell Compression</h4>
+              <p class="text-slate-600 text-[11px]">
+                Compress Aligarh (ALJN) passenger stop from 5 min to <strong>2 min</strong> using pre-staged RPF and coach guidance displays.
+              </p>
+              <div class="text-[10px] text-slate-400 font-mono flex items-center gap-1">
+                <i class="fa-solid fa-clock text-amber-500"></i> Turnaround Optimized
+              </div>
+            </div>
+          </div>
+
+          <!-- Post-Resolution Impact Banner (Hidden until applied) -->
+          <div id="aiResolutionBanner" class="hidden p-4 rounded-xl bg-emerald-700 text-white shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-xl shrink-0">
+                <i class="fa-solid fa-shield-check"></i>
+              </div>
+              <div>
+                <p class="font-bold text-sm">AI Mitigation Plan Executed & Locked across Kavach Radio Block Center (RBC)!</p>
+                <p class="text-xs text-emerald-100">
+                  Total corridor delay reduced from <span class="line-through text-red-300 font-mono">+58.0m</span> to <strong class="text-white font-mono text-sm">+8.5m</strong>. Saved 2,400 passenger-hours and 480 kWh in braking losses.
+                </p>
+              </div>
+            </div>
+            <span class="px-3 py-1.5 rounded-lg bg-emerald-900/60 text-emerald-200 font-mono text-xs font-bold shrink-0">
+              <i class="fa-solid fa-circle-check mr-1 text-emerald-300"></i> LINE CLEAR
+            </span>
+          </div>
+        </div>
+
+        <!-- Interactive Time-Distance Progression Chart (String Chart) -->
+        <div class="glass-card p-5 space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-200 pb-2.5">
+            <div>
+              <h3 class="text-sm font-black text-[#12355B] font-['Outfit'] flex items-center gap-2">
+                <i class="fa-solid fa-chart-line text-purple-600"></i> Distance vs. Time Corridor Trajectory (Section String Chart)
+              </h3>
+              <p class="text-[11px] text-slate-500">Visualizing train separation, choke bottleneck, and AI-rescheduled conflict-free paths</p>
+            </div>
+            <div class="flex items-center gap-3 text-[10px] font-mono">
+              <span class="flex items-center gap-1"><span class="w-3 h-0.5 bg-slate-400 inline-block"></span> Scheduled</span>
+              <span class="flex items-center gap-1"><span class="w-3 h-0.5 bg-red-500 inline-block"></span> Delayed</span>
+              <span class="flex items-center gap-1"><span class="w-3 h-0.5 bg-emerald-500 inline-block"></span> AI Recovered</span>
+            </div>
+          </div>
+
+          <!-- Canvas for String Diagram -->
+          <div class="relative w-full h-48 bg-slate-950 rounded-xl p-3 overflow-hidden border border-slate-800">
+            <canvas id="stringChartCanvas" class="w-full h-full"></canvas>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
   </div>
+
+  <!-- Interactive JavaScript Engine -->
+  <script>
+    (function () {
+      // Train Roster on NDLS–CNB Section
+      const defaultTrains = [
+        {
+          id: "54302",
+          name: "BOXN Freight (4,800t)",
+          type: "FREIGHT",
+          loco: "WAG-9 #31042",
+          scheduledKm: 24,
+          currentKm: 24,
+          aspect: "RED (STOP)",
+          aspectColor: "#ef4444",
+          nominalSpeed: 65,
+          currentSpeed: 0,
+          initialDelay: 25,
+          cascadeDelay: 0,
+          totalDelay: 25,
+          isTrigger: true,
+          status: "Stalled on Mainline (Traction Motor Thermal)"
+        },
+        {
+          id: "12951",
+          name: "Mumbai Tejas Rajdhani",
+          type: "SUPERFAST (P1)",
+          loco: "WAP-7 #30211",
+          scheduledKm: 18,
+          currentKm: 16,
+          aspect: "YELLOW (CAUTION)",
+          aspectColor: "#eab308",
+          nominalSpeed: 130,
+          currentSpeed: 30,
+          initialDelay: 0,
+          cascadeDelay: 18,
+          totalDelay: 18,
+          isTrigger: false,
+          status: "Braking for Yellow Aspect (Headway Deficit: 8m)"
+        },
+        {
+          id: "22436",
+          name: "Kashi Vande Bharat Express",
+          type: "PREMIUM (P1)",
+          loco: "Trainset #02 (WAP-7 equiv)",
+          scheduledKm: 12,
+          currentKm: 9,
+          aspect: "DOUBLE YELLOW (ATTENTION)",
+          aspectColor: "#f59e0b",
+          nominalSpeed: 130,
+          currentSpeed: 60,
+          initialDelay: 0,
+          cascadeDelay: 14,
+          totalDelay: 14,
+          isTrigger: false,
+          status: "Restricted Speed (60 km/h Attention Aspect)"
+        },
+        {
+          id: "12302",
+          name: "Howrah Rajdhani Express",
+          type: "SUPERFAST (P1)",
+          loco: "WAP-7 #30288",
+          scheduledKm: 6,
+          currentKm: 4,
+          aspect: "GREEN (CLEAR)",
+          aspectColor: "#10b981",
+          nominalSpeed: 130,
+          currentSpeed: 110,
+          initialDelay: 0,
+          cascadeDelay: 11,
+          totalDelay: 11,
+          isTrigger: false,
+          status: "Approaching Outer Block (Cascade Delay Projected)"
+        }
+      ];
+
+      let currentTrains = JSON.parse(JSON.stringify(defaultTrains));
+      let isAiApplied = false;
+
+      // Update Slider Label Live
+      const slider = document.getElementById("simDelaySlider");
+      const sliderLabel = document.getElementById("sliderValLabel");
+      if (slider && sliderLabel) {
+        slider.addEventListener("input", function () {
+          sliderLabel.textContent = `${this.value} mins`;
+        });
+      }
+
+      // Render the Domino List
+      function renderTrainList() {
+        const listEl = document.getElementById("cascadeTrainList");
+        if (!listEl) return;
+
+        listEl.innerHTML = currentTrains.map((t, idx) => {
+          const isTrigger = t.isTrigger;
+          const badgeClass = isTrigger ? "bg-red-100 text-red-800 border-red-300" : "bg-blue-50 text-[#12355B] border-blue-200";
+          const delayClass = t.totalDelay > 15 ? "text-red-600" : (t.totalDelay > 0 ? "text-amber-600" : "text-emerald-700");
+
+          return `
+            <div class="p-4 rounded-xl border ${isTrigger ? 'border-red-300 bg-red-50/40' : 'border-slate-200 bg-white'} shadow-sm space-y-3 transition-all">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div class="flex items-center gap-2.5">
+                  <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${isTrigger ? 'bg-red-600 text-white' : 'bg-slate-200 text-slate-700'} font-mono">
+                    ${idx + 1}
+                  </span>
+                  <div>
+                    <span class="font-black text-[#12355B] text-sm">${t.id} ${t.name}</span>
+                    <span class="text-[10px] text-slate-500 font-mono ml-1">(${t.loco})</span>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${badgeClass} border font-mono">
+                    ${t.type}
+                  </span>
+                  <span class="px-2.5 py-1 rounded-lg text-xs font-black font-mono ${delayClass} bg-slate-100">
+                    +${t.totalDelay.toFixed(1)} min
+                  </span>
+                </div>
+              </div>
+
+              <!-- Signal & Speed Telemetry Row -->
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] font-mono bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                <div>
+                  <span class="text-[10px] text-slate-400 block font-sans">Current Aspect</span>
+                  <strong style="color: ${t.aspectColor};" class="flex items-center gap-1">
+                    <span class="w-2 h-2 rounded-full inline-block" style="background-color: ${t.aspectColor};"></span>
+                    ${t.aspect}
+                  </strong>
+                </div>
+                <div>
+                  <span class="text-[10px] text-slate-400 block font-sans">Speed Profile</span>
+                  <strong class="text-slate-800">${t.currentSpeed} / ${t.nominalSpeed} km/h</strong>
+                </div>
+                <div>
+                  <span class="text-[10px] text-slate-400 block font-sans">Position Chainage</span>
+                  <strong class="text-slate-800">Km ${t.currentKm}/0</strong>
+                </div>
+                <div>
+                  <span class="text-[10px] text-slate-400 block font-sans">Cascade Share</span>
+                  <strong class="${t.cascadeDelay > 0 ? 'text-red-600 font-bold' : 'text-slate-500'}">
+                    ${t.cascadeDelay > 0 ? '+' + t.cascadeDelay.toFixed(1) + ' min' : '0 min (Root)'}
+                  </strong>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between text-[11px] text-slate-600">
+                <span><i class="fa-solid fa-circle-info text-blue-500 mr-1"></i> ${t.status}</span>
+                ${idx < currentTrains.length - 1 ? '<span class="text-[10px] text-slate-400 font-mono">Headway to following: ~11 min ➔</span>' : ''}
+              </div>
+            </div>
+          `;
+        }).join("");
+      }
+
+      // Update KPI metrics
+      function updateKpis() {
+        const trigger = currentTrains.find(t => t.isTrigger) || currentTrains[0];
+        const totalCorridor = currentTrains.reduce((acc, t) => acc + t.totalDelay, 0);
+
+        document.getElementById("kpiTriggerDelay").textContent = `+${trigger.totalDelay.toFixed(1)} min`;
+        document.getElementById("kpiTriggerTrain").textContent = `Train ${trigger.id} (${trigger.name})`;
+        document.getElementById("kpiCorridorDelay").textContent = `+${totalCorridor.toFixed(1)} min`;
+        document.getElementById("kpiChokePoints").textContent = isAiApplied ? "0 Signals (All Green)" : "3 Signals Red/Yellow";
+        document.getElementById("kpiRecoverableTime").textContent = isAiApplied ? "Recovered 49.5 min" : "49.5 min (85%)";
+      }
+
+      // Run Cascade Simulation
+      window.runCascadeSimulation = function () {
+        const delay = parseFloat(document.getElementById("simDelaySlider").value);
+        const cause = document.getElementById("simCause").value;
+        const [trainId, trainName] = document.getElementById("simLeadingTrain").value.split("|");
+
+        isAiApplied = false;
+        document.getElementById("aiResolutionBanner").classList.add("hidden");
+
+        // Calculate realistic cascade based on automatic block headway (15 min standard)
+        currentTrains[0].id = trainId;
+        currentTrains[0].name = trainName;
+        currentTrains[0].totalDelay = delay;
+        currentTrains[0].currentSpeed = 0;
+        currentTrains[0].aspect = "RED (STOP)";
+        currentTrains[0].aspectColor = "#ef4444";
+        currentTrains[0].status = `Stalled on Mainline (${cause})`;
+
+        // Subsequent trains suffer cascade headway penalty
+        const decayFactors = [0.72, 0.56, 0.44];
+        for (let i = 1; i < currentTrains.length; i++) {
+          const factor = decayFactors[i - 1] || 0.3;
+          currentTrains[i].cascadeDelay = Math.round(delay * factor * 10) / 10;
+          currentTrains[i].totalDelay = currentTrains[i].cascadeDelay;
+          
+          if (i === 1) {
+            currentTrains[i].aspect = "YELLOW (CAUTION)";
+            currentTrains[i].aspectColor = "#eab308";
+            currentTrains[i].currentSpeed = 30;
+            currentTrains[i].status = `Throttled at Yellow Aspect behind ${currentTrains[i - 1].id}`;
+          } else if (i === 2) {
+            currentTrains[i].aspect = "DOUBLE YELLOW (ATTENTION)";
+            currentTrains[i].aspectColor = "#f59e0b";
+            currentTrains[i].currentSpeed = 60;
+            currentTrains[i].status = `Approaching Attention Aspect (Speed Capped at 60 km/h)`;
+          } else {
+            currentTrains[i].aspect = "GREEN (CLEAR)";
+            currentTrains[i].aspectColor = "#10b981";
+            currentTrains[i].currentSpeed = 110;
+            currentTrains[i].status = `Downline Cascading Queue Predicted`;
+          }
+        }
+
+        renderTrainList();
+        updateKpis();
+        drawStringChart();
+
+        // Query backend cascade endpoint for telemetry if server is running
+        try {
+          fetch("http://localhost:5000/api/v1/eta/cascade/evaluate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              leading_train: trainId,
+              initial_delay_minutes: delay,
+              corridor: "NDLS-CNB"
+            })
+          }).then(res => res.json()).then(data => {
+            console.log("Backend Cascade Evaluation response:", data);
+          }).catch(err => {
+            console.log("Local standalone simulation mode active");
+          });
+        } catch (e) {}
+      };
+
+      // Reset Simulation
+      window.resetCascadeSimulation = function () {
+        currentTrains = JSON.parse(JSON.stringify(defaultTrains));
+        isAiApplied = false;
+        document.getElementById("simDelaySlider").value = 25;
+        document.getElementById("sliderValLabel").textContent = "25 mins";
+        document.getElementById("aiResolutionBanner").classList.add("hidden");
+        renderTrainList();
+        updateKpis();
+        drawStringChart();
+      };
+
+      // Execute AI Mitigation Package
+      window.applyAiReschedulingPlan = function () {
+        isAiApplied = true;
+
+        // 1. Freight is moved to Loop Line 3
+        currentTrains[0].status = "Diverted into Ghaziabad Yard Loop Line 3 (Mainline Released)";
+        currentTrains[0].aspect = "RED (LOOP SECURED)";
+        currentTrains[0].aspectColor = "#64748b";
+
+        // 2. High-priority coaching trains get Green signals and speed recovery
+        for (let i = 1; i < currentTrains.length; i++) {
+          currentTrains[i].aspect = "GREEN (CLEAR)";
+          currentTrains[i].aspectColor = "#10b981";
+          currentTrains[i].currentSpeed = currentTrains[i].nominalSpeed;
+          // Recover 80% to 90% of delay via leapfrog + speed elevation + dwell compression
+          currentTrains[i].totalDelay = Math.max(0, Math.round((currentTrains[i].cascadeDelay * 0.15) * 10) / 10);
+          currentTrains[i].status = "AI Priority Leapfrog Completed. Mainline Green Aspect Restored.";
+        }
+
+        document.getElementById("aiResolutionBanner").classList.remove("hidden");
+        renderTrainList();
+        updateKpis();
+        drawStringChart();
+      };
+
+      // Draw Time-Distance String Chart (Section Motion Diagram)
+      function drawStringChart() {
+        const canvas = document.getElementById("stringChartCanvas");
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d");
+        const w = canvas.width = canvas.parentElement.clientWidth;
+        const h = canvas.height = canvas.parentElement.clientHeight;
+
+        ctx.clearRect(0, 0, w, h);
+
+        // Background Grid (Stations along Y axis: NDLS -> GZB -> ALJN -> CNB)
+        const stations = [
+          { name: "NDLS (Km 0)", y: h * 0.15 },
+          { name: "GZB (Km 28)", y: h * 0.42 },
+          { name: "ALJN (Km 126)", y: h * 0.70 },
+          { name: "CNB (Km 435)", y: h * 0.90 }
+        ];
+
+        ctx.strokeStyle = "#1e293b";
+        ctx.lineWidth = 1;
+        ctx.font = "10px JetBrains Mono";
+        ctx.fillStyle = "#64748b";
+
+        stations.forEach(st => {
+          ctx.beginPath();
+          ctx.moveTo(80, st.y);
+          ctx.lineTo(w - 20, st.y);
+          ctx.stroke();
+          ctx.fillText(st.name, 10, st.y + 3);
+        });
+
+        // Draw Time Markers on X axis
+        for (let x = 90; x < w - 20; x += 80) {
+          ctx.beginPath();
+          ctx.moveTo(x, 10);
+          ctx.lineTo(x, h - 10);
+          ctx.strokeStyle = "#0f172a";
+          ctx.stroke();
+        }
+
+        // Draw Train Trajectories
+        const colors = ["#ef4444", "#3b82f6", "#10b981", "#8b5cf6"];
+
+        currentTrains.forEach((t, i) => {
+          const color = isAiApplied ? (i === 0 ? "#64748b" : "#10b981") : (i === 0 ? "#ef4444" : "#f59e0b");
+          const startX = 100 + i * 50;
+          const endX = isAiApplied ? (startX + 120) : (startX + 180 + (t.totalDelay * 1.5));
+
+          ctx.beginPath();
+          ctx.moveTo(startX, stations[0].y);
+          
+          if (i === 0 && isAiApplied) {
+            // Freight loops at Ghaziabad
+            ctx.lineTo(startX + 40, stations[1].y);
+            ctx.lineTo(startX + 160, stations[1].y); // Horizontal hold on loop line
+          } else {
+            ctx.bezierCurveTo(
+              startX + 30, stations[1].y,
+              endX - 30, stations[2].y,
+              endX, stations[3].y
+            );
+          }
+
+          ctx.strokeStyle = color;
+          ctx.lineWidth = 2.5;
+          ctx.stroke();
+
+          // Label
+          ctx.fillStyle = color;
+          ctx.fillText(t.id, Math.min(endX - 25, w - 45), stations[3].y - 6);
+        });
+      }
+
+      // Window resize listener for chart
+      window.addEventListener("resize", drawStringChart);
+
+      // Initial Mount
+      renderTrainList();
+      updateKpis();
+      setTimeout(drawStringChart, 100);
+    })();
+  </script>
 </body>
 </html>
